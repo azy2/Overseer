@@ -1,4 +1,4 @@
 #!/bin/bash
 
 now=$(date +"%Y%m%d_%H%M")
-mkdir "V"$now"__"$1".py"
+mkdir "migrations/V"$now"__"$1".py"
