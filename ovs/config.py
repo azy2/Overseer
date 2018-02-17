@@ -29,5 +29,7 @@ class Config(object):
 
 	SUPERUSER = {
 		'email': os.getenv('SUPERUSER_EMAIL', 'admin@example.com'),
+                'first_name': os.getenv('SUPERUSER_FIRSTNAME', 'John'),
+                'last_name': os.getenv('SUPERUSER_LASTNAME', 'Smith'),
 		'password': os.getenv('SUPERUSER_PASSWORD', 'ABCD1234')
 	}

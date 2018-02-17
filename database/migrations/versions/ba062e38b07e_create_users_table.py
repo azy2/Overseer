@@ -21,6 +21,8 @@ def upgrade():
         'users',
         sa.Column('id', sa.Integer, primary_key=True),
         sa.Column('email', sa.String(255), nullable=False, unique=True),
+        sa.Column('first_name', sa.String(255), nullable=False),
+        sa.Column('last_name', sa.String(255), nullable=False),
         sa.Column('password', sa.CHAR(60), nullable=False),
         sa.Column('role', sa.Enum('RESIDENT', 'RESIDENT_ADVISOR', 'STAFF', 'OFFICE_MANAGER', 'BUILDING_MANAGER', 'ADMIN'), nullable=False),
         sa.Column('created', sa.DateTime, server_default=sa.text('CURRENT_TIMESTAMP')),
