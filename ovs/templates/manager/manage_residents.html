@@ -5,18 +5,16 @@
 	<title>Manage Residents</title>
 </head>
 <body>
-	<form method="post" id="register-manager-submit" action="register_manager">
-		First Name: <input type="text" name="first_name" required> <br>
-		Last Name: <input type="text" name="last_name" required> <br>
-		Email: <input type="email" name="email" required> <br>
-		Role: <select name="role" required>
-		<option value="ADMIN" >Admin</option>
-		<option value="BUILDING_MANAGER" >Building Manager</option>
-		<option value="OFFICE_MANAGER" >Office Manager</option>
-		<option value="STAFF" >Staff</option>
-		<option value="RESIDENT_ADVISOR" >Resident Advisor</option>
-		</select> <br>
-		<input type="submit" value="Submit">
-	</form>
+	<a href="/">Add new resident</a>
+	{% for (resident, user) in residents %}
+		<form method="post" id="edit-resident-submit">
+			User ID: <input type="text" name="user_id" value={{ resident.user_id }} readonly>
+			Email: <input type="text" name="email" value={{ user.email }} readonly>
+			First Name: <input type="text" name="first_name" value={{ user.first_name }} readonly>
+			Last Name: <input type="text" name="last_name" value={{ user.last_name }} readonly>
+            Room Number: <input type="text" name="number" value={{ resident.room_number }} required>
+            <input type="submit" value="Submit">
+        </form>
+	{% endfor %}
 </body>
 </html>

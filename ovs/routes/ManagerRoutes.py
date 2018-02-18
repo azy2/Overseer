@@ -12,7 +12,9 @@ def manage_residents():
     It will also be a link there to add/edit/delete residents with form inputs.
     """
     if request.method == 'GET':
-        return render_template('manager/manage_residents.html')
+        return render_template('manager/manage_residents.html', residents=ManagerService.get_all_residents())
     elif request.method == 'POST':
-        pass
+        user_id = request.form['user_id']
+        room_number = request.form['number']
+        return ManagerService.update_resident_room_number(user_id, room_number).json()
 
