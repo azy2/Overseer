@@ -1,1 +1,2 @@
 from .RegisterManagerForm import RegisterManagerForm as RegisterManagerForm
+from .RegisterResidentForm import RegisterResidentForm as RegisterResidentForm
