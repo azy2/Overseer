@@ -5,6 +5,18 @@
 	<title>Manage Residents</title>
 </head>
 <body>
-
+	<form method="post" id="register-manager-submit" action="register_manager">
+		First Name: <input type="text" name="first_name" required> <br>
+		Last Name: <input type="text" name="last_name" required> <br>
+		Email: <input type="email" name="email" required> <br>
+		Role: <select name="role" required>
+		<option value="ADMIN" >Admin</option>
+		<option value="BUILDING_MANAGER" >Building Manager</option>
+		<option value="OFFICE_MANAGER" >Office Manager</option>
+		<option value="STAFF" >Staff</option>
+		<option value="RESIDENT_ADVISOR" >Resident Advisor</option>
+		</select> <br>
+		<input type="submit" value="Submit">
+	</form>
 </body>
 </html>
