@@ -4,3 +4,4 @@ Flask==0.12.2
 Flask-WTF==0.14.2
 PyMySQL==0.8.0
 SQLAlchemy==1.2.2
+Flask-Login==0.4.1
