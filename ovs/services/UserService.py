@@ -5,15 +5,10 @@ db = app.database.instance()
 
 class UserService:
     @staticmethod
-    def create_user(email, first_name, last_name, password, role):
+    def create_user(email, first_name, last_name, role, password=None):
+        if password is None:
+            password = crypto.generate_password()
         new_user = User(email, first_name, last_name, password, role)
-        db.add(new_user)
-        db.commit()
-
-        return new_user
-
-    def create_user_password(email, first_name, last_name, role):
-        new_user = User(email, first_name, last_name, crypto.generate_password(), role)
         db.add(new_user)
         db.commit()
 
