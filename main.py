@@ -7,7 +7,7 @@ if __name__ == '__main__':
     app.register_blueprint(routes.UserRoutes, url_prefix='/user')
     app.register_blueprint(routes.AdminRoutes, url_prefix='/admin')
     app.register_blueprint(routes.ManagerRoutes, url_prefix='/manager')
-    app.register.blueprint(routes.AuthRoutes, url_prefix='/auth')
+    app.register_blueprint(routes.AuthRoutes, url_prefix='/auth')
     app.register_blueprint(routes.DevRoutes, url_prefix='/')
 
     super_user = UserService.get_user_by_email(app.config['SUPERUSER']['email']).one_or_none()
