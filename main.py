@@ -5,6 +5,7 @@ from ovs.utils import roles
 
 if __name__ == '__main__':
 	app.register_blueprint(routes.UserRoutes, url_prefix='/user')
+	app.register_blueprint(routes.ManagerRoutes, url_prefix='/manager')
 
 	super_user = UserService.get_user_by_email(app.config['SUPERUSER']['email']).one_or_none()
 	if not super_user:
