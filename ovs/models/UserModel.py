@@ -6,7 +6,6 @@ from ovs import app
 
 SALT_ROUNDS = 12
 
-
 class User(app.BaseModel):
     __tablename__ = 'users'
 
