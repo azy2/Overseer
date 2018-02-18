@@ -1,9 +1,9 @@
 from flask import Blueprint, render_template, request
 from ovs.services import UserService, ManagerService
 from ovs.forms import RegisterResidentForm
-admin_bp = Blueprint('manager', __name__,)
+manager_bp = Blueprint('manager', __name__,)
 
-@admin_bp.route('/register_resident', methods=['GET', 'POST'])
+@manager_bp.route('/register_resident', methods=['GET', 'POST'])
 def register_resident():
     """
     /manager/register_resident serves an html form with input fields for email,
