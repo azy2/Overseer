@@ -14,7 +14,7 @@ class Logger:
         stdout_logging_handler = logging.StreamHandler(sys.stdout)
         stdout_logging_handler.setFormatter(stdout_logging_formatter)
 
-		# Testing logging with two handlers
+        # Testing logging with two handlers
         self.console_logger.addHandler(stdout_logging_handler)
         self.console_logger.addHandler(logging.StreamHandler(sys.stderr))
 

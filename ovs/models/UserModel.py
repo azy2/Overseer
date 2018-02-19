@@ -6,6 +6,7 @@ from ovs import app
 
 SALT_ROUNDS = 12
 
+
 class User(app.BaseModel):
     __tablename__ = 'users'
 
@@ -15,7 +16,8 @@ class User(app.BaseModel):
     last_name = sa.Column(sa.String(255), nullable=False)
     password = sa.Column(sa.CHAR(60), nullable=False)
     role = sa.Column(sa.Enum('RESIDENT', 'RESIDENT_ADVISOR', 'STAFF',
-                             'OFFICE_MANAGER', 'BUILDING_MANAGER', 'ADMIN'), nullable=False)
+                             'OFFICE_MANAGER', 'BUILDING_MANAGER', 'ADMIN'),
+                     nullable=False)
     created = sa.Column(
         sa.DateTime, server_default=sa.text('CURRENT_TIMESTAMP'))
     updated = sa.Column(sa.DateTime, server_default=sa.text(
@@ -32,7 +34,8 @@ class User(app.BaseModel):
             role=role)
 
     def __repr__(self):
-        return "User([id='%s', email='%s', first_name='%s', last_name='%s', role='%s', created='%s', updated='%s'])" % \
+        return "User([id='%s', email='%s', first_name='%s', last_name='%s', " + \
+            "role='%s', created='%s', updated='%s'])" % \
             (self.id, self.email, self.first_name, self.last_name,
              self.role, self.created, self.updated)
 
