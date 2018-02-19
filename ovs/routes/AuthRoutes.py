@@ -12,7 +12,7 @@ db = app.database.instance()
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
-    form = LoginForm()
+    form = LoginForm(csrf_enabled=False)
     if request.method == 'POST' and form.validate():
         email = form.email.data
         # TODO: validate passwords once user is able to reset them.
