@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request
-from ovs.services import RoomService
-from ovs.forms import RegisterRoomForm
+from ovs.services import RoomService, UserService
+from ovs.forms import RegisterRoomForm, RegisterResidentForm
 manager_bp = Blueprint('manager', __name__,)
 
 @manager_bp.route('/register_room', methods=['GET', 'POST'])
