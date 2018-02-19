@@ -1,7 +1,9 @@
+""" routes under /manager/ """
 from flask import Blueprint, render_template, request
 from ovs.services import RoomService, UserService
 from ovs.forms import RegisterRoomForm, RegisterResidentForm
 manager_bp = Blueprint('manager', __name__,)
+
 
 @manager_bp.route('/register_room', methods=['GET', 'POST'])
 def register_room():
@@ -32,6 +34,7 @@ def register_room():
             return str(form.errors)
     else:
         return render_template('manager/register_room.html', form=form)
+
 
 @manager_bp.route('/register_resident', methods=['GET', 'POST'])
 def register_resident():

@@ -1,7 +1,14 @@
-import os, sys
+"""
+config is for all the particular setup details such as
+the app environment, database name and ip, super user account
+details, etc...
+"""
+import os
+import sys
 
 # TODO force production to set env vals instead of using defaults
 class Config(object):
+    """ The Config object stores all of the setup information """
     APP_ENV = os.getenv('APP_ENV', 'DEV')
     SECRET_KEY = os.getenv('SECRET', 'VERY_SPECIAL_KEY')
     DEVELOPMENT = APP_ENV == 'DEV'

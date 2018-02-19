@@ -1,3 +1,6 @@
+"""
+Defines a User as represented in the database
+"""
 import bcrypt
 import sqlalchemy as sa
 from flask import jsonify
@@ -8,6 +11,9 @@ SALT_ROUNDS = 12
 
 
 class User(app.BaseModel):
+    """
+    Defines a User as represented in the database. Along with some utility functions.
+    """
     __tablename__ = 'users'
 
     id = sa.Column(sa.Integer, primary_key=True)
@@ -40,9 +46,11 @@ class User(app.BaseModel):
              self.role, self.created, self.updated)
 
     def has_password(self, password):
+        """ Checks if inputted password matches the one stored in DB """
         return self.password == bcrypt.hashpw(password, self.password)
 
     def json(self):
+        """ Returns a JSON representation of this User """
         return jsonify(
             id=self.id,
             email=self.email,
@@ -54,13 +62,20 @@ class User(app.BaseModel):
         )
 
     def is_authenticated(self):
+        """ Checks if this user is logged in """
+        # TODO: Implement authentication
         return True
 
     def is_active(self):
+        """ Checks if this user account is active """
+        # TODO: Implement active
         return True
 
     def is_anonymous(self):
+        """ Checks if this user is anonymous """
+        # TODO: Implement anonymous
         return False
 
     def get_id(self):
+        """ :returns the user's unique id in the database """
         return str(self.id)
