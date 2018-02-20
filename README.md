@@ -15,11 +15,10 @@ One time setup:
 #!/bin/bash
 sudo apt update
 sudo apt install -y make g++ mysql-server-5.7 python3 python3-virtualenv
-sudo mysql_ssl_rsa_setup --uid=mysql
 sudo service mysql restart
 sudo mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH
-mysql_native_password BY 'pass'; FUSH PRIVILEGES;"
-mysql -u root -p"pass" -e "CREATE DATABASE ovs"
+mysql_native_password BY 'pass123'; FUSH PRIVILEGES;"
+mysql -u root -p"pass123" -e "CREATE DATABASE ovs"
 echo "[mysqld]\nbind-address = localhost\n" > sudo tee
 /etc/mysql/mysql.conf.d/overseer.cnf
 sudo service mysql restart
