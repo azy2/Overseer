@@ -14,6 +14,7 @@ def register_manager():
     """
     # TODO: turn CSRF on
     form = RegisterManagerForm(csrf_enabled=False)
+    # pylint: disable=duplicate-code
     if request.method == 'POST':
         if form.validate():
             new_user = UserService.create_user(
@@ -21,6 +22,7 @@ def register_manager():
                 form.first_name.data,
                 form.last_name.data,
                 form.role.data)
+            # pylint: enable=duplicate-code
             return new_user.json()
         else:
             return str(form.errors)

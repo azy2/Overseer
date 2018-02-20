@@ -45,6 +45,7 @@ def register_resident():
     """
     # TODO: turn CSRF on
     form = RegisterResidentForm(csrf_enabled=False)
+    # pylint: disable=duplicate-code
     if request.method == 'POST':
         if form.validate():
             new_user = UserService.create_user(
@@ -52,6 +53,7 @@ def register_resident():
                 form.first_name.data,
                 form.last_name.data,
                 "RESIDENT")
+            # pylint: enable=duplicate-code
             return new_user.json()
         else:
             return str(form.errors)

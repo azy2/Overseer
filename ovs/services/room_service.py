@@ -4,7 +4,7 @@ DB access and other services for Rooms
 from ovs import app
 from ovs.models.room_model import Room
 from ovs.models.resident_model import Resident
-from ovs.services import UserService
+from ovs.services.user_service import UserService
 db = app.database.instance()
 
 

@@ -62,18 +62,15 @@ class User(app.BaseModel):
         )
 
     def is_authenticated(self):
-        """ Checks if this user is logged in """
-        # TODO: Implement authentication
+        """ Checks if a user is authenticated """
         return True
 
     def is_active(self):
         """ Checks if this user account is active """
-        # TODO: Implement active
         return True
 
     def is_anonymous(self):
         """ Checks if this user is anonymous """
-        # TODO: Implement anonymous
         return False
 
     def get_id(self):
