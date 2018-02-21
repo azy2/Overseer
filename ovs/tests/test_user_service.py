@@ -19,6 +19,7 @@ class TestUserService(TestCase):
     def tearDown(self):
         """ Runs after every tests and clears the user table """
         self.db.query(User).delete()
+        self.db.commit()
 
     def test_create_user(self):
         """ Tests create_user """

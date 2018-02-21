@@ -3,18 +3,47 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Manage Residents</title>
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #000000;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
 </head>
 <body>
-	<a href="/">Add new resident</a>
+	<a href="/manager/register_resident">Add new resident</a> <br>
+    {% from "_formhelper.html" import render_field %}
+    <table>
+        <tr>
+            <th>Email</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>{{form.room_number.label}}</th>
+            <th></th>
+        </tr>
 	{% for (resident, user) in residents %}
-		<form method="post" id="edit-resident-submit">
-			User ID: <input type="text" name="user_id" value={{ resident.user_id }} readonly>
-			Email: <input type="text" name="email" value={{ user.email }} readonly>
-			First Name: <input type="text" name="first_name" value={{ user.first_name }} readonly>
-			Last Name: <input type="text" name="last_name" value={{ user.last_name }} readonly>
-            Room Number: <input type="text" name="number" value={{ resident.room_number }} required>
-            <input type="submit" value="Submit">
-        </form>
+        <tr>
+            <form method="post" id="edit-resident-submit" action="/manager/manage_residents">
+                {{form.user_id(value=user.id, type="hidden")|safe}}
+                <td>{{ user.email }}</td>
+                <td>{{ user.first_name }}</td>
+                <td>{{ user.last_name }}</td>
+                <td>{{form.room_number(value=resident.room_number)|safe}}</td>
+                <td><input type="submit" value="Submit"></td>
+            </form>
+        </tr>
 	{% endfor %}
+    </table>
 </body>
 </html>

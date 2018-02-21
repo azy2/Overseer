@@ -26,10 +26,10 @@ class UserService:
         if password is None:
             password = crypto.generate_password()
         new_user = User(email, first_name, last_name, password, role)
-        if role == 'RESIDENT':
-            ResidentService.create_resident(new_user.id)
         db.add(new_user)
         db.commit()
+        if role == 'RESIDENT':
+            ResidentService.create_resident(new_user.id)
 
         return new_user
 

@@ -22,9 +22,8 @@ class ManagerService:
 
     @staticmethod
     def update_resident_room_number(user_id, room_number):
-        resident = ManagerService.get_resident_by_id(user_id)
-        resident.room_number = room_number
+        db.query(Resident).filter(Resident.user_id == user_id).update({Resident.room_number: room_number})
         db.commit()
-        return resident
+        return ManagerService.get_resident_by_id(user_id)
 
     # TODO get a resident by email, etc...
