@@ -18,7 +18,7 @@ depends_on = None
 
 def upgrade():
     op.create_table(
-        'package',
+        'packages',
         sa.Column('id', sa.Integer, primary_key=True),
         sa.Column('user_id', sa.Integer, nullable=False),
         sa.Column('checked_by', sa.Integer, nullable=False),
@@ -30,4 +30,4 @@ def upgrade():
 
 
 def downgrade():
-    op.drop_table('package')
+    op.drop_table('packages')
