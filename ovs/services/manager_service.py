@@ -1,7 +1,7 @@
 
 from ovs import app
-from ovs.models.UserModel import User
-from ovs.models.ResidentModel import Resident
+from ovs.models.user_model import User
+from ovs.models.resident_model import Resident
 db = app.database.instance()
 
 

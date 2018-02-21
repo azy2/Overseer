@@ -1,6 +1,8 @@
 """ routes under /manager/ """
 from flask import Blueprint, render_template, request
-from ovs.services import RoomService, UserService, ManagerService
+from ovs.services.room_service import RoomService
+from ovs.services.user_service import UserService
+from ovs.services.manager_service import ManagerService
 from ovs.forms import RegisterRoomForm, RegisterResidentForm
 manager_bp = Blueprint('manager', __name__,)
 
