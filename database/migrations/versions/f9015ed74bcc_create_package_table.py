@@ -23,7 +23,7 @@ def upgrade():
         sa.Column('user_id', sa.Integer, nullable=False),
         sa.Column('checked_by', sa.Integer, nullable=False),
         sa.Column('checked_at', sa.DateTime, nullable=False),
-        sa.Column('is_signed', sa.Boolean, server_default=None),
+        sa.Column('is_signed', sa.Boolean, default=False),
         sa.Column('signed_at', sa.DateTime, server_default=None),
         sa.Column('description', sa.VARCHAR(2047), server_default="")
     )
