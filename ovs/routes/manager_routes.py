@@ -73,5 +73,7 @@ def manage_residents():
         if form.validate():
             return ManagerService.update_resident_room_number(
                 form.user_id.data, form.room_number.data).json()
+        else:
+            return str(form.errors)
     else:
         return render_template('manager/manage_residents.html', residents=ManagerService.get_all_residents(), form=form)
