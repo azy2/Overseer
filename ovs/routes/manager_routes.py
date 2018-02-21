@@ -1,7 +1,9 @@
+""" routes under /manager/ """
 from flask import Blueprint, render_template, request
-from ovs.services import RoomService
-from ovs.forms import RegisterRoomForm
+from ovs.services import RoomService, UserService
+from ovs.forms import RegisterRoomForm, RegisterResidentForm
 manager_bp = Blueprint('manager', __name__,)
+
 
 @manager_bp.route('/register_room', methods=['GET', 'POST'])
 def register_room():
@@ -33,6 +35,7 @@ def register_room():
     else:
         return render_template('manager/register_room.html', form=form)
 
+
 @manager_bp.route('/register_resident', methods=['GET', 'POST'])
 def register_resident():
     """
@@ -40,8 +43,8 @@ def register_resident():
     first name, and last name and accepts that form (POST) and adds a user
     to the user table with a default password.
     """
-    # TODO: turn CSRF on
     form = RegisterResidentForm(csrf_enabled=False)
+    # pylint: disable=duplicate-code
     if request.method == 'POST':
         if form.validate():
             new_user = UserService.create_user(
@@ -49,6 +52,7 @@ def register_resident():
                 form.first_name.data,
                 form.last_name.data,
                 "RESIDENT")
+            # pylint: enable=duplicate-code
             return new_user.json()
         else:
             return str(form.errors)

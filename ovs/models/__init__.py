@@ -1,3 +1,4 @@
-from .UserModel import User as UserModel
-from .RoomModel import Room as RoomModel
-from .ResidentModel import Resident as ResidentModel
+""" Database models """
+from .user_model import User as UserModel
+from .room_model import Room as RoomModel
+from .resident_model import Resident as ResidentModel

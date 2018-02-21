@@ -1,2 +1,3 @@
-from .UserService import UserService
-from .RoomService import RoomService
+""" DB Access services """
+from .user_service import UserService
+from .room_service import RoomService
