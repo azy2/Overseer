@@ -12,7 +12,6 @@ def register_manager():
     first name, last name, and role and accepts that form (POST) and adds a user
     to the user table with a default password.
     """
-    # TODO: turn CSRF on
     form = RegisterManagerForm(csrf_enabled=False)
     # pylint: disable=duplicate-code
     if request.method == 'POST':

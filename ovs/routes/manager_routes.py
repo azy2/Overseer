@@ -43,7 +43,6 @@ def register_resident():
     first name, and last name and accepts that form (POST) and adds a user
     to the user table with a default password.
     """
-    # TODO: turn CSRF on
     form = RegisterResidentForm(csrf_enabled=False)
     # pylint: disable=duplicate-code
     if request.method == 'POST':

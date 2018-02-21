@@ -10,7 +10,6 @@ class Database():
     with a target.
     """
     def __init__(self, app):
-        # TODO clean up, handle TEST mode
         database = app.config['DATABASE']
         url = 'mysql+pymysql://' +                    \
               database['primary']['user'] + ':' +     \

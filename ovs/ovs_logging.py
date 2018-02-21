@@ -9,7 +9,7 @@ from flask import request
 class Logger:
     """ Provides an interface for logging """
 
-    def __init__(self, app):
+    def __init__(self, app):  # pylint: disable=unused-argument
         self.console_logger = logging.Logger(__name__)
         self.console_logger.setLevel(logging.DEBUG)
 

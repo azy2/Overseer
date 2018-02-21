@@ -7,7 +7,6 @@ from ovs.utils import roles
 users_bp = Blueprint('user', __name__,)
 
 
-# TODO delete example route and replace it with real code
 @users_bp.route('/')
 def create_user():
     """ Example route that generates a random user """

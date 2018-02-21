@@ -38,5 +38,3 @@ class UserService:
         :return: The db entry of that user
         """
         return db.query(User).filter(User.email == email)
-
-    # TODO get a user by id, etc...

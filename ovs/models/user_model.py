@@ -61,15 +61,15 @@ class User(app.BaseModel):
             updated=self.updated
         )
 
-    def is_authenticated(self):
+    def is_authenticated(self):  # pylint: disable=no-self-use
         """ Checks if a user is authenticated """
         return True
 
-    def is_active(self):
+    def is_active(self):  # pylint: disable=no-self-use
         """ Checks if this user account is active """
         return True
 
-    def is_anonymous(self):
+    def is_anonymous(self):  # pylint: disable=no-self-use
         """ Checks if this user is anonymous """
         return False
 

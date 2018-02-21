@@ -12,7 +12,6 @@ LOGIN_MANAGER.init_app(app)
 LOGIN_MANAGER.login_view = 'auth.login'
 
 
-# TODO: Move this to user_service. There's no reason for it to be here
 @LOGIN_MANAGER.user_loader
 def load_user(user_id):
     """ Get a user by their id """

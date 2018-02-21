@@ -44,9 +44,6 @@ class RoomService:
         Associates a Resident to a room. This involves adding the room
         to the Residents table and adding the resident to the Rooms table.
         """
-        # TODO: change below code to pull from residents table once it is
-        # implemented to mirror the users table automatically
-
         user = UserService.get_user_by_email(email).first()
 
         new_resident = Resident(user_id=user.id, room_number=number)

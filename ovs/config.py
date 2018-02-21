@@ -6,7 +6,6 @@ details, etc...
 import os
 import sys
 
-# TODO force production to set env vals instead of using defaults
 class Config(object):
     """ The Config object stores all of the setup information """
     APP_ENV = os.getenv('APP_ENV', 'DEV')
@@ -15,7 +14,6 @@ class Config(object):
     TESTING = APP_ENV == 'TEST'
     PRODUCTION = APP_ENV == 'PROD'
     if not DEVELOPMENT and not TESTING and not PRODUCTION:
-        # TODO Add logging
         sys.exit('Please enter a valid environment')
 
     PORT = os.getenv('PORT', 8080)

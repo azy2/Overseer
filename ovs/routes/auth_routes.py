@@ -16,7 +16,6 @@ def login():
     form = LoginForm(csrf_enabled=False)
     if request.method == 'POST' and form.validate():
         email = form.email.data
-        # TODO: validate passwords once user is able to reset them.
         # password = form.password.data
         user = db.query(User).filter_by(email=email).first()
         if user is None:
