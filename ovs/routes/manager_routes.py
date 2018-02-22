@@ -1,7 +1,9 @@
 """ routes under /manager/ """
 from flask import Blueprint, render_template, request
-from ovs.services import RoomService, UserService
-from ovs.forms import RegisterRoomForm, RegisterResidentForm
+from ovs.services.room_service import RoomService
+from ovs.services.user_service import UserService
+from ovs.services.manager_service import ManagerService
+from ovs.forms import RegisterRoomForm, RegisterResidentForm, ManageResidentsForm
 manager_bp = Blueprint('manager', __name__,)
 
 
@@ -58,3 +60,20 @@ def register_resident():
             return str(form.errors)
     else:
         return render_template('manager/register_resident.html', form=form)
+
+
+@manager_bp.route('/manage_residents', methods=['GET', 'POST'])
+def manage_residents():
+    """
+    /manager/manage_residents severs a HTML with list of residents with their info.
+    It will also be a link there to add/edit/delete residents with form inputs.
+    """
+    form = ManageResidentsForm(csrf_enabled=False)
+    if request.method == 'POST':
+        if form.validate():
+            return ManagerService.update_resident_room_number(
+                form.user_id.data, form.room_number.data).json()
+        else:
+            return str(form.errors)
+    else:
+        return render_template('manager/manage_residents.html', residents=ManagerService.get_all_residents(), form=form)

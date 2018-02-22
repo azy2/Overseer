@@ -3,6 +3,7 @@ DB and utility functions for Users
 """
 from ovs import app
 from ovs.models.user_model import User
+from ovs.services.resident_service import ResidentService
 from ovs.utils import crypto
 db = app.database.instance()
 
@@ -27,6 +28,8 @@ class UserService:
         new_user = User(email, first_name, last_name, password, role)
         db.add(new_user)
         db.commit()
+        if role == 'RESIDENT':
+            ResidentService.create_resident(new_user.id)
 
         return new_user
 

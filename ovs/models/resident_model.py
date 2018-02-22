@@ -17,6 +17,9 @@ class Resident(app.BaseModel):
     created = sa.Column(sa.DateTime, server_default=sa.text('CURRENT_TIMESTAMP'))
     updated = sa.Column(sa.DateTime, server_default=sa.text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))
 
+    def __init__(self, user_id, room_number):
+        super(Resident, self).__init__(user_id=user_id, room_number=room_number)
+
     def __repr__(self):
         return "Resident([user_id='%s', room_number='%s', created='%s', updated='%s'])" \
                % (self.user_id, self.room_number, self.created, self.updated)
