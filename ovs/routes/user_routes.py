@@ -10,9 +10,13 @@ users_bp = Blueprint('user', __name__,)
 @users_bp.route('/')
 def create_user():
     """ Example route that generates a random user """
+    random_email = ''.join(random.choice(string.ascii_lowercase)
+                           for x in range(5)) + '@gmail.com'
+    random_first_name = random.choice(
+        string.ascii_uppercase) + ''.join(random.choice(string.ascii_lowercase) for x in range(6))
+    random_last_name = random.choice(
+        string.ascii_uppercase) + ''.join(random.choice(string.ascii_lowercase) for x in range(6))
+
     new_user = UserService.create_user(
-        ''.join(random.choice(string.ascii_lowercase) for x in range(5)) + '@gmail.com',
-        random.choice(string.ascii_uppercase) + ''.join(random.choice(string.ascii_lowercase) for x in range(6)),
-        random.choice(string.ascii_uppercase) + ''.join(random.choice(string.ascii_lowercase) for x in range(6)),
-        roles.RESIDENT)
+        random_email, random_first_name, random_last_name, roles.RESIDENT)
     return new_user.json()

@@ -5,6 +5,7 @@ from ovs import app
 from ovs.models.user_model import User
 from ovs.services.resident_service import ResidentService
 from ovs.utils import crypto
+from ovs.mail.send_mail import send_account_creation_email
 db = app.database.instance()
 
 
@@ -31,6 +32,7 @@ class UserService:
         if role == 'RESIDENT':
             ResidentService.create_resident(new_user.id)
 
+        send_account_creation_email(email, first_name, last_name, role)
         return new_user
 
     @staticmethod
