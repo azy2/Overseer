@@ -70,3 +70,13 @@ class TestUserService(TestCase):
         RoomService.add_resident_to_room(test_user_info[0], test_room_info[0])
         resident = ResidentService.get_resident_by_id(test_user.id).first()
         self.assertEqual(resident.room_number, test_room_info[0])
+
+    def test_add_resident_to_room_fail(self):
+        """ Tests add_resident_to_room """
+        test_user_info = ('test@gmail.com', 'Bob', 'Ross', 'ADMIN')
+        test_user = UserService.create_user(*test_user_info)
+        test_room_info = ('5', 'Good', 'Single')
+        RoomService.create_room(*test_room_info)
+        RoomService.add_resident_to_room(test_user_info[0], test_room_info[0])
+        resident = ResidentService.get_resident_by_id(test_user.id).first()
+        self.assertIsNone(resident)
