@@ -27,6 +27,17 @@ class TestUserService(TestCase):
         self.db.query(Room).delete()
         self.db.commit()
 
+    def test_get_all_residents(self):
+        """ Tests get_all_residents """
+        test_user_info = ('test@gmail.com', 'Bob', 'Ross', 'RESIDENT')
+        test_user = UserService.create_user(*test_user_info)
+        test_user_info = ('test2@gmail.com', 'Joe', 'Smith', 'RESIDENT')
+        test_user = UserService.create_user(*test_user_info)
+        test_user_info = ('test3@gmail.com', 'Jim', 'White', 'ADMIN')
+        test_user = UserService.create_user(*test_user_info)
+        residents = ManagerService.get_all_residents()
+        self.assertEqual(len(residents), 2)
+
     def test_update_resident_room_number(self):
         """ Tests update_resident_room_number """
         test_user_info = ('test@gmail.com', 'Bob', 'Ross', 'RESIDENT')
