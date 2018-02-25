@@ -27,19 +27,6 @@ class TestUserService(TestCase):
         self.db.query(Room).delete()
         self.db.commit()
 
-    def test_get_resident_by_id(self):
-        """ Tests get_resident_by_id """
-        test_user_info = ('test@gmail.com', 'Bob', 'Ross', 'RESIDENT')
-        test_user = UserService.create_user(*test_user_info)
-        resident = ManagerService.get_resident_by_id(test_user.id)
-        self.assertIsNotNone(resident)
-
-    def test_get_resident_by_id_null(self):
-        """ Tests get_resident_by_id """
-        resident = ManagerService.get_resident_by_id(4)
-        self.assertisNone(resident)
-
-
     def test_update_resident_room_number(self):
         """ Tests update_resident_room_number """
         test_user_info = ('test@gmail.com', 'Bob', 'Ross', 'RESIDENT')
