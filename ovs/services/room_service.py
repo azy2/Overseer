@@ -45,7 +45,6 @@ class RoomService:
         to the Residents table and adding the resident to the Rooms table.
         """
         user = UserService.get_user_by_email(email).first()
-        resident = ResidentService.get_resident_by_id(user.user_id).first()
+        resident = ResidentService.get_resident_by_id(user.id).first()
         resident.room_number = room_number
-        db.update(resident)
         db.commit()
