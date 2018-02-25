@@ -37,7 +37,7 @@ class TestUserService(TestCase):
     def test_get_resident_by_id_null(self):
         """ Tests get_resident_by_id """
         resident = ManagerService.get_resident_by_id(4)
-        self.assertEqual(resident, None)
+        self.assertisNone(resident)
 
 
     def test_update_resident_room_number(self):
