@@ -1,5 +1,5 @@
 """
-Tests for manager services
+Tests for room services
 """
 from unittest import TestCase
 from ovs import app
@@ -11,17 +11,17 @@ from ovs.models.resident_model import Resident
 from ovs.models.room_model import Room
 
 
-class TestUserService(TestCase):
+class TestRoomService(TestCase):
     """
-    Tests for manager services
+    Tests for room services
     """
     def setUp(self):
-        """ Runs before every test and clears the user table """
+        """ Runs before every test and clears relevant tables """
         self.db = app.database.instance()
         self.tearDown()
 
     def tearDown(self):
-        """ Runs after every tests and clears the user table """
+        """ Runs after every tests and clears relevant tables """
         self.db.query(User).delete()
         self.db.query(Resident).delete()
         self.db.query(Room).delete()
@@ -33,7 +33,7 @@ class TestUserService(TestCase):
         orig_room = RoomService.create_room(*test_room_info)
         room = self.db.query(Room).filter(Room.id == orig_room.id).first()
         self.assertEqual((room.number, room.status,
-                        room.type), test_room_info)
+                          room.type), test_room_info)
 
     def test_get_room_by_id(self):
         """ Tests get_room_by_id """
@@ -41,7 +41,7 @@ class TestUserService(TestCase):
         orig_room = RoomService.create_room(*test_room_info)
         room = RoomService.get_room_by_id(orig_room.id).first()
         self.assertEqual((room.number, room.status,
-                         room.type), test_room_info)
+                          room.type), test_room_info)
 
     def test_get_room_by_id_null(self):
         """ Tests get_room_by_id """
@@ -54,7 +54,7 @@ class TestUserService(TestCase):
         RoomService.create_room(*test_room_info)
         room = RoomService.get_room_by_number(test_room_info[0]).first()
         self.assertEqual((room.number, room.status,
-                        room.type), test_room_info)
+                          room.type), test_room_info)
 
     def test_get_room_by_number_null(self):
         """ Tests get_room_by_number """

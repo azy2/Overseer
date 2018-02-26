@@ -1,5 +1,5 @@
 """
-Tests for manager services
+Tests for resident services
 """
 from unittest import TestCase
 from ovs import app
@@ -10,17 +10,17 @@ from ovs.models.resident_model import Resident
 from ovs.models.room_model import Room
 
 
-class TestUserService(TestCase):
+class TestResidentService(TestCase):
     """
-    Tests for manager services
+    Tests for resident services
     """
     def setUp(self):
-        """ Runs before every test and clears the user table """
+        """ Runs before every test and clears relevant tables """
         self.db = app.database.instance()
         self.tearDown()
 
     def tearDown(self):
-        """ Runs after every tests and clears the user table """
+        """ Runs after every tests and clears relevant tables """
         self.db.query(User).delete()
         self.db.query(Resident).delete()
         self.db.query(Room).delete()

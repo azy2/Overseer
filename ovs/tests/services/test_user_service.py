@@ -12,12 +12,12 @@ class TestUserService(TestCase):
     Tests for user services
     """
     def setUp(self):
-        """ Runs before every test and clears the user table """
+        """ Runs before every test and clears relevant tables """
         self.db = app.database.instance()
         self.tearDown()
 
     def tearDown(self):
-        """ Runs after every tests and clears the user table """
+        """ Runs after every tests and clears relevant tables """
         self.db.query(User).delete()
         self.db.commit()
 
