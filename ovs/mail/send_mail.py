@@ -11,6 +11,8 @@ mail = SendGrid(app)
 
 def send_email(to_email, subject, text):
     """Send an email to the recipient."""
+    if app.config['TESTING']:
+        return
     from_email = 'no-reply@ovs.com'
     mail.send_email(
         from_email=from_email,
