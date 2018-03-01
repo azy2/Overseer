@@ -1,4 +1,3 @@
-
 from flask import jsonify
 import sqlalchemy as sa
 from ovs import app

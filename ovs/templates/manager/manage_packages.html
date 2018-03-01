@@ -1,0 +1,29 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>Manage Packages</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+        {% from "_formhelper.html" import render_field %}
+        <form action="manage_packages" method="post" name="Add Form">
+            <dl>
+                {{ render_field(form1.email) }}
+                {{ render_field(form1.description) }}
+            </dl>
+            <input type="submit" value="Add" name="add_btn">
+        </form>
+        <br>
+        {% from "_formhelper.html" import render_field %}
+        <form action="manage_packages" method="post" name="Edit Form">
+            <dl>
+                {{ render_field(form2.email) }}
+                {{ render_field(form2.description) }}
+            </dl>
+            <input type="submit" value="Edit" name="edit_btn">
+        </form>
+    </body>
+</html>

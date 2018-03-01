@@ -1,6 +1,7 @@
-from flask import Blueprint, render_template, request
-from ovs.services import RoomService
-from ovs.forms import RegisterRoomForm
+from flask import Blueprint, render_template, request, jsonify
+from ovs.services import RoomService, UserService, PackageService
+from ovs.forms import RegisterRoomForm, RegisterResidentForm, AddPackageForm, EditPackageForm
+import datetime
 manager_bp = Blueprint('manager', __name__,)
 
 @manager_bp.route('/register_room', methods=['GET', 'POST'])
@@ -43,6 +44,7 @@ def register_resident():
     # TODO: turn CSRF on
     form = RegisterResidentForm(csrf_enabled=False)
     if request.method == 'POST':
+        print(form) # <-- added !!!
         if form.validate():
             new_user = UserService.create_user(
                 form.email.data,
@@ -54,3 +56,19 @@ def register_resident():
             return str(form.errors)
     else:
         return render_template('manager/register_resident.html', form=form)
+
+@manager_bp.route('/manage_packages', methods=['GET', 'POST'])
+def manage_packages():
+    """
+    /manager/register_resident serves an html form with input fields for email,
+    first name, and last name and accepts that form (POST) and adds a user
+    to the user table with a default password.
+    """
+    form = ManagePackagesForm(csrf_enabled=False)
+    if request.method == 'POST':
+        if form.validate():
+            return ManagerService.update_resident_room_number(form.user_id.data, form.room_number.data).json()
+        else:
+            return str(form.errors)
+    else:
+        return render_template('manager/manage_packages.html', residents=ManagerService.get_all_packages(), form=form)
