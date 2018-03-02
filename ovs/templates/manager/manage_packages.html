@@ -1,29 +1,63 @@
-<!doctype html>
-<html class="no-js" lang="">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>Manage Packages</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-    </head>
-    <body>
-        {% from "_formhelper.html" import render_field %}
-        <form action="manage_packages" method="post" name="Add Form">
-            <dl>
-                {{ render_field(form1.email) }}
-                {{ render_field(form1.description) }}
-            </dl>
-            <input type="submit" value="Add" name="add_btn">
-        </form>
-        <br>
-        {% from "_formhelper.html" import render_field %}
-        <form action="manage_packages" method="post" name="Edit Form">
-            <dl>
-                {{ render_field(form2.email) }}
-                {{ render_field(form2.description) }}
-            </dl>
-            <input type="submit" value="Edit" name="edit_btn">
-        </form>
-    </body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Packages</title>
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #000000;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
+</head>
+<body>
+    {% from "_formhelper.html" import render_field %}
+    <form action="manage_packages" method="post" name="Add Form">
+        <dl>
+            {{ render_field(add_form.email) }}
+            {{ render_field(add_form.description) }}
+        </dl>
+        <input type="submit" value="Add" name="add_btn">
+    </form>
+    <br>
+
+    {% from "_formhelper.html" import render_field %}
+    <table>
+        <tr>
+            <th>{{ edit_form.email.label }}</th>
+            <th>{{ edit_form.checked_by.label }}</th>
+            <th>{{ edit_form.checked_at.label }}</th>
+            <th>{{ edit_form.is_signed.label }}</th>
+            <th>{{ edit_form.signed_at.label }}</th>
+            <th>{{ edit_form.description.label }}</th>
+            <th></th>
+        </tr>
+    {% for (package, receiver) in package_receivers %}
+        <tr>
+            <form action="/manager/manage_packages" method="post" name="Edit Form" id="edit-package-submit">
+                {{edit_form.package_id(value=package.id, type="hidden")|safe}}
+                {{edit_form.user_id(value=package.user_id, type="hidden")|safe}}
+                <td>{{ edit_form.email(value=receiver.email)|safe }}</td>
+                <td>{{ package.checked_by }}</td>
+                <td>{{ package.checked_at }}</td>
+                <td>{{ package.is_signed }}</td>
+                <td>{{ package.signed_at }}</td>
+                <td>{{ edit_form.description(value=package.description)|safe }}</td>
+                <td><input type="submit" value="Edit" name="edit_btn">
+            </form>
+        </tr>
+    {% endfor %}
+    </table>
+</body>
 </html>

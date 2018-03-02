@@ -1,4 +1,4 @@
-from .UserModel import User as UserModel
-from .RoomModel import Room as RoomModel
-from .ResidentModel import Resident as ResidentModel
-from .PackageModel import Package as PackageModel
+from .user_model import User as UserModel
+from .room_model import Room as RoomModel
+from .resident_model import Resident as ResidentModel
+from .package_model import Package as PackageModel

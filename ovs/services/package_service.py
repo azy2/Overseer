@@ -1,8 +1,8 @@
-
 from ovs import app
-from ovs.models.UserModel import User
-from ovs.models.PackageModel import Package
-from ovs.services import UserService
+from ovs.models.user_model import User
+from ovs.models.package_model import Package
+from ovs.services.user_service import UserService
+
 db = app.database.instance()
 
 
