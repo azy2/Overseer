@@ -1,5 +1,5 @@
 """
-Tests for user services
+Tests for meal plan services
 """
 from unittest import TestCase
 from datetime import datetime
@@ -8,10 +8,9 @@ from ovs.services.meal_service import MealService
 from ovs.models.meal_plan_model import MealPlan
 
 
-
-class TestUserService(TestCase):
+class TestMealPlanService(TestCase):
     """
-    Tests for user services
+    Tests for meal plan services
     """
     def setUp(self):
         """ Runs before every test and clears relevant tables """
