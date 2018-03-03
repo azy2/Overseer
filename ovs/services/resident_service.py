@@ -15,7 +15,9 @@ class ResidentService:
         Adds a User to the Resident table
         """
         new_resident = Resident(user_id, room_number)
+        new_resident_profile = Profile(user_id)
         db.add(new_resident)
+        db.add(new_resident_profile)
         db.commit()
 
         return new_resident
@@ -26,10 +28,3 @@ class ResidentService:
         Returns the resident given by user_id
         """
         return db.query(Resident).filter(Resident.user_id == user_id)
-
-    @staticmethod
-    def get_resident_profile_by_id(user_id):
-        """
-        Returns the profile for the resident with the given user_id
-        """
-        return db.query(Profile).filter(Profile.user_id == user_id).first()

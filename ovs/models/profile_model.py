@@ -5,7 +5,7 @@ from flask import jsonify
 import sqlalchemy as sa
 from sqlalchemy.orm import relationship
 from ovs import app
-
+from ovs.utils import genders
 
 class Profile(app.BaseModel):
     """
@@ -18,7 +18,7 @@ class Profile(app.BaseModel):
     phone_number = sa.Column(sa.CHAR(255))
     preferred_email = sa.Column(sa.CHAR(255))
     race = sa.Column(sa.CHAR(31))
-    gender = sa.Column(sa.Enum('Male', 'Female'))
+    gender = sa.Column(sa.Enum(genders.MALE, genders.FEMALE))
     picture_path = sa.Column(sa.CHAR(255))
     created = sa.Column(sa.DateTime, server_default=sa.text('CURRENT_TIMESTAMP'))
     updated = sa.Column(sa.DateTime, server_default=sa.text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))
@@ -42,6 +42,7 @@ class Profile(app.BaseModel):
             phone_number=self.phone_number,
             preferred_email=self.preferred_email,
             race=self.race,
+            gender=self.gender,
             picture_path=self.picture_path,
             created=self.created,
             updated=self.updated
