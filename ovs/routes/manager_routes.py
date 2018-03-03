@@ -5,8 +5,8 @@ from ovs.services.user_service import UserService
 from ovs.services.manager_service import ManagerService
 from ovs.services.meal_service import MealService
 from ovs.forms import RegisterRoomForm, RegisterResidentForm, ManageResidentsForm, MealLoginForm, CreateMealPlanForm
-manager_bp = Blueprint('manager', __name__,)
 
+manager_bp = Blueprint('manager', __name__,)
 
 @manager_bp.route('/register_room', methods=['GET', 'POST'])
 def register_room():
@@ -39,10 +39,10 @@ def register_room():
         return render_template('manager/register_room.html', form=form)
 
 
-@manager_bp.route('/register_resident', methods=['GET', 'POummy values for testingST'])
+@manager_bp.route('/register_resident', methods=['GET', 'POST'])
 def register_resident():
     """
-    /manager/register_resident serves an html formget_meal_plan_by_pin(pin) with input fields for email,
+    /manager/register_resident serves an html form with input fields for email,
     first name, and last name and accepts that form (POST) and adds a user
     to the user table with a default password.
     """
