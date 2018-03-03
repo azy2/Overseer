@@ -138,5 +138,5 @@ def manage_packages():
     else:
         packages_recipients_checkers = ManagerService.get_all_packages_recipients_checkers()
         return render_template('manager/manage_packages.html',
-                                packages_recipients_checkers=packages_recipients_checkers,
-                                add_form=add_form, edit_form=edit_form)
+                               packages_recipients_checkers=packages_recipients_checkers,
+                               add_form=add_form, edit_form=edit_form)
