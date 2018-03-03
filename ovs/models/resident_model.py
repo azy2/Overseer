@@ -3,6 +3,7 @@ Defines a Resident as represented in the database
 """
 from flask import jsonify
 import sqlalchemy as sa
+from sqlalchemy.orm import relationship
 from ovs import app
 
 
@@ -16,6 +17,7 @@ class Resident(app.BaseModel):
     room_number = sa.Column(sa.CHAR(255))
     created = sa.Column(sa.DateTime, server_default=sa.text('CURRENT_TIMESTAMP'))
     updated = sa.Column(sa.DateTime, server_default=sa.text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))
+    profile = relationship('Profile', uselist=False, back_populates='resident', cascade='all, delete, delete-orphan')
 
     def __init__(self, user_id, room_number):
         super(Resident, self).__init__(user_id=user_id, room_number=room_number)
