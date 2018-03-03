@@ -1,4 +1,4 @@
-""" Form with data required to edit a resident """
+""" Form with data required to edit a package """
 from flask_wtf import FlaskForm
 from wtforms import StringField, ValidationError
 from wtforms.validators import DataRequired, Length
@@ -33,12 +33,15 @@ def validate_resident_email(form, field):  # pylint: disable=unused-argument
     if db.query(Resident, User).join(User, Resident.user_id == User.id).filter(User.email == field.data).count() == 0:
         raise ValidationError('Resident does not exist. Please verify resident email.')
 
-class EditPackageForm(FlaskForm): # NEED MORE VALIDATORS? !!!
+class EditPackageForm(FlaskForm):
+    """ Form with data required to edit a package """
     package_id = StringField('Package ID', validators=[DataRequired(), validate_package_id]) # (hidden)
     recipient_id = StringField('Recipient ID', validators=[DataRequired(), validate_user_id]) # (hidden)
-    recipient_email = StringField('Package Recipient', validators=[Length(min=6, max=35), DataRequired(), validate_resident_email]) # (editable)
-    checked_by = StringField('Checked By', validators=[])
-    checked_at = StringField('Checked At', validators=[])
-    is_signed = StringField('Is Signed', validators=[])
-    signed_at = StringField('Signed At', validators=[])
+    recipient_email = StringField('Package Recipient', validators=[Length(min=6, max=35),
+                                                                   DataRequired(),
+                                                                   validate_resident_email]) # (editable)
+    checked_by = StringField('Checked By')
+    checked_at = StringField('Checked At')
+    is_signed = StringField('Is Signed')
+    signed_at = StringField('Signed At')
     description = StringField('Package Description', validators=[Length(min=0, max=2047), DataRequired()]) # (editable)

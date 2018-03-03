@@ -1,12 +1,11 @@
+""" DB and utility functions for Packages """
 from ovs import app
-from ovs.models.user_model import User
 from ovs.models.package_model import Package
-from ovs.services.user_service import UserService
-
 db = app.database.instance()
 
 
 class PackageService:
+    """ DB and utility functions for Packages """
     @staticmethod
     def create_package(recipient_id, checked_by_id, checked_at, description):
         """
@@ -17,7 +16,8 @@ class PackageService:
         :param description: A description of the package
         :return: The db entry of the newly created package
         """
-        new_package = Package(recipient_id=recipient_id, checked_by_id=checked_by_id, checked_at=checked_at, description=description)
+        new_package = Package(recipient_id=recipient_id, checked_by_id=checked_by_id,
+                              checked_at=checked_at, description=description)
         db.add(new_package)
         db.commit()
         return new_package

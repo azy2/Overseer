@@ -1,7 +1,6 @@
-"""
-Tests for manager services
-"""
+""" Tests for manager services """
 from unittest import TestCase
+import datetime
 from ovs import app
 from ovs.services.user_service import UserService
 from ovs.services.manager_service import ManagerService
@@ -11,13 +10,11 @@ from ovs.models.user_model import User
 from ovs.models.resident_model import Resident
 from ovs.models.room_model import Room
 from ovs.models.package_model import Package
-import datetime
 
 
 class TestManagerService(TestCase):
-    """
-    Tests for manager services
-    """
+    """ Tests for manager services """
+
     def setUp(self):
         """ Runs before every test and clears relevant tables """
         self.db = app.database.instance()
@@ -53,11 +50,10 @@ class TestManagerService(TestCase):
     def test_get_all_packages_recipients_checkers(self):
         """ Tests get_all_packages_recipients_checkers """
         user_1 = UserService.create_user('test@gmail.com', 'Bob', 'Ross', 'RESIDENT')
-        user_2 = UserService.create_user('test2@gmail.com', 'Joe', 'Smith', 'RESIDENT')
-        user_3 = UserService.create_user('test3@gmail.com', 'Jim', 'White', 'ADMIN')
+        user_2 = UserService.create_user('test2@gmail.com', 'Jim', 'White', 'ADMIN')
         checked_at = datetime.datetime.now()
         package_description = "Fragile"
-        package_1 = PackageService.create_package(user_1.id, user_3.id, checked_at, package_description)
+        PackageService.create_package(user_1.id, user_2.id, checked_at, package_description)
         packages_recipients_checkers = ManagerService.get_all_packages_recipients_checkers()
 
         self.assertEqual(len(packages_recipients_checkers), 1)
@@ -65,8 +61,8 @@ class TestManagerService(TestCase):
         self.assertEqual(packages_recipients_checkers[0][0].checked_at, checked_at)
         self.assertEqual(packages_recipients_checkers[0][1].email, user_1.email)
         self.assertEqual(packages_recipients_checkers[0][1].role, user_1.role)
-        self.assertEqual(packages_recipients_checkers[0][2].email, user_3.email)
-        self.assertEqual(packages_recipients_checkers[0][2].role, user_3.role)
+        self.assertEqual(packages_recipients_checkers[0][2].email, user_2.email)
+        self.assertEqual(packages_recipients_checkers[0][2].role, user_2.role)
 
     def test_update_package(self):
         """ Tests update_package """

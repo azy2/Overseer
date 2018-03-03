@@ -1,6 +1,4 @@
-"""
-DB and utility functions for Users
-"""
+""" DB and utility functions for Users """
 from ovs import app
 from ovs.models.user_model import User
 from ovs.services.resident_service import ResidentService
