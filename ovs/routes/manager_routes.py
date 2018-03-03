@@ -95,7 +95,7 @@ def manage_packages():
             recipient_email = add_form.recipient_email.data
             recipient_id = UserService.get_user_by_email(recipient_email).first().id
             checked_by_id = 1 # Current user's user id !!!
-            checked_at = datetime.datetime.now() # Current date/time
+            checked_at = datetime.datetime.now().replace(second=0, microsecond=0) # Current date/time
             description = add_form.description.data
 
             print("ADD FORM")
@@ -140,3 +140,4 @@ def manage_packages():
         return render_template('manager/manage_packages.html',
                                 packages_recipients_checkers=packages_recipients_checkers,
                                 add_form=add_form, edit_form=edit_form)
+        

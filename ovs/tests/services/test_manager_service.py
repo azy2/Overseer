@@ -51,7 +51,7 @@ class TestManagerService(TestCase):
         """ Tests get_all_packages_recipients_checkers """
         user_1 = UserService.create_user('test@gmail.com', 'Bob', 'Ross', 'RESIDENT')
         user_2 = UserService.create_user('test2@gmail.com', 'Jim', 'White', 'ADMIN')
-        checked_at = datetime.datetime.now()
+        checked_at = datetime.datetime.now().replace(second=0, microsecond=0)
         package_description = "Fragile"
         PackageService.create_package(user_1.id, user_2.id, checked_at, package_description)
         packages_recipients_checkers = ManagerService.get_all_packages_recipients_checkers()
