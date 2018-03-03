@@ -3,6 +3,7 @@ Defines a Profile as represented in the database
 """
 from flask import jsonify
 import sqlalchemy as sa
+from sqlalchemy.orm import relationship
 from ovs import app
 
 
@@ -22,7 +23,9 @@ class Profile(app.BaseModel):
     created = sa.Column(sa.DateTime, server_default=sa.text('CURRENT_TIMESTAMP'))
     updated = sa.Column(sa.DateTime, server_default=sa.text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))
 
-    def __init__(self, user_id, room_number):
+    resident = relationship('Resident', uselist=False, back_populates='profile')
+
+    def __init__(self, user_id):
         super(Profile, self).__init__(user_id=user_id)
 
     def __repr__(self):
