@@ -3,7 +3,10 @@ from ovs import app
 from ovs.models.user_model import User
 from ovs.models.resident_model import Resident
 from ovs.models.package_model import Package
+from ovs.services.user_service import UserService
 from ovs.services.resident_service import ResidentService
+from ovs.services.package_service import PackageService
+from sqlalchemy.orm import aliased
 db = app.database.instance()
 
 
@@ -27,20 +30,20 @@ class ManagerService:
         return ResidentService.get_resident_by_id(user_id).first()
 
     @staticmethod
-    def get_all_packages_and_receivers():
+    def get_all_packages_recipients_checkers():
         """
         Join based on user_id
         :return: Lists of residents, users tuples
         :rtype: [(Resident(...), User(...)), ...]
         """
-        # return db.query(Package).all()
-        # return db.select(Package).all()
-        # return db.select([Package]).all()
-        return db.query(Package, User).join(User, Package.user_id == User.id).all()
+        u1 = aliased(User)
+        u2 = aliased(User)
+        return db.query(Package, u1, u2).join(u1, Package.recipient_id == u1.id).join(u2, Package.checked_by_id == u2.id).all()
 
     @staticmethod
-    def update_package(user_id, room_number): # NEED TO IMPLEMENT !!!
-        """ Changes the room_number of Resident identified by user_id """
-        db.query(Resident).filter(Resident.user_id == user_id).update({Resident.room_number: room_number})
+    def update_package(package_id, recipient_email, description):
+        """ Changes the receiver and description of Package identified by package_id """
+        recipient_id = UserService.get_user_by_email(recipient_email).first().id
+        db.query(Package).filter(Package.id == package_id).update({Package.recipient_id: recipient_id, Package.description: description})
         db.commit()
-        return ResidentService.get_resident_by_id(user_id).first()
+        return PackageService.get_package_by_id(package_id).first()

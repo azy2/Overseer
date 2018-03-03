@@ -20,8 +20,8 @@ def upgrade():
     op.create_table(
         'packages',
         sa.Column('id', sa.Integer, primary_key=True),
-        sa.Column('user_id', sa.Integer, nullable=False),
-        sa.Column('checked_by', sa.Integer, nullable=False),
+        sa.Column('recipient_id', sa.Integer, nullable=False),
+        sa.Column('checked_by_id', sa.Integer, nullable=False),
         sa.Column('checked_at', sa.DateTime, nullable=False),
         sa.Column('is_signed', sa.Boolean, default=False),
         sa.Column('signed_at', sa.DateTime, server_default=None),

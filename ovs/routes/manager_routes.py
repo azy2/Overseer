@@ -90,46 +90,62 @@ def manage_packages():
     edit_form = EditPackageForm(prefix='edit_form', csrf_enabled=False)
     if request.method == 'POST':
         # Add package
-        if add_form.validate_on_submit() and request.form['add_btn'] == 'Add':
-            receiver_email = add_form.email.data
-            user_id = UserService.get_user_by_email(receiver_email).first().id # Find user id by email
-            checked_by = 1 # Current user's user id !!!
+        if add_form.validate_on_submit():
+            recipient_email = add_form.recipient_email.data
+            recipient_id = UserService.get_user_by_email(recipient_email).first().id
+            checked_by_id = 1 # Current user's user id !!!
             checked_at = datetime.datetime.now() # Current date/time
             description = add_form.description.data
 
             print("ADD FORM")
-            print(receiver_email)
-            print(user_id)
-            print(checked_by)
+            print(recipient_email)
+            print(recipient_id)
+            print(checked_by_id)
             print(checked_at)
             print(description)
 
-            new_package = PackageService.create_package(user_id, checked_by, checked_at, description)
+            new_package = PackageService.create_package(recipient_id, checked_by_id, checked_at, description)
             return new_package.json()
         
         # Edit package
-        elif edit_form.validate_on_submit and request.form['edit_btn'] == 'Edit':
-            # new_package = UserService.create_user( # <-- 'Edit package' code goes here !!!
-            #     form.email.data,
-            #     form.first_name.data,
-            #     form.last_name.data,
-            #     "RESIDENT")
-            # return new_package.json()
+        elif edit_form.validate_on_submit():
+            package_id = edit_form.package_id.data
+            recipient_email = edit_form.recipient_email.data
+            old_recipient_id = edit_form.recipient_id.data
+            description = edit_form.description.data
             
             print("EDIT FORM")
             print(request.form)
-            # print(edit_form.email.data)
-            # print(edit_form.description.data)
+            print(package_id)
+            print(recipient_email)
+            print(old_recipient_id)
+            print(description)
 
-            return jsonify(response="Edit successful")
-            # return ManagerService.update_resident_room_number(form.user_id.data, form.room_number.data).json()
+            updated_package = ManagerService.update_package(package_id, recipient_email, description)
+            return updated_package.json()
 
         else:
-            return str(add_form.errors) + "\n-----\n" + str(edit_form.errors)
+            if 'add_btn' in request.form:
+                return str(add_form.errors)
+            elif 'edit_btn' in request.form:
+                return str(edit_form.errors)
+            
+            # Should not reach here
+            else:
+                return str(add_form.errors) + "\n-----\n" + str(edit_form.errors)
 
     else:
-        package_receivers = ManagerService.get_all_packages_and_receivers()
-        return render_template('manager/manage_packages.html', package_receivers=package_receivers, add_form=add_form, edit_form=edit_form)
+        packages_recipients_checkers = ManagerService.get_all_packages_recipients_checkers()
+        print(len(packages_recipients_checkers))
+        print(len(packages_recipients_checkers[0]))
+        print(packages_recipients_checkers[0][0])
+        print(packages_recipients_checkers[0][1].email)
+        # print(packages_recipients_checkers[0][2])
+        print(len(packages_recipients_checkers[1]))
+        print(packages_recipients_checkers[1][0])
+        # print(packages_recipients_checkers[1][1])
+        # print(packages_recipients_checkers[1][2])
+        return render_template('manager/manage_packages.html', packages_recipients_checkers=packages_recipients_checkers, add_form=add_form, edit_form=edit_form)
 
 # @manager_bp.route('/manage_packages', methods=['GET', 'POST'])
 # def manage_packages():
@@ -144,14 +160,14 @@ def manage_packages():
 #     if request.method == 'POST':
 #         # Add package
 #         if add_form.validate_on_submit() and request.form['add_btn'] == 'Add':
-#             receiver_email = add_form.email.data
-#             user_id = UserService.get_user_by_email(receiver_email).first().id # Find user id by email
+#             recipient_email = add_form.email.data
+#             user_id = UserService.get_user_by_email(recipient_email).first().id # Find user id by email
 #             checked_by = 1 # Current user's user id !!!
 #             checked_at = datetime.datetime.now() # Current date/time
 #             description = add_form.description.data
 
 #             print("ADD FORM")
-#             print(receiver_email)
+#             print(recipient_email)
 #             print(user_id)
 #             print(checked_by)
 #             print(checked_at)
