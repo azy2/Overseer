@@ -11,6 +11,3 @@ class EditResidentProfileForm(FlaskForm):
     preferred_email = StringField('Preferred Contact Email', validators=[Email(), Length(max=255)])
     race = StringField('Race/Ethnicity', validators=[Length(max=31)])
     gender = RadioField('Gender', choices=[(genders.MALE, 'Male'), (genders.FEMALE, 'Female'), (None, 'Unspecified')])
-
-#    def __init__(self, profile_to_edit, **kwargs):
-#        super(EditResidentProfileForm, self).__init__(self, **kwargs)
