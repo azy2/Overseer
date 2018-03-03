@@ -3,6 +3,7 @@ from flask import Blueprint, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 from ovs import app
 from ovs.services.resident_service import ResidentService
+from ovs.services.profile_service import ProfileService
 from ovs.forms.edit_resident_profile_form import EditResidentProfileForm
 
 residents_bp = Blueprint('resident', __name__)
@@ -34,20 +35,17 @@ def edit_profile():
 
     form = EditResidentProfileForm(obj=resident_profile, csrf_enabled=False)
 
-    if request.method == 'POST' and form.validate():
-        # Set profile data in database with non-null values from the form
-        if form.preferred_email.data:
-            resident_profile.preferred_email = form.preferred_email.data
-        if form.preferred_name.data:
-            resident_profile.preferred_name = form.preferred_name.data
-        if form.phone_number.data:
-            resident_profile.phone_number = form.phone_number.data
-        if form.race.data:
-            resident_profile.race = form.race.data
-        if form.gender.data:
-            resident_profile.gender = form.gender.data
-
-        db.commit()
-        return redirect(url_for('resident.view_profile'))
-
-    return render_template('resident/edit_resident_profile.html', form=form)
+    if request.method == 'POST':
+        if form.validate():
+            # Set profile data in database with non-null values from the form
+            ProfileService.update_profile(resident_id,
+                                          form.preferred_email.data,
+                                          form.preferred_name.data,
+                                          form.phone_number.data,
+                                          form.race.data,
+                                          form.gender.data)
+            return redirect(url_for('resident.view_profile'))
+        else:
+            return str(form.errors)
+    else:
+        return render_template('resident/edit_resident_profile.html', form=form)
