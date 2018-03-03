@@ -23,7 +23,7 @@ class Profile(app.BaseModel):
     created = sa.Column(sa.DateTime, server_default=sa.text('CURRENT_TIMESTAMP'))
     updated = sa.Column(sa.DateTime, server_default=sa.text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))
 
-    resident = relationship('Resident', uselist=False, back_populates='profile')
+    resident = relationship('Resident', uselist=False, back_populates='profile', single_parent=True)
 
     def __init__(self, user_id):
         super(Profile, self).__init__(user_id=user_id)
