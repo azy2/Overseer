@@ -23,6 +23,13 @@ class ManagerService:
         return db.query(Resident, User).join(User, Resident.user_id == User.id).all()
 
     @staticmethod
+    def get_resident_by_id(user_id):
+        """
+        Returns the Resident identified by user_id
+        """
+        return db.query(Resident).filter(Resident.user_id == user_id).first()
+
+    @staticmethod
     def update_resident_room_number(user_id, room_number):
         """ Changes the room_number of Resident identified by user_id """
         db.query(Resident).filter(Resident.user_id == user_id).update({Resident.room_number: room_number})
