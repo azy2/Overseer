@@ -107,14 +107,14 @@ def manage_packages():
 
             new_package = PackageService.create_package(recipient_id, checked_by_id, checked_at, description)
             return new_package.json()
-        
+
         # Edit package
         elif edit_form.validate_on_submit():
             package_id = edit_form.package_id.data
             recipient_email = edit_form.recipient_email.data
             old_recipient_id = edit_form.recipient_id.data
             description = edit_form.description.data
-            
+
             print("EDIT FORM")
             print(request.form)
             print(package_id)
@@ -130,7 +130,7 @@ def manage_packages():
                 return str(add_form.errors)
             elif 'edit_btn' in request.form:
                 return str(edit_form.errors)
-            
+
             # Should not reach here
             else:
                 return str(add_form.errors) + "\n-----\n" + str(edit_form.errors)
@@ -138,5 +138,5 @@ def manage_packages():
     else:
         packages_recipients_checkers = ManagerService.get_all_packages_recipients_checkers()
         return render_template('manager/manage_packages.html',
-                                packages_recipients_checkers=packages_recipients_checkers,
-                                add_form=add_form, edit_form=edit_form)
+                               packages_recipients_checkers=packages_recipients_checkers,
+                               add_form=add_form, edit_form=edit_form)
