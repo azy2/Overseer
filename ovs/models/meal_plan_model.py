@@ -35,7 +35,7 @@ class MealPlan(app.BaseModel):
         Uses a meal credit, as outlined by the plan.
         :return: Boolean, whether a credit was available
         """
-        if datetime.now() > self.reset_date:
+        if self.reset_date is None or datetime.now() > self.reset_date:
             self.reset_date = self.get_next_reset_date()
             self.credits = self.meal_plan
         if self.credits > 0:
