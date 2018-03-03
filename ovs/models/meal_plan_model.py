@@ -18,7 +18,7 @@ class MealPlan(app.BaseModel):
     pin = sa.Column(sa.Integer, unique=True)
     credits = sa.Column(sa.Integer, nullable=False)
     meal_plan = sa.Column(sa.Integer, nullable=False)
-    reset_date = sa.Column(sa.DateTime, server_default=sa.text('CURRENT_TIMESTAMP'))
+    reset_date = sa.Column(sa.DateTime, default=datetime.utcnow())
     plan_type = sa.Column(sa.Enum('WEEKLY', 'SEMESTERLY', 'LIFETIME'), nullable=False)
     created = sa.Column(sa.DateTime, server_default=sa.text('CURRENT_TIMESTAMP'))
     updated = sa.Column(sa.DateTime, server_default=sa.text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))
@@ -35,7 +35,7 @@ class MealPlan(app.BaseModel):
         Uses a meal credit, as outlined by the plan.
         :return: Boolean, whether a credit was available
         """
-        if self.reset_date is None or datetime.now() > self.reset_date:
+        if self.reset_date is None or datetime.utcnow() > self.reset_date:
             self.reset_date = self.get_next_reset_date()
             self.credits = self.meal_plan
         if self.credits > 0:
@@ -49,10 +49,10 @@ class MealPlan(app.BaseModel):
         :return: DateTime value for reset_day
         """
         if self.plan_type == 'WEEKLY':
-            date = MealPlan.next_weekday(datetime.now(), 0)
+            date = MealPlan.next_weekday(datetime.utcnow(), 0)
             return date.replace(hour=0, minute=0, second=0, microsecond=0)
-        else:
-            return datetime.now()
+        else: #error case. This does give them unlimited meals
+            return datetime.utcnow()
 
     @staticmethod
     def next_weekday(date, weekday):

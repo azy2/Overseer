@@ -66,7 +66,7 @@ class TestUserService(TestCase):
         meal_plan = MealService.get_meal_plan_by_pin(test_meal_plan_info[0])
         self.assertEqual(test_meal_plan_info[1]-1, meal_plan.credits)
         #Add 1 minute to the reset time to avoid any flaky tests right around the reset period
-        self.assertTrue(datetime.now() < meal_plan.reset_date.replace(minute=1))
+        self.assertTrue(datetime.utcnow() < meal_plan.reset_date.replace(minute=1))
 
     def test_use_meal_no_credits(self):
         """ Tests use_meal with no credits available"""

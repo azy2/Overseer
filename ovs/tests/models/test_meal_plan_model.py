@@ -29,7 +29,7 @@ class TestUserService(TestCase):
         self.assertTrue(meal_plan.update_meal_count())
         self.assertEqual(test_meal_plan_info[1]-1, meal_plan.credits)
         #Add 1 minute to the reset time to avoid any flaky tests right around the reset period
-        self.assertTrue(datetime.now() < meal_plan.reset_date.replace(minute=1))
+        self.assertTrue(datetime.utcnow() < meal_plan.reset_date.replace(minute=1))
 
     def test_get_next_reset_date_weekly(self):
         """ Tests get_next_reset_date for WEEKLY plan_type """
