@@ -5,9 +5,10 @@ from ovs.services.room_service import RoomService
 from ovs.services.user_service import UserService
 from ovs.services.package_service import PackageService
 from ovs.services.manager_service import ManagerService
-from ovs.forms import RegisterRoomForm, RegisterResidentForm, ManageResidentsForm, AddPackageForm, EditPackageForm
+from ovs.services.meal_service import MealService
+from ovs.forms import RegisterRoomForm, RegisterResidentForm, ManageResidentsForm, \
+    AddPackageForm, EditPackageForm, MealLoginForm, CreateMealPlanForm
 manager_bp = Blueprint('manager', __name__,)
-
 
 @manager_bp.route('/register_room', methods=['GET', 'POST'])
 def register_room():
@@ -140,3 +141,42 @@ def manage_packages():
         return render_template('manager/manage_packages.html',
                                packages_recipients_checkers=packages_recipients_checkers,
                                add_form=add_form, edit_form=edit_form)
+
+@manager_bp.route('/meal_login', methods=['GET', 'POST'])
+def meal_login():
+    """
+    /manager/meal_login serves an html form with input field pin
+    and accepts that form (POST) and logs the use to a meal plan
+    """
+    form = MealLoginForm(csrf_enabled=False)
+    if request.method == 'POST':
+        if form.validate():
+            MealService.use_meal(form.pin.data)
+            user_plan = MealService.get_meal_plan_by_pin(form.pin.data)
+            if user_plan is None:
+                return "Invalid login"
+            return user_plan.json()
+        else:
+            return str(form.errors)
+    else:
+        return render_template('manager/meal_login.html', form=form)
+
+@manager_bp.route('/create_meal_plan', methods=['GET', 'POST'])
+def create_meal_plan():
+    """
+    /manager/meal_login serves an html form with input field pin
+    and accepts that form (POST) and logs the use to a meal plan
+    """
+    form = CreateMealPlanForm(csrf_enabled=False)
+    if request.method == 'POST':
+        if form.validate():
+            UserService.create_meal_plan_for_user_by_email(
+                form.pin.data,
+                form.meal_plan.data,
+                form.plan_type.data,
+                form.email.data)
+            return MealService.get_meal_plan_by_pin(form.pin.data).json()
+        else:
+            return str(form.errors)
+    else:
+        return render_template('manager/create_meal_plan.html', form=form)
