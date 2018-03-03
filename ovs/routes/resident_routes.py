@@ -4,6 +4,7 @@ from flask_login import current_user, login_required
 from ovs import app
 from ovs.services.resident_service import ResidentService
 from ovs.forms.edit_resident_profile_form import EditResidentProfileForm
+from ovs.utils import genders
 
 residents_bp = Blueprint('resident', __name__)
 db = app.database.instance()
@@ -32,22 +33,7 @@ def edit_profile():
     if(resident_profile == None):
         return 'Could not find profile information for user with id: ' + resident_id
     
-    #form = EditResidentProfileForm(resident_profile, csrf_enabled=False)
-    form = EditResidentProfileForm(csrf_enabled=False)
-    # Set default field values based on existing profile
-    if(resident_profile.preferred_name):
-        form.preferred_name.default = resident_profile.preferred_name
-
-    if(resident_profile.phone_number):
-        form.phone_number.default = resident_profile.phone_number
- 
-    if(resident_profile.preferred_email):
-        form.preferred_email.default = resident_profile.preferred_email
-
-    if(resident_profile.race):
-        form.race.default = resident_profile.race
-
-    #form.process()
+    form = EditResidentProfileForm(obj=resident_profile, csrf_enabled=False)
 
     if request.method == 'POST' and form.validate():
         # Set profile data in database with non-null values from the form
@@ -60,7 +46,12 @@ def edit_profile():
         if form.race.data:
             resident_profile.race = form.race.data
         if form.gender.data:
-            resident_profile.gender = form.gender.data
+            if form.gender.data == '1':
+                resident_profile.gender = genders.MALE
+            elif form.gender.data == '2':
+                resident_profile.gender = genders.FEMALE
+            else:
+                resident_profile.gender = None
 
         db.commit()
         return redirect(url_for('resident.view_profile'))
