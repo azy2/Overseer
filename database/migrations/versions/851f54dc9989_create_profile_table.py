@@ -17,11 +17,12 @@ depends_on = None
 def upgrade():
     op.create_table(
         'profile',
-        sa.Column('user_id', sa.Integer, sa.ForeignKey('residents.user_id'), nullable=False),
+        sa.Column('user_id', sa.Integer, sa.ForeignKey('residents.user_id'), primary_key=True, nullable=False),
         sa.Column('preferred_name', sa.CHAR(255)),
         sa.Column('phone_number', sa.CHAR(31)),
         sa.Column('preferred_email', sa.CHAR(255)),
         sa.Column('race', sa.CHAR(31)),
+        sa.Column('gender', sa.Enum('Male', 'Female')),
         sa.Column('picture_path', sa.CHAR(255)),
         sa.Column('created', sa.DateTime, server_default=sa.text('CURRENT_TIMESTAMP')),
         sa.Column('updated', sa.DateTime, server_default=sa.text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP')),
