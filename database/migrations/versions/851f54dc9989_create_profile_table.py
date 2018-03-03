@@ -7,7 +7,6 @@ Create Date: 2018-03-01 23:51:05.631322
 """
 from alembic import op
 import sqlalchemy as sa
-from ovs.utils import genders
 
 # revision identifiers, used by Alembic.
 revision = '851f54dc9989'
@@ -23,7 +22,7 @@ def upgrade():
         sa.Column('phone_number', sa.CHAR(31)),
         sa.Column('preferred_email', sa.CHAR(255)),
         sa.Column('race', sa.CHAR(31)),
-        sa.Column('gender', sa.Enum(genders.MALE, genders.FEMALE)),
+        sa.Column('gender', sa.Enum('Male', 'Female')),
         sa.Column('picture_path', sa.CHAR(255)),
         sa.Column('created', sa.DateTime, server_default=sa.text('CURRENT_TIMESTAMP')),
         sa.Column('updated', sa.DateTime, server_default=sa.text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP')),
