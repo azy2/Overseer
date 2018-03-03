@@ -1,20 +1,21 @@
-""" under /user/ """
+""" under /resident """
 from flask import Blueprint
+from flask_login import current_user, login_required
+from ovs import app
 from ovs.services.resident_service import ResidentService
-residents_bp = Blueprint('resident', __name__,)
+
+residents_bp = Blueprint('resident', __name__)
+db = app.database.instance()
 
 @residents_bp.route('/view_profile')
+@login_required
 def view_profile():
-    return 'stuff'
+    """
+    Displays the profile for the currently logged in user
+    """
+    resident_id = current_user.get_id()
+    resident_profile = ResidentService.get_resident_profile_by_id(current_user.get_id())
+    if(resident_profile == None):
+        return 'Could not find profile information for user with id: ' + resident_id
 
-"""
-@users_bp.route('/')
-def create_user():
-    # Example route that generates a random user
-    new_user = UserService.create_user(
-        ''.join(random.choice(string.ascii_lowercase) for x in range(5)) + '@gmail.com',
-        random.choice(string.ascii_uppercase) + ''.join(random.choice(string.ascii_lowercase) for x in range(6)),
-        random.choice(string.ascii_uppercase) + ''.join(random.choice(string.ascii_lowercase) for x in range(6)),
-        roles.RESIDENT)
-    return new_user.json()
-"""
+    return 'User ID: ' + resident_id + ' profile: ' + resident_profile
