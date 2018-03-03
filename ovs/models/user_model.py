@@ -1,11 +1,12 @@
 """
 Defines a User as represented in the database
 """
-import bcrypt
+
 import sqlalchemy as sa
 from flask import jsonify
+from flask_bcrypt import bcrypt
 
-from ovs import app
+from ovs import app, bcrypt_app
 
 SALT_ROUNDS = 12
 
@@ -30,13 +31,14 @@ class User(app.BaseModel):
         'CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))
 
     def __init__(self, email, first_name, last_name, password, role):
-        password = bcrypt.hashpw(password.encode(
-            'utf-8'), bcrypt.gensalt(SALT_ROUNDS))
+        if password is None:
+            password = bcrypt.gensalt()
+        password_hash = bcrypt_app.generate_password_hash(password)
         super(User, self).__init__(
             email=email,
-            password=password,
             first_name=first_name,
             last_name=last_name,
+            password=password_hash,
             role=role)
 
     def __repr__(self):
@@ -47,7 +49,7 @@ class User(app.BaseModel):
 
     def has_password(self, password):
         """ Checks if inputted password matches the one stored in DB """
-        return self.password == bcrypt.hashpw(password, self.password)
+        return self.password == bcrypt_app.check_password_hash(self.password_hash, password)
 
     def json(self):
         """ Returns a JSON representation of this User """
