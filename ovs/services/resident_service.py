@@ -6,6 +6,7 @@ from ovs.models.resident_model import Resident
 from ovs.models.profile_model import Profile
 db = app.database.instance()
 
+
 class ResidentService:
     """ DB and utility functions for Residents """
     @staticmethod

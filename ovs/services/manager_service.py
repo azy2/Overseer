@@ -2,6 +2,7 @@
 from ovs import app
 from ovs.models.user_model import User
 from ovs.models.resident_model import Resident
+from ovs.services.resident_service import ResidentService
 db = app.database.instance()
 
 
@@ -29,4 +30,4 @@ class ManagerService:
         """ Changes the room_number of Resident identified by user_id """
         db.query(Resident).filter(Resident.user_id == user_id).update({Resident.room_number: room_number})
         db.commit()
-        return ManagerService.get_resident_by_id(user_id)
+        return ResidentService.get_resident_by_id(user_id).first()

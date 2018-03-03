@@ -17,7 +17,6 @@ class Resident(app.BaseModel):
     room_number = sa.Column(sa.CHAR(255))
     created = sa.Column(sa.DateTime, server_default=sa.text('CURRENT_TIMESTAMP'))
     updated = sa.Column(sa.DateTime, server_default=sa.text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))
-
     profile = relationship('Profile', uselist=False, back_populates='resident', cascade='all, delete, delete-orphan')
 
     def __init__(self, user_id, room_number):
