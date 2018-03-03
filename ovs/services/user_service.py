@@ -25,11 +25,12 @@ class UserService:
         """
         if password is None:
             password = crypto.generate_password()
+
         new_user = User(email, first_name, last_name, password, role)
         db.add(new_user)
         db.commit()
         if role == 'RESIDENT':
-            ResidentService.create_resident(new_user.id)
+            ResidentService.create_resident(new_user)
 
         return new_user
 
@@ -41,3 +42,10 @@ class UserService:
         :return: The db entry of that user
         """
         return db.query(User).filter(User.email == email)
+
+    @staticmethod
+    def get_user_by_id(user_id):
+        """
+        Gets a user by their id
+        """
+        return db.query(User).filter(User.id == user_id)

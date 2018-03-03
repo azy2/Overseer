@@ -30,9 +30,9 @@ class Profile(app.BaseModel):
 
     def __repr__(self):
         return "Profile([user_id='%s', preferred_name='%s', phone_number='%s', preferred_email='%s', race='%s', \
-                 gender='%s', picture_path='%s', created='%s', updated='%s'])" \
-               % (self.user_id, self.preferred_name, self.phone_number, self.preferred_email, self.race, self.gender, 
-                    self.picture_path, self.created, self.updated)
+               gender='%s', picture_path='%s', created='%s', updated='%s'])" \
+               % (self.user_id, self.preferred_name, self.phone_number, self.preferred_email, self.race, self.gender,
+                  self.picture_path, self.created, self.updated)
 
     def json(self):
         """ Returns a JSON representation of this Profile """
@@ -47,6 +47,3 @@ class Profile(app.BaseModel):
             created=self.created,
             updated=self.updated
         )
-
-
-

@@ -10,7 +10,7 @@ class EditResidentProfileForm(FlaskForm):
     phone_number = StringField('Phone Number', validators=[Length(max=31)])
     preferred_email = StringField('Preferred Contact Email', validators=[Email(), Length(max=255)])
     race = StringField('Race/Ethnicity', validators=[Length(max=31)])
-    gender = RadioField('Gender', choices=[('1', 'Male'), ('2', 'Female'), ('3', 'Unspecified')])
+    gender = RadioField('Gender', choices=[(genders.MALE, 'Male'), (genders.FEMALE, 'Female'), (None, 'Unspecified')])
 
 #    def __init__(self, profile_to_edit, **kwargs):
 #        super(EditResidentProfileForm, self).__init__(self, **kwargs)

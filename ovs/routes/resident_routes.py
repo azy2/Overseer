@@ -1,10 +1,9 @@
 """ under /resident """
-from flask import Blueprint, flash, redirect, render_template, request, url_for
+from flask import Blueprint, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 from ovs import app
 from ovs.services.resident_service import ResidentService
 from ovs.forms.edit_resident_profile_form import EditResidentProfileForm
-from ovs.utils import genders
 
 residents_bp = Blueprint('resident', __name__)
 db = app.database.instance()
@@ -17,7 +16,7 @@ def view_profile():
     """
     resident_id = current_user.get_id()
     resident_profile = ResidentService.get_resident_by_id(resident_id).first().profile
-    if(resident_profile == None):
+    if resident_profile is None:
         return 'Could not find profile information for user with id: ' + resident_id
 
     return resident_profile.json()
@@ -30,9 +29,9 @@ def edit_profile():
     """
     resident_id = current_user.get_id()
     resident_profile = ResidentService.get_resident_by_id(resident_id).first().profile
-    if(resident_profile == None):
+    if resident_profile is None:
         return 'Could not find profile information for user with id: ' + resident_id
-    
+
     form = EditResidentProfileForm(obj=resident_profile, csrf_enabled=False)
 
     if request.method == 'POST' and form.validate():
@@ -46,14 +45,9 @@ def edit_profile():
         if form.race.data:
             resident_profile.race = form.race.data
         if form.gender.data:
-            if form.gender.data == '1':
-                resident_profile.gender = genders.MALE
-            elif form.gender.data == '2':
-                resident_profile.gender = genders.FEMALE
-            else:
-                resident_profile.gender = None
+            resident_profile.gender = form.gender.data
 
         db.commit()
         return redirect(url_for('resident.view_profile'))
 
-    return render_template('resident/edit_resident_profile.html', form=form) 
+    return render_template('resident/edit_resident_profile.html', form=form)
