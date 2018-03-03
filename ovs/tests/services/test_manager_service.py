@@ -70,7 +70,7 @@ class TestManagerService(TestCase):
         user_1 = UserService.create_user('test@gmail.com', 'Bob', 'Ross', 'RESIDENT')
         user_2 = UserService.create_user('test2@gmail.com', 'Joe', 'Smith', 'RESIDENT')
         user_3 = UserService.create_user('test3@gmail.com', 'Jim', 'White', 'ADMIN')
-        checked_at = datetime.datetime.now()
+        checked_at = datetime.datetime.now().replace(second=0, microsecond=0)
         package_description = "Fragile"
         package_1 = PackageService.create_package(user_1.id, user_3.id, checked_at, package_description)
         new_package_description = "NOT Fragile"
