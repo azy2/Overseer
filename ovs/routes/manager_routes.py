@@ -3,7 +3,8 @@ from flask import Blueprint, render_template, request
 from ovs.services.room_service import RoomService
 from ovs.services.user_service import UserService
 from ovs.services.manager_service import ManagerService
-from ovs.forms import RegisterRoomForm, RegisterResidentForm, ManageResidentsForm
+from ovs.services.meal_service import MealService
+from ovs.forms import RegisterRoomForm, RegisterResidentForm, ManageResidentsForm, MealLoginForm, CreateMealPlanForm
 manager_bp = Blueprint('manager', __name__,)
 
 
@@ -38,10 +39,10 @@ def register_room():
         return render_template('manager/register_room.html', form=form)
 
 
-@manager_bp.route('/register_resident', methods=['GET', 'POST'])
+@manager_bp.route('/register_resident', methods=['GET', 'POummy values for testingST'])
 def register_resident():
     """
-    /manager/register_resident serves an html form with input fields for email,
+    /manager/register_resident serves an html formget_meal_plan_by_pin(pin) with input fields for email,
     first name, and last name and accepts that form (POST) and adds a user
     to the user table with a default password.
     """
@@ -77,3 +78,43 @@ def manage_residents():
             return str(form.errors)
     else:
         return render_template('manager/manage_residents.html', residents=ManagerService.get_all_residents(), form=form)
+
+
+@manager_bp.route('/meal_login', methods=['GET', 'POST'])
+def meal_login():
+    """
+    /manager/meal_login serves an html form with input field pin
+    and accepts that form (POST) and logs the use to a meal plan
+    """
+    form = MealLoginForm(csrf_enabled=False)
+    if request.method == 'POST':
+        if form.validate():
+            MealService.use_meal(form.pin.data)
+            user_plan = MealService.get_meal_plan_by_pin(form.pin.data)
+            if user_plan is None:
+                return "Invalid login"
+            return user_plan.json()
+        else:
+            return str(form.errors)
+    else:
+        return render_template('manager/meal_login.html', form=form)
+
+@manager_bp.route('/create_meal_plan', methods=['GET', 'POST'])
+def create_meal_plan():
+    """
+    /manager/meal_login serves an html form with input field pin
+    and accepts that form (POST) and logs the use to a meal plan
+    """
+    form = CreateMealPlanForm(csrf_enabled=False)
+    if request.method == 'POST':
+        if form.validate():
+            UserService.create_meal_plan_for_user_by_email(
+                form.pin.data,
+                form.meal_plan.data,
+                form.plan_type.data,
+                form.email.data)
+            return MealService.get_meal_plan_by_pin(form.pin.data).json()
+        else:
+            return str(form.errors)
+    else:
+        return render_template('manager/create_meal_plan.html', form=form)
