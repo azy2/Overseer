@@ -18,6 +18,8 @@ class Config(object):
 
     PORT = os.getenv('PORT', 8080)
 
+    TEMPLATES_AUTO_RELOAD = True
+
     DATABASE = {
         'primary': {
             'host': os.getenv('DB_HOSTNAME', '127.0.0.1'),
