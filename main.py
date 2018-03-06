@@ -19,3 +19,12 @@ if not super_user:
                             app.config['SUPERUSER']['last_name'],
                             roles.ADMIN,
                             app.config['SUPERUSER']['password'])
+if app.config['APP_ENV'] == 'DEV':
+    resident_user = UserService.get_user_by_email(
+        app.config['RESIDENT']['email']).one_or_none()
+    if not resident_user:
+        UserService.create_user(app.config['RESIDENT']['email'],
+                                app.config['RESIDENT']['first_name'],
+                                app.config['RESIDENT']['last_name'],
+                                roles.RESIDENT,
+                                app.config['RESIDENT']['password'])

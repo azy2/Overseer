@@ -2,12 +2,21 @@
 from flask import Blueprint, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 from ovs import app
+from ovs.utils.roles import UserRole
 from ovs.services.resident_service import ResidentService
 from ovs.services.profile_service import ProfileService
 from ovs.forms.edit_resident_profile_form import EditResidentProfileForm
 
 residents_bp = Blueprint('resident', __name__)
 db = app.database.instance()
+
+@residents_bp.route('/')
+@login_required
+def landing_page():
+    resident_id = current_user.get_id()
+    resident = ResidentService.get_resident_by_id(resident_id).first()
+    profile = resident.profile
+    return render_template('resident/index.html', role=UserRole.RESIDENT, profile=profile)
 
 @residents_bp.route('/view_profile')
 @login_required

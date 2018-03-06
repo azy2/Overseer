@@ -5,6 +5,7 @@ from flask_login import login_user, logout_user, login_required
 from ovs import app
 from ovs.forms.login_form import LoginForm
 from ovs.models.user_model import User
+from ovs.utils.roles import UserRole
 
 auth_bp = Blueprint('auth', __name__,)
 db = app.database.instance()
@@ -20,9 +21,11 @@ def login():
         user = db.query(User).filter_by(email=email).first()
         if user is None:
             flash('Invalid Credentials.', 'error')
-            return redirect(url_for('auth.login'))
+            return redirect(url_for('/.landing_page'))
         login_user(user)
         flash('success!', 'message')
+        if user.role == UserRole.RESIDENT:
+            return redirect(url_for('resident.landing_page'))
         return redirect(url_for('auth.login'))
     return render_template('login_page.html', form=form)
 
@@ -31,7 +34,7 @@ def login():
 def logout():
     """ Logs a user out """
     logout_user()
-    return redirect(url_for('auth.login'))
+    return redirect(url_for('/.landing_page'))
 
 
 @auth_bp.route('/test')
