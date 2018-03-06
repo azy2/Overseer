@@ -12,8 +12,8 @@ def landing_page():
     """ Example route that generates a random user """
     kwargs = {}
     if current_user.is_authenticated:
-        kwargs['role'] = UserRole.RESIDENT
         user = UserService.get_user_by_id(current_user.get_id()).first()
+        kwargs['role'] = user.role
         if user.role == UserRole.RESIDENT:
             profile = ResidentService.get_resident_by_id(user.id).first().profile
             kwargs['profile'] = profile
