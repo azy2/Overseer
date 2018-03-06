@@ -35,10 +35,3 @@ def logout():
     """ Logs a user out """
     logout_user()
     return redirect(url_for('/.landing_page'))
-
-
-@auth_bp.route('/test')
-@login_required
-def test():
-    """ Checks to see if a user is logged in """
-    return 'I am logged in.'

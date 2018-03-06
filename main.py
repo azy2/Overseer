@@ -4,7 +4,6 @@ from ovs.services import UserService
 from ovs.utils import roles
 
 app.register_blueprint(routes.OvsRoutes, url_prefix='/')
-app.register_blueprint(routes.UserRoutes, url_prefix='/user')
 app.register_blueprint(routes.AdminRoutes, url_prefix='/admin')
 app.register_blueprint(routes.ManagerRoutes, url_prefix='/manager')
 app.register_blueprint(routes.ResidentRoutes, url_prefix='/resident')

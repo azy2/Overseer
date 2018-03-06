@@ -18,31 +18,18 @@ def landing_page():
     profile = resident.profile
     return render_template('resident/index.html', role=UserRole.RESIDENT, profile=profile)
 
-@residents_bp.route('/view_profile')
+@residents_bp.route('/profile', methods=['GET', 'POST'])
 @login_required
-def view_profile():
-    """
-    Displays the profile for the currently logged in user
-    """
-    resident_id = current_user.get_id()
-    resident_profile = ResidentService.get_resident_by_id(resident_id).first().profile
-    if resident_profile is None:
-        return 'Could not find profile information for user with id: ' + resident_id
-
-    return resident_profile.json()
-
-@residents_bp.route('/edit_profile', methods=['GET', 'POST'])
-@login_required
-def edit_profile():
+def profile():
     """
     Allows the user to edit their profile in a wtform
     """
     resident_id = current_user.get_id()
-    resident_profile = ResidentService.get_resident_by_id(resident_id).first().profile
-    if resident_profile is None:
+    profile = ResidentService.get_resident_by_id(resident_id).first().profile
+    if profile is None:
         return 'Could not find profile information for user with id: ' + resident_id
 
-    form = EditResidentProfileForm(obj=resident_profile, csrf_enabled=False)
+    form = EditResidentProfileForm(obj=profile, csrf_enabled=False)
 
     if request.method == 'POST':
         if form.validate():
@@ -53,8 +40,8 @@ def edit_profile():
                                           form.phone_number.data,
                                           form.race.data,
                                           form.gender.data)
-            return redirect(url_for('resident.view_profile'))
+            return redirect(url_for('resident.profile'))
         else:
             return str(form.errors)
     else:
-        return render_template('resident/edit_resident_profile.html', form=form)
+        return render_template('resident/profile.html', role=UserRole.RESIDENT, profile=profile, form=form)

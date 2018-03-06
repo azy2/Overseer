@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Edit profile - {{ profile.preferred_name }}{% endblock %}
+{% block content %}
+        {% from "_formhelper.html" import field_inline %}
+    <div class="container card mt-5" >
+        <div class="row card-body" >
+            <div class="col-3 card-img-left" >
+                <img src="{{ url_for('static', filename="default_profile.png") }}" class="rounded">
+            </div>
+            <div class="col-9" >
+                <form method="post">
+                    {{ field_inline(form.preferred_name) }}
+                    {{ field_inline(form.phone_number) }}
+                    {{ field_inline(form.preferred_email) }}
+                    {{ field_inline(form.race) }}
+                    {{ field_inline(form.gender) }}
+                    <input type="submit" value="Submit Changes">
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
