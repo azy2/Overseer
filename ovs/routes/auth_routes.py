@@ -11,11 +11,11 @@ auth_bp = Blueprint('auth', __name__,)
 db = app.database.instance()
 
 
-@auth_bp.route('/login', methods=['GET', 'POST'])
+@auth_bp.route('/login', methods=['POST'])
 def login():
     """ Interface for users to login """
     form = LoginForm(csrf_enabled=False)
-    if request.method == 'POST' and form.validate():
+    if form.validate():
         email = form.email.data
         # password = form.password.data
         user = db.query(User).filter_by(email=email).first()
@@ -26,8 +26,10 @@ def login():
         flash('success!', 'message')
         if user.role == UserRole.RESIDENT:
             return redirect(url_for('resident.landing_page'))
-        return redirect(url_for('auth.login'))
-    return render_template('login_page.html', form=form)
+        else:
+            return redirect(url_for('manager.landing_page'))
+    else:
+        return str(form.errors)
 
 
 @auth_bp.route('/logout')

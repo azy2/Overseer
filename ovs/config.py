@@ -36,8 +36,8 @@ class Config(object):
 
     SUPERUSER = {
         'email': os.getenv('SUPERUSER_EMAIL', 'admin@gmail.com'),
-        'first_name': os.getenv('SUPERUSER_FIRSTNAME', 'John'),
-        'last_name': os.getenv('SUPERUSER_LASTNAME', 'Smith'),
+        'first_name': os.getenv('SUPERUSER_FIRSTNAME', 'Super'),
+        'last_name': os.getenv('SUPERUSER_LASTNAME', 'User'),
         'password': os.getenv('SUPERUSER_PASSWORD', 'abcd1234')
     }
     RESIDENT = {

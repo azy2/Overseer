@@ -17,4 +17,7 @@ def landing_page():
         if user.role == UserRole.RESIDENT:
             profile = ResidentService.get_resident_by_id(user.id).first().profile
             kwargs['profile'] = profile
+
+        else:
+            kwargs['user'] = user
     return render_template('index.html', **kwargs)

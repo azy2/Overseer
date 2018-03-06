@@ -1,6 +1,7 @@
 """ Routes under /manager/ """
 import datetime
 from flask import Blueprint, render_template, request
+from flask_login import current_user
 from ovs.services.room_service import RoomService
 from ovs.services.user_service import UserService
 from ovs.services.package_service import PackageService
@@ -9,6 +10,12 @@ from ovs.services.meal_service import MealService
 from ovs.forms import RegisterRoomForm, RegisterResidentForm, ManageResidentsForm, \
     AddPackageForm, EditPackageForm, MealLoginForm, CreateMealPlanForm
 manager_bp = Blueprint('manager', __name__,)
+
+@manager_bp.route('/', methods=['GET'])
+def landing_page():
+    user = UserService.get_user_by_id(current_user.get_id()).first()
+    role = user.role
+    return render_template('/manager/index.html', role=role, user=user)
 
 @manager_bp.route('/register_room', methods=['GET', 'POST'])
 def register_room():
