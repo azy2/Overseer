@@ -25,58 +25,54 @@
         {% endblock %}
     </head>
     <body>
+        {% macro navbar_item(url, text) %}
+            <li class="nav-item {% if request.path == url %}active{% endif %}" >
+                <a class="nav-link" href="{{ url }}" >{{ text }}</a>
+            </li>
+        {% endmacro %}
+        {% macro dropdown(url, id, text, right, items) %}
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle {% if request.path == url %}active{% endif %}" href="{{ url }}" id="{{ id }}"
+                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {{ text }}
+                </a>
+                <div class="dropdown-menu {% if right %}dropdown-menu-right{% endif %}" aria-labelledby="{{ id }}">
+                    {% for item in items %}
+                        <a class="dropdown-item" href="{{ item[0] }}">{{ item[1] }}</a>
+                    {% endfor %}
+                </div>
+            </li>
+        {% endmacro %}
         <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
             <a class="navbar-brand" href="/">Overseer</a>
             {% if role == 'RESIDENT' %}
                 <div class="collapse navbar-collapse">
+                    <ul class="navbar-nav" >
+                        {{ navbar_item('/resident/', 'Home') }}
+                    </ul>
                 </div>
                 <ul class="navbar-nav">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle active" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            {{ profile.preferred_name }}
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown01">
-                            <a class="dropdown-item" href="/resident" >Home</a>
-                            <a class="dropdown-item" href="/resident/profile">Profile</a>
-                            <a class="dropdown-item" href="/auth/logout" >Logout</a>
-                        </div>
-                    </li>
+                    {{ dropdown('#', 'accountDropdown', profile.preferred_name, True, [
+                        ('/resident/profile/', 'Profile'),
+                        ('/auth/logout', 'Logout')]) }}
                 </ul>
             {% elif role == 'ADMIN' or role == 'BUILDING_MANAGER' or role == 'OFFICE_MANAGER' or role == 'STAFF' or role == 'RESIDENT_ADVISOR' %}
                 <div class="collapse navbar-collapse">
                     <ul class="navbar-nav" >
-                        <li class="nav-item">
-                            <a class="nav-link" href="/manager/register_room" >Register a Room</a>
-                        </li>
-                        <li class="nav-item dropdown" >
-                            <a class="nav-link dropdown-toggle" href="#" id="residentDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >Resident</a>
-                            <div class="dropdown-menu" aria-labelledby="residentDropdown" >
-                            <a class="dropdown-item" href="/manager/register_resident" >Register a Resident</a>
-                            <a class="dropdown-item" href="/manager/manage_residents" >Manage Residents</a>
-                            </div>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/manager/manage_packages" >Manage Packages</a>
-                        </li>
-                        <li class="nav-item dropdown" >
-                            <a class="nav-link dropdown-toggle" href="#" id="residentDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >Meals</a>
-                            <div class="dropdown-menu" aria-labelledby="residentDropdown" >
-                            <a class="dropdown-item" href="/manager/meal_login" >Meal login</a>
-                            <a class="dropdown-item" href="/manager/create_meal_plan" >Create Meal Plan</a>
-                            </div>
-                        </li>
+                        {{ navbar_item('/manager/', 'Home') }}
+                        {{ navbar_item('/manager/register_room/', 'Register a Room') }}
+                        {{ dropdown('#', 'residentDropdown', 'Resident', False, [
+                            ('/manager/register_resident/', 'Register a Resident'),
+                            ('/manager/manage_residents/', 'Manage Residents')]) }}
+                        {{ navbar_item('/manager/manage_packages', 'Manage Packages') }}
+                        {{ dropdown('#', 'mealDropdown', 'Meals', False, [
+                            ('/manager/meal_login/', 'Meal login'),
+                            ('/manager/create_meal_plan', 'Create Meal Plan')]) }}
                     </ul>
                 </div>
                 <ul class="navbar-nav">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle active" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            {{ user.first_name }}
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown01">
-                            <a class="dropdown-item" href="/manager" >Home</a>
-                            <a class="dropdown-item" href="/auth/logout" >Logout</a>
-                        </div>
-                    </li>
+                    {{ dropdown('#', 'accountDropdown', user.first_name, True, [
+                        ('/auth/logout', 'Logout')]) }}
                 </ul>
             {% else %}
                 <div class="collapse navbar-collapse">
