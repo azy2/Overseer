@@ -1,24 +1,21 @@
-<!doctype html>
-<html class="no-js" lang="">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>Register a Manager</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    </head>
-    <body>
-        {% from "_formhelper.html" import render_field %}
-        <form method="post">
-            <dl>
-                {{ render_field(form.email) }}
-                {{ render_field(form.first_name) }}
-                {{ render_field(form.last_name) }}
-                {{ render_field(form.role) }}
-            </dl>
-            <input type="submit" value="Register">
-        </form>
-
-    </body>
-</html>
+{% extends "base.html" %}
+{% block title %}Register Manager{% endblock %}
+{% block content %}
+    {% from "_formhelper.html" import field_inline %}
+    <div class="container mt-5" >
+        <h2>Register Manager</h2>
+        <div class="row card" >
+            <div class="card-body"
+                <div class="col" >
+                    <form method="post">
+                        {{ field_inline(form.email) }}
+                        {{ field_inline(form.first_name) }}
+                        {{ field_inline(form.last_name) }}
+                        {{ field_inline(form.role) }}
+                        <input type="submit" value="Register">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

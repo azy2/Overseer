@@ -13,14 +13,15 @@ db = app.database.instance()
 @residents_bp.route('/')
 @login_required
 def landing_page():
+    """ The landing page for residents """
     resident_id = current_user.get_id()
     resident = ResidentService.get_resident_by_id(resident_id).first()
     profile = resident.profile
     return render_template('resident/index.html', role=UserRole.RESIDENT, profile=profile)
 
-@residents_bp.route('/profile', methods=['GET', 'POST'])
+@residents_bp.route('/profile/', methods=['GET', 'POST'])
 @login_required
-def profile():
+def edit_profile():
     """
     Allows the user to edit their profile in a wtform
     """
@@ -40,7 +41,7 @@ def profile():
                                           form.phone_number.data,
                                           form.race.data,
                                           form.gender.data)
-            return redirect(url_for('resident.profile'))
+            return redirect(url_for('resident.edit_profile'))
         else:
             return str(form.errors)
     else:

@@ -1,19 +1,13 @@
-<!doctype html>
-<html class="no-js" lang="">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>Meal Login</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-    </head>
-    <body>
-        {% from "_formhelper.html" import render_field %}
+{% extends "base.html" %}
+{% block title %}Meals{% endblock %}
+{% block content %}
+    <div class="container mt-5" >
+        {% from "_formhelper.html" import field_inline %}
         <form method="post">
             <dl>
-                {{ render_field(form.pin) }}
+                {{ field_inline(form.pin) }}
             </dl>
             <input type="submit" value="Login">
         </form>
-    </body>
-</html>
+    </div>
+{% endblock %}

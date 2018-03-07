@@ -1,8 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Manage Packages</title>
+{% extends "base.html" %}
+{% block title %}Manage Packages{% endblock %}
+{% block head %}
     <style>
         table {
             font-family: arial, sans-serif;
@@ -20,49 +18,49 @@
             background-color: #dddddd;
         }
     </style>
-</head>
-<body>
-    <h3>Add Package to Package List:</h3>
-    {% from "_formhelper.html" import render_field %}
-    <form action="manage_packages" method="post" name="Add Form">
-        <dl>
-            {{ render_field(add_form.recipient_email) }}
-            {{ render_field(add_form.description) }}
-        </dl>
-        <input type="submit" value="Add Package" name="add_btn">
-    </form>
+{% endblock %}
+{% block content %}
+    <div class="container mt-5" >
+        <h3>Add Package to Package List:</h3>
+        {% from "_formhelper.html" import field_stacked %}
+        <form method="post" name="Add Form">
+            <dl>
+                {{ field_stacked(add_form.recipient_email) }}
+                {{ field_stacked(add_form.description) }}
+            </dl>
+            <input type="submit" value="Add Package" name="add_btn">
+        </form>
 
-    <br>
-    <br>
-    <br>
+        <br>
+        <br>
+        <br>
 
-    <h3>Package List:</h3>
-    {% from "_formhelper.html" import render_field %}
-    <table>
-        <tr>
-            <th>{{ edit_form.recipient_email.label }}</th>
-            <th>{{ edit_form.checked_by.label }}</th>
-            <th>{{ edit_form.checked_at.label }}</th>
-            <th>{{ edit_form.is_signed.label }}</th>
-            <th>{{ edit_form.signed_at.label }}</th>
-            <th>{{ edit_form.description.label }}</th>
-            <th></th>
-        </tr>
-    {% for (package, recipient, checker) in packages_recipients_checkers %}
-        <tr>
-            <form action="/manager/manage_packages" method="post" name="Edit Form" id="edit-package-submit">
-                {{edit_form.package_id(value=package.id, type="hidden")|safe}}
-                {{edit_form.recipient_id(value=package.recipient_id, type="hidden")|safe}}
-                <td>{{ edit_form.recipient_email(value=recipient.email)|safe + " -- " + recipient.first_name + " " + recipient.last_name}}</td>
-                <td>{{ checker.first_name + " " + checker.last_name }}</td>
-                <td>{{ package.checked_at }}</td>
-                <td>{{ package.is_signed }}</td>
-                <td>{{ package.signed_at }}</td>
-                <td>{{ edit_form.description(value=package.description)|safe }}</td>
-                <td><input type="submit" value="Submit" name="edit_btn">
-            </form>
-        </tr>
-    {% endfor %}
-    </table>
-</body>
-</html>
+        <h3>Package List:</h3>
+        <table>
+            <tr>
+                <th>{{ edit_form.recipient_email.label }}</th>
+                <th>{{ edit_form.checked_by.label }}</th>
+                <th>{{ edit_form.checked_at.label }}</th>
+                <th>{{ edit_form.is_signed.label }}</th>
+                <th>{{ edit_form.signed_at.label }}</th>
+                <th>{{ edit_form.description.label }}</th>
+                <th></th>
+            </tr>
+            {% for (package, recipient, checker) in packages_recipients_checkers %}
+                <tr>
+                    <form method="post" name="Edit Form" id="edit-package-submit">
+                        {{edit_form.package_id(value=package.id, type="hidden")|safe}}
+                        {{edit_form.recipient_id(value=package.recipient_id, type="hidden")|safe}}
+                        <td>{{ edit_form.recipient_email(value=recipient.email)|safe + " -- " + recipient.first_name + " " + recipient.last_name}}</td>
+                        <td>{{ checker.first_name + " " + checker.last_name }}</td>
+                        <td>{{ package.checked_at }}</td>
+                        <td>{{ package.is_signed }}</td>
+                        <td>{{ package.signed_at }}</td>
+                        <td>{{ edit_form.description(value=package.description)|safe }}</td>
+                        <td><input type="submit" value="Submit" name="edit_btn"></td>
+                    </form>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}

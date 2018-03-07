@@ -1,7 +1,6 @@
 """ Routes for developers """
 from flask import Blueprint, url_for, render_template
 from ovs import app
-from ovs.utils.roles import UserRole
 dev_bp = Blueprint('/dev', __name__,)
 
 

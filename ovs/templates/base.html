@@ -60,6 +60,9 @@
                 <div class="collapse navbar-collapse">
                     <ul class="navbar-nav" >
                         {{ navbar_item('/manager/', 'Home') }}
+                        {% if role == 'ADMIN' %}
+                            {{ navbar_item('/admin/register_manager/', 'Register Manager') }}
+                        {% endif %}
                         {{ navbar_item('/manager/register_room/', 'Register a Room') }}
                         {{ dropdown('#', 'residentDropdown', 'Resident', False, [
                             ('/manager/register_resident/', 'Register a Resident'),

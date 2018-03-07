@@ -1,5 +1,5 @@
 """ routes under /auth/ """
-from flask import Blueprint, flash, redirect, render_template, request, url_for
+from flask import Blueprint, flash, redirect, url_for
 from flask_login import login_user, logout_user, login_required
 
 from ovs import app
@@ -33,6 +33,7 @@ def login():
 
 
 @auth_bp.route('/logout')
+@login_required
 def logout():
     """ Logs a user out """
     logout_user()
