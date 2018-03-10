@@ -2,6 +2,10 @@
 from unittest import TestCase
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
 from ovs import app
 from ovs.models.user_model import User
 from ovs.models.resident_model import Resident
@@ -24,7 +28,7 @@ class TestLogin(TestCase):
         """ Creates a headless chrome instance for selenium and clears the DB """
         self.db = app.database.instance()
         chrome_options = Options()
-        chrome_options.add_argument("--headless")
+        #chrome_options.add_argument("--headless")
         self.browser = webdriver.Chrome(chrome_options=chrome_options)
         self.base_url = 'localhost:5000'
         self.clear_db()
@@ -37,4 +41,14 @@ class TestLogin(TestCase):
     def test_resident_login(self):
         """ Tests whether residents can log in or not """
         self.browser.get(self.base_url)
-        self.assertIn(self.browser.title, 'Overseer')
+        self.assertIn('Overseer', self.browser.title)
+
+        name_box = self.browser.find_element_by_name('email')
+        name_box.send_keys("resident@gmail.com")
+        pass_box = self.browser.find_element_by_name('password')
+        pass_box.send_keys('abcd1234')
+        pass_box.send_keys(Keys.ENTER)
+
+        wait = WebDriverWait(self.browser, 10)
+        wait.until(EC.title_contains('John'))
+        self.assertIn('John', self.browser.title)
