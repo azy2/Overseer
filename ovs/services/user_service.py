@@ -4,6 +4,7 @@ from ovs.models.user_model import User
 from ovs.services.resident_service import ResidentService
 from ovs.services.meal_service import MealService
 from ovs.utils import crypto
+from sqlalchemy import exc
 db = app.database.instance()
 
 
@@ -25,8 +26,12 @@ class UserService:
         if password is None:
             password = crypto.generate_password()
         new_user = User(email, first_name, last_name, password, role)
-        db.add(new_user)
-        db.commit()
+        try:
+            db.add(new_user)
+            db.commit()
+        except exc.IntegrityError:
+            db.rollback()
+            return None
         if role == 'RESIDENT':
             ResidentService.create_resident(new_user)
 

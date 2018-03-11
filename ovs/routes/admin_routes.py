@@ -22,17 +22,20 @@ def register_manager():
     form = RegisterManagerForm(csrf_enabled=False)
     if request.method == 'POST':
         if form.validate():
-            # UserService.create_user(
-            #     form.email.data,
-            #     form.first_name.data,
-            #     form.last_name.data,
-            #     form.role.data)
+            user = UserService.create_user(
+                form.email.data,
+                form.first_name.data,
+                form.last_name.data,
+                form.role.data)
 
             # form.email.data = ""
             # form.first_name.data = ""
             # form.last_name.data = ""
             # form.role.data = ""
-            flash("User successfully added!")
+            if user:
+                flash("User successfully added!")
+            else:
+                flash("User not successfully added! Email already exists!")
             return redirect(url_for('admin.register_manager'))
             # return render_template('admin/register_manager.html', role=role, user=user, form=form)
         else:
