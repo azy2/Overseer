@@ -206,8 +206,12 @@ def create_meal_plan():
                 form.meal_plan.data,
                 form.plan_type.data,
                 form.email.data)
-            MealService.get_meal_plan_by_pin(form.pin.data)
-            flash('Meal plan created successfully!', 'message')
+            valid = MealService.get_meal_plan_by_pin(form.pin.data)
+            # Todo: meal service always returns false, not fully implemented yet
+            if valid:
+                flash('Meal plan created successfully!', 'message')
+            else:
+                flash('Meal plan not created', 'error')
             return redirect(url_for('manager.create_meal_plan'))
         else:
             return str(form.errors)
