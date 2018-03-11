@@ -33,9 +33,9 @@ def register_manager():
             # form.last_name.data = ""
             # form.role.data = ""
             if user:
-                flash("User successfully added!")
+                flash('User successfully added!', 'message')
             else:
-                flash("User not successfully added! Email already exists!")
+                flash('User not successfully added! Email already exists!', 'error')
             return redirect(url_for('admin.register_manager'))
             # return render_template('admin/register_manager.html', role=role, user=user, form=form)
         else:
