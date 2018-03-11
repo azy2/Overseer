@@ -7,6 +7,7 @@ from ovs.models.package_model import Package
 from ovs.services.user_service import UserService
 from ovs.services.resident_service import ResidentService
 from ovs.services.package_service import PackageService
+from ovs.services.room_service import RoomService
 db = app.database.instance()
 
 
@@ -32,8 +33,16 @@ class ManagerService:
     @staticmethod
     def update_resident_room_number(user_id, room_number):
         """ Changes the room_number of Resident identified by user_id """
-        db.query(Resident).filter(Resident.user_id == user_id).update({Resident.room_number: room_number})
-        db.commit()
+        room = RoomService.get_room_by_number(room_number).first()
+        if room is None:
+            return None
+        # Todo: Catch specific exceptions for join and update
+        try:
+            db.query(Resident).filter(Resident.user_id == user_id).update({Resident.room_number: room_number})
+            db.commit()
+        except Exception:
+            db.rollback()
+            return None
         return ResidentService.get_resident_by_id(user_id).first()
 
     @staticmethod
