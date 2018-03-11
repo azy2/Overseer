@@ -31,16 +31,20 @@ def register_room():
     form = RegisterRoomForm(csrf_enabled=False)
     if request.method == 'POST':
         if form.validate():
-            RoomService.create_room(
+            room = RoomService.create_room(
                 form.room_number.data,
                 form.room_status.data,
                 form.room_type.data)
+            if room is None:
+                flash('Room number already exists! Creation Failed!', 'error')
+                return redirect((url_for('manager.register_room')))
             occupants = form.occupants.data
             emails = occupants.split(';')
             number = form.room_number.data
             for email in emails:
                 if email == '':
                     continue
+                # Todo: Add flash response for bad emails
                 RoomService.add_resident_to_room(email, number)
             flash('Residents added to rooms successfully!', 'message')
             return redirect(url_for('manager.register_room'))
