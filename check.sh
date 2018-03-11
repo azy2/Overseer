@@ -16,7 +16,7 @@ function run_unittests() {
 
 function run_selenium() {
     echo '======================== selenium ========================='
-    (FLASK_APP=main.py APP_ENV=TEST flask run > /dev/null 2>&1) &
+    (FLASK_APP=main.py APP_ENV=TEST flask run --port=5000 > /dev/null 2>&1) &
     PID=$!
     PATH=.:$PATH nose2 -s ovs/tests/selenium
     kill $PID
