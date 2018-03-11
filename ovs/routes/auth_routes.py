@@ -4,8 +4,8 @@ from flask_login import login_user, logout_user, login_required
 
 from ovs import app
 from ovs.forms.login_form import LoginForm
-from ovs.models.user_model import User
 from ovs.utils.roles import UserRole
+from ovs.services.user_service import UserService
 
 auth_bp = Blueprint('auth', __name__,)
 db = app.database.instance()
@@ -18,7 +18,7 @@ def login():
     if form.validate():
         email = form.email.data
         # password = form.password.data
-        user = db.query(User).filter_by(email=email).first()
+        user = UserService.get_user_by_email(email).first()
         if user is None:
             return redirect(url_for('/.landing_page'))
         login_user(user)
