@@ -201,13 +201,13 @@ def create_meal_plan():
     form = CreateMealPlanForm(csrf_enabled=False)
     if request.method == 'POST':
         if form.validate():
-            UserService.create_meal_plan_for_user_by_email(
+            valid = UserService.create_meal_plan_for_user_by_email(
                 form.pin.data,
                 form.meal_plan.data,
                 form.plan_type.data,
                 form.email.data)
-            valid = MealService.get_meal_plan_by_pin(form.pin.data)
-            # Todo: meal service always returns false, not fully implemented yet
+            MealService.get_meal_plan_by_pin(form.pin.data)
+            # Todo: create meal plan by email always returns false, not fully implemented yet
             if valid:
                 flash('Meal plan created successfully!', 'message')
             else:
