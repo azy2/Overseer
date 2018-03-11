@@ -3,10 +3,7 @@ from unittest import TestCase
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
-#from selenium.webdriver.support.ui import WebDriverWait
-#from selenium.webdriver.support import expected_conditions as EC
-
-from ovs import  DataGen
+from ovs import DataGen
 
 
 class TestLogin(TestCase):
@@ -15,7 +12,7 @@ class TestLogin(TestCase):
     def setUp(self):
         """ Creates a headless chrome instance for selenium and clears the DB """
         chrome_options = Options()
-        #chrome_options.add_argument("--headless")
+        # chrome_options.add_argument("--headless")
         self.browser = webdriver.Chrome(chrome_options=chrome_options)
         self.base_url = 'localhost:5000'
         DataGen.clear_db()
