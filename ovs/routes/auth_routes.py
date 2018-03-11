@@ -20,10 +20,9 @@ def login():
         # password = form.password.data
         user = db.query(User).filter_by(email=email).first()
         if user is None:
-            flash('Invalid Credentials.', 'error')
+            flash('Invalid Credentials!', 'error')
             return redirect(url_for('/.landing_page'))
         login_user(user)
-        flash('success!', 'message')
         if user.role == UserRole.RESIDENT:
             return redirect(url_for('resident.landing_page'))
         else:
