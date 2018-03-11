@@ -6,7 +6,7 @@ from selenium.webdriver.common.keys import Keys
 #from selenium.webdriver.support.ui import WebDriverWait
 #from selenium.webdriver.support import expected_conditions as EC
 
-from ovs import app, DataGen
+from ovs import  DataGen
 
 
 class TestLogin(TestCase):
@@ -14,7 +14,6 @@ class TestLogin(TestCase):
 
     def setUp(self):
         """ Creates a headless chrome instance for selenium and clears the DB """
-        self.db = app.database.instance()
         chrome_options = Options()
         #chrome_options.add_argument("--headless")
         self.browser = webdriver.Chrome(chrome_options=chrome_options)
