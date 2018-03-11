@@ -124,6 +124,9 @@ def manage_packages():
     """
     add_form = AddPackageForm(prefix='add_form', csrf_enabled=False)
     edit_form = EditPackageForm(prefix='edit_form', csrf_enabled=False)
+    user = UserService.get_user_by_id(current_user.get_id()).first()
+    role = user.role
+    packages_recipients_checkers = ManagerService.get_all_packages_recipients_checkers()
     if request.method == 'POST':
         # Add package
         if add_form.validate_on_submit():
@@ -149,18 +152,18 @@ def manage_packages():
 
         else:
             if 'add_btn' in request.form:
-                return str(add_form.errors)
+                return render_template('manager/manage_packages.html', role=role, user=user,
+                                       packages_recipients_checkers=packages_recipients_checkers,
+                                       add_form=add_form, edit_form=edit_form)
             elif 'edit_btn' in request.form:
-                return str(edit_form.errors)
+                flash(str(edit_form.errors['recipient_email'][0]), 'error')
+                return redirect(url_for('manager.manage_packages'))
 
             # Should not reach here
             else:
                 return str(add_form.errors) + "\n-----\n" + str(edit_form.errors)
 
     else:
-        user = UserService.get_user_by_id(current_user.get_id()).first()
-        role = user.role
-        packages_recipients_checkers = ManagerService.get_all_packages_recipients_checkers()
         return render_template('manager/manage_packages.html', role=role, user=user,
                                packages_recipients_checkers=packages_recipients_checkers,
                                add_form=add_form, edit_form=edit_form)
