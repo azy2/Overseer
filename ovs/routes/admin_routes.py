@@ -1,5 +1,4 @@
 """ routes under /admin/ """
-import json
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
 from ovs.services import UserService
@@ -39,7 +38,6 @@ def register_manager():
             return redirect(url_for('admin.register_manager'))
             # return render_template('admin/register_manager.html', role=role, user=user, form=form)
         else:
-            errors = str(form.errors)
             return render_template('admin/register_manager.html', role=role, user=user, form=form)
     else:
         return render_template('admin/register_manager.html', role=role, user=user, form=form)

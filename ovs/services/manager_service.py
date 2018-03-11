@@ -1,5 +1,6 @@
 """ Services related to managers """
 from sqlalchemy.orm import aliased
+from sqlalchemy import exc
 from ovs import app
 from ovs.models.user_model import User
 from ovs.models.resident_model import Resident
@@ -40,7 +41,7 @@ class ManagerService:
         try:
             db.query(Resident).filter(Resident.user_id == user_id).update({Resident.room_number: room_number})
             db.commit()
-        except Exception:
+        except exc.SQLAlchemyError:
             db.rollback()
             return None
         return ResidentService.get_resident_by_id(user_id).first()

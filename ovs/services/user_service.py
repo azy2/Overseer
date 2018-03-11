@@ -1,10 +1,10 @@
 """ DB and utility functions for Users """
+from sqlalchemy import exc
 from ovs import app
 from ovs.models.user_model import User
 from ovs.services.resident_service import ResidentService
 from ovs.services.meal_service import MealService
 from ovs.utils import crypto
-from sqlalchemy import exc
 db = app.database.instance()
 
 

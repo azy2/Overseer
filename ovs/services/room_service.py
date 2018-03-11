@@ -1,11 +1,11 @@
 """
 DB access and other services for Rooms
 """
+from sqlalchemy import exc
 from ovs import app
 from ovs.models.room_model import Room
 from ovs.services.user_service import UserService
 from ovs.services.resident_service import ResidentService
-from sqlalchemy import exc
 db = app.database.instance()
 
 
