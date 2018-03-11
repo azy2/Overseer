@@ -31,12 +31,12 @@ class TestLogin(TestCase):
         #chrome_options.add_argument("--headless")
         self.browser = webdriver.Chrome(chrome_options=chrome_options)
         self.base_url = 'localhost:5000'
-        self.clear_db()
+        #self.clear_db()
 
     def tearDown(self):
         """ Closes selenium driver and clears the DB """
         self.browser.quit()
-        self.clear_db()
+        #self.clear_db()
 
     def test_resident_login(self):
         """ Tests whether residents can log in or not """
