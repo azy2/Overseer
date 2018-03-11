@@ -6,23 +6,11 @@ from selenium.webdriver.common.keys import Keys
 #from selenium.webdriver.support.ui import WebDriverWait
 #from selenium.webdriver.support import expected_conditions as EC
 
-from ovs import app
-from ovs.models.user_model import User
-from ovs.models.resident_model import Resident
-from ovs.models.room_model import Room
-from ovs.models.profile_model import Profile
+from ovs import app, DataGen
 
 
 class TestLogin(TestCase):
     """ Test whether users can log in """
-
-    def clear_db(self):
-        """ Empty the DB for tests """
-        self.db.query(Profile).delete()
-        self.db.query(User).delete()
-        self.db.query(Resident).delete()
-        self.db.query(Room).delete()
-        self.db.commit()
 
     def setUp(self):
         """ Creates a headless chrome instance for selenium and clears the DB """
@@ -31,12 +19,13 @@ class TestLogin(TestCase):
         #chrome_options.add_argument("--headless")
         self.browser = webdriver.Chrome(chrome_options=chrome_options)
         self.base_url = 'localhost:5000'
-        #self.clear_db()
+        DataGen.clear_db()
+        DataGen.create_defaults()
 
     def tearDown(self):
         """ Closes selenium driver and clears the DB """
         self.browser.quit()
-        #self.clear_db()
+        DataGen.clear_db()
 
     def test_resident_login(self):
         """ Tests whether residents can log in or not """
@@ -52,7 +41,7 @@ class TestLogin(TestCase):
         self.assertIn('John', self.browser.title)
 
     def test_manager_login(self):
-        """ Tests whether manageres can log in or not """
+        """ Tests whether managers can log in or not """
         self.browser.get(self.base_url)
         self.assertIn('Overseer', self.browser.title)
 
@@ -63,3 +52,16 @@ class TestLogin(TestCase):
         pass_box.send_keys(Keys.ENTER)
 
         self.assertIn('Super', self.browser.title)
+
+    def test_bad_login(self):
+        """ Tests whether a random email  can log in or not """
+        self.browser.get(self.base_url)
+        self.assertIn('Overseer', self.browser.title)
+
+        name_box = self.browser.find_element_by_name('email')
+        name_box.send_keys('testtesttest@gmail.com')
+        pass_box = self.browser.find_element_by_name('password')
+        pass_box.send_keys('abcd1234')
+        pass_box.send_keys(Keys.ENTER)
+
+        self.assertEqual('Overseer', self.browser.title)
