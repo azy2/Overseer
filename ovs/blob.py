@@ -13,7 +13,8 @@ class Blob():
         blob_config = app.config['BLOB']
         self._service = BlockBlobService(account_name = blob_config['account'],
             account_key = blob_config['key'])
-        self._service.create_container('profile_picture')
+        if not self._service.exists(self.PROFILE_PICTURE_CONTAINER):
+            self._service.create_container(self.PROFILE_PICTURE_CONTAINER)
 
     def instance(self):
         """ Get a handle to the profile blob container """
