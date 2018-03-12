@@ -12,9 +12,10 @@ class TestLogin(TestCase):
     def setUp(self):
         """ Creates a headless chrome instance for selenium and clears the DB """
         chrome_options = Options()
-        # chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         self.browser = webdriver.Chrome(chrome_options=chrome_options)
-        self.base_url = 'localhost:5000'
+        self.browser.implicitly_wait(1)
+        self.base_url = 'http://localhost:5000'
         DataGen.clear_db()
         DataGen.create_defaults()
 
