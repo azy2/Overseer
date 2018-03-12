@@ -15,32 +15,30 @@ class TestMealPlanModel(TestCase):
         """ Runs before every test and clears relevant tables """
         self.db = app.database.instance()
         self.tearDown()
+        self.create_test_meal_plan()
 
     def tearDown(self):
         """ Runs after every tests and clears relevant tables """
         self.db.query(MealPlan).delete()
         self.db.commit()
 
-    @staticmethod
-    def get_weekly_test_meal_plan():
-        """ Returns a meal plan with WEEKLY plan_type for use in testing """
+    def create_test_meal_plan(self):
+        """ Creates a meal plan with WEEKLY plan_type for use in testing """
         test_meal_plan_info = (141414, 10, 'WEEKLY')
-        return MealPlan(*test_meal_plan_info)
+        self.test_meal_plan = MealPlan(*test_meal_plan_info)
 
     def test_update_meal_plan(self):
         """ Tests that meal plans can be updated """
-        meal_plan = TestMealPlanModel.get_weekly_test_meal_plan()
-        starting_credits = meal_plan.credits
+        starting_credits = self.test_meal_plan.credits
 
-        self.assertTrue(meal_plan.update_meal_count())
-        self.assertEqual(starting_credits - 1, meal_plan.credits)
+        self.assertTrue(self.test_meal_plan.update_meal_count())
+        self.assertEqual(starting_credits - 1, self.test_meal_plan.credits)
         # Add 1 minute to the reset time to avoid any flaky tests right around the reset period
-        self.assertTrue(datetime.utcnow() < meal_plan.reset_date.replace(minute=1))
+        self.assertTrue(datetime.utcnow() < self.test_meal_plan.reset_date.replace(minute=1))
 
     def test_get_next_reset_date_weekly(self):
         """ Tests get_next_reset_date for WEEKLY plan_type """
-        meal_plan = TestMealPlanModel.get_weekly_test_meal_plan()
-        self.assertEqual(meal_plan.get_next_reset_date().weekday(), 0)  # Is it a Monday?
+        self.assertEqual(self.test_meal_plan.get_next_reset_date().weekday(), 0)  # Is it a Monday?
 
     def test_next_weekday(self):
         """ Tests next_weekday when later in the same week """
