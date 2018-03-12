@@ -19,7 +19,7 @@ class Profile(app.BaseModel):
     preferred_email = sa.Column(sa.CHAR(255))
     race = sa.Column(sa.CHAR(31))
     gender = sa.Column(sa.Enum(genders.MALE, genders.FEMALE))
-    picture_path = sa.Column(sa.CHAR(255))
+    picture_id = sa.Column(sa.CHAR(255))
     created = sa.Column(sa.DateTime, server_default=sa.text('CURRENT_TIMESTAMP'))
     updated = sa.Column(sa.DateTime, server_default=sa.text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))
 
@@ -30,9 +30,9 @@ class Profile(app.BaseModel):
 
     def __repr__(self):
         return "Profile([user_id='%s', preferred_name='%s', phone_number='%s', preferred_email='%s', race='%s', \
-               gender='%s', picture_path='%s', created='%s', updated='%s'])" \
+               gender='%s', picture_id='%s', created='%s', updated='%s'])" \
                % (self.user_id, self.preferred_name, self.phone_number, self.preferred_email, self.race, self.gender,
-                  self.picture_path, self.created, self.updated)
+                  self.picture_id, self.created, self.updated)
 
     def json(self):
         """ Returns a JSON representation of this Profile """
@@ -43,7 +43,7 @@ class Profile(app.BaseModel):
             preferred_email=self.preferred_email,
             race=self.race,
             gender=self.gender,
-            picture_path=self.picture_path,
+            picture_id=self.picture_id,
             created=self.created,
             updated=self.updated
         )
