@@ -6,11 +6,13 @@ details, etc...
 import os
 import sys
 
+
 def prod_env_load(key, _):
     """Forces production environment loads to set keys instead of using defaults"""
     if key not in os.environ:
         raise KeyError("Running in production, please override %s" % (key))
     return os.environ[key]
+
 
 class Config(object):
     """ The Config object stores all of the setup information """
@@ -24,9 +26,10 @@ class Config(object):
     TESTING = APP_ENV == 'TEST'
     TEST_MAIL = False
     PRODUCTION = APP_ENV == 'PROD'
-    DOMAIN_NAME = 'ovs-overseer.azurewebsites.net'
-    SENDGRID_API_KEY = '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'
-    SENDGRID_DEFAULT_FROM = 'admin@{domain_name}'.format(domain_name=DOMAIN_NAME)
+    DOMAIN_NAME = env_load('DOMAIN_NAME', 'ovs-overseer.azurewebsites.net')
+    SENDGRID_API_KEY = env_load('SENDGRID_API_KEY', 'FAKEAPIKEY')
+    SENDGRID_DEFAULT_FROM = 'admin@{domain_name}'.format(
+        domain_name=DOMAIN_NAME)
 
     if not DEVELOPMENT and not TESTING and not PRODUCTION:
         sys.exit('Please enter a valid environment')
