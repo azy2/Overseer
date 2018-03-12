@@ -55,6 +55,8 @@ class Config(object):
     BLOB = {
         'account': env_load('BLOB_ACCOUNT', 'overseer'),
         'key': env_load('BLOB_KEY', ''),
+        'default_picture_path': env_load('DEFAULT_PICTURE_PATH',
+                                         'ovs/static/default_profile.png')
     }
 
     SUPERUSER = {
