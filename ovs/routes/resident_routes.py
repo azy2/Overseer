@@ -1,5 +1,5 @@
 """ under /resident """
-from flask import Blueprint, redirect, render_template, request, url_for
+from flask import Blueprint, redirect, render_template, request, url_for, flash
 from flask_login import current_user, login_required
 from ovs import app
 from ovs.utils.roles import UserRole
@@ -41,6 +41,7 @@ def edit_profile():
                                           form.phone_number.data,
                                           form.race.data,
                                           form.gender.data)
+            flash('Profile edit successfully!', 'message')
             return redirect(url_for('resident.edit_profile'))
         else:
             return str(form.errors)
