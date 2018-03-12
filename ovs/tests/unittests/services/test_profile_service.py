@@ -9,7 +9,6 @@ from ovs.services.profile_service import ProfileService
 from ovs.models.user_model import User
 from ovs.utils.genders import Gender
 
-
 class TestProfileService(TestCase):
     """
     Tests for profile services
@@ -29,7 +28,7 @@ class TestProfileService(TestCase):
         self.db.commit()
 
     def test_update_profile(self):
-        """ Tests update_profile """
+        """ Tests that profiles can be updated """
         profile = self.test_resident.profile
         self.assertEqual(profile.preferred_name, "Bob")
         self.assertEqual(profile.phone_number, None)
@@ -44,6 +43,7 @@ class TestProfileService(TestCase):
                                       preferred_email='test_new@gmail.com',
                                       race='Black',
                                       gender=Gender.FEMALE)
+
         self.assertEqual(profile.preferred_name, "Jenny")
         self.assertEqual(profile.phone_number, "867-5309")
         self.assertEqual(profile.preferred_email, 'test_new@gmail.com')
