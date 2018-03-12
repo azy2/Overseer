@@ -33,7 +33,7 @@ class Config(object):
     }
 
     BLOB = {
-        'account' : os.getenv('BLOB_ACCOUNT', ''),
+        'account' : os.getenv('BLOB_ACCOUNT', 'overseer'),
         'key' os.getenv('BLOB_KEY', ''): ,
     }
 
