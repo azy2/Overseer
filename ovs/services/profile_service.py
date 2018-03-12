@@ -16,13 +16,12 @@ class ProfileService:
         """
         Updates a user's profile information
         """
-        print(phone_number)
         resident = ResidentService.get_resident_by_id(resident_id).one_or_none()
         if resident is None:
             return False
         profile = resident.profile
         if preferred_email:
-            profile.email = preferred_email
+            profile.preferred_email = preferred_email
         if preferred_name:
             profile.preferred_name = preferred_name
         if phone_number:

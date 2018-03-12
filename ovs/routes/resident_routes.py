@@ -2,6 +2,7 @@
 from flask import Blueprint, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 from ovs import app
+from ovs.utils.roles import UserRole
 from ovs.services.resident_service import ResidentService
 from ovs.services.profile_service import ProfileService
 from ovs.forms.edit_resident_profile_form import EditResidentProfileForm
@@ -9,31 +10,27 @@ from ovs.forms.edit_resident_profile_form import EditResidentProfileForm
 residents_bp = Blueprint('resident', __name__)
 db = app.database.instance()
 
-@residents_bp.route('/view_profile')
+@residents_bp.route('/')
 @login_required
-def view_profile():
-    """
-    Displays the profile for the currently logged in user
-    """
+def landing_page():
+    """ The landing page for residents """
     resident_id = current_user.get_id()
-    resident_profile = ResidentService.get_resident_by_id(resident_id).first().profile
-    if resident_profile is None:
-        return 'Could not find profile information for user with id: ' + resident_id
+    resident = ResidentService.get_resident_by_id(resident_id).first()
+    profile = resident.profile
+    return render_template('resident/index.html', role=UserRole.RESIDENT, profile=profile)
 
-    return resident_profile.json()
-
-@residents_bp.route('/edit_profile', methods=['GET', 'POST'])
+@residents_bp.route('/profile/', methods=['GET', 'POST'])
 @login_required
 def edit_profile():
     """
     Allows the user to edit their profile in a wtform
     """
     resident_id = current_user.get_id()
-    resident_profile = ResidentService.get_resident_by_id(resident_id).first().profile
-    if resident_profile is None:
+    profile = ResidentService.get_resident_by_id(resident_id).first().profile
+    if profile is None:
         return 'Could not find profile information for user with id: ' + resident_id
 
-    form = EditResidentProfileForm(obj=resident_profile, csrf_enabled=False)
+    form = EditResidentProfileForm(obj=profile, csrf_enabled=False)
 
     if request.method == 'POST':
         if form.validate():
@@ -44,8 +41,8 @@ def edit_profile():
                                           form.phone_number.data,
                                           form.race.data,
                                           form.gender.data)
-            return redirect(url_for('resident.view_profile'))
+            return redirect(url_for('resident.edit_profile'))
         else:
             return str(form.errors)
     else:
-        return render_template('resident/edit_resident_profile.html', form=form)
+        return render_template('resident/profile.html', role=UserRole.RESIDENT, profile=profile, form=form)
