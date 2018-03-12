@@ -6,11 +6,13 @@ details, etc...
 import os
 import sys
 
+
 def prod_env_load(key, _):
     """Forces production environment loads to set keys instead of using defaults"""
     if key not in os.environ:
         raise KeyError("Running in production, please override %s" % (key))
     return os.environ[key]
+
 
 class Config(object):
     """ The Config object stores all of the setup information """
@@ -43,8 +45,8 @@ class Config(object):
     }
 
     BLOB = {
-        'account' : os.getenv('BLOB_ACCOUNT', 'overseer'),
-        'key' : os.getenv('BLOB_KEY', ''),
+        'account': env_load('BLOB_ACCOUNT', 'overseer'),
+        'key': env_load('BLOB_KEY', ''),
     }
 
     SUPERUSER = {
