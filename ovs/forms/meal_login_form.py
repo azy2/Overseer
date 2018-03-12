@@ -2,9 +2,12 @@
 from flask_wtf import FlaskForm
 from wtforms import IntegerField, ValidationError
 from wtforms.validators import DataRequired
-from ovs.models.meal_plan_model import MealPlan
+
 from ovs import app
+from ovs.models.meal_plan_model import MealPlan
+
 db = app.database.instance()
+
 
 def validate_meal_pin(form, field):  # pylint: disable=unused-argument
     """

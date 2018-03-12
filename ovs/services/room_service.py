@@ -2,10 +2,12 @@
 DB access and other services for Rooms
 """
 from sqlalchemy import exc
+
 from ovs import app
 from ovs.models.room_model import Room
-from ovs.services.user_service import UserService
 from ovs.services.resident_service import ResidentService
+from ovs.services.user_service import UserService
+
 db = app.database.instance()
 
 
@@ -13,6 +15,10 @@ class RoomService:
     """
     DB Access and utility methods for Rooms
     """
+
+    def __init__(self):
+        pass
+
     @staticmethod
     def create_room(number, status, room_type):
         """ Adds a room to the database """

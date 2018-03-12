@@ -1,9 +1,11 @@
 """ routes under /admin/ """
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
-from ovs.services import UserService
+
 from ovs.forms import RegisterManagerForm
-admin_bp = Blueprint('admin', __name__,)
+from ovs.services import UserService
+
+admin_bp = Blueprint('admin', __name__, )
 
 
 @admin_bp.route('/register_manager/', methods=['GET', 'POST'])

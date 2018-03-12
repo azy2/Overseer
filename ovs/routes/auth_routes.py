@@ -7,7 +7,7 @@ from ovs.forms.login_form import LoginForm
 from ovs.models.user_model import User
 from ovs.utils.roles import UserRole
 
-auth_bp = Blueprint('auth', __name__,)
+auth_bp = Blueprint('auth', __name__, )
 db = app.database.instance()
 
 

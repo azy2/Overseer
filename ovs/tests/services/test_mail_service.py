@@ -31,7 +31,9 @@ class TestSendMail(TestCase):
             text='testText')
         mock_client.assert_called()
         self.assertEqual(json.dumps(self.mail.get(), sort_keys=True),
-                         '{"content": [{"type": "text/plain", "value": "testText"}], "from": {"email": "no-reply@ovs-overseer.azurewebsites.net"}, "personalizations": [{"to": [{"email": "testEmail@test.com"}]}], "subject": "TestSubject"}')  # pylint: disable=line-too-long
+                         '{"content": [{"type": "text/plain", "value": "testText"}], "from": {"email": '
+                         '"no-reply@ovs-overseer.azurewebsites.net"}, "personalizations": [{"to": [{"email": '
+                         '"testEmail@test.com"}]}], "subject": "TestSubject"}')
 
     # pylint: disable=no-self-use
     @patch('ovs.services.mail_service.send_email')

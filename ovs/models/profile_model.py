@@ -3,10 +3,12 @@ Defines a Profile as represented in the database
 """
 import uuid
 from flask import jsonify
-import sqlalchemy as sa
+from sqlalchemy import Integer, Enum, Column, CHAR, text, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
+
 from ovs import app
 from ovs.utils import genders
+
 
 class Profile(app.BaseModel):
     """
@@ -14,26 +16,28 @@ class Profile(app.BaseModel):
     """
     __tablename__ = 'profile'
 
-    user_id = sa.Column(sa.Integer, sa.ForeignKey('residents.user_id'), primary_key=True, nullable=False)
-    preferred_name = sa.Column(sa.CHAR(255))
-    phone_number = sa.Column(sa.CHAR(255))
-    preferred_email = sa.Column(sa.CHAR(255))
-    race = sa.Column(sa.CHAR(31))
-    gender = sa.Column(sa.Enum(genders.MALE, genders.FEMALE))
-    picture_id = sa.Column(sa.CHAR(63))
-    created = sa.Column(sa.DateTime, server_default=sa.text('CURRENT_TIMESTAMP'))
-    updated = sa.Column(sa.DateTime, server_default=sa.text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))
+    user_id = Column(Integer, ForeignKey('residents.user_id'),
+                     primary_key=True, nullable=False)
+    preferred_name = Column(CHAR(255))
+    phone_number = Column(CHAR(255))
+    preferred_email = Column(CHAR(255))
+    race = Column(CHAR(31))
+    gender = Column(Enum(genders.MALE, genders.FEMALE))
+    picture_id = Column(CHAR(63))
+    created = Column(DateTime, server_default=text('CURRENT_TIMESTAMP'))
+    updated = Column(DateTime, server_default=text(
+        'CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))
 
-    resident = relationship('Resident', uselist=False, back_populates='profile', single_parent=True)
+    resident = relationship('Resident', uselist=False,
+                            back_populates='profile', single_parent=True)
 
     def __init__(self, user_id):
         super(Profile, self).__init__(user_id=user_id, picture_id=str(uuid.uuid4()))
 
     def __repr__(self):
-        return "Profile([user_id='%s', preferred_name='%s', phone_number='%s', preferred_email='%s', race='%s', \
-               gender='%s', picture_id='%s', created='%s', updated='%s'])" \
-               % (self.user_id, self.preferred_name, self.phone_number, self.preferred_email, self.race, self.gender,
-                  self.picture_id, self.created, self.updated)
+        return 'Profile([user_id={user_id}, preferred_name={preferred_name}, phone_number={phone_number}, ' \
+               'preferred_email={preferred_email}, race={race}, gender={gender}, picture_id={picture_id}, ' \
+               'created={created}, updated={updated}])'.format(**self.__dict__)
 
     def json(self):
         """ Returns a JSON representation of this Profile """

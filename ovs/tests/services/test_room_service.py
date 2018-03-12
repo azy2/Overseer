@@ -2,14 +2,15 @@
 Tests for room services
 """
 from unittest import TestCase
+
 from ovs import app
-from ovs.services.user_service import UserService
-from ovs.services.resident_service import ResidentService
-from ovs.services.room_service import RoomService
-from ovs.models.user_model import User
+from ovs.models.profile_model import Profile
 from ovs.models.resident_model import Resident
 from ovs.models.room_model import Room
-from ovs.models.profile_model import Profile
+from ovs.models.user_model import User
+from ovs.services.resident_service import ResidentService
+from ovs.services.room_service import RoomService
+from ovs.services.user_service import UserService
 
 
 class TestRoomService(TestCase):

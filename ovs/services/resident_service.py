@@ -2,14 +2,19 @@
 DB and utility functions for Residents
 """
 from ovs import app
-from ovs.models.resident_model import Resident
 from ovs.models.profile_model import Profile
 from ovs.services.profile_picture_service import ProfilePictureService
+from ovs.models.resident_model import Resident
+
 db = app.database.instance()
 
 
 class ResidentService:
     """ DB and utility functions for Residents """
+
+    def __init__(self):
+        pass
+
     @staticmethod
     def create_resident(new_user, room_number=None):
         """
