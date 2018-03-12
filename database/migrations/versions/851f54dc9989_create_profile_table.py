@@ -14,9 +14,6 @@ down_revision = '01e80453c316'
 branch_labels = None
 depends_on = None
 
-def generate_profile_id():
-    return str(uuid.uuid4())
-
 def upgrade():
     op.create_table(
         'profile',
@@ -26,7 +23,7 @@ def upgrade():
         sa.Column('preferred_email', sa.CHAR(255)),
         sa.Column('race', sa.CHAR(31)),
         sa.Column('gender', sa.Enum('Male', 'Female')),
-        sa.Column('picture_id', sa.CHAR(63), default=generate_profile_id),
+        sa.Column('picture_id', sa.CHAR(63)),
         sa.Column('created', sa.DateTime, server_default=sa.text('CURRENT_TIMESTAMP')),
         sa.Column('updated', sa.DateTime, server_default=sa.text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP')),
     )

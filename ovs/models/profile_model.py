@@ -19,14 +19,14 @@ class Profile(app.BaseModel):
     preferred_email = sa.Column(sa.CHAR(255))
     race = sa.Column(sa.CHAR(31))
     gender = sa.Column(sa.Enum(genders.MALE, genders.FEMALE))
-    picture_id = sa.Column(sa.CHAR(255))
+    picture_id = sa.Column(sa.CHAR(63))
     created = sa.Column(sa.DateTime, server_default=sa.text('CURRENT_TIMESTAMP'))
     updated = sa.Column(sa.DateTime, server_default=sa.text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))
 
     resident = relationship('Resident', uselist=False, back_populates='profile', single_parent=True)
 
     def __init__(self, user_id):
-        super(Profile, self).__init__(user_id=user_id)
+        super(Profile, self).__init__(user_id=user_id, profile_id=str(uuid.uuid4()))
 
     def __repr__(self):
         return "Profile([user_id='%s', preferred_name='%s', phone_number='%s', preferred_email='%s', race='%s', \
