@@ -37,8 +37,7 @@ class EditPackageForm(FlaskForm):
     """ Form with data required to edit a package """
     package_id = StringField('Package ID', validators=[DataRequired(), validate_package_id]) # (hidden)
     recipient_id = StringField('Recipient ID', validators=[DataRequired(), validate_user_id]) # (hidden)
-    recipient_email = StringField('Package Recipient', validators=[Length(min=6, max=35),
-                                                                   DataRequired(),
+    recipient_email = StringField('Package Recipient', validators=[DataRequired(),
                                                                    validate_resident_email]) # (editable)
     checked_by = StringField('Checked By')
     checked_at = StringField('Checked At')

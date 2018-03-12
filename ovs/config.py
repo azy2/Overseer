@@ -24,11 +24,19 @@ class Config(object):
     SECRET_KEY = env_load('SECRET', 'VERY_SPECIAL_KEY')
     DEVELOPMENT = APP_ENV == 'DEV'
     TESTING = APP_ENV == 'TEST'
+    TEST_MAIL = False
     PRODUCTION = APP_ENV == 'PROD'
+    DOMAIN_NAME = env_load('DOMAIN_NAME', 'ovs-overseer.azurewebsites.net')
+    SENDGRID_API_KEY = env_load('SENDGRID_API_KEY', 'FAKEAPIKEY')
+    SENDGRID_DEFAULT_FROM = 'admin@{domain_name}'.format(
+        domain_name=DOMAIN_NAME)
+
     if not DEVELOPMENT and not TESTING and not PRODUCTION:
         sys.exit('Please enter a valid environment')
 
     PORT = env_load('PORT', 8080)
+
+    TEMPLATES_AUTO_RELOAD = True
 
     DATABASE = {
         'primary': {
@@ -44,14 +52,15 @@ class Config(object):
         }
     }
 
-    BLOB = {
-        'account': env_load('BLOB_ACCOUNT', 'overseer'),
-        'key': env_load('BLOB_KEY', ''),
-    }
-
     SUPERUSER = {
-        'email': env_load('SUPERUSER_EMAIL', 'admin@example.com'),
-        'first_name': os.getenv('SUPERUSER_FIRSTNAME', 'John'),
-        'last_name': os.getenv('SUPERUSER_LASTNAME', 'Smith'),
-        'password': env_load('SUPERUSER_PASSWORD', 'ABCD1234')
+        'email': os.getenv('SUPERUSER_EMAIL', 'admin@gmail.com'),
+        'first_name': os.getenv('SUPERUSER_FIRSTNAME', 'Super'),
+        'last_name': os.getenv('SUPERUSER_LASTNAME', 'User'),
+        'password': os.getenv('SUPERUSER_PASSWORD', 'abcd1234')
+    }
+    RESIDENT = {
+        'email': os.getenv('RESIDENT_EMAIL', 'resident@gmail.com'),
+        'first_name': os.getenv('RESIDENT_FIRSTNAME', 'John'),
+        'last_name': os.getenv('RESIDENT_LASTNAME', 'Smith'),
+        'password': os.getenv('RESIDENT_PASSWORD', 'abcd1234')
     }

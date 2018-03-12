@@ -1,6 +1,7 @@
 """
 DB access and other services for Rooms
 """
+from sqlalchemy import exc
 from ovs import app
 from ovs.models.room_model import Room
 from ovs.services.user_service import UserService
@@ -16,8 +17,12 @@ class RoomService:
     def create_room(number, status, room_type):
         """ Adds a room to the database """
         new_room = Room(number=number, status=status, type=room_type)
-        db.add(new_room)
-        db.commit()
+        try:
+            db.add(new_room)
+            db.commit()
+        except exc.IntegrityError:
+            db.rollback()
+            return None
         return new_room
 
     @staticmethod
@@ -45,7 +50,11 @@ class RoomService:
         to the Residents table and adding the resident to the Rooms table.
         """
         user = UserService.get_user_by_email(email).first()
+        if user is None:
+            return {'message': 'Email provided is not valid', 'status': False}
         if user.role == "RESIDENT":
             resident = ResidentService.get_resident_by_id(user.id).first()
             resident.room_number = room_number
             db.commit()
+            return {'message': 'Success', 'status': True}
+        return {'message': 'User role is not resident', 'status': False}
