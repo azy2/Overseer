@@ -1,15 +1,19 @@
 """ Routes under /manager/ """
 import datetime
+
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import current_user, login_required
-from ovs.services.room_service import RoomService
-from ovs.services.user_service import UserService
-from ovs.services.package_service import PackageService
-from ovs.services.manager_service import ManagerService
-from ovs.services.meal_service import MealService
+
 from ovs.forms import RegisterRoomForm, RegisterResidentForm, ManageResidentsForm, \
     AddPackageForm, EditPackageForm, MealLoginForm, CreateMealPlanForm
-manager_bp = Blueprint('manager', __name__,)
+from ovs.services.manager_service import ManagerService
+from ovs.services.meal_service import MealService
+from ovs.services.package_service import PackageService
+from ovs.services.room_service import RoomService
+from ovs.services.user_service import UserService
+
+manager_bp = Blueprint('manager', __name__, )
+
 
 @manager_bp.route('/', methods=['GET'])
 @login_required
@@ -17,7 +21,8 @@ def landing_page():
     """ The landing page for managers """
     user = UserService.get_user_by_id(current_user.get_id()).first()
     role = user.role
-    return render_template('/manager/index.html', role=role, user=user)
+    return render_template('manager/index.html', role=role, user=user)
+
 
 @manager_bp.route('/register_room/', methods=['GET', 'POST'])
 @login_required
@@ -69,7 +74,7 @@ def register_resident():
     user = UserService.get_user_by_id(current_user.get_id()).first()
     role = user.role
     if request.method == 'POST':
-        print(form) # <-- added !!!
+        print(form)  # <-- added !!!
         if form.validate():
             user = UserService.create_user(
                 form.email.data,
@@ -133,7 +138,7 @@ def manage_packages():
             recipient_email = add_form.recipient_email.data
             recipient_id = UserService.get_user_by_email(recipient_email).first().id
             checked_by_id = current_user.get_id()
-            checked_at = datetime.datetime.now().replace(second=0, microsecond=0) # Current date/time
+            checked_at = datetime.datetime.now().replace(second=0, microsecond=0)  # Current date/time
             description = add_form.description.data
 
             PackageService.create_package(recipient_id, checked_by_id, checked_at, description)
@@ -168,6 +173,7 @@ def manage_packages():
                                packages_recipients_checkers=packages_recipients_checkers,
                                add_form=add_form, edit_form=edit_form)
 
+
 @manager_bp.route('/meal_login/', methods=['GET', 'POST'])
 @login_required
 def meal_login():
@@ -190,6 +196,7 @@ def meal_login():
         user = UserService.get_user_by_id(current_user.get_id()).first()
         role = user.role
         return render_template('manager/meal_login.html', role=role, user=user, form=form)
+
 
 @manager_bp.route('/create_meal_plan/', methods=['GET', 'POST'])
 @login_required

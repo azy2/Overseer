@@ -2,10 +2,12 @@
 Defines a Profile as represented in the database
 """
 from flask import jsonify
-import sqlalchemy as sa
+from sqlalchemy import Integer, Enum, Column, CHAR, text, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
+
 from ovs import app
 from ovs.utils import genders
+
 
 class Profile(app.BaseModel):
     """
@@ -13,15 +15,15 @@ class Profile(app.BaseModel):
     """
     __tablename__ = 'profile'
 
-    user_id = sa.Column(sa.Integer, sa.ForeignKey('residents.user_id'), primary_key=True, nullable=False)
-    preferred_name = sa.Column(sa.CHAR(255))
-    phone_number = sa.Column(sa.CHAR(255))
-    preferred_email = sa.Column(sa.CHAR(255))
-    race = sa.Column(sa.CHAR(31))
-    gender = sa.Column(sa.Enum(genders.MALE, genders.FEMALE))
-    picture_path = sa.Column(sa.CHAR(255))
-    created = sa.Column(sa.DateTime, server_default=sa.text('CURRENT_TIMESTAMP'))
-    updated = sa.Column(sa.DateTime, server_default=sa.text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))
+    user_id = Column(Integer, ForeignKey('residents.user_id'), primary_key=True, nullable=False)
+    preferred_name = Column(CHAR(255))
+    phone_number = Column(CHAR(255))
+    preferred_email = Column(CHAR(255))
+    race = Column(CHAR(31))
+    gender = Column(Enum(genders.MALE, genders.FEMALE))
+    picture_path = Column(CHAR(255))
+    created = Column(DateTime, server_default=text('CURRENT_TIMESTAMP'))
+    updated = Column(DateTime, server_default=text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))
 
     resident = relationship('Resident', uselist=False, back_populates='profile', single_parent=True)
 

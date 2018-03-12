@@ -3,11 +3,16 @@ DB and utility functions for Meals
 """
 from ovs import app
 from ovs.models.meal_plan_model import MealPlan
+
 db = app.database.instance()
 
 
 class MealService:
     """ DB and utility functions for Meals """
+
+    def __init__(self):
+        pass
+
     @staticmethod
     def create_meal_plan(pin, meal_plan, plan_type):
         """
@@ -17,7 +22,7 @@ class MealService:
         :param plan_type: The plan's reset period
         :return: True for success, False for failure
         """
-        if MealService.get_meal_plan_by_pin(pin) != None:
+        if MealService.get_meal_plan_by_pin(pin) is not None:
             return False
         new_plan = MealPlan(pin, meal_plan, plan_type)
         db.add(new_plan)
@@ -32,7 +37,7 @@ class MealService:
         :return: The updated account
         """
         user_plan = MealService.get_meal_plan_by_pin(pin)
-        if user_plan != None:
+        if user_plan is not None:
             has_meal = user_plan.update_meal_count()
             if has_meal:
                 MealService.log_meal_use(pin)

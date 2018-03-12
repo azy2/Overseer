@@ -2,7 +2,9 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, RadioField
 from wtforms.validators import Length, Email
+
 from ovs.utils import genders
+
 
 class EditResidentProfileForm(FlaskForm):
     """ Form with data to edit the current user's profile """

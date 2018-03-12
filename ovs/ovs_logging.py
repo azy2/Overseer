@@ -1,8 +1,9 @@
 """
 Application wide logging support
 """
-import sys
 import logging
+import sys
+
 from flask import request
 
 
@@ -65,6 +66,6 @@ class RequestFormatter(logging.Formatter):
     # Using flask.request global to add information about last request to record attribute dict for formatting
     def format(self, record):
         """ Defines the format in which to log HTTP requests """
-        record.request_url = request.url  # u'http://www.example.com/myapplication/π/page.html?x=y'
+        record.request_url = request.url  # 'http://www.example.com/myapplication/π/page.html?x=y'
         record.request_args = request.args
         record.request_method = request.method  # POST, GET, etc.

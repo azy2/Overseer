@@ -2,7 +2,8 @@
 Defines a Room as represented in the database
 """
 from flask import jsonify
-import sqlalchemy as sa
+from sqlalchemy import Integer, Column, CHAR, text, DateTime
+
 from ovs import app
 
 
@@ -12,12 +13,12 @@ class Room(app.BaseModel):
     """
     __tablename__ = 'rooms'
 
-    id = sa.Column(sa.Integer, primary_key=True)
-    number = sa.Column(sa.CHAR(255), unique=True)
-    status = sa.Column(sa.CHAR(255), nullable=False)
-    type = sa.Column(sa.CHAR(255), nullable=False)
-    created = sa.Column(sa.DateTime, server_default=sa.text('CURRENT_TIMESTAMP'))
-    updated = sa.Column(sa.DateTime, server_default=sa.text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))
+    id = Column(Integer, primary_key=True)
+    number = Column(CHAR(255), unique=True)
+    status = Column(CHAR(255), nullable=False)
+    type = Column(CHAR(255), nullable=False)
+    created = Column(DateTime, server_default=text('CURRENT_TIMESTAMP'))
+    updated = Column(DateTime, server_default=text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))
 
     def __repr__(self):
         return 'Room([id="%s", number="%s", status="%s", type="%s", created="%s", updated="%s"])' \

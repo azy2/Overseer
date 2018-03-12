@@ -2,8 +2,9 @@
 Defines a Resident as represented in the database
 """
 from flask import jsonify
-import sqlalchemy as sa
+from sqlalchemy import Integer, Column, CHAR, text, DateTime
 from sqlalchemy.orm import relationship
+
 from ovs import app
 
 
@@ -13,10 +14,10 @@ class Resident(app.BaseModel):
     """
     __tablename__ = 'residents'
 
-    user_id = sa.Column(sa.Integer, primary_key=True)
-    room_number = sa.Column(sa.CHAR(255))
-    created = sa.Column(sa.DateTime, server_default=sa.text('CURRENT_TIMESTAMP'))
-    updated = sa.Column(sa.DateTime, server_default=sa.text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))
+    user_id = Column(Integer, primary_key=True)
+    room_number = Column(CHAR(255))
+    created = Column(DateTime, server_default=text('CURRENT_TIMESTAMP'))
+    updated = Column(DateTime, server_default=text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))
     profile = relationship('Profile', uselist=False, back_populates='resident', cascade='all, delete, delete-orphan')
 
     def __init__(self, user_id, room_number):

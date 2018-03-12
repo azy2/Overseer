@@ -5,9 +5,8 @@ a database connection. The networking code can be found in `../main.py`
 
 from flask import Flask
 from flask_bcrypt import Bcrypt
-
-from sqlalchemy.ext.declarative import declarative_base
 from flask_sendgrid import SendGrid
+from sqlalchemy.ext.declarative import declarative_base
 
 from ovs.database import Database
 

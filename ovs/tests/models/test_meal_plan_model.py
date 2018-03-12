@@ -1,17 +1,18 @@
 """
 Tests for meal plan model
 """
-from unittest import TestCase
 from datetime import datetime
+from unittest import TestCase
+
 from ovs import app
 from ovs.models.meal_plan_model import MealPlan
-
 
 
 class TestMealPlanModel(TestCase):
     """
     Tests for meal plan model
     """
+
     def setUp(self):
         """ Runs before every test and clears relevant tables """
         self.db = app.database.instance()
@@ -27,8 +28,8 @@ class TestMealPlanModel(TestCase):
         test_meal_plan_info = (141414, 10, 'WEEKLY')
         meal_plan = MealPlan(*test_meal_plan_info)
         self.assertTrue(meal_plan.update_meal_count())
-        self.assertEqual(test_meal_plan_info[1]-1, meal_plan.credits)
-        #Add 1 minute to the reset time to avoid any flaky tests right around the reset period
+        self.assertEqual(test_meal_plan_info[1] - 1, meal_plan.credits)
+        # Add 1 minute to the reset time to avoid any flaky tests right around the reset period
         self.assertTrue(datetime.utcnow() < meal_plan.reset_date.replace(minute=1))
 
     def test_get_next_reset_date_weekly(self):

@@ -2,8 +2,10 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, ValidationError
 from wtforms.validators import DataRequired, Length
-from ovs.models.resident_model import Resident
+
 from ovs import app
+from ovs.models.resident_model import Resident
+
 db = app.database.instance()
 
 
@@ -16,6 +18,7 @@ def validate_user_id(form, field):  # pylint: disable=unused-argument
     print(db.query(Resident).filter(Resident.user_id == field.data))
     if db.query(Resident).filter(Resident.user_id == field.data).count() == 0:
         raise ValidationError('Resident does not exist')
+
 
 class ManageResidentsForm(FlaskForm):
     """ Form with data required to edit a resident """

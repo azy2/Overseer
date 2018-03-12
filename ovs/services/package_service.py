@@ -1,11 +1,16 @@
 """ DB and utility functions for Packages """
 from ovs import app
 from ovs.models.package_model import Package
+
 db = app.database.instance()
 
 
 class PackageService:
     """ DB and utility functions for Packages """
+
+    def __init__(self):
+        pass
+
     @staticmethod
     def create_package(recipient_id, checked_by_id, checked_at, description):
         """

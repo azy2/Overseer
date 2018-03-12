@@ -1,17 +1,19 @@
 """
 Tests for meal plan services
 """
-from unittest import TestCase
 from datetime import datetime
+from unittest import TestCase
+
 from ovs import app
-from ovs.services.meal_service import MealService
 from ovs.models.meal_plan_model import MealPlan
+from ovs.services.meal_service import MealService
 
 
 class TestMealPlanService(TestCase):
     """
     Tests for meal plan services
     """
+
     def setUp(self):
         """ Runs before every test and clears relevant tables """
         self.db = app.database.instance()
@@ -63,13 +65,13 @@ class TestMealPlanService(TestCase):
         MealService.create_meal_plan(*test_meal_plan_info)
         self.assertTrue(MealService.use_meal(test_meal_plan_info[0]))
         meal_plan = MealService.get_meal_plan_by_pin(test_meal_plan_info[0])
-        self.assertEqual(test_meal_plan_info[1]-1, meal_plan.credits)
-        #Add 1 minute to the reset time to avoid any flaky tests right around the reset period
+        self.assertEqual(test_meal_plan_info[1] - 1, meal_plan.credits)
+        # Add 1 minute to the reset time to avoid any flaky tests right around the reset period
         self.assertTrue(datetime.utcnow() < meal_plan.reset_date.replace(minute=1))
 
     def test_use_meal_no_credits(self):
         """ Tests use_meal with no credits available"""
-        #Test currently flaky if reset_date is between the first call and last call to use_meal
+        # Test currently flaky if reset_date is between the first call and last call to use_meal
         test_meal_plan_info = (141414, 10, 'WEEKLY')
         MealService.create_meal_plan(*test_meal_plan_info)
         for _ in range(test_meal_plan_info[1]):
@@ -79,5 +81,5 @@ class TestMealPlanService(TestCase):
         self.assertFalse(MealService.use_meal(test_meal_plan_info[0]))
 
     def test_use_meal_invalid_pin(self):
-        """ Tests use_meal with no account exisiting """
+        """ Tests use_meal with no account existing """
         self.assertFalse(MealService.use_meal(9999999))

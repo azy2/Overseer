@@ -2,10 +2,11 @@
 Defines a MealPlan as represented in the database
 """
 from datetime import datetime, timedelta
-from flask import jsonify
-import sqlalchemy as sa
-from ovs import app
 
+from flask import jsonify
+from sqlalchemy import Integer, Enum, Column, text, DateTime
+
+from ovs import app
 
 
 class MealPlan(app.BaseModel):
@@ -14,14 +15,14 @@ class MealPlan(app.BaseModel):
     """
     __tablename__ = 'mealplan'
 
-    id = sa.Column(sa.Integer, primary_key=True)
-    pin = sa.Column(sa.Integer, unique=True)
-    credits = sa.Column(sa.Integer, nullable=False)
-    meal_plan = sa.Column(sa.Integer, nullable=False)
-    reset_date = sa.Column(sa.DateTime, default=datetime.utcnow())
-    plan_type = sa.Column(sa.Enum('WEEKLY', 'SEMESTERLY', 'LIFETIME'), nullable=False)
-    created = sa.Column(sa.DateTime, server_default=sa.text('CURRENT_TIMESTAMP'))
-    updated = sa.Column(sa.DateTime, server_default=sa.text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))
+    id = Column(Integer, primary_key=True)
+    pin = Column(Integer, unique=True)
+    credits = Column(Integer, nullable=False)
+    meal_plan = Column(Integer, nullable=False)
+    reset_date = Column(DateTime, default=datetime.utcnow())
+    plan_type = Column(Enum('WEEKLY', 'SEMESTERLY', 'LIFETIME'), nullable=False)
+    created = Column(DateTime, server_default=text('CURRENT_TIMESTAMP'))
+    updated = Column(DateTime, server_default=text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))
 
     def __init__(self, pin, meal_plan, plan_type):
         super(MealPlan, self).__init__(
@@ -51,7 +52,7 @@ class MealPlan(app.BaseModel):
         if self.plan_type == 'WEEKLY':
             date = MealPlan.next_weekday(datetime.utcnow(), 0)
             return date.replace(hour=0, minute=0, second=0, microsecond=0)
-        else: #error case. This does give them unlimited meals
+        else:  # error case. This does give them unlimited meals
             return datetime.utcnow()
 
     @staticmethod
@@ -63,7 +64,7 @@ class MealPlan(app.BaseModel):
         :return: DateTime with date as the next weekday and time identical to provided date.
         """
         days_ahead = weekday - date.weekday()
-        if days_ahead <= 0: # Target day already happened this week
+        if days_ahead <= 0:  # Target day already happened this week
             days_ahead += 7
         return date + timedelta(days=days_ahead)
 

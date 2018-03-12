@@ -1,16 +1,17 @@
 """ Tests for manager services """
-from unittest import TestCase
 import datetime
+from unittest import TestCase
+
 from ovs import app
-from ovs.services.user_service import UserService
-from ovs.services.manager_service import ManagerService
-from ovs.services.room_service import RoomService
-from ovs.services.package_service import PackageService
-from ovs.models.user_model import User
+from ovs.models.package_model import Package
+from ovs.models.profile_model import Profile
 from ovs.models.resident_model import Resident
 from ovs.models.room_model import Room
-from ovs.models.profile_model import Profile
-from ovs.models.package_model import Package
+from ovs.models.user_model import User
+from ovs.services.manager_service import ManagerService
+from ovs.services.package_service import PackageService
+from ovs.services.room_service import RoomService
+from ovs.services.user_service import UserService
 
 
 class TestManagerService(TestCase):
@@ -34,7 +35,8 @@ class TestManagerService(TestCase):
         test_user_info = ('test@gmail.com', 'Bob', 'Ross', 'RESIDENT')
         test_user = UserService.create_user(*test_user_info)
         RoomService.create_room('1', 'Good', 'Single')
-        ManagerService.update_resident_room_number(test_user.id, '1') # <-- Not actually changing the room number... !!!
+        ManagerService.update_resident_room_number(test_user.id,
+                                                   '1')  # <-- Not actually changing the room number... !!!
         resident = self.db.query(Resident).filter(Resident.user_id == test_user.id).first()
         self.assertEqual(resident.room_number, '1')
 
