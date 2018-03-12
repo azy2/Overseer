@@ -24,6 +24,7 @@ class ResidentService:
         new_resident_profile = Profile(new_user.id)
         new_resident_profile.preferred_name = new_user.first_name
         new_resident_profile.preferred_email = new_user.email
+        ResidentService.set_default_picture(new_resident_profile.picture_id)
 
         db.add(new_resident)
         db.add(new_resident_profile)

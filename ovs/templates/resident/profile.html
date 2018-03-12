@@ -5,7 +5,7 @@
     <div class="container card mt-5" >
         <div class="row card-body" >
             <div class="col-3 card-img-left" >
-                <img src="{{ url_for('static', filename="default_profile.png") }}" class="rounded">
+                <img src="data:image/png;base64,{{ pict }}" class="rounded">
             </div>
             <div class="col-9" >
                 <form method="post">

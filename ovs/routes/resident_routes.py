@@ -1,4 +1,6 @@
 """ under /resident """
+import base64
+
 from flask import Blueprint, redirect, render_template, request, url_for, flash
 from flask_login import current_user, login_required
 
@@ -6,6 +8,7 @@ from ovs import app
 from ovs.forms.edit_resident_profile_form import EditResidentProfileForm
 from ovs.services.profile_service import ProfileService
 from ovs.services.resident_service import ResidentService
+from ovs.services.profile_picture_service import ProfilePictureService
 from ovs.utils.roles import UserRole
 
 residents_bp = Blueprint('resident', __name__)
@@ -49,4 +52,5 @@ def edit_profile():
         else:
             return str(form.errors)
     else:
-        return render_template('resident/profile.html', role=UserRole.RESIDENT, profile=profile, form=form)
+        pict = base64.b64encode(ProfilePictureService.get_profile_picture(profile.picture_id)).decode()
+        return render_template('resident/profile.html', role=UserRole.RESIDENT, profile=profile, pict=pict, form=form)

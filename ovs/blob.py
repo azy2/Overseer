@@ -30,7 +30,7 @@ class Blob():
             file_name = make_file_name(container, name)
             if not os.path.exists(os.path.dirname(file_name)):
                 os.makedirs(os.path.dirname(file_name))
-            with open(file_name, "w") as blob_file:
+            with open(file_name, "wb") as blob_file:
                 blob_file.write(byte_array)
 
     def delete_blob(self, container, name):
@@ -63,7 +63,7 @@ class Blob():
             if not self.exists(container, name):
                 return None
             file_name = make_file_name(container, name)
-            with open(file_name, "r") as blob_file:
+            with open(file_name, "rb") as blob_file:
                 file_contents = blob_file.read()
                 file_bytes = bytearray(file_contents)
             return file_bytes
