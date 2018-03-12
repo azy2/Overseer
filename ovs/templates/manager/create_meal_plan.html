@@ -1,22 +1,16 @@
-<!doctype html>
-<html class="no-js" lang="">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>Create a Meal Plan</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-    </head>
-    <body>
-        {% from "_formhelper.html" import render_field %}
+{% extends "base.html" %}
+{% block title %}Create Meal Plan{% endblock %}
+{% block content %}
+    {% from "_formhelper.html" import field_inline %}
+    <div class="container mt-5" >
         <form method="post">
             <dl>
-                {{ render_field(form.email) }}
-                {{ render_field(form.pin) }}
-                {{ render_field(form.meal_plan) }}
-                {{ render_field(form.plan_type) }}
+                {{ field_inline(form.email) }}
+                {{ field_inline(form.pin) }}
+                {{ field_inline(form.meal_plan) }}
+                {{ field_inline(form.plan_type) }}
             </dl>
             <input type="submit" value="Register">
         </form>
-    </body>
-</html>
+    </div>
+{% endblock %}

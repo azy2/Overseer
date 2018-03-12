@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>{% block title %}{% endblock %}</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+        <style>
+         body {
+             padding-top: 3.5rem;
+             margin-bottom: 60px;
+         }
+         .footer {
+             position: absolute;
+             bottom: 0;
+             width: 100%;
+             height: 60px;
+             line-height: 60px;
+         }
+        </style>
+        {% block head %}
+        {% endblock %}
+    </head>
+    <body>
+        {% macro navbar_item(url, text) %}
+            <li class="nav-item {% if request.path == url %}active{% endif %}" >
+                <a class="nav-link" href="{{ url }}" >{{ text }}</a>
+            </li>
+        {% endmacro %}
+        {% macro dropdown(url, id, text, right, items) %}
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle {% if request.path == url %}active{% endif %}" href="{{ url }}" id="{{ id }}"
+                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {{ text }}
+                </a>
+                <div class="dropdown-menu {% if right %}dropdown-menu-right{% endif %}" aria-labelledby="{{ id }}">
+                    {% for item in items %}
+                        <a class="dropdown-item" href="{{ item[0] }}">{{ item[1] }}</a>
+                    {% endfor %}
+                </div>
+            </li>
+        {% endmacro %}
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+            <a class="navbar-brand" href="/">Overseer</a>
+            {% if role == 'RESIDENT' %}
+                <div class="collapse navbar-collapse">
+                    <ul class="navbar-nav" >
+                        {{ navbar_item('/resident/', 'Home') }}
+                    </ul>
+                </div>
+                <ul class="navbar-nav">
+                    {{ dropdown('#', 'accountDropdown', profile.preferred_name, True, [
+                        ('/resident/profile/', 'Profile'),
+                        ('/auth/logout', 'Logout')]) }}
+                </ul>
+            {% elif role == 'ADMIN' or role == 'BUILDING_MANAGER' or role == 'OFFICE_MANAGER' or role == 'STAFF' or role == 'RESIDENT_ADVISOR' %}
+                <div class="collapse navbar-collapse">
+                    <ul class="navbar-nav" >
+                        {{ navbar_item('/manager/', 'Home') }}
+                        {% if role == 'ADMIN' %}
+                            {{ navbar_item('/admin/register_manager/', 'Register Manager') }}
+                        {% endif %}
+                        {{ navbar_item('/manager/register_room/', 'Register a Room') }}
+                        {{ dropdown('#', 'residentDropdown', 'Resident', False, [
+                            ('/manager/register_resident/', 'Register a Resident'),
+                            ('/manager/manage_residents/', 'Manage Residents')]) }}
+                        {{ navbar_item('/manager/manage_packages', 'Manage Packages') }}
+                        {{ dropdown('#', 'mealDropdown', 'Meals', False, [
+                            ('/manager/meal_login/', 'Meal login'),
+                            ('/manager/create_meal_plan', 'Create Meal Plan')]) }}
+                    </ul>
+                </div>
+                <ul class="navbar-nav">
+                    {{ dropdown('#', 'accountDropdown', user.first_name, True, [
+                        ('/auth/logout', 'Logout')]) }}
+                </ul>
+            {% else %}
+                <div class="collapse navbar-collapse">
+                </div>
+
+                <form class="form-inline" method="post" action="/auth/login" >
+                    <div class="input-group" >
+                        <input type="text" id="email" name="email" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" >
+                        <input type="password" id="password" name="password" class="form-control" placeholder="Password" aria-label="Username" aria-describedby="basic-addon1" >
+                        <div class="input-group-append" >
+                            <button type="submit" class="btn btn-primary" >Login</button>
+                        </div>
+                    </div>
+                </form>
+            {% endif %}
+        </nav>
+        <main role="main">
+            {% block content %}
+            {% endblock %}
+        </main>
+
+        <footer class="footer container" >
+            <span class="text-muted">Overseer</span>
+        </footer>
+
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="{{ url_for('static', filename="js/bootstrap.min.js") }}"></script>
+    </body>
+</html>

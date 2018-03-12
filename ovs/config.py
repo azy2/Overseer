@@ -28,6 +28,8 @@ class Config(object):
 
     PORT = env_load('PORT', 8080)
 
+    TEMPLATES_AUTO_RELOAD = True
+
     DATABASE = {
         'primary': {
             'host': env_load('DB_HOSTNAME', '127.0.0.1'),
@@ -43,8 +45,14 @@ class Config(object):
     }
 
     SUPERUSER = {
-        'email': env_load('SUPERUSER_EMAIL', 'admin@example.com'),
-        'first_name': os.getenv('SUPERUSER_FIRSTNAME', 'John'),
-        'last_name': os.getenv('SUPERUSER_LASTNAME', 'Smith'),
-        'password': env_load('SUPERUSER_PASSWORD', 'ABCD1234')
+        'email': os.getenv('SUPERUSER_EMAIL', 'admin@gmail.com'),
+        'first_name': os.getenv('SUPERUSER_FIRSTNAME', 'Super'),
+        'last_name': os.getenv('SUPERUSER_LASTNAME', 'User'),
+        'password': os.getenv('SUPERUSER_PASSWORD', 'abcd1234')
+    }
+    RESIDENT = {
+        'email': os.getenv('RESIDENT_EMAIL', 'resident@gmail.com'),
+        'first_name': os.getenv('RESIDENT_FIRSTNAME', 'John'),
+        'last_name': os.getenv('RESIDENT_LASTNAME', 'Smith'),
+        'password': os.getenv('RESIDENT_PASSWORD', 'abcd1234')
     }

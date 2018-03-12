@@ -1,7 +1,7 @@
 """ Routes for developers """
 from flask import Blueprint, url_for, render_template
 from ovs import app
-dev_home_page_bp = Blueprint('/', __name__,)
+dev_bp = Blueprint('/dev', __name__,)
 
 
 def has_no_empty_params(rule):
@@ -10,7 +10,7 @@ def has_no_empty_params(rule):
     arguments = rule.arguments if rule.arguments is not None else ()
     return len(defaults) >= len(arguments)
 
-@dev_home_page_bp.route("/")
+@dev_bp.route("/")
 def dev_home_page():
     """ A home page that displays links to all accessible routes """
     links = []
