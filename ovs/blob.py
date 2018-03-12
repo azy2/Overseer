@@ -11,8 +11,8 @@ class Blob():
         blob_config = app.config['BLOB']
         self._service = BlockBlobService(account_name = blob_config['account'],
             account_key = blob_config['key'])
-        self._container = self._service.create_container(blob_config['container_name'])
+        self._profile_container = self._service.create_container('profile_picture')
 
-    def instance(self):
-        """ Get a handle to the blob container """
-        return self._db
+    def profile_container(self):
+        """ Get a handle to the profile blob container """
+        return self._profile_container

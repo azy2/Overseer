@@ -11,6 +11,7 @@ from ovs.database import Database
 app = Flask(__name__)
 app.config.from_object('ovs.config.Config')
 app.database = Database(app)
+app.blob = Blob(app)
 app.BaseModel = declarative_base()
 
 # import at bottom to avoid circular dependencies
