@@ -20,14 +20,15 @@ class TestMealPlanModel(TestCase):
         self.db.query(MealPlan).delete()
         self.db.commit()
 
-    def get_weekly_test_meal_plan(self):
+    @staticmethod
+    def get_weekly_test_meal_plan():
         """ Returns a meal plan with WEEKLY plan_type for use in testing """
         test_meal_plan_info = (141414, 10, 'WEEKLY')
         return MealPlan(*test_meal_plan_info)
 
     def test_update_meal_plan(self):
         """ Tests that meal plans can be updated """
-        meal_plan = self.get_weekly_test_meal_plan()
+        meal_plan = TestMealPlanModel.get_weekly_test_meal_plan()
         starting_credits = meal_plan.credits
 
         self.assertTrue(meal_plan.update_meal_count())
@@ -37,7 +38,7 @@ class TestMealPlanModel(TestCase):
 
     def test_get_next_reset_date_weekly(self):
         """ Tests get_next_reset_date for WEEKLY plan_type """
-        meal_plan = self.get_weekly_test_meal_plan()
+        meal_plan = TestMealPlanModel.get_weekly_test_meal_plan()
         self.assertEqual(meal_plan.get_next_reset_date().weekday(), 0)  # Is it a Monday?
 
     def test_next_weekday(self):
