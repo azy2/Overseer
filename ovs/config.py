@@ -7,6 +7,7 @@ import os
 import sys
 
 def prod_env_load(key, _):
+    """Forces production environment loads to set keys instead of using defaults"""
     if key not in os.environ:
         raise KeyError("Running in production, please override %s" % (key))
     return os.environ[key]
