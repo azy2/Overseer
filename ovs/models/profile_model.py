@@ -1,6 +1,7 @@
 """
 Defines a Profile as represented in the database
 """
+import uuid
 from flask import jsonify
 import sqlalchemy as sa
 from sqlalchemy.orm import relationship
@@ -26,7 +27,7 @@ class Profile(app.BaseModel):
     resident = relationship('Resident', uselist=False, back_populates='profile', single_parent=True)
 
     def __init__(self, user_id):
-        super(Profile, self).__init__(user_id=user_id, profile_id=str(uuid.uuid4()))
+        super(Profile, self).__init__(user_id=user_id, picture_id=str(uuid.uuid4()))
 
     def __repr__(self):
         return "Profile([user_id='%s', preferred_name='%s', phone_number='%s', preferred_email='%s', race='%s', \
