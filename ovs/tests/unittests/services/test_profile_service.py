@@ -9,6 +9,7 @@ from ovs.services.profile_service import ProfileService
 from ovs.models.user_model import User
 from ovs.utils.genders import Gender
 
+
 class TestProfileService(TestCase):
     """
     Tests for profile services

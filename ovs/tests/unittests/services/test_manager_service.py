@@ -12,6 +12,7 @@ from ovs.models.room_model import Room
 from ovs.models.profile_model import Profile
 from ovs.models.package_model import Package
 
+
 class TestManagerService(TestCase):
     """ Tests for manager services """
 

@@ -7,6 +7,7 @@ from ovs import app
 from ovs.services.meal_service import MealService
 from ovs.models.meal_plan_model import MealPlan
 
+
 class TestMealPlanService(TestCase):
     """
     Tests for meal plan services

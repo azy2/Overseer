@@ -6,6 +6,7 @@ from datetime import datetime
 from ovs import app
 from ovs.models.meal_plan_model import MealPlan
 
+
 class TestMealPlanModel(TestCase):
     """
     Tests for the meal plan model

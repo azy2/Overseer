@@ -10,6 +10,7 @@ from ovs.models.resident_model import Resident
 from ovs.models.room_model import Room
 from ovs.models.profile_model import Profile
 
+
 class TestResidentService(TestCase):
     """
     Tests for resident services
