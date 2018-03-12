@@ -15,8 +15,7 @@ from ovs.blob import Blob
 app = Flask(__name__)
 app.config.from_object('ovs.config.Config')
 app.database = Database(app)
-if app.config['PRODUCTION']:
-    app.blob = Blob(app)
+app.blob = Blob(app)
 app.BaseModel = declarative_base()
 app.mail = SendGrid(app)
 
