@@ -48,8 +48,8 @@ class TestSendMail(TestCase):
             text='Hi testFirstName testLastName, thank you for creating your account!\nYour role is: testRole')
 
     @patch('ovs.services.user_service.send_account_creation_email')
-    def test_create_user(self, mock_mail):
-        """ Tests create_user """
+    def test_create_user_sends_email(self, mock_mail):
+        """ Tests that creating a user sends an email """
         test_user_info = ('test@gmail.com', 'Bob', 'Ross', 'ADMIN')
         UserService.create_user(*test_user_info)
         mock_mail.assert_called_once_with(*test_user_info)
