@@ -1,9 +1,8 @@
-"""
-DB and utility functions for Users
-"""
+""" DB and utility functions for Users """
 from ovs import app
 from ovs.models.user_model import User
 from ovs.services.resident_service import ResidentService
+from ovs.services.meal_service import MealService
 from ovs.utils import crypto
 from ovs.mail.send_mail import send_account_creation_email
 db = app.database.instance()
@@ -30,7 +29,7 @@ class UserService:
         db.add(new_user)
         db.commit()
         if role == 'RESIDENT':
-            ResidentService.create_resident(new_user.id)
+            ResidentService.create_resident(new_user)
 
         send_account_creation_email(email, first_name, last_name, role)
         return new_user
@@ -43,3 +42,27 @@ class UserService:
         :return: The db entry of that user
         """
         return db.query(User).filter(User.email == email)
+
+    @staticmethod
+    def get_user_by_id(user_id):
+        """
+        Gets a user by their id
+        """
+        return db.query(User).filter(User.id == user_id)
+
+    @staticmethod
+    def create_meal_plan_for_user_by_email(pin, meal_plan, plan_type, email):
+        """
+        Adds a new meal plan to the DB
+        :param email: User to link to, TODO:implement
+        :param pin: The plan's pin
+        :param meal_plan: The plan's maximum credit count
+        :param plan_type: The plan's reset period
+        :return: True for success, False for failure
+        """
+        valid = MealService.create_meal_plan(pin, meal_plan, plan_type)
+        valid = False
+        if valid:
+            db.query(User).filter(User.email == email).update({User.meal_plan: pin})
+            db.commit()
+        return valid

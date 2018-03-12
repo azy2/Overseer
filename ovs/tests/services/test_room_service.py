@@ -9,6 +9,7 @@ from ovs.services.room_service import RoomService
 from ovs.models.user_model import User
 from ovs.models.resident_model import Resident
 from ovs.models.room_model import Room
+from ovs.models.profile_model import Profile
 
 
 class TestRoomService(TestCase):
@@ -28,6 +29,7 @@ class TestRoomService(TestCase):
 
     def tearDown(self):
         """ Runs after every tests and clears relevant tables """
+        self.db.query(Profile).delete()
         self.db.query(User).delete()
         self.db.query(Resident).delete()
         self.db.query(Room).delete()

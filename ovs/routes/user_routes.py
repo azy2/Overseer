@@ -1,4 +1,4 @@
-""" routes under /user/ """
+""" Routes under /user/ """
 import random
 import string
 from flask import Blueprint
