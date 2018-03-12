@@ -1,16 +1,14 @@
 """
-Tests for meal plan model
+Tests for the meal plan model
 """
 from unittest import TestCase
 from datetime import datetime
 from ovs import app
 from ovs.models.meal_plan_model import MealPlan
 
-
-
 class TestMealPlanModel(TestCase):
     """
-    Tests for meal plan model
+    Tests for the meal plan model
     """
     def setUp(self):
         """ Runs before every test and clears relevant tables """
@@ -22,20 +20,25 @@ class TestMealPlanModel(TestCase):
         self.db.query(MealPlan).delete()
         self.db.commit()
 
-    def test_create_meal_plan(self):
-        """ Tests create_meal_plan """
+    def get_weekly_test_meal_plan(self):
+        """ Returns a meal plan with WEEKLY plan_type for use in testing """
         test_meal_plan_info = (141414, 10, 'WEEKLY')
-        meal_plan = MealPlan(*test_meal_plan_info)
+        return MealPlan(*test_meal_plan_info)
+
+    def test_update_meal_plan(self):
+        """ Tests that meal plans can be updated """
+        meal_plan = self.get_weekly_test_meal_plan()
+        starting_credits = meal_plan.credits
+
         self.assertTrue(meal_plan.update_meal_count())
-        self.assertEqual(test_meal_plan_info[1]-1, meal_plan.credits)
-        #Add 1 minute to the reset time to avoid any flaky tests right around the reset period
+        self.assertEqual(starting_credits - 1, meal_plan.credits)
+        # Add 1 minute to the reset time to avoid any flaky tests right around the reset period
         self.assertTrue(datetime.utcnow() < meal_plan.reset_date.replace(minute=1))
 
     def test_get_next_reset_date_weekly(self):
         """ Tests get_next_reset_date for WEEKLY plan_type """
-        test_meal_plan_info = (141414, 10, 'WEEKLY')
-        meal_plan = MealPlan(*test_meal_plan_info)
-        self.assertEqual(meal_plan.get_next_reset_date().weekday(), 0)  # Is it a monday?
+        meal_plan = self.get_weekly_test_meal_plan()
+        self.assertEqual(meal_plan.get_next_reset_date().weekday(), 0)  # Is it a Monday?
 
     def test_next_weekday(self):
         """ Tests next_weekday when later in the same week """
