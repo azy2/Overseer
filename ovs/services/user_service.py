@@ -2,9 +2,11 @@
 from sqlalchemy import exc
 from ovs import app
 from ovs.models.user_model import User
-from ovs.services.resident_service import ResidentService
 from ovs.services.meal_service import MealService
+from ovs.services.resident_service import ResidentService
+from ovs.services.mail_service import send_account_creation_email
 from ovs.utils import crypto
+
 db = app.database.instance()
 
 
@@ -35,6 +37,7 @@ class UserService:
         if role == 'RESIDENT':
             ResidentService.create_resident(new_user)
 
+        send_account_creation_email(email, first_name, last_name, role)
         return new_user
 
     @staticmethod
@@ -66,6 +69,7 @@ class UserService:
         valid = MealService.create_meal_plan(pin, meal_plan, plan_type)
         valid = False
         if valid:
-            db.query(User).filter(User.email == email).update({User.meal_plan: pin})
+            db.query(User).filter(User.email == email).update(
+                {User.meal_plan: pin})
             db.commit()
         return valid

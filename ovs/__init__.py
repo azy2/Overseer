@@ -7,6 +7,7 @@ from flask import Flask
 from flask_bcrypt import Bcrypt
 
 from sqlalchemy.ext.declarative import declarative_base
+from flask_sendgrid import SendGrid
 
 from ovs.database import Database
 
@@ -14,6 +15,7 @@ app = Flask(__name__)
 app.config.from_object('ovs.config.Config')
 app.database = Database(app)
 app.BaseModel = declarative_base()
+app.mail = SendGrid(app)
 
 bcrypt_app = Bcrypt(app)
 
