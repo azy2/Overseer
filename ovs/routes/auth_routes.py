@@ -5,6 +5,7 @@ from flask_login import login_user, logout_user, login_required
 from ovs import app
 from ovs.forms.login_form import LoginForm
 from ovs.models.user_model import User
+from ovs.services import AuthService
 
 auth_bp = Blueprint('auth', __name__,)
 db = app.database.instance()
@@ -16,10 +17,13 @@ def login():
     form = LoginForm(csrf_enabled=False)
     if request.method == 'POST' and form.validate():
         email = form.email.data
-        # password = form.password.data
-        user = db.query(User).filter_by(email=email).first()
+        password = form.password.data
+        user = db.query(User).filter_by(email=email).one_or_none()
         if user is None:
-            flash('Invalid Credentials.', 'error')
+            flash('Invalid Email.', 'error')
+            return redirect(url_for('auth.login'))
+        elif not AuthService.verify_auth(user, password):
+            flash('Invalid password.', 'error')
             return redirect(url_for('auth.login'))
         login_user(user)
         flash('success!', 'message')

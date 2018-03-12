@@ -4,3 +4,4 @@ from .room_service import RoomService
 from .manager_service import ManagerService
 from .package_service import PackageService
 from .meal_service import MealService
+from .auth_service import AuthService

@@ -47,7 +47,7 @@ class User(app.BaseModel):
 
     def has_password(self, password):
         """ Checks if inputted password matches the one stored in DB """
-        return self.password == bcrypt.hashpw(password, self.password)
+        return self.password.encode('utf-8') == bcrypt.hashpw(password.encode('utf-8'), self.password.encode('utf-8'))
 
     def json(self):
         """ Returns a JSON representation of this User """
