@@ -32,6 +32,11 @@ class Config(object):
         }
     }
 
+    BLOB = {
+        'account' : os.getenv('BLOB_ACCOUNT', ''),
+        'key' os.getenv('BLOB_KEY', ''): ,
+    }
+
     SUPERUSER = {
         'email': os.getenv('SUPERUSER_EMAIL', 'admin@example.com'),
         'first_name': os.getenv('SUPERUSER_FIRSTNAME', 'John'),
