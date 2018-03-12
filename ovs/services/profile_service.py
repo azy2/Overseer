@@ -3,6 +3,7 @@ DB access and other services for profiles
 """
 from ovs import app
 from ovs.services.resident_service import ResidentService
+
 db = app.database.instance()
 
 
@@ -10,6 +11,10 @@ class ProfileService:
     """
     DB Access and utility methods for profiles
     """
+
+    def __init__(self):
+        pass
+
     @staticmethod
     def update_profile(resident_id, preferred_email=None, preferred_name=None,
                        phone_number=None, race=None, gender=None):

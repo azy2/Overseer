@@ -1,10 +1,12 @@
 """ Routes under / """
 from flask import Blueprint, render_template
 from flask_login import current_user
-from ovs.services.user_service import UserService
+
 from ovs.services.resident_service import ResidentService
+from ovs.services.user_service import UserService
 from ovs.utils.roles import UserRole
-ovs_bp = Blueprint('/', __name__,)
+
+ovs_bp = Blueprint('/', __name__, )
 
 
 @ovs_bp.route('/')

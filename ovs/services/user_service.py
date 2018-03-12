@@ -1,10 +1,11 @@
 """ DB and utility functions for Users """
 from sqlalchemy import exc
+
 from ovs import app
 from ovs.models.user_model import User
+from ovs.services.mail_service import send_account_creation_email
 from ovs.services.meal_service import MealService
 from ovs.services.resident_service import ResidentService
-from ovs.services.mail_service import send_account_creation_email
 from ovs.utils import crypto
 
 db = app.database.instance()
@@ -12,6 +13,10 @@ db = app.database.instance()
 
 class UserService:
     """ DB and utility functions for Users """
+
+    def __init__(self):
+        pass
+
     @staticmethod
     def create_user(email, first_name, last_name, role, password=None):
         """

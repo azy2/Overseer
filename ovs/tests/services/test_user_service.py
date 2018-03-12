@@ -2,6 +2,7 @@
 Tests for user services
 """
 from unittest import TestCase
+
 from ovs import app
 from ovs.models.user_model import User
 from ovs.services.user_service import UserService

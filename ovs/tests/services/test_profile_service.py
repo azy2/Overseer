@@ -2,11 +2,12 @@
 Tests for profile services
 """
 from unittest import TestCase
+
 from ovs import app
-from ovs.services.user_service import UserService
-from ovs.services.resident_service import ResidentService
-from ovs.services.profile_service import ProfileService
 from ovs.models.user_model import User
+from ovs.services.profile_service import ProfileService
+from ovs.services.resident_service import ResidentService
+from ovs.services.user_service import UserService
 from ovs.utils.genders import Gender
 
 
@@ -14,6 +15,7 @@ class TestProfileService(TestCase):
     """
     Tests for profile services
     """
+
     def setUp(self):
         """ Runs before every test and clears relevant tables """
         self.db = app.database.instance()
