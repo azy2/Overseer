@@ -52,6 +52,11 @@ class Config(object):
         }
     }
 
+    BLOB = {
+        'account': env_load('BLOB_ACCOUNT', 'overseer'),
+        'key': env_load('BLOB_KEY', ''),
+    }
+
     SUPERUSER = {
         'email': os.getenv('SUPERUSER_EMAIL', 'admin@gmail.com'),
         'first_name': os.getenv('SUPERUSER_FIRSTNAME', 'Super'),
