@@ -1,9 +1,6 @@
 """ Services related to profile pictures """
 from ovs import app
-from ovs.models.user_model import User
-from ovs.models.resident_model import Resident
-from ovs.services.resident_service import ResidentService
-profile_container = app.blob.profile_container()
+profile_container = app.blob.instance()
 
 
 class ProfilePictureService:
