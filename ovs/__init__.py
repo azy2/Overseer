@@ -7,6 +7,7 @@ from flask import Flask
 from sqlalchemy.ext.declarative import declarative_base
 
 from ovs.database import Database
+from ovs.blob import Blob
 
 app = Flask(__name__)
 app.config.from_object('ovs.config.Config')
