@@ -76,12 +76,12 @@ def register_resident():
     if request.method == 'POST':
         print(form)  # <-- added !!!
         if form.validate():
-            user = UserService.create_user(
+            new_user = UserService.create_user(
                 form.email.data,
                 form.first_name.data,
                 form.last_name.data,
                 "RESIDENT")
-            if user:
+            if new_user:
                 flash('Residents successfully registered!', 'message')
             else:
                 flash('Residents not successfully registered! Email already exists!', 'error')

@@ -23,13 +23,13 @@ def register_manager():
     form = RegisterManagerForm(csrf_enabled=False)
     if request.method == 'POST':
         if form.validate():
-            user = UserService.create_user(
+            new_user = UserService.create_user(
                 form.email.data,
                 form.first_name.data,
                 form.last_name.data,
                 form.role.data)
 
-            if user:
+            if new_user:
                 flash('User successfully added!', 'message')
             else:
                 flash('User not successfully added! Email already exists!', 'error')
