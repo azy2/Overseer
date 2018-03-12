@@ -6,7 +6,7 @@ details, etc...
 import os
 import sys
 
-def prod_env(key, _):
+def prod_env_load(key, _):
     if key not in os.environ:
         raise KeyError("Running in production, please override %s" % (key))
     return os.environ[key]
@@ -15,8 +15,8 @@ class Config(object):
     """ The Config object stores all of the setup information """
     APP_ENV = os.getenv('APP_ENV', 'DEV')
     env_load = os.getenv
-    if APP_ENV == prod:
-        env_load = prod_env
+    if APP_ENV == 'prod':
+        env_load = prod_env_load
 
     SECRET_KEY = env_load('SECRET', 'VERY_SPECIAL_KEY')
     DEVELOPMENT = APP_ENV == 'DEV'
