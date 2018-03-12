@@ -11,8 +11,8 @@ class Blob():
     PROFILE_PICTURE_CONTAINER = 'profile-picture'
     def __init__(self, app):
         blob_config = app.config['BLOB']
-        self._service = BlockBlobService(account_name = blob_config['account'],
-            account_key = blob_config['key'])
+        self._service = BlockBlobService(account_name=blob_config['account'],
+                                         account_key=blob_config['key'])
         if not self._service.exists(self.PROFILE_PICTURE_CONTAINER):
             self._service.create_container(self.PROFILE_PICTURE_CONTAINER)
 
