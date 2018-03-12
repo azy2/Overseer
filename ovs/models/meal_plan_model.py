@@ -69,9 +69,8 @@ class MealPlan(app.BaseModel):
         return date + timedelta(days=days_ahead)
 
     def __repr__(self):
-        return 'MealPlan([id="%s", pin="%s", credits="%s", meal_plan = "%s", " + \
-                "plan_type="%s", created="%s", updated="%s"])' \
-               % (self.id, self.pin, self.credits, self.meal_plan, self.plan_type, self.created, self.updated)
+        return 'MealPlan([id={id}, pin={pin}, credits={credits}, meal_plan={meal_plan}, plan_type={plan_type}, ' \
+               'created={created}, updated={updated}])'.format(**self.__dict__)
 
     def json(self):
         """ Returns a JSON representation of this Meal Plan """

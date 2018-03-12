@@ -15,7 +15,8 @@ class Profile(app.BaseModel):
     """
     __tablename__ = 'profile'
 
-    user_id = Column(Integer, ForeignKey('residents.user_id'), primary_key=True, nullable=False)
+    user_id = Column(Integer, ForeignKey('residents.user_id'),
+                     primary_key=True, nullable=False)
     preferred_name = Column(CHAR(255))
     phone_number = Column(CHAR(255))
     preferred_email = Column(CHAR(255))
@@ -23,18 +24,19 @@ class Profile(app.BaseModel):
     gender = Column(Enum(genders.MALE, genders.FEMALE))
     picture_path = Column(CHAR(255))
     created = Column(DateTime, server_default=text('CURRENT_TIMESTAMP'))
-    updated = Column(DateTime, server_default=text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))
+    updated = Column(DateTime, server_default=text(
+        'CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))
 
-    resident = relationship('Resident', uselist=False, back_populates='profile', single_parent=True)
+    resident = relationship('Resident', uselist=False,
+                            back_populates='profile', single_parent=True)
 
     def __init__(self, user_id):
         super(Profile, self).__init__(user_id=user_id)
 
     def __repr__(self):
-        return "Profile([user_id='%s', preferred_name='%s', phone_number='%s', preferred_email='%s', race='%s', \
-               gender='%s', picture_path='%s', created='%s', updated='%s'])" \
-               % (self.user_id, self.preferred_name, self.phone_number, self.preferred_email, self.race, self.gender,
-                  self.picture_path, self.created, self.updated)
+        return 'Profile([user_id={user_id}, preferred_name={preferred_name}, phone_number={phone_number}, ' \
+               'preferred_email={preferred_email}, race={race}, gender={gender}, picture_path={picture_path}, ' \
+               'created={created}, updated={updated}])'.format(**self.__dict__)
 
     def json(self):
         """ Returns a JSON representation of this Profile """

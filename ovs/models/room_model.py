@@ -21,8 +21,8 @@ class Room(app.BaseModel):
     updated = Column(DateTime, server_default=text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))
 
     def __repr__(self):
-        return 'Room([id="%s", number="%s", status="%s", type="%s", created="%s", updated="%s"])' \
-               % (self.id, self.number, self.status, self.type, self.created, self.updated)
+        return 'Room([id={id}, number={number}, status={status}, type={type}, created={created}, ' \
+               'updated={updated}])'.format(**self.__dict__)
 
     def json(self):
         """ Returns a JSON representation of this Room """

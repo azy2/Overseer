@@ -18,10 +18,9 @@ class Package(app.BaseModel):
     description = Column('description', VARCHAR(2047), server_default="")
 
     def __repr__(self):
-        return 'Package([id="%s", recipient_id="%s", checked_by_id="%s", checked_at="%s", ' \
-               'is_signed="%s", signed_at="%s", description="%s"])' \
-               % (self.id, self.recipient_id, self.checked_by_id, self.checked_at,
-                  self.is_signed, self.signed_at, self.description)
+        return 'Package([id={id}, recipient_id={recipient_id}, checked_by_id={checked_by_id}, ' \
+               'checked_at={checked_at}, is_signed={is_signed}, signed_at={signed_at}, ' \
+               'description={description}])'.format(**self.__dict__)
 
     def json(self):
         """ Returns a JSON representation of the Package """

@@ -14,7 +14,7 @@ def validate_user_id(form, field):  # pylint: disable=unused-argument
     Validates that the provided user_id exists.
     This is to thwart malicious input.
     """
-    print("db.query(Resident).filter(Resident.user_id == field.data)")
+    print('db.query(Resident).filter(Resident.user_id == field.data)')
     print(db.query(Resident).filter(Resident.user_id == field.data))
     if db.query(Resident).filter(Resident.user_id == field.data).count() == 0:
         raise ValidationError('Resident does not exist')

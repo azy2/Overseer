@@ -24,8 +24,8 @@ class Resident(app.BaseModel):
         super(Resident, self).__init__(user_id=user_id, room_number=room_number)
 
     def __repr__(self):
-        return "Resident([user_id='%s', room_number='%s', created='%s', updated='%s'])" \
-               % (self.user_id, self.room_number, self.created, self.updated)
+        return 'Resident([user_id={user_id}, room_number={room_number},' \
+               'created={created}, updated={updated}])'.format(**self.__dict__)
 
     def json(self):
         """ Returns a JSON representation of this Resident """
