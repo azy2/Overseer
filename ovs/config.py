@@ -12,7 +12,12 @@ class Config(object):
     SECRET_KEY = os.getenv('SECRET', 'VERY_SPECIAL_KEY')
     DEVELOPMENT = APP_ENV == 'DEV'
     TESTING = APP_ENV == 'TEST'
+    TEST_MAIL = False
     PRODUCTION = APP_ENV == 'PROD'
+    DOMAIN_NAME = 'ovs-overseer.azurewebsites.net'
+    SENDGRID_API_KEY = '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'
+    SENDGRID_DEFAULT_FROM = 'admin@{domain_name}'.format(domain_name=DOMAIN_NAME)
+
     if not DEVELOPMENT and not TESTING and not PRODUCTION:
         sys.exit('Please enter a valid environment')
 
