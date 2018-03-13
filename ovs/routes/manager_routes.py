@@ -214,7 +214,7 @@ def create_meal_plan():
                 form.plan_type.data,
                 form.email.data)
             MealService.get_meal_plan_by_pin(form.pin.data)
-            # Todo: create meal plan by email always returns false, not fully implemented yet
+            # Todo: create meal plan by email not fully implemented yet
             if valid:
                 flash('Meal plan created successfully!', 'message')
             else:
