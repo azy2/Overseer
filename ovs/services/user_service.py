@@ -50,7 +50,7 @@ class UserService:
         }
         MailService.send_email(email, 'User Account Creation',
                                templates['user_creation_email'],
-                               substitutions=substitutions)
+                               substitutions=user_info_substitution)
 
         return new_user
 
