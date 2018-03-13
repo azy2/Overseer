@@ -2,9 +2,9 @@
 Defines a User as represented in the database
 """
 
-import sqlalchemy as sa
 from flask import jsonify
 from flask_bcrypt import bcrypt
+from sqlalchemy import Integer, Enum, Column, CHAR, String, text, DateTime
 
 from ovs import app, bcrypt_app
 
@@ -17,17 +17,17 @@ class User(app.BaseModel):
     """
     __tablename__ = 'users'
 
-    id = sa.Column(sa.Integer, primary_key=True)
-    email = sa.Column(sa.String(255), nullable=False, unique=True)
-    first_name = sa.Column(sa.String(255), nullable=False)
-    last_name = sa.Column(sa.String(255), nullable=False)
-    password = sa.Column(sa.CHAR(60), nullable=False)
-    role = sa.Column(sa.Enum('RESIDENT', 'RESIDENT_ADVISOR', 'STAFF',
-                             'OFFICE_MANAGER', 'BUILDING_MANAGER', 'ADMIN'),
-                     nullable=False)
-    created = sa.Column(
-        sa.DateTime, server_default=sa.text('CURRENT_TIMESTAMP'))
-    updated = sa.Column(sa.DateTime, server_default=sa.text(
+    id = Column(Integer, primary_key=True)
+    email = Column(String(255), nullable=False, unique=True)
+    first_name = Column(String(255), nullable=False)
+    last_name = Column(String(255), nullable=False)
+    password = Column(CHAR(60), nullable=False)
+    role = Column(Enum('RESIDENT', 'RESIDENT_ADVISOR', 'STAFF',
+                       'OFFICE_MANAGER', 'BUILDING_MANAGER', 'ADMIN'),
+                  nullable=False)
+    created = Column(
+        DateTime, server_default=text('CURRENT_TIMESTAMP'))
+    updated = Column(DateTime, server_default=text(
         'CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))
 
     def __init__(self, email, first_name, last_name, password, role):
@@ -42,14 +42,15 @@ class User(app.BaseModel):
             role=role)
 
     def __repr__(self):
-        return "User([id='%s', email='%s', first_name='%s', last_name='%s', " + \
-            "role='%s', created='%s', updated='%s'])" % \
-            (self.id, self.email, self.first_name, self.last_name,
-             self.role, self.created, self.updated)
+        return 'User([id={id}, email={email}, first_name={first_name}, last_name={last_name}, role={role}, ' \
+               'created={created}, updated={updated}])'.format(**self.__dict__)
 
     def has_password(self, password):
         """ Checks if inputted password matches the one stored in DB """
-        return self.password == bcrypt_app.check_password_hash(self.password_hash, password)
+        to_check = password.encode('utf-8')
+        actual = self.password.encode('utf-8')
+
+        return bcrypt_app.check_password_hash(actual, to_check)
 
     def json(self):
         """ Returns a JSON representation of this User """

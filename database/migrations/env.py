@@ -1,9 +1,11 @@
 from __future__ import with_statement
-import os, sys
+
+import sys
+
 sys.path.append('..')
 
 from alembic import context
-from sqlalchemy import create_engine, pool
+from sqlalchemy import create_engine
 from logging.config import fileConfig
 from ovs.config import Config
 
@@ -30,12 +32,13 @@ target_metadata = None
 config = Config()
 DATABASE = config.DATABASE
 
-url = "mysql+pymysql://" +                    \
-      DATABASE['primary']['user'] + ":" +     \
+url = "mysql+pymysql://" + \
+      DATABASE['primary']['user'] + ":" + \
       DATABASE['primary']['password'] + "@" + \
-      DATABASE['primary']['host'] + ":" +     \
-      DATABASE['primary']['port'] + "/" +     \
+      DATABASE['primary']['host'] + ":" + \
+      DATABASE['primary']['port'] + "/" + \
       DATABASE['primary']['name']
+
 
 def run_migrations_offline():
     """Run migrations in 'offline' mode.
@@ -73,6 +76,7 @@ def run_migrations_online():
 
         with context.begin_transaction():
             context.run_migrations()
+
 
 if context.is_offline_mode():
     run_migrations_offline()

@@ -1,11 +1,17 @@
 """ DB and utility functions for Packages """
 from ovs import app
 from ovs.models.package_model import Package
+from ovs.services.user_service import UserService
+
 db = app.database.instance()
 
 
 class PackageService:
     """ DB and utility functions for Packages """
+
+    def __init__(self):
+        pass
+
     @staticmethod
     def create_package(recipient_id, checked_by_id, checked_at, description):
         """
@@ -30,3 +36,13 @@ class PackageService:
         :return: The db entry of that package
         """
         return db.query(Package).filter(Package.id == package_id)
+
+    @staticmethod
+    def update_package(package_id, recipient_email, description):
+        """ Changes the receiver and description of Package identified by package_id """
+        recipient_id = UserService.get_user_by_email(recipient_email).first().id
+        db.query(Package) \
+            .filter(Package.id == package_id) \
+            .update({Package.recipient_id: recipient_id, Package.description: description})
+        db.commit()
+        return PackageService.get_package_by_id(package_id).first()

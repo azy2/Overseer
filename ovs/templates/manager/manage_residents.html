@@ -1,8 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<title>Manage Residents</title>
+{% extends "base.html" %}
+{% block title %}Manage Residents{% endblock %}
+{% block head %}
     <style>
         table {
             font-family: arial, sans-serif;
@@ -20,10 +18,9 @@
             background-color: #dddddd;
         }
     </style>
-</head>
-<body>
-	<a href="/manager/register_resident">Add new resident</a> <br>
-    {% from "_formhelper.html" import render_field %}
+{% endblock %}
+{% block content %}
+    <div class="container mt-5" >
     <table>
         <tr>
             <th>Email</th>
@@ -34,16 +31,16 @@
         </tr>
 	{% for (resident, user) in residents %}
         <tr>
-            <form method="post" id="edit-resident-submit" action="/manager/manage_residents">
+            <form method="post" id="edit-resident-submit">
                 {{form.user_id(value=user.id, type="hidden")|safe}}
                 <td>{{ user.email }}</td>
                 <td>{{ user.first_name }}</td>
                 <td>{{ user.last_name }}</td>
                 <td>{{form.room_number(value=resident.room_number)|safe}}</td>
-                <td><input type="submit" value="Submit"></td>
+                <td><input type="submit" value="Update"></td>
             </form>
         </tr>
 	{% endfor %}
     </table>
-</body>
-</html>
+    </div>
+{% endblock %}
