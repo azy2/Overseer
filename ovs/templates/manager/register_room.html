@@ -1,22 +1,20 @@
-<!doctype html>
-<html class="no-js" lang="">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>Register a Room</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-    </head>
-    <body>
-        {% from "_formhelper.html" import render_field %}
-        <form method="post">
-            <dl>
-                {{ render_field(form.room_number) }}
-                {{ render_field(form.room_status) }}
-                {{ render_field(form.room_type) }}
-                {{ render_field(form.occupants) }}
-            </dl>
-            <input type="submit" value="Register">
-        </form>
-    </body>
-</html>
+{% extends "base.html" %}
+{% block title %}Register Room{% endblock %}
+{% block content %}
+{% from "_formhelper.html" import field_stacked %}
+    <div class="container card mt-5" >
+        <div class="row card-body" >
+            <div class="col" >
+                <form method="post">
+                    <dl>
+                        {{ field_stacked(form.room_number) }}
+                        {{ field_stacked(form.room_status) }}
+                        {{ field_stacked(form.room_type) }}
+                        {{ field_stacked(form.occupants) }}
+                    </dl>
+                    <input type="submit" value="Register">
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

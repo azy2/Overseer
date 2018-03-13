@@ -6,25 +6,45 @@ details, etc...
 import os
 import sys
 
+
+def prod_env_load(key, _):
+    """Forces production environment loads to set keys instead of using defaults"""
+    if key not in os.environ:
+        raise KeyError("Running in production, please override %s" % key)
+    return os.environ[key]
+
+
 class Config(object):
     """ The Config object stores all of the setup information """
     APP_ENV = os.getenv('APP_ENV', 'DEV')
-    SECRET_KEY = os.getenv('SECRET', 'VERY_SPECIAL_KEY')
+    env_load = os.getenv
+    if APP_ENV == 'prod':
+        env_load = prod_env_load
+
+    SECRET_KEY = env_load('SECRET', 'VERY_SPECIAL_KEY')
     DEVELOPMENT = APP_ENV == 'DEV'
     TESTING = APP_ENV == 'TEST'
+    TEST_MAIL = False
     PRODUCTION = APP_ENV == 'PROD'
+    DOMAIN_NAME = env_load('DOMAIN_NAME', 'ovs-overseer.azurewebsites.net')
+    SENDGRID_API_KEY = env_load('SENDGRID_API_KEY', 'FAKEAPIKEY')
+    SENDGRID_DEFAULT_FROM = 'admin@{domain_name}'.format(
+        domain_name=DOMAIN_NAME)
+
     if not DEVELOPMENT and not TESTING and not PRODUCTION:
         sys.exit('Please enter a valid environment')
 
-    PORT = os.getenv('PORT', 8080)
+    PORT = env_load('PORT', 8080)
+
+    TEMPLATES_AUTO_RELOAD = True
 
     DATABASE = {
         'primary': {
-            'host': os.getenv('DB_HOSTNAME', '127.0.0.1'),
-            'name': os.getenv('DB_NAME', 'ovs'),
-            'password': os.getenv('DB_PASSWORD', 'pass123'),
-            'port': os.getenv('DB_PORT', '3306'),
-            'user': os.getenv('DB_USER', 'root'),
+            'host': env_load('DB_HOSTNAME', '127.0.0.1'),
+            'name': env_load('DB_NAME', 'ovs'),
+            'password': env_load('DB_PASSWORD', 'pass123'),
+            'port': env_load('DB_PORT', '3306'),
+            'user': env_load('DB_USER', 'root'),
         },
         'pool': {
             'size': os.getenv('DB_POOL_SIZE', 200),
@@ -32,9 +52,22 @@ class Config(object):
         }
     }
 
+    BLOB = {
+        'account': env_load('BLOB_ACCOUNT', 'overseer'),
+        'key': env_load('BLOB_KEY', ''),
+        'default_picture_path': env_load('DEFAULT_PICTURE_PATH',
+                                         'ovs/static/default_profile.png')
+    }
+
     SUPERUSER = {
-        'email': os.getenv('SUPERUSER_EMAIL', 'admin@example.com'),
-        'first_name': os.getenv('SUPERUSER_FIRSTNAME', 'John'),
-        'last_name': os.getenv('SUPERUSER_LASTNAME', 'Smith'),
-        'password': os.getenv('SUPERUSER_PASSWORD', 'ABCD1234')
+        'email': os.getenv('SUPERUSER_EMAIL', 'admin@gmail.com'),
+        'first_name': os.getenv('SUPERUSER_FIRSTNAME', 'Super'),
+        'last_name': os.getenv('SUPERUSER_LASTNAME', 'User'),
+        'password': os.getenv('SUPERUSER_PASSWORD', 'abcd1234')
+    }
+    RESIDENT = {
+        'email': os.getenv('RESIDENT_EMAIL', 'resident@gmail.com'),
+        'first_name': os.getenv('RESIDENT_FIRSTNAME', 'John'),
+        'last_name': os.getenv('RESIDENT_LASTNAME', 'Smith'),
+        'password': os.getenv('RESIDENT_PASSWORD', 'abcd1234')
     }

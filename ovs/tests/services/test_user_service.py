@@ -2,15 +2,22 @@
 Tests for user services
 """
 from unittest import TestCase
+
 from ovs import app
-from ovs.services.user_service import UserService
 from ovs.models.user_model import User
+from ovs.services.user_service import UserService
 
 
 class TestUserService(TestCase):
     """
     Tests for user services
     """
+
+    @classmethod
+    def setUpClass(cls):
+        """ Sets the app config to TESTING mode """
+        app.config['TESTING'] = True
+
     def setUp(self):
         """ Runs before every test and clears relevant tables """
         self.db = app.database.instance()
@@ -25,7 +32,8 @@ class TestUserService(TestCase):
         """ Tests create_user """
         test_user_info = ('test@gmail.com', 'Bob', 'Ross', 'ADMIN')
         UserService.create_user(*test_user_info)
-        user_list = self.db.query(User).filter(User.email == test_user_info[0]).all()
+        user_list = self.db.query(User).filter(
+            User.email == test_user_info[0]).all()
         self.assertEqual(len(user_list), 1)
         user = user_list[0]
         self.assertEqual((user.email, user.first_name,

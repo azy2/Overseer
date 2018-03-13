@@ -1,21 +1,22 @@
 """ routes under /auth/ """
-from flask import Blueprint, flash, redirect, render_template, request, url_for
+from flask import Blueprint, flash, redirect, url_for
 from flask_login import login_user, logout_user, login_required
 
 from ovs import app
 from ovs.forms.login_form import LoginForm
 from ovs.models.user_model import User
 from ovs.services import AuthService
+from ovs.utils.roles import UserRole
 
-auth_bp = Blueprint('auth', __name__,)
+auth_bp = Blueprint('auth', __name__, )
 db = app.database.instance()
 
 
-@auth_bp.route('/login', methods=['GET', 'POST'])
+@auth_bp.route('/login', methods=['POST'])
 def login():
     """ Interface for users to login """
     form = LoginForm(csrf_enabled=False)
-    if request.method == 'POST' and form.validate():
+    if form.validate():
         email = form.email.data
         password = form.password.data
         user = db.query(User).filter_by(email=email).one_or_none()
@@ -26,20 +27,17 @@ def login():
             flash('Invalid password.', 'error')
             return redirect(url_for('auth.login'))
         login_user(user)
-        flash('success!', 'message')
-        return redirect(url_for('auth.login'))
-    return render_template('login_page.html', form=form)
+        if user.role == UserRole.RESIDENT:
+            return redirect(url_for('resident.landing_page'))
+        else:
+            return redirect(url_for('manager.landing_page'))
+    else:
+        return str(form.errors)
 
 
 @auth_bp.route('/logout')
+@login_required
 def logout():
     """ Logs a user out """
     logout_user()
-    return redirect(url_for('auth.login'))
-
-
-@auth_bp.route('/test')
-@login_required
-def test():
-    """ Checks to see if a user is logged in """
-    return 'I am logged in.'
+    return redirect(url_for('/.landing_page'))

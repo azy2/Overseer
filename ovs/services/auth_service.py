@@ -2,6 +2,7 @@
 Service routines and db access for the Auth layer
 """
 from flask_login import LoginManager
+
 from ovs import app
 from ovs.models.user_model import User
 
