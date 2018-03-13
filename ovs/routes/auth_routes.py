@@ -22,10 +22,10 @@ def login():
         user = db.query(User).filter_by(email=email).one_or_none()
         if user is None:
             flash('Invalid Email.', 'error')
-            return redirect(url_for('auth.login'))
+            return redirect(url_for('/.landing_page'))
         elif not AuthService.verify_auth(user, password):
             flash('Invalid password.', 'error')
-            return redirect(url_for('auth.login'))
+            return redirect(url_for('/.landing_page'))
         login_user(user)
         if user.role == UserRole.RESIDENT:
             return redirect(url_for('resident.landing_page'))
