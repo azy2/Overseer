@@ -15,3 +15,16 @@ class UserRole:
     OFFICE_MANAGER = 'OFFICE_MANAGER'
     BUILDING_MANAGER = 'BUILDING_MANAGER'
     ADMIN = 'ADMIN'
+
+    @staticmethod
+    def has_permission(user_role, min_access_role):
+        permission_levels ={
+            'ADMIN': 100,
+            'OFFICE_MANAGER': 2,
+            'BUILDING_MANAGER': 2,
+            'RESIDENT_ADVISOR': 1,
+            'STAFF': 1,
+            'RESIDENT': 0,
+        }
+
+        return permission_levels[user_role] >= permission_levels[min_access_role]
