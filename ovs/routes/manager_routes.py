@@ -39,18 +39,11 @@ def register_room():
             room = RoomService.create_room(
                 form.room_number.data,
                 form.room_status.data,
-                form.room_type.data)
+                form.room_type.data,
+                form.occupants.data)
             if room is None:
                 flash('Room number already exists! Creation Failed!', 'error')
                 return redirect((url_for('manager.register_room')))
-            occupants = form.occupants.data
-            emails = occupants.split(';')
-            number = form.room_number.data
-            for email in emails:
-                if email == '':
-                    continue
-                # Todo: Add flash response for bad emails
-                RoomService.add_resident_to_room(email, number)
             flash('Residents added to rooms successfully!', 'message')
             return redirect(url_for('manager.register_room'))
         else:
@@ -74,14 +67,13 @@ def register_resident():
     user = UserService.get_user_by_id(current_user.get_id()).first()
     role = user.role
     if request.method == 'POST':
-        print(form)  # <-- added !!!
         if form.validate():
-            user = UserService.create_user(
+            new_user = UserService.create_user(
                 form.email.data,
                 form.first_name.data,
                 form.last_name.data,
                 "RESIDENT")
-            if user:
+            if new_user:
                 flash('Residents successfully registered!', 'message')
             else:
                 flash('Residents not successfully registered! Email already exists!', 'error')
@@ -147,11 +139,9 @@ def manage_packages():
 
         # Edit package
         elif edit_form.validate_on_submit():
-            package_id = edit_form.package_id.data
-            recipient_email = edit_form.recipient_email.data
-            description = edit_form.description.data
-
-            ManagerService.update_package(package_id, recipient_email, description)
+            PackageService.update_package(edit_form.package_id.data,
+                                          edit_form.recipient_email.data,
+                                          edit_form.description.data)
             flash('Package edited successfully!', 'message')
             return redirect(url_for('manager.manage_packages'))
 
@@ -214,7 +204,7 @@ def create_meal_plan():
                 form.plan_type.data,
                 form.email.data)
             MealService.get_meal_plan_by_pin(form.pin.data)
-            # Todo: create meal plan by email always returns false, not fully implemented yet
+            # Todo: create meal plan by email not fully implemented yet
             if valid:
                 flash('Meal plan created successfully!', 'message')
             else:

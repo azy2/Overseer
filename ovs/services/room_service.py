@@ -20,7 +20,7 @@ class RoomService:
         pass
 
     @staticmethod
-    def create_room(number, status, room_type):
+    def create_room(number, status, room_type, occupants=''):
         """ Adds a room to the database """
         new_room = Room(number=number, status=status, type=room_type)
         try:
@@ -29,6 +29,11 @@ class RoomService:
         except exc.IntegrityError:
             db.rollback()
             return None
+
+        emails = occupants.split(';')
+        for email in emails:
+            RoomService.add_resident_to_room(email, number)
+
         return new_room
 
     @staticmethod
