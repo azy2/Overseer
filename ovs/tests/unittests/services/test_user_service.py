@@ -1,49 +1,46 @@
 """
 Tests for user services
 """
-from unittest import TestCase
-from ovs import app
 from ovs.services.user_service import UserService
 from ovs.models.user_model import User
+from ovs.tests.unittests.base_test import OVSBaseTestCase
 
-
-class TestUserService(TestCase):
+class TestUserService(OVSBaseTestCase):
     """
     Tests for user services
     """
-    def setUp(self):
-        """ Runs before every test and clears relevant tables """
-        self.db = app.database.instance()
-        self.tearDown()
-
-    def tearDown(self):
-        """ Runs after every tests and clears relevant tables """
-        self.db.query(User).delete()
-        self.db.commit()
+    def get_tables_used_in_tests(self):
+        """
+        Subclass test cases should override this to return what database objects
+        correspond to tables they will need cleared before running
+        """
+        return [User]
 
     def test_create_user(self):
-        """ Tests create_user """
+        """ Tests that users can be created """
         test_user_info = ('test@gmail.com', 'Bob', 'Ross', 'ADMIN')
         UserService.create_user(*test_user_info)
+
         user_list = self.db.query(User).filter(User.email == test_user_info[0]).all()
         self.assertEqual(len(user_list), 1)
+
         user = user_list[0]
-        self.assertEqual((user.email, user.first_name,
-                          user.last_name, user.role), test_user_info)
+        self.assertEqual((user.email, user.first_name, user.last_name, user.role), test_user_info)
         self.assertIsNotNone(user.password)
 
     def test_get_user_by_email(self):
-        """ Tests get_user_by_email """
+        """ Tests get_user_by_email successfully finds a user """
         test_user_info = ('test@gmail.com', 'Bob', 'Ross', 'ADMIN')
         UserService.create_user(*test_user_info)
+
         user_list = UserService.get_user_by_email(test_user_info[0]).all()
         self.assertEqual(len(user_list), 1)
+
         user = user_list[0]
-        self.assertEqual((user.email, user.first_name,
-                          user.last_name, user.role), test_user_info)
+        self.assertEqual((user.email, user.first_name, user.last_name, user.role), test_user_info)
         self.assertIsNotNone(user.password)
 
-    def test_get_user_by_email_0(self):
-        """ Tests get_user_by_email with bad parameter"""
+    def test_invalid_get_user_by_email(self):
+        """ Tests get_user_by_email does not find anyone with an invalid email """
         user_list = UserService.get_user_by_email("dummy@gmail.com").all()
         self.assertEqual(len(user_list), 0)
