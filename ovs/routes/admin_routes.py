@@ -4,12 +4,15 @@ from flask_login import login_required, current_user
 
 from ovs.forms import RegisterManagerForm
 from ovs.services import UserService
+from ovs.middleware import permissions
+from ovs.utils import roles
 
 admin_bp = Blueprint('admin', __name__, )
 
 
 @admin_bp.route('/register_manager/', methods=['GET', 'POST'])
 @login_required
+@permissions(roles.ADMIN)
 def register_manager():
     """
     /admin/register_manager serves an html form with input fields for email,

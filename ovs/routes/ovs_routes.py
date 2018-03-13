@@ -11,7 +11,7 @@ ovs_bp = Blueprint('/', __name__, )
 
 @ovs_bp.route('/')
 def landing_page():
-    """ Example route that generates a random user """
+    """ The homepage for OVS """
     kwargs = {}
     if current_user.is_authenticated:
         user = UserService.get_user_by_id(current_user.get_id()).first()
