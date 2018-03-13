@@ -4,3 +4,5 @@ __pycache__
 .vagrant
 *.log
 .vscode/
+ovs/data/test
+ovs/data/test/*
