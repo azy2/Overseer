@@ -50,7 +50,7 @@ class User(app.BaseModel):
         to_check = password.encode('utf-8')
         actual = self.password.encode('utf-8')
 
-        return actual == bcrypt_app.check_password_hash(actual, to_check)
+        return bcrypt_app.check_password_hash(actual, to_check)
 
     def json(self):
         """ Returns a JSON representation of this User """
