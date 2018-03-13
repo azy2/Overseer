@@ -43,7 +43,7 @@ class UserService:
         if role == 'RESIDENT':
             ResidentService.create_resident(new_user)
 
-        substitutions = {
+        user_info_substitution = {
             "first_name": first_name,
             "last_name": last_name,
             "role": role

@@ -18,4 +18,4 @@ class MailService:
                 from_email=from_email,
                 to_email=to_email,
                 subject=subject,
-                text=text if not substitutions else text % substitutions)
+                text=text if not substitutions else text.format(**substitutions)
