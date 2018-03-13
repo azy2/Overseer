@@ -3,7 +3,6 @@ import datetime
 from unittest import TestCase
 
 from ovs import app
-from ovs.models.package_model import Package
 from ovs.models.profile_model import Profile
 from ovs.models.resident_model import Resident
 from ovs.models.room_model import Room
@@ -67,19 +66,3 @@ class TestManagerService(TestCase):
         self.assertEqual(packages_recipients_checkers[0][1].role, user_1.role)
         self.assertEqual(packages_recipients_checkers[0][2].email, user_2.email)
         self.assertEqual(packages_recipients_checkers[0][2].role, user_2.role)
-
-    def test_update_package(self):
-        """ Tests update_package """
-        # update_package(package_id, recipient_email, description)
-        user_1 = UserService.create_user('test@gmail.com', 'Bob', 'Ross', 'RESIDENT')
-        user_2 = UserService.create_user('test2@gmail.com', 'Joe', 'Smith', 'RESIDENT')
-        user_3 = UserService.create_user('test3@gmail.com', 'Jim', 'White', 'ADMIN')
-        checked_at = datetime.datetime.now().replace(second=0, microsecond=0)
-        package_description = "Fragile"
-        package_1 = PackageService.create_package(user_1.id, user_3.id, checked_at, package_description)
-        new_package_description = "NOT Fragile"
-        ManagerService.update_package(package_1.id, user_2.email, new_package_description)
-        updated_package_1 = self.db.query(Package).filter(Package.id == package_1.id).first()
-
-        self.assertEqual(updated_package_1.recipient_id, user_2.id)
-        self.assertEqual(updated_package_1.description, new_package_description)

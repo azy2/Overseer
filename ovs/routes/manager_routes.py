@@ -151,7 +151,7 @@ def manage_packages():
             recipient_email = edit_form.recipient_email.data
             description = edit_form.description.data
 
-            ManagerService.update_package(package_id, recipient_email, description)
+            PackageService.update_package(package_id, recipient_email, description)
             flash('Package edited successfully!', 'message')
             return redirect(url_for('manager.manage_packages'))
 
