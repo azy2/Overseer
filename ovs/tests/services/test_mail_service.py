@@ -8,6 +8,7 @@ from mock import patch
 from ovs import app
 from ovs.services.mail_service import MailService as mail_service
 from ovs.services.user_service import UserService
+from ovs.mail import templates
 
 
 class TestSendMail(TestCase):
@@ -40,6 +41,14 @@ class TestSendMail(TestCase):
     def test_create_user_sends_email(self, mock_mail):
         """ Tests that creating a user sends an email """
         test_user_info = ('test@gmail.com', 'Bob', 'Ross', 'ADMIN')
+        expected_substitutions = {
+            'first_name': 'Bob',
+            'last_name': 'Ross',
+            'role': 'ADMIN'
+        }
+
         UserService.create_user(*test_user_info)
-        mock_mail.assert_called_once_with(*test_user_info)
-    # pylint: enable=no-self-use
+        mock_mail.assert_called_once_with('test@gmail.com',
+                                          'User Account Creation',
+                                          templates['user_creation_email'],
+                                          substitutions=expected_substitutions)
