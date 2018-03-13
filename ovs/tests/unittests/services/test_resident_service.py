@@ -1,33 +1,29 @@
 """
 Tests for resident services
 """
-from unittest import TestCase
-from ovs import app
 from ovs.services.user_service import UserService
 from ovs.services.resident_service import ResidentService
 from ovs.models.user_model import User
 from ovs.models.resident_model import Resident
 from ovs.models.room_model import Room
 from ovs.models.profile_model import Profile
+from ovs.tests.unittests.base_test import OVSBaseTestCase
 
-
-class TestResidentService(TestCase):
+class TestResidentService(OVSBaseTestCase):
     """
     Tests for resident services
     """
     def setUp(self):
         """ Runs before every test and clears relevant tables """
-        self.db = app.database.instance()
-        #self.tearDown()
+        super().setUp()
         self.create_test_resident()
 
-    def tearDown(self):
-        """ Runs after every tests and clears relevant tables """
-        self.db.query(Profile).delete()
-        self.db.query(User).delete()
-        self.db.query(Resident).delete()
-        self.db.query(Room).delete()
-        self.db.commit()
+    def get_tables_used_in_tests(self):
+        """
+        Subclass test cases should override this to return what database objects
+        correspond to tables they will need cleared before running
+        """
+        return [Profile, User, Resident, Room]
 
     def create_test_resident(self):
         """ Creates a test resident for use in testing """

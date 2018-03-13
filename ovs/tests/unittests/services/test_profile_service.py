@@ -1,32 +1,31 @@
 """
 Tests for profile services
 """
-from unittest import TestCase
-from ovs import app
 from ovs.services.user_service import UserService
 from ovs.services.resident_service import ResidentService
 from ovs.services.profile_service import ProfileService
 from ovs.models.user_model import User
 from ovs.utils.genders import Gender
+from ovs.tests.unittests.base_test import OVSBaseTestCase
 
-
-class TestProfileService(TestCase):
+class TestProfileService(OVSBaseTestCase):
     """
     Tests for profile services
     """
     def setUp(self):
         """ Runs before every test and clears relevant tables """
-        self.db = app.database.instance()
-        self.tearDown()
+        super().setUp()
         test_user_info = ('test@gmail.com', 'Bob', 'Smith', 'RESIDENT')
         UserService.create_user(*test_user_info)
         self.test_user = UserService.get_user_by_email('test@gmail.com').first()
         self.test_resident = ResidentService.get_resident_by_id(self.test_user.id).first()
 
-    def tearDown(self):
-        """ Runs after every tests and clears relevant tables """
-        self.db.query(User).delete()
-        self.db.commit()
+    def get_tables_used_in_tests(self):
+        """
+        Subclass test cases should override this to return what database objects
+        correspond to tables they will need cleared before running
+        """
+        return [User]
 
     def test_update_profile(self):
         """ Tests that profiles can be updated """

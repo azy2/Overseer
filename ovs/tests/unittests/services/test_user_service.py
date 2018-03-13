@@ -1,25 +1,20 @@
 """
 Tests for user services
 """
-from unittest import TestCase
-from ovs import app
 from ovs.services.user_service import UserService
 from ovs.models.user_model import User
+from ovs.tests.unittests.base_test import OVSBaseTestCase
 
-
-class TestUserService(TestCase):
+class TestUserService(OVSBaseTestCase):
     """
     Tests for user services
     """
-    def setUp(self):
-        """ Runs before every test and clears relevant tables """
-        self.db = app.database.instance()
-        self.tearDown()
-
-    def tearDown(self):
-        """ Runs after every tests and clears relevant tables """
-        self.db.query(User).delete()
-        self.db.commit()
+    def get_tables_used_in_tests(self):
+        """
+        Subclass test cases should override this to return what database objects
+        correspond to tables they will need cleared before running
+        """
+        return [User]
 
     def test_create_user(self):
         """ Tests that users can be created """

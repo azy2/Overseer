@@ -1,27 +1,26 @@
 """
 Tests for meal plan services
 """
-from unittest import TestCase
 from datetime import datetime
-from ovs import app
 from ovs.services.meal_service import MealService
 from ovs.models.meal_plan_model import MealPlan
+from ovs.tests.unittests.base_test import OVSBaseTestCase
 
-
-class TestMealPlanService(TestCase):
+class TestMealPlanService(OVSBaseTestCase):
     """
     Tests for meal plan services
     """
     def setUp(self):
         """ Runs before every test and clears relevant tables """
-        self.db = app.database.instance()
-        #self.tearDown()
+        super().setUp()
         self.create_test_weekly_meal_plan()
 
-    def tearDown(self):
-        """ Runs after every tests and clears relevant tables """
-        self.db.query(MealPlan).delete()
-        self.db.commit()
+    def get_tables_used_in_tests(self):
+        """
+        Subclass test cases should override this to return what database objects
+        correspond to tables they will need cleared before running
+        """
+        return [MealPlan]
 
     def create_test_weekly_meal_plan(self):
         """ Creates a meal plan of WEEKLY plan type for use in testing  """
