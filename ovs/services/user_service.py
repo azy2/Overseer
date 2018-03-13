@@ -72,9 +72,5 @@ class UserService:
         :return: True for success, False for failure
         """
         valid = MealService.create_meal_plan(pin, meal_plan, plan_type)
-        valid = False
-        if valid:
-            db.query(User).filter(User.email == email).update(
-                {User.meal_plan: pin})
-            db.commit()
+        UserService.get_user_by_email(email)
         return valid
