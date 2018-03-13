@@ -3,10 +3,11 @@ from sqlalchemy import exc
 
 from ovs import app
 from ovs.models.user_model import User
-from ovs.services.mail_service import send_account_creation_email
+from ovs.services.mail_service import MailService
 from ovs.services.meal_service import MealService
 from ovs.services.resident_service import ResidentService
 from ovs.utils import crypto
+from ovs.mail import templates
 
 db = app.database.instance()
 
@@ -42,7 +43,15 @@ class UserService:
         if role == 'RESIDENT':
             ResidentService.create_resident(new_user)
 
-        send_account_creation_email(email, first_name, last_name, role)
+        user_info_substitution = {
+            "first_name": first_name,
+            "last_name": last_name,
+            "role": role
+        }
+        MailService.send_email(email, 'User Account Creation',
+                               templates['user_creation_email'],
+                               substitutions=user_info_substitution)
+
         return new_user
 
     @staticmethod
