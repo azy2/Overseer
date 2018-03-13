@@ -140,11 +140,9 @@ def manage_packages():
 
         # Edit package
         elif edit_form.validate_on_submit():
-            package_id = edit_form.package_id.data
-            recipient_email = edit_form.recipient_email.data
-            description = edit_form.description.data
-
-            PackageService.update_package(package_id, recipient_email, description)
+            PackageService.update_package(edit_form.package_id.data,
+                                          edit_form.recipient_email.data,
+                                          edit_form.description.data)
             flash('Package edited successfully!', 'message')
             return redirect(url_for('manager.manage_packages'))
 
