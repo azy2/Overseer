@@ -18,7 +18,7 @@ class Config(object):
     """ The Config object stores all of the setup information """
     APP_ENV = os.getenv('APP_ENV', 'DEV')
     env_load = os.getenv
-    if APP_ENV == 'prod':
+    if APP_ENV == 'PROD':
         env_load = prod_env_load
 
     SECRET_KEY = env_load('SECRET', 'VERY_SPECIAL_KEY')
@@ -60,10 +60,10 @@ class Config(object):
     }
 
     ADMIN = {
-        'email': prod_env_load('ADMIN_EMAIL', 'admin@gmail.com'),
-        'first_name': prod_env_load('ADMIN_FIRSTNAME', 'Admin'),
-        'last_name': prod_env_load('ADMIN_LASTNAME', 'User'),
-        'password': prod_env_load('ADMIN_PASSWORD', 'abcd1234')
+        'email': env_load('ADMIN_EMAIL', 'admin@gmail.com'),
+        'first_name': env_load('ADMIN_FIRSTNAME', 'Admin'),
+        'last_name': env_load('ADMIN_LASTNAME', 'User'),
+        'password': env_load('ADMIN_PASSWORD', 'abcd1234')
     }
     BUILDING_MANAGER = {
         'email': os.getenv('BUILDING_MANAGER_EMAIL', 'building_manager@gmail.com'),
