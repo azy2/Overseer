@@ -74,5 +74,5 @@ def edit_profile():
             return str(profile_form.errors)
     else:
         pict = base64.b64encode(ProfilePictureService.get_profile_picture(profile.picture_id)).decode()
-        return render_template('resident/profile.html', role=UserRole.RESIDENT, profile=profile, pict=pict,
+        return render_template('resident/profile.html', role=roles.RESIDENT, profile=profile, pict=pict,
                                profile_form=profile_form, picture_form=picture_form)
