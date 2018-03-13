@@ -1,12 +1,12 @@
 """ routes under /auth/ """
-from flask import Blueprint, flash, redirect, url_for
+from flask import Blueprint, redirect, url_for, flash
 from flask_login import login_user, logout_user, login_required
 
 from ovs import app
 from ovs.forms.login_form import LoginForm
-from ovs.models.user_model import User
 from ovs.services import AuthService
 from ovs.utils.roles import UserRole
+from ovs.services.user_service import UserService
 
 auth_bp = Blueprint('auth', __name__, )
 db = app.database.instance()
@@ -19,7 +19,7 @@ def login():
     if form.validate():
         email = form.email.data
         password = form.password.data
-        user = db.query(User).filter_by(email=email).one_or_none()
+        user = UserService.get_user_by_email(email).one_or_none()
         if user is None:
             flash('Invalid Email.', 'error')
             return redirect(url_for('/.landing_page'))
