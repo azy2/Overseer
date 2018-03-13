@@ -6,7 +6,7 @@ from unittest import TestCase
 from mock import patch
 
 from ovs import app
-from ovs.services import mail_service
+from ovs.services.mail_service import MailService as mail_service
 from ovs.services.user_service import UserService
 
 
@@ -35,21 +35,8 @@ class TestSendMail(TestCase):
                          '"no-reply@ovs-overseer.azurewebsites.net"}, "personalizations": [{"to": [{"email": '
                          '"testEmail@test.com"}]}], "subject": "TestSubject"}')
 
-    # pylint: disable=no-self-use
-    @patch('ovs.services.mail_service.send_email')
-    def test_send_account_creation_email(self, mock_mail):
-        """Test that account creation mail contain correct info."""
-        mail_service.send_account_creation_email(
-            to_email='testEmail@test.com',
-            first_name='testFirstName',
-            last_name='testLastName',
-            role='testRole')
-        mock_mail.assert_called_once_with(
-            to_email='testEmail@test.com',
-            subject='Your New Account',
-            text='Hi testFirstName testLastName, thank you for creating your account!\nYour role is: testRole')
-
-    @patch('ovs.services.user_service.send_account_creation_email')
+    #pylint: disable=no-self-use
+    @patch('ovs.services.user_service.send_email')
     def test_create_user_sends_email(self, mock_mail):
         """ Tests that creating a user sends an email """
         test_user_info = ('test@gmail.com', 'Bob', 'Ross', 'ADMIN')
