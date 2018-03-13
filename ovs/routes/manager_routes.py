@@ -67,7 +67,6 @@ def register_resident():
     user = UserService.get_user_by_id(current_user.get_id()).first()
     role = user.role
     if request.method == 'POST':
-        print(form)  # <-- added !!!
         if form.validate():
             new_user = UserService.create_user(
                 form.email.data,
