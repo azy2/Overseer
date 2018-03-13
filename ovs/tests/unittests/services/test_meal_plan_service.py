@@ -6,10 +6,12 @@ from ovs.services.meal_service import MealService
 from ovs.models.meal_plan_model import MealPlan
 from ovs.tests.unittests.base_test import OVSBaseTestCase
 
+
 class TestMealPlanService(OVSBaseTestCase):
     """
     Tests for meal plan services
     """
+
     def setUp(self):
         """ Runs before every test and clears relevant tables """
         super().setUp()

@@ -13,6 +13,7 @@ class TestResidentService(OVSBaseTestCase):
     """
     Tests for resident services
     """
+
     def setUp(self):
         """ Runs before every test and clears relevant tables """
         super().setUp()

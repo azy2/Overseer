@@ -8,10 +8,12 @@ from ovs.models.user_model import User
 from ovs.utils.genders import Gender
 from ovs.tests.unittests.base_test import OVSBaseTestCase
 
+
 class TestProfileService(OVSBaseTestCase):
     """
     Tests for profile services
     """
+
     def setUp(self):
         """ Runs before every test and clears relevant tables """
         super().setUp()

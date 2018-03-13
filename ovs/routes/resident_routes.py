@@ -1,14 +1,16 @@
 """ under /resident """
-from flask import Blueprint, redirect, render_template, request, url_for
+from flask import Blueprint, redirect, render_template, request, url_for, flash
 from flask_login import current_user, login_required
+
 from ovs import app
-from ovs.utils.roles import UserRole
-from ovs.services.resident_service import ResidentService
-from ovs.services.profile_service import ProfileService
 from ovs.forms.edit_resident_profile_form import EditResidentProfileForm
+from ovs.services.profile_service import ProfileService
+from ovs.services.resident_service import ResidentService
+from ovs.utils.roles import UserRole
 
 residents_bp = Blueprint('resident', __name__)
 db = app.database.instance()
+
 
 @residents_bp.route('/')
 @login_required
@@ -18,6 +20,7 @@ def landing_page():
     resident = ResidentService.get_resident_by_id(resident_id).first()
     profile = resident.profile
     return render_template('resident/index.html', role=UserRole.RESIDENT, profile=profile)
+
 
 @residents_bp.route('/profile/', methods=['GET', 'POST'])
 @login_required
@@ -41,6 +44,7 @@ def edit_profile():
                                           form.phone_number.data,
                                           form.race.data,
                                           form.gender.data)
+            flash('Profile edit successfully!', 'message')
             return redirect(url_for('resident.edit_profile'))
         else:
             return str(form.errors)

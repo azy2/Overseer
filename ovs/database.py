@@ -4,18 +4,20 @@ Database interface code
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-class Database():
+
+class Database:
     """
     Database is the implementation for app.database and provides sqlalchemy
     with a target.
     """
+
     def __init__(self, app):
         database = app.config['DATABASE']
-        url = 'mysql+pymysql://' +                    \
-              database['primary']['user'] + ':' +     \
+        url = 'mysql+pymysql://' + \
+              database['primary']['user'] + ':' + \
               database['primary']['password'] + '@' + \
-              database['primary']['host'] + ':' +     \
-              database['primary']['port'] + '/' +     \
+              database['primary']['host'] + ':' + \
+              database['primary']['port'] + '/' + \
               database['primary']['name']
 
         self._engine = create_engine(url, pool_size=database['pool']['size'],

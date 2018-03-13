@@ -9,6 +9,12 @@ class OVSBaseTestCase(TestCase):
     """
     The base test case that all other test cases should inherit from
     """
+
+    @classmethod
+    def setUpClass(cls):
+        """ Sets the app config to TESTING mode """
+        app.config['TESTING'] = True
+
     def setUp(self):
         """ Runs before every test and clears relevant tables """
         self.db = app.database.instance()

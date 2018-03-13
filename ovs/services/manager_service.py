@@ -1,17 +1,24 @@
 """ Services related to managers """
+from sqlalchemy import exc
 from sqlalchemy.orm import aliased
+
 from ovs import app
-from ovs.models.user_model import User
-from ovs.models.resident_model import Resident
 from ovs.models.package_model import Package
-from ovs.services.user_service import UserService
-from ovs.services.resident_service import ResidentService
+from ovs.models.resident_model import Resident
+from ovs.models.user_model import User
 from ovs.services.package_service import PackageService
+from ovs.services.resident_service import ResidentService
+from ovs.services.room_service import RoomService
+from ovs.services.user_service import UserService
+
 db = app.database.instance()
 
 
 class ManagerService:
     """ Services related to managers """
+
+    def __init__(self):
+        pass
 
     @staticmethod
     def get_all_residents():
@@ -32,8 +39,16 @@ class ManagerService:
     @staticmethod
     def update_resident_room_number(user_id, room_number):
         """ Changes the room_number of Resident identified by user_id """
-        db.query(Resident).filter(Resident.user_id == user_id).update({Resident.room_number: room_number})
-        db.commit()
+        room = RoomService.get_room_by_number(room_number).first()
+        if room is None:
+            return None
+        # Todo: Catch specific exceptions for join and update
+        try:
+            db.query(Resident).filter(Resident.user_id == user_id).update({Resident.room_number: room_number})
+            db.commit()
+        except exc.SQLAlchemyError:
+            db.rollback()
+            return None
         return ResidentService.get_resident_by_id(user_id).first()
 
     @staticmethod
@@ -46,15 +61,15 @@ class ManagerService:
         user_1 = aliased(User)
         user_2 = aliased(User)
         return db.query(Package, user_1, user_2) \
-                 .join(user_1, Package.recipient_id == user_1.id) \
-                 .join(user_2, Package.checked_by_id == user_2.id).all()
+            .join(user_1, Package.recipient_id == user_1.id) \
+            .join(user_2, Package.checked_by_id == user_2.id).all()
 
     @staticmethod
     def update_package(package_id, recipient_email, description):
         """ Changes the receiver and description of Package identified by package_id """
         recipient_id = UserService.get_user_by_email(recipient_email).first().id
         db.query(Package) \
-          .filter(Package.id == package_id) \
-          .update({Package.recipient_id: recipient_id, Package.description: description})
+            .filter(Package.id == package_id) \
+            .update({Package.recipient_id: recipient_id, Package.description: description})
         db.commit()
         return PackageService.get_package_by_id(package_id).first()

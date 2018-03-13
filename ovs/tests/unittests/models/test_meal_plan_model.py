@@ -2,6 +2,7 @@
 Tests for the meal plan model
 """
 from datetime import datetime
+
 from ovs.models.meal_plan_model import MealPlan
 from ovs.tests.unittests.base_test import OVSBaseTestCase
 
@@ -10,6 +11,7 @@ class TestMealPlanModel(OVSBaseTestCase):
     """
     Tests for the meal plan model
     """
+
     def setUp(self):
         """ Runs before every test """
         super().setUp()
