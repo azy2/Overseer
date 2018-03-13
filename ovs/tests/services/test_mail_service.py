@@ -36,7 +36,7 @@ class TestSendMail(TestCase):
                          '"testEmail@test.com"}]}], "subject": "TestSubject"}')
 
     #pylint: disable=no-self-use
-    @patch('ovs.services.user_service.send_email')
+    @patch('ovs.services.mail_service.send_email')
     def test_create_user_sends_email(self, mock_mail):
         """ Tests that creating a user sends an email """
         test_user_info = ('test@gmail.com', 'Bob', 'Ross', 'ADMIN')
