@@ -18,7 +18,7 @@ class Config(object):
     """ The Config object stores all of the setup information """
     APP_ENV = os.getenv('APP_ENV', 'DEV')
     env_load = os.getenv
-    if APP_ENV == 'prod':
+    if APP_ENV == 'PROD':
         env_load = prod_env_load
 
     SECRET_KEY = env_load('SECRET', 'VERY_SPECIAL_KEY')
@@ -52,15 +52,46 @@ class Config(object):
         }
     }
 
-    SUPERUSER = {
-        'email': os.getenv('SUPERUSER_EMAIL', 'admin@gmail.com'),
-        'first_name': os.getenv('SUPERUSER_FIRSTNAME', 'Super'),
-        'last_name': os.getenv('SUPERUSER_LASTNAME', 'User'),
-        'password': os.getenv('SUPERUSER_PASSWORD', 'abcd1234')
+    BLOB = {
+        'account': env_load('BLOB_ACCOUNT', 'overseer'),
+        'key': env_load('BLOB_KEY', ''),
+        'default_picture_path': env_load('DEFAULT_PICTURE_PATH',
+                                         'ovs/static/default_profile.png')
+    }
+
+    ADMIN = {
+        'email': env_load('ADMIN_EMAIL', 'admin@gmail.com'),
+        'first_name': env_load('ADMIN_FIRSTNAME', 'Admin'),
+        'last_name': env_load('ADMIN_LASTNAME', 'User'),
+        'password': env_load('ADMIN_PASSWORD', 'abcd1234')
+    }
+    BUILDING_MANAGER = {
+        'email': 'building_manager@gmail.com',
+        'first_name': 'Building',
+        'last_name': 'Manager',
+        'password': 'abcd1234'
+    }
+    OFFICE_MANAGER = {
+        'email': 'office_manager@gmail.com',
+        'first_name': 'Office',
+        'last_name': 'Manager',
+        'password': 'abcd1234'
+    }
+    STAFF = {
+        'email': 'staff@gmail.com',
+        'first_name': 'Staff',
+        'last_name': 'Smith',
+        'password': 'abcd1234'
+    }
+    RESIDENT_ADVISOR = {
+        'email': 'resident_advisor@gmail.com',
+        'first_name': 'Resident',
+        'last_name': 'Advisor',
+        'password': 'abcd1234'
     }
     RESIDENT = {
-        'email': os.getenv('RESIDENT_EMAIL', 'resident@gmail.com'),
-        'first_name': os.getenv('RESIDENT_FIRSTNAME', 'John'),
-        'last_name': os.getenv('RESIDENT_LASTNAME', 'Smith'),
-        'password': os.getenv('RESIDENT_PASSWORD', 'abcd1234')
+        'email': 'resident@gmail.com',
+        'first_name': 'John',
+        'last_name': 'Smith',
+        'password': 'abcd1234'
     }

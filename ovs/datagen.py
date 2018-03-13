@@ -12,35 +12,25 @@ db = app.database.instance()
 class DataGen:
     """ Data generation class """
     @staticmethod
-    def create_superuser():
-        """ Add the superuser to the database """
-        UserService.create_user(app.config['SUPERUSER']['email'],
-                                app.config['SUPERUSER']['first_name'],
-                                app.config['SUPERUSER']['last_name'],
-                                roles.ADMIN,
-                                app.config['SUPERUSER']['password'])
-
-    @staticmethod
-    def create_default_resident():
-        """ Add the default resident to the database """
-        UserService.create_user(app.config['RESIDENT']['email'],
-                                app.config['RESIDENT']['first_name'],
-                                app.config['RESIDENT']['last_name'],
-                                roles.RESIDENT,
-                                app.config['RESIDENT']['password'])
+    def create_user(user_role):
+        """ Creates a default user if it doesn't exist """
+        user = UserService.get_user_by_email(
+            app.config[user_role]['email']).one_or_none()
+        if not user:
+            UserService.create_user(app.config[user_role]['email'],
+                                    app.config[user_role]['first_name'],
+                                    app.config[user_role]['last_name'],
+                                    user_role,
+                                    app.config[user_role]['password'])
 
     @staticmethod
     def create_defaults():
         """ Populate the database with defaults """
-        super_user = UserService.get_user_by_email(
-            app.config['SUPERUSER']['email']).one_or_none()
-        if not super_user:
-            DataGen.create_superuser()
-
-        default_resident = UserService.get_user_by_email(
-            app.config['RESIDENT']['email']).one_or_none()
-        if not default_resident:
-            DataGen.create_default_resident()
+        DataGen.create_user(roles.ADMIN)
+        if app.config['TESTING'] or app.config['DEVELOPMENT']:
+            for user_role in [roles.RESIDENT, roles.RESIDENT_ADVISOR, roles.STAFF,
+                              roles.OFFICE_MANAGER, roles.BUILDING_MANAGER]:
+                DataGen.create_user(user_role)
 
     @staticmethod
     def clear_db():

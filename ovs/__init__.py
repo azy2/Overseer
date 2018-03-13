@@ -9,10 +9,12 @@ from flask_sendgrid import SendGrid
 from sqlalchemy.ext.declarative import declarative_base
 
 from ovs.database import Database
+from ovs.blob import Blob
 
 app = Flask(__name__)
 app.config.from_object('ovs.config.Config')
 app.database = Database(app)
+app.blob = Blob(app)
 app.BaseModel = declarative_base()
 app.mail = SendGrid(app)
 

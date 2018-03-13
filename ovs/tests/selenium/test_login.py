@@ -3,6 +3,7 @@ from unittest import TestCase
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
+from ovs import app
 from ovs import DataGen
 
 
@@ -48,7 +49,7 @@ class TestLogin(TestCase):
         pass_box.send_keys('abcd1234')
         pass_box.send_keys(Keys.ENTER)
 
-        self.assertIn('Super', self.browser.title)
+        self.assertIn(app.config['ADMIN']['first_name'], self.browser.title)
 
     def test_bad_login(self):
         """ Tests whether a random email  can log in or not """

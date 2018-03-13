@@ -3,10 +3,11 @@ from sqlalchemy import exc
 
 from ovs import app
 from ovs.models.user_model import User
-from ovs.services.mail_service import send_account_creation_email
+from ovs.services.mail_service import MailService
 from ovs.services.meal_service import MealService
 from ovs.services.resident_service import ResidentService
 from ovs.utils import crypto
+from ovs.mail import templates
 
 db = app.database.instance()
 
@@ -42,7 +43,15 @@ class UserService:
         if role == 'RESIDENT':
             ResidentService.create_resident(new_user)
 
-        send_account_creation_email(email, first_name, last_name, role)
+        user_info_substitution = {
+            "first_name": first_name,
+            "last_name": last_name,
+            "role": role
+        }
+        MailService.send_email(email, 'User Account Creation',
+                               templates['user_creation_email'],
+                               substitutions=user_info_substitution)
+
         return new_user
 
     @staticmethod
@@ -62,7 +71,7 @@ class UserService:
         return db.query(User).filter(User.id == user_id)
 
     @staticmethod
-    def create_meal_plan_for_user_by_email(pin, meal_plan, plan_type, email):
+    def create_meal_plan_for_user_by_email(pin, meal_plan, plan_type, email):  # pylint: disable=unused-argument
         """
         Adds a new meal plan to the DB
         :param email: User to link to, TODO:implement
@@ -72,9 +81,4 @@ class UserService:
         :return: True for success, False for failure
         """
         valid = MealService.create_meal_plan(pin, meal_plan, plan_type)
-        valid = False
-        if valid:
-            db.query(User).filter(User.email == email).update(
-                {User.meal_plan: pin})
-            db.commit()
         return valid

@@ -4,12 +4,15 @@ from flask_login import login_required, current_user
 
 from ovs.forms import RegisterManagerForm
 from ovs.services import UserService
+from ovs.middleware import permissions
+from ovs.utils import roles
 
 admin_bp = Blueprint('admin', __name__, )
 
 
 @admin_bp.route('/register_manager/', methods=['GET', 'POST'])
 @login_required
+@permissions(roles.ADMIN)
 def register_manager():
     """
     /admin/register_manager serves an html form with input fields for email,
@@ -23,13 +26,13 @@ def register_manager():
     form = RegisterManagerForm(csrf_enabled=False)
     if request.method == 'POST':
         if form.validate():
-            user = UserService.create_user(
+            new_user = UserService.create_user(
                 form.email.data,
                 form.first_name.data,
                 form.last_name.data,
                 form.role.data)
 
-            if user:
+            if new_user:
                 flash('User successfully added!', 'message')
             else:
                 flash('User not successfully added! Email already exists!', 'error')

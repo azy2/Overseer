@@ -5,7 +5,6 @@ from ovs.services.manager_service import ManagerService
 from ovs.services.room_service import RoomService
 from ovs.services.package_service import PackageService
 from ovs.models.resident_model import Resident
-from ovs.models.package_model import Package
 from ovs.tests.unittests.base_test import OVSBaseTestCase
 
 
@@ -50,17 +49,3 @@ class TestManagerService(OVSBaseTestCase):
         self.assertEqual(packages_recipients_checkers[0][1].role, self.test_resident_1.role)
         self.assertEqual(packages_recipients_checkers[0][2].email, self.test_admin.email)
         self.assertEqual(packages_recipients_checkers[0][2].role, self.test_admin.role)
-
-    def test_update_package(self):
-        """ Tests that packages can be updated """
-        # update_package(package_id, recipient_email, description)
-        checked_at = datetime.datetime.now().replace(second=0, microsecond=0)
-        package_description = "Fragile"
-        test_package = PackageService.create_package(self.test_resident_1.id, self.test_admin.id,
-                                                     checked_at, package_description)
-        new_package_description = "NOT Fragile"
-        ManagerService.update_package(test_package.id, self.test_resident_2.email, new_package_description)
-        updated_test_package = self.db.query(Package).filter(Package.id == test_package.id).first()
-
-        self.assertEqual(updated_test_package.recipient_id, self.test_resident_2.id)
-        self.assertEqual(updated_test_package.description, new_package_description)
