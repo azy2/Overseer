@@ -17,13 +17,6 @@ class TestMealPlanService(OVSBaseTestCase):
         super().setUp()
         self.create_test_weekly_meal_plan()
 
-    def get_tables_used_in_tests(self):
-        """
-        Subclass test cases should override this to return what database objects
-        correspond to tables they will need cleared before running
-        """
-        return [MealPlan]
-
     def create_test_weekly_meal_plan(self):
         """ Creates a meal plan of WEEKLY plan type for use in testing  """
         self.test_meal_plan_info = (141414, 10, 'WEEKLY')

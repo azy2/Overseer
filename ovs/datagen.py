@@ -5,6 +5,7 @@ from ovs.models.user_model import User
 from ovs.models.resident_model import Resident
 from ovs.models.room_model import Room
 from ovs.models.profile_model import Profile
+from ovs.models.meal_plan_model import MealPlan
 from ovs.utils import roles
 
 db = app.database.instance()
@@ -48,4 +49,5 @@ class DataGen:
         db.query(User).delete()
         db.query(Resident).delete()
         db.query(Room).delete()
+        db.query(MealPlan).delete()
         db.commit()

@@ -4,10 +4,7 @@ Tests for room services
 from ovs.services.user_service import UserService
 from ovs.services.resident_service import ResidentService
 from ovs.services.room_service import RoomService
-from ovs.models.user_model import User
-from ovs.models.resident_model import Resident
 from ovs.models.room_model import Room
-from ovs.models.profile_model import Profile
 from ovs.tests.unittests.base_test import OVSBaseTestCase
 
 class TestRoomService(OVSBaseTestCase):
@@ -18,13 +15,6 @@ class TestRoomService(OVSBaseTestCase):
         """ Runs before every test and clears relevant tables """
         super().setUp()
         self.create_test_room()
-
-    def get_tables_used_in_tests(self):
-        """
-        Subclass test cases should override this to return what database objects
-        correspond to tables they will need cleared before running
-        """
-        return [Profile, User, Resident, Room]
 
     def create_test_room(self):
         """ Creates a room for use in testing  """

@@ -9,13 +9,6 @@ class TestUserService(OVSBaseTestCase):
     """
     Tests for user services
     """
-    def get_tables_used_in_tests(self):
-        """
-        Subclass test cases should override this to return what database objects
-        correspond to tables they will need cleared before running
-        """
-        return [User]
-
     def test_create_user(self):
         """ Tests that users can be created """
         test_user_info = ('test@gmail.com', 'Bob', 'Ross', 'ADMIN')
