@@ -1,6 +1,7 @@
 """Middleware to allow for user role based endpoint control"""
+from functools import wraps
 from flask_login import current_user
-from flask import flash, redirect, url_for
+from flask import flash, redirect, request
 from ovs.utils import roles
 
 class Permissions(object):
@@ -10,9 +11,11 @@ class Permissions(object):
 
     def __call__(self, func):
         # pylint: disable=missing-docstring
+        @wraps(func)
         def authorize_and_call(*args, **kwargs):
             if not roles.has_permission(current_user.role, self.role):
-                flash('Unauthorized Access!')
-                return redirect(url_for('/.landing_page'))
+                flash('Unauthorized Access!', 'error')
+                print(request.referrer)
+                return redirect(request.referrer or '/')
             return func(*args, **kwargs)
         return authorize_and_call

@@ -59,11 +59,35 @@ class Config(object):
                                          'ovs/static/default_profile.png')
     }
 
-    SUPERUSER = {
-        'email': os.getenv('SUPERUSER_EMAIL', 'admin@gmail.com'),
-        'first_name': os.getenv('SUPERUSER_FIRSTNAME', 'Super'),
-        'last_name': os.getenv('SUPERUSER_LASTNAME', 'User'),
-        'password': os.getenv('SUPERUSER_PASSWORD', 'abcd1234')
+    ADMIN = {
+        'email': os.getenv('ADMIN_EMAIL', 'admin@gmail.com'),
+        'first_name': os.getenv('ADMIN_FIRSTNAME', 'Admin'),
+        'last_name': os.getenv('ADMIN_LASTNAME', 'User'),
+        'password': os.getenv('ADMIN_PASSWORD', 'abcd1234')
+    }
+    BUILDING_MANAGER = {
+        'email': os.getenv('BUILDING_MANAGER_EMAIL', 'building_manager@gmail.com'),
+        'first_name': os.getenv('BUILDING_MANAGER_FIRSTNAME', 'Building'),
+        'last_name': os.getenv('BUILDING_MANAGER_LASTNAME', 'Manager'),
+        'password': os.getenv('BUILDING_MANAGER_PASSWORD', 'abcd1234')
+    }
+    OFFICE_MANAGER = {
+        'email': os.getenv('OFFICE_MANAGER_EMAIL', 'office_manager@gmail.com'),
+        'first_name': os.getenv('OFFICE_MANAGER_FIRSTNAME', 'Office'),
+        'last_name': os.getenv('OFFICE_MANAGER_LASTNAME', 'Manager'),
+        'password': os.getenv('OFFICE_MANAGER_PASSWORD', 'abcd1234')
+    }
+    STAFF = {
+        'email': os.getenv('STAFF_EMAIL', 'staff@gmail.com'),
+        'first_name': os.getenv('STAFF_FIRSTNAME', 'Staff'),
+        'last_name': os.getenv('STAFF_LASTNAME', 'Smith'),
+        'password': os.getenv('STAFF_PASSWORD', 'abcd1234')
+    }
+    RESIDENT_ADVISOR = {
+        'email': os.getenv('RESIDENT_ADVISOR_EMAIL', 'resident_advisor@gmail.com'),
+        'first_name': os.getenv('RESIDENT_ADVISOR_FIRSTNAME', 'Resident'),
+        'last_name': os.getenv('RESIDENT_ADVISOR_LASTNAME', 'Advisor'),
+        'password': os.getenv('RESIDENT_ADVISOR_PASSWORD', 'abcd1234')
     }
     RESIDENT = {
         'email': os.getenv('RESIDENT_EMAIL', 'resident@gmail.com'),

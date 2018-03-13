@@ -11,12 +11,15 @@ from ovs.services.meal_service import MealService
 from ovs.services.package_service import PackageService
 from ovs.services.room_service import RoomService
 from ovs.services.user_service import UserService
+from ovs.middleware import permissions
+from ovs.utils import roles
 
 manager_bp = Blueprint('manager', __name__, )
 
 
 @manager_bp.route('/', methods=['GET'])
 @login_required
+@permissions(roles.STAFF)
 def landing_page():
     """ The landing page for managers """
     user = UserService.get_user_by_id(current_user.get_id()).first()
@@ -26,6 +29,7 @@ def landing_page():
 
 @manager_bp.route('/register_room/', methods=['GET', 'POST'])
 @login_required
+@permissions(roles.OFFICE_MANAGER)
 def register_room():
     """
     /manager/register_room serves an HTML form with input fields for room #,
@@ -56,6 +60,7 @@ def register_room():
 
 @manager_bp.route('/register_resident/', methods=['GET', 'POST'])
 @login_required
+@permissions(roles.OFFICE_MANAGER)
 def register_resident():
     """
     /manager/register_resident serves an html form with input fields for email,
@@ -87,6 +92,7 @@ def register_resident():
 
 @manager_bp.route('/manage_residents/', methods=['GET', 'POST'])
 @login_required
+@permissions(roles.RESIDENT_ADVISOR)
 def manage_residents():
     """
     /manager/manage_residents severs a HTML with list of residents with their info.
@@ -113,6 +119,7 @@ def manage_residents():
 
 @manager_bp.route('/manage_packages/', methods=['GET', 'POST'])
 @login_required
+@permissions(roles.RESIDENT_ADVISOR)
 def manage_packages():
     """
     /manager/register_resident serves an html form with input fields for email,
@@ -166,6 +173,7 @@ def manage_packages():
 
 @manager_bp.route('/meal_login/', methods=['GET', 'POST'])
 @login_required
+@permissions(roles.STAFF)
 def meal_login():
     """
     /manager/meal_login serves an html form with input field pin
@@ -190,6 +198,7 @@ def meal_login():
 
 @manager_bp.route('/create_meal_plan/', methods=['GET', 'POST'])
 @login_required
+@permissions(roles.OFFICE_MANAGER)
 def create_meal_plan():
     """
     /manager/meal_login serves an html form with input field pin

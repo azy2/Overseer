@@ -12,20 +12,13 @@ app.register_blueprint(routes.AuthRoutes, url_prefix='/auth')
 app.register_blueprint(routes.DevRoutes, url_prefix='/dev')
 
 if os.environ.get("WERKZEUG_RUN_MAIN") == "true":
-    super_user = UserService.get_user_by_email(
-        app.config['SUPERUSER']['email']).one_or_none()
-    resident_user = UserService.get_user_by_email(
-        app.config['RESIDENT']['email']).one_or_none()
-    if not super_user:
-        UserService.create_user(app.config['SUPERUSER']['email'],
-                                app.config['SUPERUSER']['first_name'],
-                                app.config['SUPERUSER']['last_name'],
-                                roles.ADMIN,
-                                app.config['SUPERUSER']['password'])
-
-    if not resident_user:
-        UserService.create_user(app.config['RESIDENT']['email'],
-                                app.config['RESIDENT']['first_name'],
-                                app.config['RESIDENT']['last_name'],
-                                roles.RESIDENT,
-                                app.config['RESIDENT']['password'])
+    for user_role in [roles.RESIDENT, roles.RESIDENT_ADVISOR, roles.STAFF,
+                      roles.OFFICE_MANAGER, roles.BUILDING_MANAGER, roles.ADMIN]:
+        user = UserService.get_user_by_email(
+            app.config[user_role]['email']).one_or_none()
+        if not user:
+            UserService.create_user(app.config[user_role]['email'],
+                                    app.config[user_role]['first_name'],
+                                    app.config[user_role]['last_name'],
+                                    user_role,
+                                    app.config[user_role]['password'])

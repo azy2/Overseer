@@ -11,7 +11,8 @@ from ovs.forms.upload_profile_picture_form import UploadProfilePictureForm
 from ovs.services.profile_service import ProfileService
 from ovs.services.resident_service import ResidentService
 from ovs.services.profile_picture_service import ProfilePictureService
-from ovs.utils.roles import UserRole
+from ovs.middleware import permissions
+from ovs.utils import roles
 
 residents_bp = Blueprint('resident', __name__)
 db = app.database.instance()
@@ -19,16 +20,18 @@ db = app.database.instance()
 
 @residents_bp.route('/')
 @login_required
+@permissions(roles.RESIDENT)
 def landing_page():
     """ The landing page for residents """
     resident_id = current_user.get_id()
     resident = ResidentService.get_resident_by_id(resident_id).first()
     profile = resident.profile
-    return render_template('resident/index.html', role=UserRole.RESIDENT, profile=profile)
+    return render_template('resident/index.html', role=roles.RESIDENT, profile=profile)
 
 
 @residents_bp.route('/profile/', methods=['GET', 'POST'])
 @login_required
+@permissions(roles.RESIDENT)
 def edit_profile():
     """
     Allows the user to edit their profile in a wtform
