@@ -18,7 +18,8 @@ class UserRole:
 
     @staticmethod
     def has_permission(user_role, min_access_role):
-        permission_levels ={
+        """Checks user perms a given user_role and minimum access role"""
+        permission_levels = {
             'ADMIN': 100,
             'OFFICE_MANAGER': 2,
             'BUILDING_MANAGER': 2,
