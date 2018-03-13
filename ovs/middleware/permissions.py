@@ -13,7 +13,7 @@ class Permissions(object):
         """Calls the decorator function"""
         @wraps(func)
         def authorize_and_call(*args, **kwargs):
-        """Calls the decorated function on successful perm check"""
+            """Calls the decorated function on successful perm check"""
             if not roles.has_permission(current_user.role, self.role):
                 flash('Unauthorized Access!', 'error')
                 print(request.referrer)
