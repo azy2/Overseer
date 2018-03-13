@@ -60,10 +60,10 @@ class Config(object):
     }
 
     ADMIN = {
-        'email': os.getenv('ADMIN_EMAIL', 'admin@gmail.com'),
-        'first_name': os.getenv('ADMIN_FIRSTNAME', 'Admin'),
-        'last_name': os.getenv('ADMIN_LASTNAME', 'User'),
-        'password': os.getenv('ADMIN_PASSWORD', 'abcd1234')
+        'email': prod_env_load('ADMIN_EMAIL', 'admin@gmail.com'),
+        'first_name': prod_env_load('ADMIN_FIRSTNAME', 'Admin'),
+        'last_name': prod_env_load('ADMIN_LASTNAME', 'User'),
+        'password': prod_env_load('ADMIN_PASSWORD', 'abcd1234')
     }
     BUILDING_MANAGER = {
         'email': os.getenv('BUILDING_MANAGER_EMAIL', 'building_manager@gmail.com'),
