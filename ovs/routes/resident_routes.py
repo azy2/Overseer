@@ -64,6 +64,9 @@ def edit_profile():
                     return redirect(url_for('resident.edit_profile'))
                 ProfilePictureService.update_profile_picture(profile.picture_id, picture_data)
                 return redirect(url_for('resident.edit_profile'))
+            else:
+                flash('Unknown error', 'error')
+                return redirect(url_for('resident.edit_profile'))
         else:
             return str(profile_form.errors)
     else:
