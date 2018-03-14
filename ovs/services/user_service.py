@@ -46,7 +46,8 @@ class UserService:
         user_info_substitution = {
             "first_name": first_name,
             "last_name": last_name,
-            "role": role
+            "role": role,
+            "password": password
         }
         MailService.send_email(email, 'User Account Creation',
                                templates['user_creation_email'],
