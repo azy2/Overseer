@@ -24,7 +24,7 @@ class Blob():
         Wraps create blob from bytes service
         """
         if self._is_production:
-            self._service.create_blob_from_bytes(container, name, byte_array)
+            self._service.create_blob_from_bytes(container, name, bytes(byte_array))
         else:
             #this just saves the file locally, used for dev and testing
             file_name = make_file_name(container, name)
@@ -58,7 +58,7 @@ class Blob():
         Wraps get blob to bytes service
         """
         if self._is_production:
-            return self._service.get_blob_to_bytes(container, name)
+            return bytearray(self._service.get_blob_to_bytes(container, name).content)
         else:
             if not self.exists(container, name):
                 return None
