@@ -1,6 +1,7 @@
 """ Data generation class """
 from ovs import app
 from ovs.services import UserService
+from ovs.services import RoomService
 from ovs.models.user_model import User
 from ovs.models.resident_model import Resident
 from ovs.models.room_model import Room
@@ -24,13 +25,21 @@ class DataGen:
                                     app.config[user_role]['password'])
 
     @staticmethod
+    def create_default_room():
+        room = RoomService.get_room_by_number('None').first()
+        if room is None:
+            RoomService.create_room('None', '', '')
+
+    @staticmethod
     def create_defaults():
         """ Populate the database with defaults """
         DataGen.create_user(roles.ADMIN)
+        DataGen.create_default_room()
         if app.config['TESTING'] or app.config['DEVELOPMENT']:
             for user_role in [roles.RESIDENT, roles.RESIDENT_ADVISOR, roles.STAFF,
                               roles.OFFICE_MANAGER, roles.BUILDING_MANAGER]:
                 DataGen.create_user(user_role)
+
 
     @staticmethod
     def clear_db():
