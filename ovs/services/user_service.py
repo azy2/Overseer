@@ -52,8 +52,16 @@ class UserService:
         """
         Edits user with user_id with new information
         """
-        user = UserService.get_user_by_id(user_id)
-        user.update(email, first_name, last_name)
+        print(user_id)
+        user = UserService.get_user_by_id(user_id).first()
+        if user is None: #Error : bad user_id
+            return False
+
+        email_user = UserService.get_user_by_email(email).first()
+        if email_user is None or email_user == user: #We don't want to overwrite somebody else
+            user.update(email, first_name, last_name)
+            return True
+        return False
 
     @staticmethod
     def send_setup_email(email, first_name, last_name, role, password):

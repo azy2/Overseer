@@ -7,8 +7,8 @@ from ovs import app
 from ovs.models.profile_model import Profile
 from ovs.models.resident_model import Resident
 from ovs.services.profile_picture_service import ProfilePictureService
-from ovs.services.user_service import UserService
-from ovs.services.room_service import RoomService
+
+
 
 
 db = app.database.instance()
@@ -42,8 +42,13 @@ class ResidentService:
         """
         Edits an existing resident
         """
-        ResidentService.update_resident_room_number(user_id, room_number)
-        UserService.edit_user(user_id, email, first_name, last_name)
+        from ovs.services.user_service import UserService
+        success = UserService.edit_user(user_id, email, first_name, last_name)
+        if success:
+            ResidentService.update_resident_room_number(user_id, room_number)
+        return success
+
+
 
     @staticmethod
     def set_default_picture(picture_id):
@@ -63,9 +68,11 @@ class ResidentService:
         """
         return db.query(Resident).filter(Resident.user_id == user_id)
 
+
     @staticmethod
     def update_resident_room_number(user_id, room_number):
         """ Changes the room_number of Resident identified by user_id """
+        from ovs.services.room_service import RoomService
         room = RoomService.get_room_by_number(room_number).first()
         if room is None:
             return None

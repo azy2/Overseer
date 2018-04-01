@@ -11,6 +11,7 @@ from ovs.services.meal_service import MealService
 from ovs.services.package_service import PackageService
 from ovs.services.room_service import RoomService
 from ovs.services.user_service import UserService
+from ovs.services.resident_service import ResidentService
 from ovs.middleware import permissions
 from ovs.utils import roles
 
@@ -104,8 +105,13 @@ def manage_residents():
 
     if request.method == 'POST':
         if form.validate():
-            resident = ManagerService.update_resident_room_number(form.user_id.data, form.room_number.data)
-            if resident:
+            success = ResidentService.edit_resident(
+                form.user_id.data,
+                form.email.data,
+                form.first_name.data,
+                form.last_name.data,
+                form.room_number.data)
+            if success:
                 flash('Resident room number updated successfully!', 'message')
             else:
                 flash('Resident room number does not exist or User ID wrong!', 'error')
