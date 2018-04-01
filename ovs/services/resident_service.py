@@ -8,11 +8,7 @@ from ovs.models.profile_model import Profile
 from ovs.models.resident_model import Resident
 from ovs.services.profile_picture_service import ProfilePictureService
 
-
-
-
 db = app.database.instance()
-
 
 class ResidentService:
     """ DB and utility functions for Residents """
@@ -45,7 +41,7 @@ class ResidentService:
         from ovs.services.user_service import UserService
         success = UserService.edit_user(user_id, email, first_name, last_name)
         if success:
-            ResidentService.update_resident_room_number(user_id, room_number)
+            success = ResidentService.update_resident_room_number(user_id, room_number) is not None
         return success
 
 

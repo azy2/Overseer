@@ -112,9 +112,9 @@ def manage_residents():
                 form.last_name.data,
                 form.room_number.data)
             if success:
-                flash('Resident room number updated successfully!', 'message')
+                flash('Resident updated successfully!', 'message')
             else:
-                flash('Resident room number does not exist or User ID wrong!', 'error')
+                flash('Room does not exist or duplicate email detected!', 'error')
             return redirect(url_for('manager.manage_residents'))
         else:
             # Todo: display form validation errors on html form fields
