@@ -1,10 +1,15 @@
 """
 DB and utility functions for Residents
 """
+from sqlalchemy import exc
+
 from ovs import app
 from ovs.models.profile_model import Profile
-from ovs.services.profile_picture_service import ProfilePictureService
 from ovs.models.resident_model import Resident
+from ovs.services.profile_picture_service import ProfilePictureService
+from ovs.services.user_service import UserService
+from ovs.services.room_service import RoomService
+
 
 db = app.database.instance()
 
@@ -33,6 +38,14 @@ class ResidentService:
         return new_resident
 
     @staticmethod
+    def edit_resident(user_id, email, first_name, last_name, room_number):
+        """
+        Edits an existing resident
+        """
+        ResidentService.update_resident_room_number(user_id, room_number)
+        UserService.edit_user(user_id, email, first_name, last_name)
+
+    @staticmethod
     def set_default_picture(picture_id):
         """
         Sets default picture for new residents
@@ -49,3 +62,18 @@ class ResidentService:
         Returns the resident given by user_id
         """
         return db.query(Resident).filter(Resident.user_id == user_id)
+
+    @staticmethod
+    def update_resident_room_number(user_id, room_number):
+        """ Changes the room_number of Resident identified by user_id """
+        room = RoomService.get_room_by_number(room_number).first()
+        if room is None:
+            return None
+        # Todo: Catch specific exceptions for join and update
+        try:
+            db.query(Resident).filter(Resident.user_id == user_id).update({Resident.room_number: room_number})
+            db.commit()
+        except exc.SQLAlchemyError:
+            db.rollback()
+            return None
+        return ResidentService.get_resident_by_id(user_id).first()

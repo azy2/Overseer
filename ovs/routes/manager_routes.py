@@ -101,6 +101,7 @@ def manage_residents():
     form = ManageResidentsForm(csrf_enabled=False)
     user = UserService.get_user_by_id(current_user.get_id()).first()
     role = user.role
+
     if request.method == 'POST':
         if form.validate():
             resident = ManagerService.update_resident_room_number(form.user_id.data, form.room_number.data)

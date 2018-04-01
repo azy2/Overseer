@@ -43,6 +43,23 @@ class UserService:
         if role == 'RESIDENT':
             ResidentService.create_resident(new_user)
 
+        UserService.send_setup_email(email, first_name, last_name, role, password)
+
+        return new_user
+
+    @staticmethod
+    def edit_user(user_id, email, first_name, last_name):
+        """
+        Edits user with user_id with new information
+        """
+        user = UserService.get_user_by_id(user_id)
+        user.update(email, first_name, last_name)
+
+    @staticmethod
+    def send_setup_email(email, first_name, last_name, role, password):
+        """
+        Sends setup email to a provided user
+        """
         user_info_substitution = {
             "first_name": first_name,
             "last_name": last_name,
@@ -52,8 +69,6 @@ class UserService:
         MailService.send_email(email, 'User Account Creation',
                                templates['user_creation_email'],
                                substitutions=user_info_substitution)
-
-        return new_user
 
     @staticmethod
     def get_user_by_email(email):

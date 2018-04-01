@@ -64,6 +64,14 @@ class User(app.BaseModel):
             updated=self.updated
         )
 
+    def update(self, email, first_name, last_name):
+        """
+        Updates user with new information
+        """
+        self.email = email
+        self.first_name = first_name
+        self.last_name = last_name
+
     def is_authenticated(self):  # pylint: disable=no-self-use
         """ Checks if a user is authenticated """
         return True

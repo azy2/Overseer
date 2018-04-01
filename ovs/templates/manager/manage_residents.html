@@ -23,20 +23,20 @@
     <div class="container mt-5" >
     <table>
         <tr>
-            <th>Email</th>
-            <th>First Name</th>
-            <th>Last Name</th>
+            <th>{{form.email.label}}</th>
+            <th>{{form.first_name.label}}</th>
+            <th>{{form.last_name.label}}</th>
             <th>{{form.room_number.label}}</th>
             <th></th>
         </tr>
 	{% for (resident, user) in residents %}
         <tr>
             <form method="post" id="edit-resident-submit">
-                {{form.user_id(value=user.id, type="hidden")|safe}}
-                <td>{{ user.email }}</td>
-                <td>{{ user.first_name }}</td>
-                <td>{{ user.last_name }}</td>
-                <td>{{form.room_number(value=resident.room_number)|safe}}</td>
+                {{ form.user_id(value=user.id, type="hidden")      |safe }}
+                <td>{{ form.email(value=user.email)                |safe }}</td>
+                <td>{{ form.first_name(value=user.first_name)      |safe }}</td>
+                <td>{{ form.last_name(value=user.last_name)        |safe }}</td>
+                <td>{{ form.room_number(value=resident.room_number)|safe }}</td>
                 <td><input type="submit" value="Update"></td>
             </form>
         </tr>
