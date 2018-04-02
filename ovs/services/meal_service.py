@@ -1,6 +1,8 @@
 """
 DB and utility functions for Meals
 """
+from datetime import datetime
+
 from ovs import app
 from ovs.models.meal_plan_model import MealPlan
 
@@ -30,6 +32,25 @@ class MealService:
         return True
 
     @staticmethod
+    def update_meal_count(meal_plan):
+        """
+        Reset meal plan credits if past reset data
+        Decrement meal plan credits if available
+        Commit changes to DB
+        :param meal_plan: 
+        :type meal_plan: 
+        :return: whether a credit was available
+        :rtype: bool
+        """
+        if meal_plan.reset_date is None or datetime.utcnow() > meal_plan.reset_date:
+            meal_plan.reset_date = meal_plan.get_next_reset_date()
+            meal_plan.credits = meal_plan.meal_plan
+        if meal_plan.credits > 0:
+            meal_plan.credits -= 1
+            return True
+        return False
+
+    @staticmethod
     def use_meal(pin):
         """
         Uses a meal on the account with given pin
@@ -38,7 +59,7 @@ class MealService:
         """
         user_plan = MealService.get_meal_plan_by_pin(pin)
         if user_plan is not None:
-            has_meal = user_plan.update_meal_count()
+            has_meal = MealService.update_meal_count(user_plan)
             if has_meal:
                 MealService.log_meal_use(pin)
             return has_meal

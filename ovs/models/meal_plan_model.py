@@ -33,6 +33,7 @@ class MealPlan(app.BaseModel):
 
     def update_meal_count(self):
         """
+        Deprecate this as it is not committing to DB.
         Uses a meal credit, as outlined by the plan.
         :return: Boolean, whether a credit was available
         """
