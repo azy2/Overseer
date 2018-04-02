@@ -5,7 +5,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import current_user, login_required
 
 from ovs.forms import RegisterRoomForm, RegisterResidentForm, ManageResidentsForm, \
-    AddPackageForm, EditPackageForm, MealLoginForm, CreateMealPlanForm
+    AddPackageForm, EditPackageForm, MealLoginForm, CreateMealPlanForm, AddMealForm
 from ovs.services.manager_service import ManagerService
 from ovs.services.meal_service import MealService
 from ovs.services.package_service import PackageService
@@ -225,3 +225,25 @@ def create_meal_plan():
         user = UserService.get_user_by_id(current_user.get_id()).first()
         role = user.role
         return render_template('manager/create_meal_plan.html', role=role, user=user, form=form)
+
+
+@manager_bp.route('/add_meals/', methods=['GET', 'POST'])
+@login_required
+@permissions(roles.OFFICE_MANAGER)
+def add_meals():
+    """
+    /manager/meal_login serves an html form with input field pin
+    and accepts that form (POST) and logs the use to a meal plan
+    """
+    form = AddMealForm(csrf_enabled=False)
+    if request.method == 'POST':
+        print(form.data)
+        if form.validate():
+            print("valid")
+        else:
+            print("Invalid")
+        return "GG"
+    else:
+        user = UserService.get_user_by_id(current_user.get_id()).first()
+        role = user.role
+        return render_template('manager/add_meals.html', role=role, user=user, form=form)
