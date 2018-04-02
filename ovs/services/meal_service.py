@@ -45,10 +45,12 @@ class MealService:
         if meal_plan.reset_date is None or datetime.utcnow() > meal_plan.reset_date:
             meal_plan.reset_date = meal_plan.get_next_reset_date()
             meal_plan.credits = meal_plan.meal_plan
+        was_updated = False
         if meal_plan.credits > 0:
             meal_plan.credits -= 1
-            return True
-        return False
+            was_updated = True
+        db.commit()
+        return was_updated
 
     @staticmethod
     def use_meal(pin):

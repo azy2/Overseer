@@ -180,19 +180,29 @@ def meal_login():
     and accepts that form (POST) and logs the use to a meal plan
     """
     form = MealLoginForm(csrf_enabled=False)
+    user = UserService.get_user_by_id(current_user.get_id()).first()
+    role = user.role
     if request.method == 'POST':
+        # Valid Form
         if form.validate():
-            MealService.use_meal(form.pin.data)
-            user_plan = MealService.get_meal_plan_by_pin(form.pin.data)
-            if user_plan is None:
-                return "Invalid login"
-            flash('Meal plan login successfully!', 'message')
+            user_meal_plan = MealService.get_meal_plan_by_pin(form.pin.data)
+            if user_meal_plan is None:
+                # Should not hit here. Form validator should have already caught this.
+                flash('PIN is not valid.', 'error')
+                return redirect(url_for('manager.meal_login'))
+            
+            # Update meal plan
+            update_successful = MealService.update_meal_count(user_meal_plan)
+            if update_successful:
+                flash('Meal plan login successful!', 'message')
+            else:
+                flash('Meal plan login unsuccessful.', 'error')
             return redirect(url_for('manager.meal_login'))
+        
+        # Invalid form
         else:
-            return str(form.errors)
+            return render_template('manager/meal_login.html', role=role, user=user, form=form)
     else:
-        user = UserService.get_user_by_id(current_user.get_id()).first()
-        role = user.role
         return render_template('manager/meal_login.html', role=role, user=user, form=form)
 
 
