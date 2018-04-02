@@ -44,6 +44,14 @@ class ResidentService:
             success = ResidentService.update_resident_room_number(user_id, room_number) is not None
         return success
 
+    @staticmethod
+    def delete_resident(user_id):
+        """
+        Deletes an existing resident
+        """
+        from ovs.services.profile_service import ProfileService
+        ProfileService.delete_profile(user_id)
+        db.query(Resident).filter(Resident.user_id == user_id).delete()
 
 
     @staticmethod

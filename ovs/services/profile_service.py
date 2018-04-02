@@ -37,3 +37,7 @@ class ProfileService:
             profile.gender = gender
         db.commit()
         return True
+
+    def delete_profile(resident_id):
+        resident = ResidentService.get_resident_by_id(resident_id).one_or_none()
+        db.delete(resident)

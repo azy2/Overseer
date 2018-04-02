@@ -44,6 +44,7 @@
             <th>{{edit_form.last_name.label}}</th>
             <th>{{edit_form.room_number.label}}</th>
             <th></th>
+            <th></th>
         </tr>
 	{% for (resident, user) in residents %}
         <tr>
@@ -54,6 +55,7 @@
                 <td>{{ edit_form.last_name(value=user.last_name)        |safe }}</td>
                 <td>{{ edit_form.room_number(value=resident.room_number)|safe }}</td>
                 <td><input type="submit" value="Update Row" name="edit_btn"></td>
+                <td><input type="submit" value="Delete" name="delete_btn"></td>
             </form>
         </tr>
 	{% endfor %}

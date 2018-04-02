@@ -52,7 +52,6 @@ class UserService:
         """
         Edits user with user_id with new information
         """
-        print(user_id)
         user = UserService.get_user_by_id(user_id).first()
         if user is None: #Error : bad user_id
             return False
@@ -62,6 +61,21 @@ class UserService:
             user.update(email, first_name, last_name)
             return True
         return False
+
+    @staticmethod
+    def delete_user(user_id):
+        """
+        Deletes existing user
+        """
+        user = UserService.get_user_by_id(user_id).first() 
+        if user is None:
+            return False
+        ResidentService.delete_resident(user_id)
+        #sql delete
+        db.delete(user)
+        return True
+
+
 
     @staticmethod
     def send_setup_email(email, first_name, last_name, role, password):

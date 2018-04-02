@@ -64,8 +64,8 @@ def register_room():
 @permissions(roles.RESIDENT_ADVISOR)
 def manage_residents():
     """
-    /manager/manage_residents severs a HTML with list of residents with their info.
-    It will also be a link there to add/edit/delete residents with form inputs.
+    /manager/manage_residents serves a HTML with list of residents with their info.
+    It allows a manager to add/edit/delete residents with form inputs.
     """
     register_form = RegisterResidentForm(prefix='register_form', csrf_enabled=False)
     edit_form = ManageResidentsForm(prefix='edit_form', csrf_enabled=False)
@@ -73,7 +73,14 @@ def manage_residents():
     role = user.role
 
     if request.method == 'POST':
-        if edit_form.validate_on_submit():
+        if 'delete_btn' in request.form:
+            success = UserService.delete_user(edit_form.user_id.data)
+            if success:
+                flash('Resident successfully deleted')
+            else:
+                flash('Something went wrong. Could not find resident to delete')
+            return redirect(url_for('manager.manage_residents'))
+        elif edit_form.validate_on_submit() and 'edit_btn' in request.form:
             success = ResidentService.edit_resident(
                 edit_form.user_id.data,
                 edit_form.email.data,
@@ -98,7 +105,7 @@ def manage_residents():
             return redirect(url_for('manager.manage_residents'))
         else:
             # Todo: display form validation errors on html form fields
-            return str(form.errors)
+            return redirect(url_for('manager.manage_residents'))
     else:
         return render_template('manager/manage_residents.html', role=role, user=user,
                                residents=ManagerService.get_all_residents(),

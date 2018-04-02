@@ -64,9 +64,7 @@
                             {{ navbar_item('/admin/register_manager/', 'Register Manager') }}
                         {% endif %}
                         {{ navbar_item('/manager/register_room/', 'Register a Room') }}
-                        {{ dropdown('#', 'residentDropdown', 'Resident', False, [
-                            ('/manager/register_resident/', 'Register a Resident'),
-                            ('/manager/manage_residents/', 'Manage Residents')]) }}
+                        {{ navbar_item('/manager/manage_residents/', 'Manage Residents') }}
                         {{ navbar_item('/manager/manage_packages', 'Manage Packages') }}
                         {{ dropdown('#', 'mealDropdown', 'Meals', False, [
                             ('/manager/meal_login/', 'Meal login'),
