@@ -26,6 +26,7 @@ class DataGen:
 
     @staticmethod
     def create_default_room():
+        """ Creates default room if it doesn't exist """
         room = RoomService.get_room_by_number('None').first()
         if room is None:
             RoomService.create_room('None', '', '')

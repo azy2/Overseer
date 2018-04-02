@@ -3,6 +3,7 @@ Tests for resident services
 """
 from ovs.services.user_service import UserService
 from ovs.services.resident_service import ResidentService
+from ovs.services.room_service import RoomService
 from ovs.models.resident_model import Resident
 from ovs.tests.unittests.base_test import OVSBaseTestCase
 
@@ -44,3 +45,11 @@ class TestResidentService(OVSBaseTestCase):
         """ Tests that get_resident_by_id does not find a resident with a non-existent id """
         resident = ResidentService.get_resident_by_id(4).first()
         self.assertIsNone(resident)
+
+    def test_update_resident_room_number(self):
+        """ Tests that a resident's room number can be updated """
+        RoomService.create_room('1', 'Good', 'Single')
+
+        ResidentService.update_resident_room_number(self.test_resident.id, '1')
+        resident = self.db.query(Resident).filter(Resident.user_id == self.test_resident.id).first()
+        self.assertEqual(resident.room_number, '1')
