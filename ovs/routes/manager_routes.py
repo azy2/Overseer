@@ -59,38 +59,6 @@ def register_room():
         return render_template('manager/register_room.html', role=role, user=user, form=form)
 
 
-@manager_bp.route('/register_resident/', methods=['GET', 'POST'])
-@login_required
-@permissions(roles.OFFICE_MANAGER)
-def register_resident():
-    """
-    /manager/register_resident serves an html form with input fields for email,
-    first name, and last name and accepts that form (POST) and adds a user
-    to the user table with a default password.
-    """
-    form = RegisterResidentForm(csrf_enabled=False)
-    # pylint: disable=duplicate-code
-    user = UserService.get_user_by_id(current_user.get_id()).first()
-    role = user.role
-    if request.method == 'POST':
-        if form.validate():
-            new_user = UserService.create_user(
-                form.email.data,
-                form.first_name.data,
-                form.last_name.data,
-                "RESIDENT")
-            if new_user:
-                flash('Residents successfully registered!', 'message')
-            else:
-                flash('Residents not successfully registered! Email already exists!', 'error')
-            # pylint: enable=duplicate-code
-            return redirect(url_for('manager.register_resident'))
-        else:
-            return render_template('manager/register_resident.html', role=role, user=user, form=form)
-    else:
-        return render_template('manager/register_resident.html', role=role, user=user, form=form)
-
-
 @manager_bp.route('/manage_residents/', methods=['GET', 'POST'])
 @login_required
 @permissions(roles.RESIDENT_ADVISOR)
@@ -99,29 +67,42 @@ def manage_residents():
     /manager/manage_residents severs a HTML with list of residents with their info.
     It will also be a link there to add/edit/delete residents with form inputs.
     """
-    form = ManageResidentsForm(csrf_enabled=False)
+    register_form = RegisterResidentForm(prefix='register_form', csrf_enabled=False)
+    edit_form = ManageResidentsForm(prefix='edit_form', csrf_enabled=False)
     user = UserService.get_user_by_id(current_user.get_id()).first()
     role = user.role
 
     if request.method == 'POST':
-        if form.validate():
+        if edit_form.validate_on_submit():
             success = ResidentService.edit_resident(
-                form.user_id.data,
-                form.email.data,
-                form.first_name.data,
-                form.last_name.data,
-                form.room_number.data)
+                edit_form.user_id.data,
+                edit_form.email.data,
+                edit_form.first_name.data,
+                edit_form.last_name.data,
+                edit_form.room_number.data)
             if success:
                 flash('Resident updated successfully!', 'message')
             else:
                 flash('Room does not exist or duplicate email detected!', 'error')
+            return redirect(url_for('manager.manage_residents'))
+        elif register_form.validate_on_submit():
+            new_user = UserService.create_user(
+                register_form.email.data,
+                register_form.first_name.data,
+                register_form.last_name.data,
+                "RESIDENT")
+            if new_user:
+                flash('Residents successfully registered!', 'message')
+            else:
+                flash('Residents not successfully registered! Email already exists!', 'error')
             return redirect(url_for('manager.manage_residents'))
         else:
             # Todo: display form validation errors on html form fields
             return str(form.errors)
     else:
         return render_template('manager/manage_residents.html', role=role, user=user,
-                               residents=ManagerService.get_all_residents(), form=form)
+                               residents=ManagerService.get_all_residents(),
+                               register_form=register_form, edit_form=edit_form)
 
 
 @manager_bp.route('/manage_packages/', methods=['GET', 'POST'])
