@@ -67,7 +67,7 @@ class UserService:
         """
         Deletes existing user
         """
-        user = UserService.get_user_by_id(user_id).first() 
+        user = UserService.get_user_by_id(user_id).first()
         if user is None:
             return False
         ResidentService.delete_resident(user_id)

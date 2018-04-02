@@ -38,6 +38,10 @@ class ProfileService:
         db.commit()
         return True
 
+    @staticmethod
     def delete_profile(resident_id):
+        """
+        Deletes a user's profile information
+        """
         resident = ResidentService.get_resident_by_id(resident_id).one_or_none()
         db.delete(resident)

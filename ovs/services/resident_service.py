@@ -51,7 +51,8 @@ class ResidentService:
         """
         from ovs.services.profile_service import ProfileService
         ProfileService.delete_profile(user_id)
-        db.query(Resident).filter(Resident.user_id == user_id).delete()
+        resident = ResidentService.get_resident_by_id(user_id)
+        db.delete(resident)
 
 
     @staticmethod
