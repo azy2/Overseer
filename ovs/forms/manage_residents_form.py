@@ -1,11 +1,10 @@
 """ Form with data required to edit a resident """
 from flask_wtf import FlaskForm
-from wtforms import SelectField, StringField, ValidationError
+from wtforms import  StringField, ValidationError
 from wtforms.validators import DataRequired, Length, Email
 
 from ovs import app
 from ovs.models.resident_model import Resident
-from ovs.services.room_service import RoomService
 
 db = app.database.instance()
 
