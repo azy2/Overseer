@@ -246,14 +246,19 @@ def add_meals():
     and accepts that form (POST) and logs the use to a meal plan
     """
     form = AddMealForm(csrf_enabled=False)
+    user = UserService.get_user_by_id(current_user.get_id()).first()
+    role = user.role
     if request.method == 'POST':
-        print(form.data)
         if form.validate():
-            print("valid")
+            valid = MealService.add_meals(
+                form.pin.data,
+                form.number.data)
+            if valid:
+                flash('Meals added successfully!', 'message')
+            else:
+                flash('Invalid pin', 'error')
+            return redirect(url_for('manager.add_meals'))
         else:
-            print("Invalid")
-        return "GG"
+            return render_template('manager/add_meals.html', role=role, user=user, form=form)
     else:
-        user = UserService.get_user_by_id(current_user.get_id()).first()
-        role = user.role
         return render_template('manager/add_meals.html', role=role, user=user, form=form)

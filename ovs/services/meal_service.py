@@ -32,6 +32,24 @@ class MealService:
         return True
 
     @staticmethod
+    def add_meals(pin, number):
+        """
+        Add numbers of meal credits
+        :param pin: The plan's pin
+        :type pin: int
+        :param number: Number of credits
+        :type number: int
+        :return: validity of adding
+        :rtype: bool
+        """
+        meal_plan = MealService.get_meal_plan_by_pin(pin)
+        if meal_plan is None:
+            return False
+        meal_plan.credits += number
+        db.commit()
+        return True
+
+    @staticmethod
     def update_meal_count(meal_plan):
         """
         Reset meal plan credits if past reset data
