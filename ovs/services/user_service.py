@@ -71,8 +71,8 @@ class UserService:
         if user is None:
             return False
         ResidentService.delete_resident(user_id)
-        #sql delete
         db.delete(user)
+        db.commit()
         return True
 
 

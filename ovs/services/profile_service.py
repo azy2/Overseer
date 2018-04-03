@@ -3,6 +3,7 @@ DB access and other services for profiles
 """
 from ovs import app
 from ovs.services.resident_service import ResidentService
+from ovs.services.profile_picture_service import ProfilePictureService
 
 db = app.database.instance()
 
@@ -44,4 +45,7 @@ class ProfileService:
         Deletes a user's profile information
         """
         resident = ResidentService.get_resident_by_id(resident_id).one_or_none()
-        db.delete(resident)
+        profile = resident.profile
+        picture_id = profile.picture_id
+        ProfilePictureService.delete_profile_picture(picture_id)
+        db.delete(profile)
