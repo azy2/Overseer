@@ -55,6 +55,13 @@ class RoomService:
         return db.query(Room).filter(Room.number == number)
 
     @staticmethod
+    def all_rooms():
+        """
+        Get all the rooms in the database
+        """
+        return db.query(Room).all()
+
+    @staticmethod
     def add_resident_to_room(email, room_number):
         """
         Associates a Resident to a room. This involves adding the room
