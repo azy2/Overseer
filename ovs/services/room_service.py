@@ -55,7 +55,7 @@ class RoomService:
         return db.query(Room).filter(Room.number == number)
 
     @staticmethod
-    def all_rooms():
+    def get_all_rooms():
         """
         Get all the rooms in the database
         """

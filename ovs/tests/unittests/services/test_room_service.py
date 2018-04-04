@@ -63,3 +63,12 @@ class TestRoomService(OVSBaseTestCase):
         RoomService.add_resident_to_room(test_user.email, self.test_room.number)
         resident = ResidentService.get_resident_by_id(test_user.id).first()
         self.assertIsNone(resident)
+
+    def test_get_all_rooms(self):
+        """ Tests getting all rooms with 1 entry"""
+        self.assertEqual(len(RoomService.get_all_rooms()), 1)
+
+    def tests_get_all_rooms_multiple(self):
+        """ Tests getting all rooms with 2 entries"""
+        RoomService.create_room('6', 'Bad', 'Double')
+        self.assertEqual(len(RoomService.get_all_rooms()), 2)
