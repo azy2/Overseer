@@ -59,6 +59,7 @@ class UserService:
         email_user = UserService.get_user_by_email(email).first()
         if email_user is None or email_user == user: #We don't want to overwrite somebody else
             user.update(email, first_name, last_name)
+            db.commit()
             return True
         return False
 
