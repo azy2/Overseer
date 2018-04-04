@@ -50,9 +50,13 @@ class ResidentService:
         Deletes an existing resident
         """
         from ovs.services.profile_service import ProfileService
-        ProfileService.delete_profile(user_id)
-        resident = ResidentService.get_resident_by_id(user_id)
-        db.delete(resident)
+        resident = ResidentService.get_resident_by_id(user_id).first()
+        if resident is None:
+            return False
+        success = ProfileService.delete_profile(user_id)
+        if success:
+            db.delete(resident)
+        return success
 
 
     @staticmethod

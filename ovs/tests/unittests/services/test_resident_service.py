@@ -1,12 +1,14 @@
 """
 Tests for resident services
 """
+from ovs import app
 from ovs.services.user_service import UserService
 from ovs.services.resident_service import ResidentService
 from ovs.services.room_service import RoomService
 from ovs.models.resident_model import Resident
 from ovs.tests.unittests.base_test import OVSBaseTestCase
 
+db = app.database.instance()
 
 class TestResidentService(OVSBaseTestCase):
     """
@@ -65,8 +67,20 @@ class TestResidentService(OVSBaseTestCase):
         self.assertEqual(self.test_resident.room_number, 'None')
 
     def test_edit_resident_bad_email(self): # cases - invalid email/id, invalid room, success
-        """ Tests that a resident can be edited"""
+        """ Tests that a duplicate email will cancel everything """
         UserService.create_user(*self.test_admin_info)
         self.assertFalse(ResidentService.edit_resident(self.test_user.id, 'test2@gmail.com', 'Joe', 'Smith', '1'))
         self.assertEqual(self.test_user.email, 'test@gmail.com') #User is not updated
         self.assertEqual(self.test_resident.room_number, 'None') #Room number is not updated
+
+    def test_delete_resident(self):
+        """ Tests that profiles can be deleted """
+        expected = db.query(Resident).count()-1
+        self.assertTrue(ResidentService.delete_resident(self.test_user.id)) #method returns success
+        self.assertEqual(db.query(Resident).count(), expected)
+
+    def test_delete_resident_null(self):
+        """ Tests that nothing breaks when deleting a nonexistant resident """
+        expected = db.query(Resident).count()
+        self.assertFalse(ResidentService.delete_resident(self.test_user.id + 3)) #This random id is NOT the resident
+        self.assertEqual(db.query(Resident).count(), expected)
