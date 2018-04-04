@@ -17,7 +17,7 @@ class ResidentService:
         pass
 
     @staticmethod
-    def create_resident(new_user, room_number=None):
+    def create_resident(new_user, room_number='None'):
         """
         Adds a User to the Resident table
         """
