@@ -71,7 +71,8 @@ class UserService:
         user = UserService.get_user_by_id(user_id).first()
         if user is None:
             return False
-        ResidentService.delete_resident(user_id)
+        if user.role == 'RESIDENT':
+            ResidentService.delete_resident(user_id)
         db.delete(user)
         db.commit()
         return True

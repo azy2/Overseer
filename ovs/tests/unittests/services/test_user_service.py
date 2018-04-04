@@ -1,9 +1,13 @@
 """
 Tests for user services
 """
+from ovs import app
 from ovs.services.user_service import UserService
 from ovs.models.user_model import User
+from ovs.models.resident_model import Resident
 from ovs.tests.unittests.base_test import OVSBaseTestCase
+
+db = app.database.instance()
 
 class TestUserService(OVSBaseTestCase):
     """
@@ -68,3 +72,24 @@ class TestUserService(OVSBaseTestCase):
         self.assertEqual(self.test_user.email, self.test_user_info[0])
         self.assertEqual(self.test_user.first_name, self.test_user_info[1])
         self.assertEqual(self.test_user.last_name, self.test_user_info[2])
+
+    def test_delete_user(self):
+        """ Tests that a user can be deleted """
+        expected = db.query(User).count()-1
+        self.assertTrue(UserService.delete_user(self.test_user.id)) #deletion successful
+        self.assertEqual(db.query(User).count(), expected)
+
+    def test_delete_user_null(self):
+        """ Tests that nothing breaks when deleting a nonexistant resident """
+        expected = db.query(User).count()
+        self.assertFalse(UserService.delete_user(self.test_user.id + 3)) #This random id is NOT the resident
+        self.assertEqual(db.query(User).count(), expected)
+
+    def test_delete_user_resident(self):
+        """ Tests that deleting a user deletes their resident info """
+        resident = UserService.create_user('test2@gmail.com', 'John', 'Smith', 'RESIDENT')
+        expected_user = db.query(User).count() - 1
+        expected_resident = db.query(Resident).count()-1
+        self.assertTrue(UserService.delete_user(resident.id))
+        self.assertEqual(db.query(User).count(), expected_user)
+        self.assertEqual(db.query(Resident).count(), expected_resident)
