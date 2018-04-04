@@ -105,7 +105,7 @@ def manage_residents():
             return redirect(url_for('manager.manage_residents'))
         else:
             # Todo: display form validation errors on html form fields
-            return flash ('Bad form inputs!')
+            return flash('Bad form inputs!')
     else:
         return render_template('manager/manage_residents.html', role=role, user=user,
                                residents=ManagerService.get_all_residents(),
