@@ -29,8 +29,9 @@ class Mealplan_History(app.BaseModel):
             log_type=log_type)
 
     def __repr__(self):
-        return 'Mealplan_History([id={id}, resident_id={resident_id}, mealplan_pin={mealplan_pin}, manager_id={manager_id}, log_type={log_type}, ' \
-               'created={created}, updated={updated}])'.format(**self.__dict__)
+        return 'Meal plan_History([id={id}, resident_id={resident_id}, mealplan_pin={mealplan_pin}, ' \
+               'manager_id={manager_id}, log_type={log_type}, created={created}, updated={updated}])'\
+            .format(**self.__dict__)
 
     def json(self):
         """ Returns a JSON representation of this Mealplan History Item"""
