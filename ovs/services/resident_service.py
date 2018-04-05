@@ -68,6 +68,13 @@ class ResidentService:
         return db.query(Resident).filter(Resident.user_id == user_id)
 
     @staticmethod
+    def get_resident_by_pin(pin):
+        """
+        Returns the resident given pin
+        """
+        return db.query(Resident).filter(Resident.mealplan_pin == pin).first()
+
+    @staticmethod
     def set_resident_pin(user_id, new_pin):
         """
         Returns the resident given by user_id

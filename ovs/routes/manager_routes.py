@@ -191,13 +191,16 @@ def meal_login():
                 # Should not hit here. Form validator should have already caught this.
                 flash('PIN is not valid.', 'error')
                 return redirect(url_for('manager.meal_login'))
-            
+            resident = ResidentService.get_resident_by_pin(user_meal_plan.pin)
             # Update meal plan
             update_successful = MealService.update_meal_count(user_meal_plan)
+            message = ('%s has %d out of %d meals remaining.' % (resident.profile.preferred_name,
+                                                                 user_meal_plan.credits,
+                                                                 user_meal_plan.meal_plan))
             if update_successful:
-                flash('Meal plan login successful!', 'message')
+                flash('Meal plan login successful!' + message, 'message')
             else:
-                flash('Meal plan login unsuccessful.', 'error')
+                flash('Meal plan login unsuccessful.' + message, 'error')
             return redirect(url_for('manager.meal_login'))
         
         # Invalid form
@@ -256,7 +259,12 @@ def add_meals():
                 form.pin.data,
                 form.number.data)
             if valid:
-                flash('Meals added successfully!', 'message')
+                user_meal_plan = MealService.get_meal_plan_by_pin(form.pin.data)
+                resident = ResidentService.get_resident_by_pin(user_meal_plan.pin)
+                message = ('%s has %d out of %d meals now.' % (resident.profile.preferred_name,
+                                                                     user_meal_plan.credits,
+                                                                     user_meal_plan.meal_plan))
+                flash('Meals added successfully!' + message, 'message')
             else:
                 flash('Invalid pin', 'error')
             return redirect(url_for('manager.add_meals'))
