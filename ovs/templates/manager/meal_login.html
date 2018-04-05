@@ -7,7 +7,10 @@
             <dl>
                 {{ field_inline(form.pin) }}
             </dl>
-            <input type="submit" value="Login">
+            <input type="submit" value="Login" name="login">
         </form>
+		<form method="post" action="/manager/meal_undo">
+			<input type="submit" value="Undo" name="undo">
+		</form>
     </div>
 {% endblock %}

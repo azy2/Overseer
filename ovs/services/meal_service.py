@@ -93,13 +93,18 @@ class MealService:
         return False
 
     @staticmethod
-    def undo_meal_use(manager_id):
+    def undo_meal_use(manager_id, resident_id, pin):
         """
         Reverts the usage of a meal logged by the given manager
         :param manager_id: id for the manager who logged the resident's usage of a meal and wishes to undo that
-        :return: TBD
+        :param resident_id: id for the resident who has the meal plan
+        :param pin: the pin of the meal plan to be reverted
+        :return: True if successful
         """
-        pass
+        if not MealService.add_meals(pin, 1):
+            return False
+        MealService.log_undo_meal_use(resident_id, pin, manager_id)
+        return True
 
     @staticmethod
     def get_meal_plan_by_pin(pin):
@@ -133,3 +138,13 @@ class MealService:
         new_mealplan_history_item = Mealplan_History(resident_id, pin, manager_id, log_types.UNDO)
         db.add(new_mealplan_history_item)
         db.commit()
+
+    @staticmethod
+    def get_last_log(manager_id):
+        """
+        Get the last meal log logged by this manager
+        :param manager_id: id of manager
+        :return: latest row logged in the meal plan history table or None
+        """
+        meal_log = db.query(Mealplan_History).filter(manager_id).order_by(Mealplan_History.id.desc()).first()
+        return meal_log

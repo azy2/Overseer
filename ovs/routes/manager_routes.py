@@ -14,6 +14,7 @@ from ovs.services.user_service import UserService
 from ovs.services.resident_service import ResidentService
 from ovs.middleware import permissions
 from ovs.utils import roles
+from ovs.utils import log_types
 
 manager_bp = Blueprint('manager', __name__, )
 
@@ -213,6 +214,30 @@ def meal_login():
             return render_template('manager/meal_login.html', role=role, user=user, form=form)
     else:
         return render_template('manager/meal_login.html', role=role, user=user, form=form)
+
+
+@manager_bp.route('/meal_undo', methods=['POST'])
+@login_required
+@permissions(roles.STAFF)
+def meal_undo():
+    """
+    /manager/meal_undo accepts that form (POST) and undo the use of a meal plan
+    Currently uses manager id to distinguish frontends. Should use session token.
+    """
+    user_id = current_user.get_id()
+
+    if request.method == 'POST':
+        meal_log = MealService.get_last_log(user_id)
+
+        if meal_log is None or meal_log.log_type == log_types.UNDO:
+            flash('Undo invalid for current manager', 'error')
+            return redirect(url_for('manager.meal_login'))
+
+        if MealService.undo_meal_use(user_id, meal_log.resident_id, meal_log.mealplan_pin):
+            flash('Undo successfully', 'message')
+        else:
+            flash('Undo unsuccessfully', 'error')
+        return redirect(url_for('manager.meal_login'))
 
 
 @manager_bp.route('/create_meal_plan/', methods=['GET', 'POST'])
