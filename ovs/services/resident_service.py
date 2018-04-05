@@ -1,6 +1,8 @@
 """
 DB and utility functions for Residents
 """
+from sqlalchemy import exc
+
 from ovs import app
 from ovs.models.user_model import User
 from ovs.models.resident_model import Resident
@@ -54,7 +56,7 @@ class ResidentService:
         :return: The db entry of that user
         """
         user_resident = db.query(User, Resident).join(Resident, User.id == Resident.user_id).filter(User.email == email)
-        if user_resident == None:
+        if user_resident is None:
             return None
         return user_resident.first()[1]
 
@@ -66,7 +68,7 @@ class ResidentService:
         return db.query(Resident).filter(Resident.user_id == user_id)
 
     @staticmethod
-    def update_resident_pin(user_id, new_pin):
+    def set_resident_pin(user_id, new_pin):
         """
         Returns the resident given by user_id
         """
@@ -94,7 +96,7 @@ class ResidentService:
             return False
 
         # Add PIN to resident
-        pin_updated = ResidentService.update_resident_pin(resident.user_id, pin)
+        pin_updated = ResidentService.set_resident_pin(resident.user_id, pin)
         if pin_updated == False:
             return False
         
