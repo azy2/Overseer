@@ -24,6 +24,19 @@ class TestLogin(SeleniumBaseTestCase):
         # Should be at resident greeting page
         self.assertIn('John', self.browser.title)
 
+    def test_resident_logout(self):
+        """ Tests whether residents can log out or not """
+        self.test_resident_login()
+
+        # Open dropdown with logout link option
+        account_dropdown = self.browser.find_element_by_id('accountDropdown')
+        account_dropdown.click()
+        logout_link = self.browser.find_element_by_link_text('Logout')
+        logout_link.click()
+
+        # Should be back at Overseer home page
+        self.assertIn('Overseer', self.browser.title)
+
     def test_manager_login(self):
         """ Tests whether managers can log in or not """
         self.browser.get(self.base_url)
