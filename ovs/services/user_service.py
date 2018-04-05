@@ -70,16 +70,3 @@ class UserService:
         Gets a user by their id
         """
         return db.query(User).filter(User.id == user_id)
-
-    @staticmethod
-    def create_meal_plan_for_user_by_email(pin, meal_plan, plan_type, email):  # pylint: disable=unused-argument
-        """
-        Adds a new meal plan to the DB
-        :param email: User to link to, TODO:implement
-        :param pin: The plan's pin
-        :param meal_plan: The plan's maximum credit count
-        :param plan_type: The plan's reset period
-        :return: True for success, False for failure
-        """
-        valid = MealService.create_meal_plan(pin, meal_plan, plan_type)
-        return valid

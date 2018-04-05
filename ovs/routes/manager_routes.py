@@ -11,6 +11,7 @@ from ovs.services.meal_service import MealService
 from ovs.services.package_service import PackageService
 from ovs.services.room_service import RoomService
 from ovs.services.user_service import UserService
+from ovs.services.resident_service import ResidentService
 from ovs.middleware import permissions
 from ovs.utils import roles
 
@@ -215,9 +216,11 @@ def create_meal_plan():
     and accepts that form (POST) and logs the use to a meal plan
     """
     form = CreateMealPlanForm(csrf_enabled=False)
+    user = UserService.get_user_by_id(current_user.get_id()).first()
+    role = user.role
     if request.method == 'POST':
         if form.validate():
-            valid = UserService.create_meal_plan_for_user_by_email(
+            valid = ResidentService.create_meal_plan_for_resident_by_email(
                 form.pin.data,
                 form.meal_plan.data,
                 form.plan_type.data,
@@ -230,10 +233,9 @@ def create_meal_plan():
                 flash('Meal plan not created', 'error')
             return redirect(url_for('manager.create_meal_plan'))
         else:
-            return str(form.errors)
+            # return str(form.errors) FIXED FORM ERRORS !!!
+            return render_template('manager/create_meal_plan.html', role=role, user=user, form=form)
     else:
-        user = UserService.get_user_by_id(current_user.get_id()).first()
-        role = user.role
         return render_template('manager/create_meal_plan.html', role=role, user=user, form=form)
 
 
