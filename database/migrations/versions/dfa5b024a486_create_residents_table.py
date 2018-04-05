@@ -24,7 +24,6 @@ def upgrade():
         sa.Column('mealplan_pin', sa.Integer, autoincrement=True),
         sa.Column('created', sa.DateTime, server_default=sa.text('CURRENT_TIMESTAMP')),
         sa.Column('updated', sa.DateTime, server_default=sa.text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP')),
-        sa.relationship('Profile', uselist=False, back_populates='resident', cascade='all, delete, delete-orphan') # <-- Is this correct? Added this to fix an error complaining about 'profile' existing in the model, but not here.
     )
 
 def downgrade():
