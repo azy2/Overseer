@@ -181,26 +181,31 @@ def meal_login():
     and accepts that form (POST) and logs the use to a meal plan
     """
     form = MealLoginForm(csrf_enabled=False)
-    user = UserService.get_user_by_id(current_user.get_id()).first()
+    user_id = current_user.get_id()
+    user = UserService.get_user_by_id(user_id).first()
     role = user.role
     if request.method == 'POST':
         # Valid Form
         if form.validate():
-            user_meal_plan = MealService.get_meal_plan_by_pin(form.pin.data)
-            if user_meal_plan is None:
+            mealplan = MealService.get_meal_plan_by_pin(form.pin.data)
+            if mealplan is None:
                 # Should not hit here. Form validator should have already caught this.
                 flash('PIN is not valid.', 'error')
                 return redirect(url_for('manager.meal_login'))
-            resident = ResidentService.get_resident_by_pin(user_meal_plan.pin)
+            resident = ResidentService.get_resident_by_pin(mealplan.pin)
+            if resident is None:
+                flash('Meal plan login unsuccessful. There is no resident associated with this PIN.', 'error')
+                return redirect(url_for('manager.meal_login'))
             # Update meal plan
-            update_successful = MealService.update_meal_count(user_meal_plan)
+            update_successful = MealService.update_meal_count(mealplan)
             message = ('%s has %d out of %d meals remaining.' % (resident.profile.preferred_name,
-                                                                 user_meal_plan.credits,
-                                                                 user_meal_plan.meal_plan))
+                                                                 mealplan.credits,
+                                                                 mealplan.meal_plan))
             if update_successful:
-                flash('Meal plan login successful!' + message, 'message')
+                MealService.log_meal_use(resident.user_id, mealplan.pin, user_id)
+                flash('Meal plan login successful! ' + message, 'message')
             else:
-                flash('Meal plan login unsuccessful.' + message, 'error')
+                flash('Meal plan login unsuccessful. ' + message, 'error')
             return redirect(url_for('manager.meal_login'))
         
         # Invalid form
@@ -219,7 +224,8 @@ def create_meal_plan():
     and accepts that form (POST) and logs the use to a meal plan
     """
     form = CreateMealPlanForm(csrf_enabled=False)
-    user = UserService.get_user_by_id(current_user.get_id()).first()
+    user_id = current_user.get_id()
+    user = UserService.get_user_by_id(user_id).first()
     role = user.role
     if request.method == 'POST':
         if form.validate():
@@ -228,7 +234,6 @@ def create_meal_plan():
                 form.meal_plan.data,
                 form.plan_type.data,
                 form.email.data)
-            MealService.get_meal_plan_by_pin(form.pin.data)
             # Todo: create meal plan by email not fully implemented yet
             if valid:
                 flash('Meal plan created successfully!', 'message')
@@ -236,7 +241,6 @@ def create_meal_plan():
                 flash('Meal plan not created', 'error')
             return redirect(url_for('manager.create_meal_plan'))
         else:
-            # return str(form.errors) FIXED FORM ERRORS !!!
             return render_template('manager/create_meal_plan.html', role=role, user=user, form=form)
     else:
         return render_template('manager/create_meal_plan.html', role=role, user=user, form=form)
