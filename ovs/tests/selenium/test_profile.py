@@ -8,8 +8,14 @@ from ovs.tests.selenium.selenium_base_test import SeleniumBaseTestCase
 class TestProfile(SeleniumBaseTestCase):
     """ Test whether profiles can be edited """
 
-    def test_edit_preferred_name(self):
-        """ Tests whether a preferred name can be edited in a resident profile """
+    def set_text_field_by_id(self, field_id, new_text):
+        """ Sets the text in the given text field to the new text """
+        text_field = self.browser.find_element_by_id(field_id)
+        text_field.clear()
+        text_field.send_keys(new_text)
+
+    def test_edit_profile(self):
+        """ Tests whether all fields can be edited in a resident profile """
         self.browser.get(self.base_url)
         self.assertIn('Overseer', self.browser.title)
 
@@ -24,10 +30,11 @@ class TestProfile(SeleniumBaseTestCase):
         # Verify page changed
         self.assertIn('Edit', self.browser.title)
 
-        # Change preferred name
-        preferred_name_text_field = self.browser.find_element_by_id('preferred_name')
-        preferred_name_text_field.clear()
-        preferred_name_text_field.send_keys('Megatron')
+        # Change all fields
+        self.set_text_field_by_id('preferred_name', 'Megatron')
+        self.set_text_field_by_id('phone_number', '555-555-5555')
+        self.set_text_field_by_id('preferred_email', 'Megatron@mega.tron')
+        self.set_text_field_by_id('race', 'Transformer')
 
         # Currently 'Unspecified' gender is broken so need to set to Male
         male_gender_option = self.browser.find_element_by_id('gender-0')
@@ -46,7 +53,17 @@ class TestProfile(SeleniumBaseTestCase):
         notification_close_button = self.browser.find_element_by_class_name('close')
         notification_close_button.click()
 
+        # Wait for successful notification popup to disappear
+        wait = WebDriverWait(self.browser, 5)
+        wait.until(EC.invisibility_of_element_located((By.CLASS_NAME, 'close')))
+
         # Verify preferred name changed in account dropdown
         # Dropdown reference must be refreshed because the page has changed after submitting
         account_dropdown = self.browser.find_element_by_id('accountDropdown')
         self.assertIn('Megatron', account_dropdown.text)
+
+        # Verify the info changed through the text fields, text is given by attribute 'value'
+        self.assertEqual(self.browser.find_element_by_id('preferred_name').get_attribute('value'), 'Megatron')
+        self.assertEqual(self.browser.find_element_by_id('phone_number').get_attribute('value'), '555-555-5555')
+        self.assertEqual(self.browser.find_element_by_id('preferred_email').get_attribute('value'), 'Megatron@mega.tron')
+        self.assertEqual(self.browser.find_element_by_id('race').get_attribute('value'), 'Transformer')
