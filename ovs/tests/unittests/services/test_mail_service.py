@@ -3,7 +3,7 @@
 import json
 from unittest import TestCase
 
-from mock import patch
+from mock import patch, ANY
 
 from ovs import app
 from ovs.services.mail_service import MailService as mail_service
@@ -42,6 +42,7 @@ class TestSendMail(TestCase):
         """ Tests that creating a user sends an email """
         test_user_info = ('test@gmail.com', 'Bob', 'Ross', 'ADMIN')
         expected_substitutions = {
+            'password': ANY,
             'first_name': 'Bob',
             'last_name': 'Ross',
             'role': 'ADMIN'
