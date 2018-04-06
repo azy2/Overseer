@@ -1,5 +1,4 @@
 """ Test whether users can log in """
-from flask import current_app
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -53,6 +52,6 @@ class TestRegisterManager(SeleniumBaseTestCase):
 
         # Verify fields are empty and ready for new account registration
 
-        self.assertEquals(self.browser.find_element_by_id('email').get_attribute('value'), '')
-        self.assertEquals(self.browser.find_element_by_id('first_name').get_attribute('value'), '')
-        self.assertEquals(self.browser.find_element_by_id('last_name').get_attribute('value'), '')
+        self.assertEqual(self.browser.find_element_by_id('email').get_attribute('value'), '')
+        self.assertEqual(self.browser.find_element_by_id('first_name').get_attribute('value'), '')
+        self.assertEqual(self.browser.find_element_by_id('last_name').get_attribute('value'), '')
