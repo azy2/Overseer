@@ -23,7 +23,7 @@ class TestRegisterManager(SeleniumBaseTestCase):
         super().login_with_credentials('admin@gmail.com', 'abcd1234')
 
         # Click on Register Manager
-        register_manager = self.browser.find_element_by_id('register_manager')
+        register_manager = self.browser.find_element_by_link_text('Register Manager')
         register_manager.click()
 
         # Verify page changed
@@ -36,7 +36,7 @@ class TestRegisterManager(SeleniumBaseTestCase):
 
         # Submit changes, need to "press enter" on button instead of clicking
         # because Selenium is wonderful, stable software
-        submit_button = self.browser.find_element_by_id('role')
+        submit_button = self.browser.find_element_by_id('register_manager')
         submit_button.send_keys(Keys.ENTER)
 
         # Wait for successful notification popup to appear
@@ -53,6 +53,6 @@ class TestRegisterManager(SeleniumBaseTestCase):
 
         # Verify fields are empty and ready for new account registration
 
-        self.assertEmpty(self.browser.find_element_by_id('email'))
-        self.assertEmpty(self.browser.find_element_by_id('first_name'))
-        self.assertEmpty(self.browser.find_element_by_id('last_name'))
+        self.assertEquals(self.browser.find_element_by_id('email').get_attribute('value'), '')
+        self.assertEquals(self.browser.find_element_by_id('first_name').get_attribute('value'), '')
+        self.assertEquals(self.browser.find_element_by_id('last_name').get_attribute('value'), '')
