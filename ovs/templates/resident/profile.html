@@ -9,7 +9,7 @@
                 <form method="post" value="Upload picture" enctype="multipart/form-data" >
                     {{ picture_form.csrf_token }}
                     {{ picture_form.profile_picture()|safe }}
-                    <input type="submit" value="Upload Picture" >
+                    <input type="submit" id="upload_picture" value="Upload Picture" >
                 </form>
             </div>
             <div class="col-9" >
