@@ -5,7 +5,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from ovs.tests.selenium.selenium_base_test import SeleniumBaseTestCase
 
-class TestRegisterManager(SeleniumBaseTestCase):
+class TestRegisterRoom(SeleniumBaseTestCase):
     """ Test whether managers can be registered"""
 
     def set_text_field_by_id(self, field_id, new_text):
@@ -14,28 +14,29 @@ class TestRegisterManager(SeleniumBaseTestCase):
         text_field.clear()
         text_field.send_keys(new_text)
 
-    def test_register_manager(self):
-        """ Tests whether all fields can be edited in a register manager page """
+    def test_register_room(self):
+        """ Tests whether all fields can be edited in a register room page """
         self.browser.get(self.base_url)
         self.assertIn('Overseer', self.browser.title)
 
         super().login_with_credentials('admin@gmail.com', 'abcd1234')
 
         # Click on Register Manager
-        register_manager = self.browser.find_element_by_link_text('Register Manager')
+        register_manager = self.browser.find_element_by_link_text('Register a Room')
         register_manager.click()
 
         # Verify page changed
-        self.assertIn('Register Manager', self.browser.title)
+        self.assertIn('Register Room', self.browser.title)
 
         # # Change all fields
-        self.set_text_field_by_id('email', 'email@website.net')
-        self.set_text_field_by_id('first_name', 'John')
-        self.set_text_field_by_id('last_name', 'Smith')
+        self.set_text_field_by_id('room_number', '429D')
+        self.set_text_field_by_id('room_status', 'rented')
+        self.set_text_field_by_id('room_type', 'single')
+        self.set_text_field_by_id('occupants', 'resident@gmail.com')
 
         # Submit changes, need to "press enter" on button instead of clicking
         # because Selenium is wonderful, stable software
-        submit_button = self.browser.find_element_by_id('register_manager')
+        submit_button = self.browser.find_element_by_id('register_room')
         submit_button.send_keys(Keys.ENTER)
 
         # Wait for successful notification popup to appear
@@ -52,6 +53,7 @@ class TestRegisterManager(SeleniumBaseTestCase):
 
         # Verify fields are empty and ready for new account registration
 
-        self.assertEqual(self.browser.find_element_by_id('email').get_attribute('value'), '')
-        self.assertEqual(self.browser.find_element_by_id('first_name').get_attribute('value'), '')
-        self.assertEqual(self.browser.find_element_by_id('last_name').get_attribute('value'), '')
+        self.assertEqual(self.browser.find_element_by_id('room_number').get_attribute('value'), '')
+        self.assertEqual(self.browser.find_element_by_id('room_status').get_attribute('value'), '')
+        self.assertEqual(self.browser.find_element_by_id('room_type').get_attribute('value'), '')
+        self.assertEqual(self.browser.find_element_by_id('occupants').get_attribute('value'), '')
