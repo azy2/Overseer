@@ -12,4 +12,4 @@ class EditResidentProfileForm(FlaskForm):
     phone_number = StringField('Phone Number', validators=[Length(max=31)])
     preferred_email = StringField('Preferred Contact Email', validators=[Email(), Length(max=255)])
     race = StringField('Race/Ethnicity', validators=[Length(max=31)])
-    gender = RadioField('Gender', choices=[(genders.MALE, 'Male'), (genders.FEMALE, 'Female'), (None, 'Unspecified')])
+    gender = RadioField('Gender', choices=[(genders.MALE, 'Male'), (genders.FEMALE, 'Female'), (genders.UNSPECIFIED, 'Unspecified')])
