@@ -15,7 +15,7 @@ class TestRegisterManager(SeleniumBaseTestCase):
         text_field.clear()
         text_field.send_keys(new_text)
 
-    def test_edit_profile(self):
+    def test_register_manager(self):
         """ Tests whether all fields can be edited in a register manage page """
         self.browser.get(self.base_url)
         self.assertIn('Overseer', self.browser.title)
@@ -23,7 +23,7 @@ class TestRegisterManager(SeleniumBaseTestCase):
         super().login_with_credentials('admin@gmail.com', 'abcd1234')
 
         # Click on Register Manager
-        register_manager = self.browser.find_element_by_link_text('Register Manager')
+        register_manager = self.browser.find_element_by_id('register_manager')
         register_manager.click()
 
         # Verify page changed
