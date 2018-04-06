@@ -1,5 +1,9 @@
 """ Test whether users can log in """
 from flask import current_app
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from ovs.tests.selenium.selenium_base_test import SeleniumBaseTestCase
 
 class TestRegisterManager(SeleniumBaseTestCase):
