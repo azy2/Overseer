@@ -16,6 +16,7 @@ class TestProfile(SeleniumBaseTestCase):
         text_field.send_keys(new_text)
 
     def go_to_resident_profile_page(self):
+        """ Runs the Selenium steps necessary to navigate to the edit profile page """
         super().login_with_credentials('resident@gmail.com', 'abcd1234')
 
         # Click on account dropdown and go to Profile link
@@ -33,7 +34,7 @@ class TestProfile(SeleniumBaseTestCase):
         self.assertIn('Overseer', self.browser.title)
 
         self.go_to_resident_profile_page()
- 
+
         # Change all fields
         self.set_text_field_by_id('preferred_name', 'Megatron')
         self.set_text_field_by_id('phone_number', '555-555-5555')
@@ -67,10 +68,14 @@ class TestProfile(SeleniumBaseTestCase):
         self.assertIn('Megatron', account_dropdown.text)
 
         # Verify the info changed through the text fields, text is given by attribute 'value'
-        self.assertEqual(self.browser.find_element_by_id('preferred_name').get_attribute('value'), 'Megatron')
-        self.assertEqual(self.browser.find_element_by_id('phone_number').get_attribute('value'), '555-555-5555')
-        self.assertEqual(self.browser.find_element_by_id('preferred_email').get_attribute('value'), 'Megatron@mega.tron')
-        self.assertEqual(self.browser.find_element_by_id('race').get_attribute('value'), 'Transformer')
+        name_text = self.browser.find_element_by_id('preferred_name').get_attribute('value')
+        phone_text = self.browser.find_element_by_id('phone_number').get_attribute('value')
+        email_text = self.browser.find_element_by_id('preferred_email').get_attribute('value')
+        race_text = self.browser.find_element_by_id('race').get_attribute('value')
+        self.assertEqual(name_text, 'Megatron')
+        self.assertEqual(phone_text, '555-555-5555')
+        self.assertEqual(email_text, 'Megatron@mega.tron')
+        self.assertEqual(race_text, 'Transformer')
 
     def test_invalid_profile_picture(self):
         """ Tests that non-.png files cannot be uploaded as a profile picture """
@@ -81,7 +86,8 @@ class TestProfile(SeleniumBaseTestCase):
 
         # Choose the non-picture file to upload
         choose_profile_picture_upload = self.browser.find_element_by_id('profile_picture')
-        choose_profile_picture_upload.send_keys(os.getcwd() + '/main.py')
+        non_picture_path = '/ovs/tests/selenium/data/not_a_picture.txt'
+        choose_profile_picture_upload.send_keys(os.getcwd() + non_picture_path)
 
         upload_picture_button = self.browser.find_element_by_id('upload_picture')
         upload_picture_button.click()
@@ -94,3 +100,26 @@ class TestProfile(SeleniumBaseTestCase):
         error_p_tag = self.browser.find_element_by_id('notificationModal').find_element_by_tag_name('p')
         error_message = error_p_tag.text
         self.assertEqual(error_message, 'File is not a png')
+
+    def test_valid_profile_picture(self):
+        """ Tests that .png files can be uploaded for a profile picture """
+        self.browser.get(self.base_url)
+        self.assertIn('Overseer', self.browser.title)
+
+        self.go_to_resident_profile_page()
+        default_image_src = self.browser.find_element_by_id('profile_image').get_attribute('src')
+
+        # Choose the picture file to upload
+        choose_profile_picture_upload = self.browser.find_element_by_id('profile_picture')
+        test_picture_path = '/ovs/tests/selenium/data/freshmanmods.png'
+        choose_profile_picture_upload.send_keys(os.getcwd() + test_picture_path)
+
+        upload_picture_button = self.browser.find_element_by_id('upload_picture')
+        upload_picture_button.click()
+
+        # Wait for picture to swap
+        self.browser.implicitly_wait(1)
+
+        # Verify picture changed
+        new_image_src = self.browser.find_element_by_id('profile_image').get_attribute('src')
+        self.assertNotEqual(new_image_src, default_image_src)

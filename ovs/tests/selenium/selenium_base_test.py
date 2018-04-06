@@ -26,9 +26,10 @@ class SeleniumBaseTestCase(OVSBaseTestCase):
         """ Closes selenium driver and OVSBaseTestCase clears the DB """
         # Take screenshot at end of every test because Python unittesting is deficient
         #  and has no non-hack way to detect a failed test case
-        if not os.path.exists('Screenshots'):
-            os.makedirs('Screenshots')
-        self.browser.save_screenshot('Screenshots/last-test-run-%s.png' % self._testMethodName)
+        test_screenshot_dir = 'Screenshots/' + type(self).__name__
+        if not os.path.exists(test_screenshot_dir):
+            os.makedirs(test_screenshot_dir)
+        self.browser.save_screenshot(test_screenshot_dir + '/last-test-run-%s.png' % self._testMethodName)
 
         super().tearDown()
 
