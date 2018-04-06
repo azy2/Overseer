@@ -23,7 +23,7 @@ def register_manager():
 
     user = UserService.get_user_by_id(current_user.get_id()).first()
     role = user.role
-    form = RegisterManagerForm(csrf_enabled=False)
+    form = RegisterManagerForm()
     if request.method == 'POST':
         if form.validate():
             new_user = UserService.create_user(

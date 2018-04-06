@@ -1,5 +1,5 @@
 """ Test whether users can log in """
-from ovs import app
+from flask import current_app
 from ovs.tests.selenium.selenium_base_test import SeleniumBaseTestCase
 
 class TestLogin(SeleniumBaseTestCase):
@@ -36,7 +36,7 @@ class TestLogin(SeleniumBaseTestCase):
         super().login_with_credentials('admin@gmail.com', 'abcd1234')
 
         # Should be at manager greeting page
-        self.assertIn(app.config['ADMIN']['first_name'], self.browser.title)
+        self.assertIn(current_app.config['ADMIN']['first_name'], self.browser.title)
 
     def test_bad_login(self):
         """ Tests whether a random email can log in or not """
@@ -44,6 +44,6 @@ class TestLogin(SeleniumBaseTestCase):
         self.assertIn('Overseer', self.browser.title)
 
         super().login_with_credentials('testtesttest@gmail.com', 'abcd1234')
-        
+
         # Page should not have changed
         self.assertEqual('Overseer', self.browser.title)

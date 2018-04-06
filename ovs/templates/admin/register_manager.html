@@ -8,6 +8,7 @@
             <div class="card-body"
                 <div class="col" >
                     <form method="post">
+                        {{ form.csrf_token }}
                         {{ field_inline(form.email) }}
                         {{ field_inline(form.first_name) }}
                         {{ field_inline(form.last_name) }}

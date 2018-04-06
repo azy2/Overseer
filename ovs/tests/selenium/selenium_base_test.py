@@ -5,25 +5,22 @@ import os
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
-from ovs import DataGen
 from ovs.tests.unittests.base_test import OVSBaseTestCase
 
 class SeleniumBaseTestCase(OVSBaseTestCase):
     """
     The base test case for selenium that all other selenium tests should inherit from
     """
-
     def setUp(self):
         """ Creates a headless chrome instance for selenium and clears the DB """
         super().setUp()
-        DataGen.create_defaults()
 
         chrome_options = Options()
         chrome_options.add_argument("--headless")
         chrome_options.add_argument("window-size=1980,960") # Make screenshots larger
         self.browser = webdriver.Chrome(chrome_options=chrome_options)
         self.browser.implicitly_wait(1)
-        self.base_url = 'http://localhost:5000'
+        self.base_url = self.get_server_url()
 
     def tearDown(self):
         """ Closes selenium driver and OVSBaseTestCase clears the DB """
@@ -32,8 +29,7 @@ class SeleniumBaseTestCase(OVSBaseTestCase):
         if not os.path.exists('Screenshots'):
             os.makedirs('Screenshots')
         self.browser.save_screenshot('Screenshots/last-test-run-%s.png' % self._testMethodName)
-        
-        self.browser.quit()
+
         super().tearDown()
 
     def login_with_credentials(self, email, password):

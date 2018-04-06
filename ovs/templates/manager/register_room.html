@@ -6,6 +6,7 @@
         <div class="row card-body" >
             <div class="col" >
                 <form method="post">
+                    {{ form.csrf_token }}
                     <dl>
                         {{ field_stacked(form.room_number) }}
                         {{ field_stacked(form.room_status) }}

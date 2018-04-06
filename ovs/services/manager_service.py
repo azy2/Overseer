@@ -2,14 +2,14 @@
 from sqlalchemy import exc
 from sqlalchemy.orm import aliased
 
-from ovs import app
+from flask import current_app
 from ovs.models.package_model import Package
 from ovs.models.resident_model import Resident
 from ovs.models.user_model import User
 from ovs.services.resident_service import ResidentService
 from ovs.services.room_service import RoomService
 
-db = app.database.instance()
+db = current_app.extensions['database'].instance()
 
 
 class ManagerService:

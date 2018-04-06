@@ -3,7 +3,6 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from ovs import app
 from ovs.tests.selenium.selenium_base_test import SeleniumBaseTestCase
 
 class TestProfile(SeleniumBaseTestCase):
@@ -15,7 +14,7 @@ class TestProfile(SeleniumBaseTestCase):
         self.assertIn('Overseer', self.browser.title)
 
         super().login_with_credentials('resident@gmail.com', 'abcd1234')
-        
+
         # Click on account dropdown and go to Profile link
         account_dropdown = self.browser.find_element_by_id('accountDropdown')
         account_dropdown.click()
@@ -24,7 +23,7 @@ class TestProfile(SeleniumBaseTestCase):
 
         # Verify page changed
         self.assertIn('Edit', self.browser.title)
-        
+
         # Change preferred name
         preferred_name_text_field = self.browser.find_element_by_id('preferred_name')
         preferred_name_text_field.clear()
@@ -51,4 +50,3 @@ class TestProfile(SeleniumBaseTestCase):
         # Dropdown reference must be refreshed because the page has changed after submitting
         account_dropdown = self.browser.find_element_by_id('accountDropdown')
         self.assertIn('Megatron', account_dropdown.text)
-

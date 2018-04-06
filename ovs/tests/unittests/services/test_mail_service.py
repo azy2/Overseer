@@ -1,31 +1,27 @@
 """Test for sending mail."""
 
 import json
-from unittest import TestCase
+from flask import current_app
 
 from mock import patch
 
-from ovs import app
-from ovs.services.mail_service import MailService as mail_service
-from ovs.services.user_service import UserService
+from ovs.tests.unittests.base_test import OVSBaseTestCase
 from ovs.mail import templates
 
 
-class TestSendMail(TestCase):
+class TestSendMail(OVSBaseTestCase):
     """Tests for sending mail."""
 
     def setUp(self):
-        app.config['TESTING'] = True
-        app.config['TEST_MAIL'] = True
-        self.mail = app.mail
-
-    def tearDown(self):
-        app.config['TESTING'] = False
-        app.config['TEST_MAIL'] = False
+        super().setUp()
+        current_app.config['TEST_MAIL'] = True
+        self.mail = current_app.extensions['mail']
 
     @patch('python_http_client.Client._make_request')
     def test_send_mail(self, mock_client):
         """Test that mail contains correct information."""
+        from ovs.services.mail_service import MailService as mail_service
+
         mail_service.send_email(
             to_email='testEmail@test.com',
             subject='TestSubject',
@@ -40,6 +36,8 @@ class TestSendMail(TestCase):
     @patch('ovs.services.mail_service.MailService.send_email')
     def test_create_user_sends_email(self, mock_mail):
         """ Tests that creating a user sends an email """
+        from ovs.services.user_service import UserService
+
         test_user_info = ('test@gmail.com', 'Bob', 'Ross', 'ADMIN')
         expected_substitutions = {
             'first_name': 'Bob',

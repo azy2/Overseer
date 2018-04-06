@@ -24,6 +24,7 @@
         <h3>Add Package to Package List:</h3>
         {% from "_formhelper.html" import field_stacked %}
         <form method="post" name="Add Form">
+            {{ add_form.csrf_token }}
             <dl>
                 {{ field_stacked(add_form.recipient_email) }}
                 {{ field_stacked(add_form.description) }}
@@ -49,6 +50,7 @@
             {% for (package, recipient, checker) in packages_recipients_checkers %}
                 <tr>
                     <form method="post" name="Edit Form" id="edit-package-submit">
+                        {{ edit_form.csrf_token }}
                         {{edit_form.package_id(value=package.id, type="hidden")|safe}}
                         {{edit_form.recipient_id(value=package.recipient_id, type="hidden")|safe}}
                         <td>{{ edit_form.recipient_email(value=recipient.email)|safe + " -- " + recipient.first_name + " " + recipient.last_name}}</td>

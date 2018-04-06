@@ -7,12 +7,14 @@
             <div class="col-3 card-img-left" >
                 <img src="data:image/png;base64,{{ pict }}" class="rounded" height="200" width="200">
                 <form method="post" value="Upload picture" enctype="multipart/form-data" >
+                    {{ picture_form.csrf_token }}
                     {{ picture_form.profile_picture()|safe }}
                     <input type="submit" value="Upload Picture" >
                 </form>
             </div>
             <div class="col-9" >
                 <form method="post">
+                    {{ profile_form.csrf_token }}
                     {{ field_inline(profile_form.preferred_name) }}
                     {{ field_inline(profile_form.phone_number) }}
                     {{ field_inline(profile_form.preferred_email) }}

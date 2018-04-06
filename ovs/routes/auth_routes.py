@@ -1,21 +1,20 @@
 """ routes under /auth/ """
-from flask import Blueprint, redirect, url_for, flash
+from flask import Blueprint, redirect, url_for, flash, current_app
 from flask_login import login_user, logout_user, login_required
 
-from ovs import app
 from ovs.forms.login_form import LoginForm
 from ovs.services import AuthService
 from ovs.utils.roles import UserRole
 from ovs.services.user_service import UserService
 
 auth_bp = Blueprint('auth', __name__, )
-db = app.database.instance()
+db = current_app.extensions['database'].instance()
 
 
 @auth_bp.route('/login', methods=['POST'])
 def login():
     """ Interface for users to login """
-    form = LoginForm(csrf_enabled=False)
+    form = LoginForm()
     if form.validate():
         email = form.email.data
         password = form.password.data

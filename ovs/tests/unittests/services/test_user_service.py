@@ -1,7 +1,6 @@
 """
 Tests for user services
 """
-from ovs.services.user_service import UserService
 from ovs.models.user_model import User
 from ovs.tests.unittests.base_test import OVSBaseTestCase
 
@@ -11,6 +10,8 @@ class TestUserService(OVSBaseTestCase):
     """
     def test_create_user(self):
         """ Tests that users can be created """
+        from ovs.services.user_service import UserService
+
         test_user_info = ('test@gmail.com', 'Bob', 'Ross', 'ADMIN')
         UserService.create_user(*test_user_info)
 
@@ -23,6 +24,8 @@ class TestUserService(OVSBaseTestCase):
 
     def test_get_user_by_email(self):
         """ Tests get_user_by_email successfully finds a user """
+        from ovs.services.user_service import UserService
+
         test_user_info = ('test@gmail.com', 'Bob', 'Ross', 'ADMIN')
         UserService.create_user(*test_user_info)
 
@@ -35,5 +38,7 @@ class TestUserService(OVSBaseTestCase):
 
     def test_invalid_get_user_by_email(self):
         """ Tests get_user_by_email does not find anyone with an invalid email """
+        from ovs.services.user_service import UserService
+
         user_list = UserService.get_user_by_email("dummy@gmail.com").all()
         self.assertEqual(len(user_list), 0)
