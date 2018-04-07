@@ -3,6 +3,8 @@ ovs is the root module of the Overseer application. It sets up flask and makes
 a database connection. The networking code can be found in `../main.py`
 """
 
+import os
+
 from flask import Flask
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -42,7 +44,8 @@ def create_app():
         app.register_blueprint(routes.AuthRoutes, url_prefix='/auth')
         app.register_blueprint(routes.DevRoutes, url_prefix='/dev')
 
-        from ovs.datagen import DataGen
-        DataGen.create_defaults()
+        if os.environ.get("WERKZEUG_RUN_MAIN") == "true":
+            from ovs.datagen import DataGen
+            DataGen.create_defaults()
 
     return app
