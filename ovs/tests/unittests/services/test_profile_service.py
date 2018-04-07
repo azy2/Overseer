@@ -72,4 +72,3 @@ class TestProfileService(OVSBaseTestCase):
         """ Tests that get_all_profiles returns the correct number of profiles """
         from ovs.services.profile_service import ProfileService
         self.assertEqual(len(ProfileService.get_all_profiles()), 1)
-
