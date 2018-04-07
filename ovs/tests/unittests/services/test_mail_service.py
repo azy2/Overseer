@@ -40,7 +40,6 @@ class TestSendMail(OVSBaseTestCase):
 
         test_user_info = ('test@gmail.com', 'Bob', 'Ross', 'ADMIN', 'testPassword')
         expected_substitutions = {
-            'password': ANY,
             'first_name': 'Bob',
             'last_name': 'Ross',
             'role': 'ADMIN',
