@@ -1,15 +1,14 @@
 """ DB and utility functions for Users """
 from sqlalchemy import exc
 
-from ovs import app
+from flask import current_app
 from ovs.models.user_model import User
 from ovs.services.mail_service import MailService
-from ovs.services.meal_service import MealService
 from ovs.services.resident_service import ResidentService
 from ovs.utils import crypto
 from ovs.mail import templates
 
-db = app.database.instance()
+db = current_app.extensions['database'].instance()
 
 
 class UserService:

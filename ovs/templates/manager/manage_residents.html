@@ -32,6 +32,7 @@
 	{% for (resident, user) in residents %}
         <tr>
             <form method="post" id="edit-resident-submit">
+                {{ form.csrf_token }}
                 {{form.user_id(value=user.id, type="hidden")|safe}}
                 <td>{{ user.email }}</td>
                 <td>{{ user.first_name }}</td>

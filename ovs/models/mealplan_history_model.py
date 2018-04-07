@@ -1,14 +1,13 @@
 """
 Keeps track of mealplan history as represented in the database
 """
-from datetime import datetime, timedelta
 from flask import jsonify
 from sqlalchemy import Integer, Enum, Column, text, DateTime
 
-from ovs import app
+from ovs import BaseModel
 
 
-class Mealplan_History(app.BaseModel):
+class MealplanHistory(BaseModel):
     """
     Defines a Mealplan History Item as represented in the database.
     """
@@ -22,14 +21,14 @@ class Mealplan_History(app.BaseModel):
     updated = Column(DateTime, server_default=text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))
 
     def __init__(self, resident_id, mealplan_pin, manager_id, log_type):
-        super(Mealplan_History, self).__init__(
+        super(MealplanHistory, self).__init__(
             resident_id=resident_id,
             mealplan_pin=mealplan_pin,
             manager_id=manager_id,
             log_type=log_type)
 
     def __repr__(self):
-        return 'Meal plan_History([id={id}, resident_id={resident_id}, mealplan_pin={mealplan_pin}, ' \
+        return 'MealplanHistory([id={id}, resident_id={resident_id}, mealplan_pin={mealplan_pin}, ' \
                'manager_id={manager_id}, log_type={log_type}, created={created}, updated={updated}])'\
             .format(**self.__dict__)
 

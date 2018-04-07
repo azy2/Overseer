@@ -1,17 +1,17 @@
 """
 DB and utility functions for Residents
 """
+from flask import current_app
+
 from sqlalchemy import exc
 
-from ovs import app
 from ovs.models.user_model import User
 from ovs.models.resident_model import Resident
 from ovs.models.profile_model import Profile
 from ovs.services.profile_picture_service import ProfilePictureService
 from ovs.services.meal_service import MealService
-# from ovs.services.user_service import UserService
 
-db = app.database.instance()
+db = current_app.extensions['database'].instance()
 
 
 class ResidentService:
@@ -42,7 +42,7 @@ class ResidentService:
         """
         Sets default picture for new residents
         """
-        default_picture_path = app.config['BLOB']['default_picture_path']
+        default_picture_path = current_app.config['BLOB']['default_picture_path']
         with open(default_picture_path, 'rb') as default_image:
             file_contents = default_image.read()
             file_bytes = bytearray(file_contents)
@@ -88,7 +88,7 @@ class ResidentService:
         return True
 
     @staticmethod
-    def create_meal_plan_for_resident_by_email(pin, meal_plan, plan_type, email):  # pylint: disable=unused-argument
+    def create_meal_plan_for_resident_by_email(meal_plan, plan_type, email):  # pylint: disable=unused-argument
         """
         Adds a new meal plan to the DB
         :param email: User to link to, TODO:implement
@@ -99,18 +99,16 @@ class ResidentService:
         """
         # Verify resident exists
         resident = ResidentService.get_resident_by_email(email)
-        if resident == None:
-            return False
+        if resident is None:
+            return None
 
-        # Add PIN to resident
-        pin_updated = ResidentService.set_resident_pin(resident.user_id, pin)
-        if pin_updated == False:
-            return False
-        
         # Create mealplan
-        mealplan_created = MealService.create_meal_plan(pin, meal_plan, plan_type)
-        if mealplan_created == False:
-            return False
+        meal_plan = MealService.create_meal_plan(meal_plan, plan_type)
+        try:
+            resident.mealplan_pin = meal_plan.pin
+            db.commit()
+        except exc.SQLAlchemyError:
+            db.rollback()
+            return None
 
-        # Success
-        return True
+        return meal_plan

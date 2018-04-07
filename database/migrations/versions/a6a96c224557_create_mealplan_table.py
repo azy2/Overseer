@@ -19,8 +19,8 @@ depends_on = None
 def upgrade():
     op.create_table(
         'mealplan',
-        sa.Column('id',  sa.Integer, primary_key=True),
-        sa.Column('pin', sa.Integer, unique=True),
+        sa.Column('id',  sa.Integer),
+        sa.Column('pin', sa.Integer, sa.Sequence('meal_pin_seq'), autoincrement=True, primary_key=True),
         sa.Column('credits', sa.Integer, nullable=False),
         sa.Column('meal_plan', sa.Integer, nullable=False),
         sa.Column('reset_date', sa.DateTime, server_default=sa.text('CURRENT_TIMESTAMP')),

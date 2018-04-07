@@ -1,12 +1,12 @@
 """ Form with data required to login for a meal"""
+from flask import current_app
 from flask_wtf import FlaskForm
 from wtforms import IntegerField, ValidationError
 from wtforms.validators import DataRequired
 
-from ovs import app
 from ovs.models.meal_plan_model import MealPlan
 
-db = app.database.instance()
+db = current_app.extensions['database'].instance()
 
 
 def validate_meal_pin(form, field):  # pylint: disable=unused-argument

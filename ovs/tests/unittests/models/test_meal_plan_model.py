@@ -19,7 +19,7 @@ class TestMealPlanModel(OVSBaseTestCase):
 
     def create_test_meal_plan(self):
         """ Creates a meal plan with WEEKLY plan_type for use in testing """
-        test_meal_plan_info = (141414, 10, 'WEEKLY')
+        test_meal_plan_info = (10, 'WEEKLY')
         self.test_meal_plan = MealPlan(*test_meal_plan_info)
 
     def test_update_meal_plan(self):

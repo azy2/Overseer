@@ -84,6 +84,7 @@
 
                 <form class="form-inline" method="post" action="/auth/login" >
                     <div class="input-group" >
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                         <input type="text" id="email" name="email" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" >
                         <input type="password" id="password" name="password" class="form-control" placeholder="Password" aria-label="Username" aria-describedby="basic-addon1" >
                         <div class="input-group-append" >

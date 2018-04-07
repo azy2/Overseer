@@ -2,11 +2,11 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, ValidationError
 from wtforms.validators import DataRequired, Length
+from flask import current_app
 
-from ovs import app
 from ovs.models.resident_model import Resident
 
-db = app.database.instance()
+db = current_app.extensions['database'].instance()
 
 
 def validate_user_id(form, field):  # pylint: disable=unused-argument

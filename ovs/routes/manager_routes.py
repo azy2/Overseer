@@ -39,7 +39,7 @@ def register_room():
     rooms table. The option for admins to add current residents to said
     room is an available option.
     """
-    form = RegisterRoomForm(csrf_enabled=False)
+    form = RegisterRoomForm()
     if request.method == 'POST':
         if form.validate():
             room = RoomService.create_room(
@@ -69,7 +69,7 @@ def register_resident():
     first name, and last name and accepts that form (POST) and adds a user
     to the user table with a default password.
     """
-    form = RegisterResidentForm(csrf_enabled=False)
+    form = RegisterResidentForm()
     # pylint: disable=duplicate-code
     user = UserService.get_user_by_id(current_user.get_id()).first()
     role = user.role
@@ -100,7 +100,7 @@ def manage_residents():
     /manager/manage_residents severs a HTML with list of residents with their info.
     It will also be a link there to add/edit/delete residents with form inputs.
     """
-    form = ManageResidentsForm(csrf_enabled=False)
+    form = ManageResidentsForm()
     user = UserService.get_user_by_id(current_user.get_id()).first()
     role = user.role
     if request.method == 'POST':
@@ -128,8 +128,8 @@ def manage_packages():
     first name, and last name and accepts that form (POST) and adds a user
     to the user table with a default password.
     """
-    add_form = AddPackageForm(prefix='add_form', csrf_enabled=False)
-    edit_form = EditPackageForm(prefix='edit_form', csrf_enabled=False)
+    add_form = AddPackageForm(prefix='add_form')
+    edit_form = EditPackageForm(prefix='edit_form')
     user = UserService.get_user_by_id(current_user.get_id()).first()
     role = user.role
     packages_recipients_checkers = ManagerService.get_all_packages_recipients_checkers()
@@ -181,7 +181,7 @@ def meal_login():
     /manager/meal_login serves an html form with input field pin
     and accepts that form (POST) and logs the use to a meal plan
     """
-    form = MealLoginForm(csrf_enabled=False)
+    form = MealLoginForm()
     user_id = current_user.get_id()
     user = UserService.get_user_by_id(user_id).first()
     role = user.role
@@ -208,7 +208,7 @@ def meal_login():
             else:
                 flash('Meal plan login unsuccessful. ' + message, 'error')
             return redirect(url_for('manager.meal_login'))
-        
+
         # Invalid form
         else:
             return render_template('manager/meal_login.html', role=role, user=user, form=form)
@@ -238,6 +238,8 @@ def meal_undo():
         else:
             flash('Undo unsuccessfully', 'error')
         return redirect(url_for('manager.meal_login'))
+    else:
+        return redirect(url_for('manager.meal_login'))
 
 
 @manager_bp.route('/create_meal_plan/', methods=['GET', 'POST'])
@@ -248,20 +250,18 @@ def create_meal_plan():
     /manager/meal_login serves an html form with input field pin
     and accepts that form (POST) and logs the use to a meal plan
     """
-    form = CreateMealPlanForm(csrf_enabled=False)
+    form = CreateMealPlanForm()
     user_id = current_user.get_id()
     user = UserService.get_user_by_id(user_id).first()
     role = user.role
     if request.method == 'POST':
         if form.validate():
-            valid = ResidentService.create_meal_plan_for_resident_by_email(
-                form.pin.data,
+            meal_plan = ResidentService.create_meal_plan_for_resident_by_email(
                 form.meal_plan.data,
                 form.plan_type.data,
                 form.email.data)
-            # Todo: create meal plan by email not fully implemented yet
-            if valid:
-                flash('Meal plan created successfully!', 'message')
+            if meal_plan is not None:
+                flash('Meal plan created successfully with pin: %d' % (meal_plan.pin), 'message')
             else:
                 flash('Meal plan not created', 'error')
             return redirect(url_for('manager.create_meal_plan'))
@@ -291,8 +291,8 @@ def add_meals():
                 user_meal_plan = MealService.get_meal_plan_by_pin(form.pin.data)
                 resident = ResidentService.get_resident_by_pin(user_meal_plan.pin)
                 message = ('%s has %d out of %d meals now.' % (resident.profile.preferred_name,
-                                                                     user_meal_plan.credits,
-                                                                     user_meal_plan.meal_plan))
+                                                               user_meal_plan.credits,
+                                                               user_meal_plan.meal_plan))
                 flash('Meals added successfully!' + message, 'message')
             else:
                 flash('Invalid pin', 'error')

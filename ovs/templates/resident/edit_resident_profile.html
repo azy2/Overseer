@@ -10,6 +10,7 @@
     <body>
         {% from "_formhelper.html" import render_field %}
         <form method="post">
+            {{ form.csrf_token }}
             <dl>
                 {{ render_field(form.preferred_name) }}
                 {{ render_field(form.phone_number) }}
