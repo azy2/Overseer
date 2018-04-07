@@ -13,7 +13,7 @@ function run_pylint() {
 
 function run_unittests() {
     echo '======================== unittests ========================'
-    nose2 -s ovs/tests/unittests/services/test_mail_service.py
+    nose2 -s ovs/tests/unittests
     return $?
 }
 
