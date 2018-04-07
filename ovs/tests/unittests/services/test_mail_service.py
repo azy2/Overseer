@@ -40,11 +40,12 @@ class TestSendMail(TestCase):
     @patch('ovs.services.mail_service.MailService.send_email')
     def test_create_user_sends_email(self, mock_mail):
         """ Tests that creating a user sends an email """
-        test_user_info = ('test@gmail.com', 'Bob', 'Ross', 'ADMIN')
+        test_user_info = ('test@gmail.com', 'Bob', 'Ross', 'ADMIN', 'testPassword')
         expected_substitutions = {
             'first_name': 'Bob',
             'last_name': 'Ross',
-            'role': 'ADMIN'
+            'role': 'ADMIN',
+            'password': 'testPassword'
         }
 
         UserService.create_user(*test_user_info)
