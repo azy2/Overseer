@@ -3,12 +3,12 @@ DB access and other services for Rooms
 """
 from sqlalchemy import exc
 
-from ovs import app
+from flask import current_app
 from ovs.models.room_model import Room
 from ovs.services.resident_service import ResidentService
 from ovs.services.user_service import UserService
 
-db = app.database.instance()
+db = current_app.extensions['database'].instance()
 
 
 class RoomService:

@@ -1,12 +1,12 @@
 """ Services related to managers """
 from sqlalchemy.orm import aliased
 
-from ovs import app
+from flask import current_app
 from ovs.models.package_model import Package
 from ovs.models.resident_model import Resident
 from ovs.models.user_model import User
 
-db = app.database.instance()
+db = current_app.extensions['database'].instance()
 
 
 class ManagerService:

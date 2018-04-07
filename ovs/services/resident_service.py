@@ -3,12 +3,12 @@ DB and utility functions for Residents
 """
 from sqlalchemy import exc
 
-from ovs import app
+from flask import current_app
 from ovs.models.profile_model import Profile
 from ovs.models.resident_model import Resident
 from ovs.services.profile_picture_service import ProfilePictureService
 
-db = app.database.instance()
+db = current_app.extensions['database'].instance()
 
 class ResidentService:
     """ DB and utility functions for Residents """
@@ -64,7 +64,7 @@ class ResidentService:
         """
         Sets default picture for new residents
         """
-        default_picture_path = app.config['BLOB']['default_picture_path']
+        default_picture_path = current_app.config['BLOB']['default_picture_path']
         with open(default_picture_path, 'rb') as default_image:
             file_contents = default_image.read()
             file_bytes = bytearray(file_contents)

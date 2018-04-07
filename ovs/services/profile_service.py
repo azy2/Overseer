@@ -1,11 +1,12 @@
 """
 DB access and other services for profiles
 """
-from ovs import app
+from flask import current_app
+from ovs.models.profile_model import Profile
 from ovs.services.resident_service import ResidentService
 from ovs.services.profile_picture_service import ProfilePictureService
 
-db = app.database.instance()
+db = current_app.extensions['database'].instance()
 
 
 class ProfileService:
@@ -52,3 +53,8 @@ class ProfileService:
         ProfilePictureService.delete_profile_picture(picture_id)
         db.delete(profile)
         return True
+
+    @staticmethod
+    def get_all_profiles():
+        """ Returns all profiles. Used only for testing """
+        return db.query(Profile).all()

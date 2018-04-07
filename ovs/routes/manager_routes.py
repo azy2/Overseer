@@ -38,7 +38,7 @@ def register_room():
     rooms table. The option for admins to add current residents to said
     room is an available option.
     """
-    form = RegisterRoomForm(csrf_enabled=False)
+    form = RegisterRoomForm()
     if request.method == 'POST':
         if form.validate():
             room = RoomService.create_room(
@@ -67,8 +67,9 @@ def manage_residents():
     /manager/manage_residents serves a HTML with list of residents with their info.
     It allows a manager to add/edit/delete residents with form inputs.
     """
-    register_form = RegisterResidentForm(prefix='register_form', csrf_enabled=False)
-    edit_form = ManageResidentsForm(prefix='edit_form', csrf_enabled=False)
+    register_form = RegisterResidentForm(prefix='register_form')
+    edit_form = ManageResidentsForm(prefix='edit_form')
+
     user = UserService.get_user_by_id(current_user.get_id()).first()
     role = user.role
 
@@ -79,7 +80,6 @@ def manage_residents():
                 flash('Resident successfully deleted')
             else:
                 flash('Something went wrong. Could not find resident to delete')
-            return redirect(url_for('manager.manage_residents'))
         elif edit_form.validate_on_submit() and 'edit_btn' in request.form:
             success = ResidentService.edit_resident(
                 edit_form.user_id.data,
@@ -91,7 +91,6 @@ def manage_residents():
                 flash('Resident updated successfully!', 'message')
             else:
                 flash('Room does not exist or duplicate email detected!', 'error')
-            return redirect(url_for('manager.manage_residents'))
         elif register_form.validate_on_submit():
             new_user = UserService.create_user(
                 register_form.email.data,
@@ -102,11 +101,10 @@ def manage_residents():
                 flash('Residents successfully registered!', 'message')
             else:
                 flash('Residents not successfully registered! Email already exists!', 'error')
-            return redirect(url_for('manager.manage_residents'))
         else:
             # Todo: display form validation errors on html form fields
             flash('Bad form inputs!', 'error')
-            return redirect(url_for('manager.manage_residents'))
+        return redirect(url_for('manager.manage_residents'))
     else:
         return render_template('manager/manage_residents.html', role=role, user=user,
                                residents=ManagerService.get_all_residents(),
@@ -122,8 +120,8 @@ def manage_packages():
     first name, and last name and accepts that form (POST) and adds a user
     to the user table with a default password.
     """
-    add_form = AddPackageForm(prefix='add_form', csrf_enabled=False)
-    edit_form = EditPackageForm(prefix='edit_form', csrf_enabled=False)
+    add_form = AddPackageForm(prefix='add_form')
+    edit_form = EditPackageForm(prefix='edit_form')
     user = UserService.get_user_by_id(current_user.get_id()).first()
     role = user.role
     packages_recipients_checkers = ManagerService.get_all_packages_recipients_checkers()
@@ -175,7 +173,7 @@ def meal_login():
     /manager/meal_login serves an html form with input field pin
     and accepts that form (POST) and logs the use to a meal plan
     """
-    form = MealLoginForm(csrf_enabled=False)
+    form = MealLoginForm()
     if request.method == 'POST':
         if form.validate():
             MealService.use_meal(form.pin.data)
@@ -200,7 +198,7 @@ def create_meal_plan():
     /manager/meal_login serves an html form with input field pin
     and accepts that form (POST) and logs the use to a meal plan
     """
-    form = CreateMealPlanForm(csrf_enabled=False)
+    form = CreateMealPlanForm()
     if request.method == 'POST':
         if form.validate():
             valid = UserService.create_meal_plan_for_user_by_email(

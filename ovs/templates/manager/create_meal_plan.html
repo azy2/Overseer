@@ -4,6 +4,7 @@
     {% from "_formhelper.html" import field_inline %}
     <div class="container mt-5" >
         <form method="post">
+            {{ form.csrf_token }}
             <dl>
                 {{ field_inline(form.email) }}
                 {{ field_inline(form.pin) }}
