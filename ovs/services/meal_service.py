@@ -1,10 +1,10 @@
 """
 DB and utility functions for Meals
 """
-from ovs import app
+from flask import current_app
 from ovs.models.meal_plan_model import MealPlan
 
-db = app.database.instance()
+db = current_app.extensions['database'].instance()
 
 
 class MealService:

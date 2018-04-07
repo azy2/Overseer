@@ -1,10 +1,6 @@
 """
 Tests for profile services
 """
-from ovs.services.user_service import UserService
-from ovs.services.resident_service import ResidentService
-from ovs.services.profile_service import ProfileService
-from ovs.utils.genders import Gender
 from ovs.tests.unittests.base_test import OVSBaseTestCase
 
 
@@ -15,6 +11,9 @@ class TestProfileService(OVSBaseTestCase):
 
     def setUp(self):
         """ Runs before every test and clears relevant tables """
+        from ovs.services.user_service import UserService
+        from ovs.services.resident_service import ResidentService
+
         super().setUp()
         test_user_info = ('test@gmail.com', 'Bob', 'Smith', 'RESIDENT')
         UserService.create_user(*test_user_info)
@@ -23,6 +22,9 @@ class TestProfileService(OVSBaseTestCase):
 
     def test_update_profile(self):
         """ Tests that profiles can be updated """
+        from ovs.services.profile_service import ProfileService
+        from ovs.utils.genders import Gender
+
         profile = self.test_resident.profile
         self.assertEqual(profile.preferred_name, "Bob")
         self.assertEqual(profile.phone_number, None)

@@ -1,10 +1,10 @@
 """
 DB access and other services for profiles
 """
-from ovs import app
+from flask import current_app
 from ovs.services.resident_service import ResidentService
 
-db = app.database.instance()
+db = current_app.extensions['database'].instance()
 
 
 class ProfileService:

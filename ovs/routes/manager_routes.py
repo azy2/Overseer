@@ -37,7 +37,7 @@ def register_room():
     rooms table. The option for admins to add current residents to said
     room is an available option.
     """
-    form = RegisterRoomForm(csrf_enabled=False)
+    form = RegisterRoomForm()
     if request.method == 'POST':
         if form.validate():
             room = RoomService.create_room(
@@ -67,7 +67,7 @@ def register_resident():
     first name, and last name and accepts that form (POST) and adds a user
     to the user table with a default password.
     """
-    form = RegisterResidentForm(csrf_enabled=False)
+    form = RegisterResidentForm()
     # pylint: disable=duplicate-code
     user = UserService.get_user_by_id(current_user.get_id()).first()
     role = user.role
@@ -98,7 +98,7 @@ def manage_residents():
     /manager/manage_residents severs a HTML with list of residents with their info.
     It will also be a link there to add/edit/delete residents with form inputs.
     """
-    form = ManageResidentsForm(csrf_enabled=False)
+    form = ManageResidentsForm()
     user = UserService.get_user_by_id(current_user.get_id()).first()
     role = user.role
     if request.method == 'POST':
@@ -126,8 +126,8 @@ def manage_packages():
     first name, and last name and accepts that form (POST) and adds a user
     to the user table with a default password.
     """
-    add_form = AddPackageForm(prefix='add_form', csrf_enabled=False)
-    edit_form = EditPackageForm(prefix='edit_form', csrf_enabled=False)
+    add_form = AddPackageForm(prefix='add_form')
+    edit_form = EditPackageForm(prefix='edit_form')
     user = UserService.get_user_by_id(current_user.get_id()).first()
     role = user.role
     packages_recipients_checkers = ManagerService.get_all_packages_recipients_checkers()
@@ -179,7 +179,7 @@ def meal_login():
     /manager/meal_login serves an html form with input field pin
     and accepts that form (POST) and logs the use to a meal plan
     """
-    form = MealLoginForm(csrf_enabled=False)
+    form = MealLoginForm()
     if request.method == 'POST':
         if form.validate():
             MealService.use_meal(form.pin.data)
@@ -204,7 +204,7 @@ def create_meal_plan():
     /manager/meal_login serves an html form with input field pin
     and accepts that form (POST) and logs the use to a meal plan
     """
-    form = CreateMealPlanForm(csrf_enabled=False)
+    form = CreateMealPlanForm()
     if request.method == 'POST':
         if form.validate():
             valid = UserService.create_meal_plan_for_user_by_email(
