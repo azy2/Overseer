@@ -38,12 +38,13 @@ class TestSendMail(OVSBaseTestCase):
         """ Tests that creating a user sends an email """
         from ovs.services.user_service import UserService
 
-        test_user_info = ('test@gmail.com', 'Bob', 'Ross', 'ADMIN')
+        test_user_info = ('test@gmail.com', 'Bob', 'Ross', 'ADMIN', 'testPassword')
         expected_substitutions = {
             'password': ANY,
             'first_name': 'Bob',
             'last_name': 'Ross',
-            'role': 'ADMIN'
+            'role': 'ADMIN',
+            'password': 'testPassword'
         }
 
         UserService.create_user(*test_user_info)
