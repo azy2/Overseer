@@ -49,6 +49,7 @@ class DataGen:
 
     @staticmethod
     def clear_db_except_defaults():
+        """ Empty the DB except for the default users """
         db.query(Profile).filter(Profile.user_id not in current_app.config['DEFAULT_IDS']).delete()
         db.query(User).filter(User.id not in current_app.config['DEFAULT_IDS']).delete()
         db.query(Resident).filter(Resident.user_id not in current_app.config['DEFAULT_IDS']).delete()
