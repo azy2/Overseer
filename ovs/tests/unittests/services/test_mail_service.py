@@ -3,7 +3,7 @@
 import json
 from flask import current_app
 
-from mock import patch
+from mock import patch, ANY
 
 from ovs.tests.unittests.base_test import OVSBaseTestCase
 from ovs.mail import templates
@@ -40,6 +40,7 @@ class TestSendMail(OVSBaseTestCase):
 
         test_user_info = ('test@gmail.com', 'Bob', 'Ross', 'ADMIN')
         expected_substitutions = {
+            'password': ANY,
             'first_name': 'Bob',
             'last_name': 'Ross',
             'role': 'ADMIN'
