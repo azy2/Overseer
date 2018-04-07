@@ -2,12 +2,12 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, ValidationError
 from wtforms.validators import Length, DataRequired
+from flask import current_app
 
-from ovs import app
 from ovs.models.resident_model import Resident
 from ovs.models.user_model import User
 
-db = app.database.instance()
+db = current_app.extensions['database'].instance()
 
 
 def validate_resident_email(form, field):  # pylint: disable=unused-argument
