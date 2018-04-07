@@ -24,7 +24,8 @@ class DataGen:
                                            user_role,
                                            current_app.config[user_role]['password'])
 
-        current_app.config['DEFAULT_IDS'].add(user.id)
+        if user is not None:
+            current_app.config['DEFAULT_IDS'].add(user.id)
 
     @staticmethod
     def create_defaults():
