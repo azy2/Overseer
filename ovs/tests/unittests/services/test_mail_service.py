@@ -3,7 +3,7 @@
 import json
 from flask import current_app
 
-from mock import patch, ANY
+from mock import patch
 
 from ovs.tests.unittests.base_test import OVSBaseTestCase
 from ovs.mail import templates
