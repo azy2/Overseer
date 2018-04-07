@@ -22,7 +22,6 @@ class OVSBaseTestCase(LiveServerTestCase):
         with current_app.app_context():
             from ovs.datagen import DataGen
             DataGen.clear_db()
-            DataGen.create_defaults()
             self.db = current_app.extensions['database'].instance()
 
     def tearDown(self):

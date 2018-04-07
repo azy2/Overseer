@@ -16,6 +16,9 @@ class TestRegisterManager(SeleniumBaseTestCase):
 
     def test_register_manager(self):
         """ Tests whether all fields can be edited in a register manager page """
+        from ovs.datagen import DataGen
+        DataGen.create_defaults()
+
         self.browser.get(self.base_url)
         self.assertIn('Overseer', self.browser.title)
 

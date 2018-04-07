@@ -16,6 +16,9 @@ class TestRegisterRoom(SeleniumBaseTestCase):
 
     def test_register_room(self):
         """ Tests whether all fields can be edited in a register room page """
+        from ovs.datagen import DataGen
+        DataGen.create_defaults()
+
         self.browser.get(self.base_url)
         self.assertIn('Overseer', self.browser.title)
 

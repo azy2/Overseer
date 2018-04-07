@@ -18,15 +18,18 @@ class DataGen:
         user = UserService.get_user_by_email(
             current_app.config[user_role]['email']).one_or_none()
         if not user:
-            UserService.create_user(current_app.config[user_role]['email'],
-                                    current_app.config[user_role]['first_name'],
-                                    current_app.config[user_role]['last_name'],
-                                    user_role,
-                                    current_app.config[user_role]['password'])
+            user = UserService.create_user(current_app.config[user_role]['email'],
+                                           current_app.config[user_role]['first_name'],
+                                           current_app.config[user_role]['last_name'],
+                                           user_role,
+                                           current_app.config[user_role]['password'])
+
+        current_app.config['DEFAULT_IDS'].add(user.id)
 
     @staticmethod
     def create_defaults():
         """ Populate the database with defaults """
+        current_app.config['DEFAULT_IDS'] = set()
         DataGen.create_user(roles.ADMIN)
         if current_app.config['TESTING'] or current_app.config['DEVELOPMENT']:
             for user_role in [roles.RESIDENT, roles.RESIDENT_ADVISOR, roles.STAFF,
@@ -43,3 +46,11 @@ class DataGen:
         db.query(Room).delete()
         db.query(MealPlan).delete()
         db.commit()
+
+    @staticmethod
+    def clear_db_except_defaults():
+        db.query(Profile).filter(Profile.user_id not in current_app.config['DEFAULT_IDS']).delete()
+        db.query(User).filter(User.id not in current_app.config['DEFAULT_IDS']).delete()
+        db.query(Resident).filter(Resident.user_id not in current_app.config['DEFAULT_IDS']).delete()
+        db.query(Room).delete()
+        db.query(MealPlan).delete()

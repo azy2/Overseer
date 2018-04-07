@@ -7,6 +7,9 @@ class TestLogin(SeleniumBaseTestCase):
 
     def test_resident_login(self):
         """ Tests whether residents can log in or not """
+        from ovs.datagen import DataGen
+        DataGen.create_defaults()
+
         self.browser.get(self.base_url)
         self.assertIn('Overseer', self.browser.title)
 
@@ -30,6 +33,9 @@ class TestLogin(SeleniumBaseTestCase):
 
     def test_manager_login(self):
         """ Tests whether managers can log in or not """
+        from ovs.datagen import DataGen
+        DataGen.create_defaults()
+
         self.browser.get(self.base_url)
         self.assertIn('Overseer', self.browser.title)
 

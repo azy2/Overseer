@@ -36,7 +36,7 @@ class TestManagerService(OVSBaseTestCase):
         from ovs.services.manager_service import ManagerService
 
         residents = ManagerService.get_all_residents()
-        self.assertEqual(len(residents), 3)
+        self.assertEqual(len(residents), 2)
 
     def test_get_all_packages_recipients_checkers(self):
         """ Tests get_all_packages_recipients_checkers are expected checkers """
