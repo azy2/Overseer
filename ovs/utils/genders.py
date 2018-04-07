@@ -11,3 +11,4 @@ class Gender:
 
     MALE = 'Male'
     FEMALE = 'Female'
+    UNSPECIFIED = 'Unspecified'
