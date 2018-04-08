@@ -22,7 +22,7 @@ def upgrade():
         sa.Column('phone_number', sa.CHAR(31)),
         sa.Column('preferred_email', sa.CHAR(255)),
         sa.Column('race', sa.CHAR(31)),
-        sa.Column('gender', sa.Enum('Male', 'Female')),
+        sa.Column('gender', sa.Enum('Male', 'Female', 'Unspecified'), nullable=False),
         sa.Column('picture_id', sa.CHAR(63)),
         sa.Column('created', sa.DateTime, server_default=sa.text('CURRENT_TIMESTAMP')),
         sa.Column('updated', sa.DateTime, server_default=sa.text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP')),

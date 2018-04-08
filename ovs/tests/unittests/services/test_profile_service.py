@@ -30,7 +30,7 @@ class TestProfileService(OVSBaseTestCase):
         self.assertEqual(profile.phone_number, None)
         self.assertEqual(profile.preferred_email, 'test@gmail.com')
         self.assertEqual(profile.race, None)
-        self.assertEqual(profile.gender, None)
+        self.assertEqual(profile.gender, 'Unspecified')
         self.assertIsNotNone(profile.picture_id)
 
         ProfileService.update_profile(self.test_user.id,

@@ -6,10 +6,12 @@ from flask import current_app
 from sqlalchemy import exc
 
 from ovs.models.user_model import User
-from ovs.models.resident_model import Resident
 from ovs.models.profile_model import Profile
+from ovs.models.resident_model import Resident
 from ovs.services.profile_picture_service import ProfilePictureService
 from ovs.services.meal_service import MealService
+from ovs.utils import genders
+
 
 db = current_app.extensions['database'].instance()
 
@@ -29,6 +31,7 @@ class ResidentService:
         new_resident_profile = Profile(new_user.id)
         new_resident_profile.preferred_name = new_user.first_name
         new_resident_profile.preferred_email = new_user.email
+        new_resident_profile.gender = genders.UNSPECIFIED
         ResidentService.set_default_picture(new_resident_profile.picture_id)
 
         db.add(new_resident)

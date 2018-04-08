@@ -279,7 +279,7 @@ def add_meals():
     /manager/meal_login serves an html form with input field pin
     and accepts that form (POST) and logs the use to a meal plan
     """
-    form = AddMealForm(csrf_enabled=False)
+    form = AddMealForm()
     user = UserService.get_user_by_id(current_user.get_id()).first()
     role = user.role
     if request.method == 'POST':
