@@ -19,18 +19,6 @@ class TestManagerService(OVSBaseTestCase):
         self.test_resident_2 = UserService.create_user('test2@gmail.com', 'Joe', 'Smith', 'RESIDENT')
         self.test_admin = UserService.create_user('test3@gmail.com', 'Jim', 'White', 'ADMIN')
 
-    def test_update_resident_room_number(self):
-        """ Tests that a resident's room number can be updated """
-        from ovs.services.manager_service import ManagerService
-        from ovs.services.room_service import RoomService
-        from ovs.models.resident_model import Resident
-
-        RoomService.create_room('1', 'Good', 'Single')
-
-        ManagerService.update_resident_room_number(self.test_resident_1.id, '1')
-        resident = self.db.query(Resident).filter(Resident.user_id == self.test_resident_1.id).first()
-        self.assertEqual(resident.room_number, '1')
-
     def test_get_all_residents(self):
         """ Tests that get_all_residents returns the correct number of residents"""
         from ovs.services.manager_service import ManagerService

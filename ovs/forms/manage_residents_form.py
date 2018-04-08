@@ -1,7 +1,7 @@
 """ Form with data required to edit a resident """
 from flask_wtf import FlaskForm
-from wtforms import StringField, ValidationError
-from wtforms.validators import DataRequired, Length
+from wtforms import  StringField, ValidationError
+from wtforms.validators import DataRequired, Length, Email
 from flask import current_app
 
 from ovs.models.resident_model import Resident
@@ -23,4 +23,7 @@ def validate_user_id(form, field):  # pylint: disable=unused-argument
 class ManageResidentsForm(FlaskForm):
     """ Form with data required to edit a resident """
     user_id = StringField('User id', validators=[DataRequired(), validate_user_id])
+    email = StringField('Email Address', validators=[Email(), DataRequired()])
+    first_name = StringField('First Name', validators=[Length(min=1, max=255), DataRequired()])
+    last_name = StringField('Last Name', validators=[Length(min=1, max=255), DataRequired()])
     room_number = StringField('Room Number', validators=[Length(min=1, max=255), DataRequired()])

@@ -2,6 +2,7 @@
 from flask import current_app
 
 from ovs.services import UserService
+from ovs.services import RoomService
 from ovs.models.user_model import User
 from ovs.models.resident_model import Resident
 from ovs.models.room_model import Room
@@ -28,15 +29,24 @@ class DataGen:
             current_app.config['DEFAULT_IDS'].add(user.id)
 
     @staticmethod
+    def create_default_room():
+        """ Creates default room if it doesn't exist """
+        room = RoomService.get_room_by_number('None').first()
+        if room is None:
+            RoomService.create_room('None', '', '')
+
+    @staticmethod
     def create_defaults():
         """ Populate the database with defaults """
         current_app.config['DEFAULT_IDS'] = set()
         DataGen.create_user(roles.ADMIN)
+        DataGen.create_default_room()
         if current_app.config['TESTING'] or current_app.config['DEVELOPMENT']:
             for user_role in [roles.RESIDENT, roles.RESIDENT_ADVISOR, roles.STAFF,
                               roles.OFFICE_MANAGER, roles.BUILDING_MANAGER]:
                 DataGen.create_user(user_role)
         db.commit()
+
 
     @staticmethod
     def clear_db():

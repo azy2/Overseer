@@ -1,9 +1,9 @@
 """
 DB and utility functions for Residents
 """
-from flask import current_app
-
 from sqlalchemy import exc
+
+from flask import current_app
 
 from ovs.models.user_model import User
 from ovs.models.profile_model import Profile
@@ -15,7 +15,6 @@ from ovs.utils import genders
 
 db = current_app.extensions['database'].instance()
 
-
 class ResidentService:
     """ DB and utility functions for Residents """
 
@@ -23,7 +22,7 @@ class ResidentService:
         pass
 
     @staticmethod
-    def create_resident(new_user, room_number=None):
+    def create_resident(new_user, room_number='None'):
         """
         Adds a User to the Resident table
         """
@@ -39,6 +38,32 @@ class ResidentService:
         db.commit()
 
         return new_resident
+
+    @staticmethod
+    def edit_resident(user_id, email, first_name, last_name, room_number):
+        """
+        Edits an existing resident
+        """
+        from ovs.services.user_service import UserService
+        success = UserService.edit_user(user_id, email, first_name, last_name)
+        if success:
+            success = ResidentService.update_resident_room_number(user_id, room_number) is not None
+        return success
+
+    @staticmethod
+    def delete_resident(user_id):
+        """
+        Deletes an existing resident
+        """
+        from ovs.services.profile_service import ProfileService
+        resident = ResidentService.get_resident_by_id(user_id).first()
+        if resident is None:
+            return False
+        success = ProfileService.delete_profile(user_id)
+        if success:
+            db.delete(resident)
+        return success
+
 
     @staticmethod
     def set_default_picture(picture_id):
@@ -69,6 +94,23 @@ class ResidentService:
         Returns the resident given by user_id
         """
         return db.query(Resident).filter(Resident.user_id == user_id)
+
+    @staticmethod
+    def update_resident_room_number(user_id, room_number):
+        """ Changes the room_number of Resident identified by user_id """
+        from ovs.services.room_service import RoomService
+        room = RoomService.get_room_by_number(room_number).first()
+        if room is None:
+            return None
+        # Todo: Catch specific exceptions for join and update
+        try:
+            db.query(Resident).filter(Resident.user_id == user_id).update({Resident.room_number: room_number})
+            db.commit()
+        except exc.SQLAlchemyError:
+            db.rollback()
+            return None
+
+        return ResidentService.get_resident_by_id(user_id).first()
 
     @staticmethod
     def get_resident_by_pin(pin):

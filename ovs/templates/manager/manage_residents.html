@@ -20,25 +20,44 @@
     </style>
 {% endblock %}
 {% block content %}
+    {% from "_formhelper.html" import field_inline %}
+    <div class="container mt-5" >
+        <h2>Register Resident</h2>
+        <div class="row card" >
+            <div class="card-body"
+                <div class="col" >
+                    <form method="post", name="Register Form">
+                        {{ register_form.csrf_token }}
+                        {{ field_inline(register_form.email) }}
+                        {{ field_inline(register_form.first_name) }}
+                        {{ field_inline(register_form.last_name) }}
+                        <input type="submit" value="Register Resident" name="register_btn">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="container mt-5" >
     <table>
         <tr>
-            <th>Email</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>{{form.room_number.label}}</th>
+            <th>{{edit_form.email.label}}</th>
+            <th>{{edit_form.first_name.label}}</th>
+            <th>{{edit_form.last_name.label}}</th>
+            <th>{{edit_form.room_number.label}}</th>
+            <th></th>
             <th></th>
         </tr>
 	{% for (resident, user) in residents %}
         <tr>
-            <form method="post" id="edit-resident-submit">
-                {{ form.csrf_token }}
-                {{form.user_id(value=user.id, type="hidden")|safe}}
-                <td>{{ user.email }}</td>
-                <td>{{ user.first_name }}</td>
-                <td>{{ user.last_name }}</td>
-                <td>{{form.room_number(value=resident.room_number)|safe}}</td>
-                <td><input type="submit" value="Update"></td>
+            <form method="post" name="Edit Form" id="edit-resident-submit">
+                {{ edit_form.csrf_token }}
+                {{ edit_form.user_id(value=user.id, type="hidden")      |safe }}
+                <td>{{ edit_form.email(value=user.email)                |safe }}</td>
+                <td>{{ edit_form.first_name(value=user.first_name)      |safe }}</td>
+                <td>{{ edit_form.last_name(value=user.last_name)        |safe }}</td>
+                <td>{{ edit_form.room_number(value=resident.room_number)|safe }}</td>
+                <td><input type="submit" value="Update Row" name="edit_btn"></td>
+                <td><input type="submit" value="Delete" name="delete_btn"></td>
             </form>
         </tr>
 	{% endfor %}
