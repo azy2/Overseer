@@ -9,12 +9,6 @@ from ovs.tests.selenium.selenium_base_test import SeleniumBaseTestCase
 class TestProfile(SeleniumBaseTestCase):
     """ Test whether profiles can be edited """
 
-    def set_text_field_by_id(self, field_id, new_text):
-        """ Sets the text in the given text field to the new text """
-        text_field = self.browser.find_element_by_id(field_id)
-        text_field.clear()
-        text_field.send_keys(new_text)
-
     def go_to_resident_profile_page(self):
         """ Runs the Selenium steps necessary to navigate to the edit profile page """
         from ovs.datagen import DataGen

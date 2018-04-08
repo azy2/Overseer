@@ -8,12 +8,6 @@ from ovs.tests.selenium.selenium_base_test import SeleniumBaseTestCase
 class TestRegisterRoom(SeleniumBaseTestCase):
     """ Test whether managers can be registered"""
 
-    def set_text_field_by_id(self, field_id, new_text):
-        """ Sets the text in the given text field to the new text """
-        text_field = self.browser.find_element_by_id(field_id)
-        text_field.clear()
-        text_field.send_keys(new_text)
-
     def test_register_room(self):
         """ Tests whether all fields can be edited in a register room page """
         from ovs.datagen import DataGen

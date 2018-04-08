@@ -26,10 +26,10 @@ class SeleniumBaseTestCase(OVSBaseTestCase):
         """ Closes selenium driver and OVSBaseTestCase clears the DB """
         # Take screenshot at end of every test because Python unittesting is deficient
         #  and has no non-hack way to detect a failed test case
-        test_screenshot_dir = 'Screenshots/' + type(self).__name__
+        test_screenshot_dir = 'ovs/tests/selenium/Screenshots/' + type(self).__name__
         if not os.path.exists(test_screenshot_dir):
             os.makedirs(test_screenshot_dir)
-        self.browser.save_screenshot(test_screenshot_dir + '/last-test-run-%s.png' % self._testMethodName)
+        self.browser.save_screenshot(test_screenshot_dir + '/%s-last-test-run.png' % self._testMethodName)
 
         super().tearDown()
 
@@ -40,3 +40,9 @@ class SeleniumBaseTestCase(OVSBaseTestCase):
         pass_box = self.browser.find_element_by_name('password')
         pass_box.send_keys(password)
         pass_box.send_keys(Keys.ENTER)
+
+    def set_text_field_by_id(self, field_id, new_text):
+        """ Sets the text in the given text field to the new text """
+        text_field = self.browser.find_element_by_id(field_id)
+        text_field.clear()
+        text_field.send_keys(new_text)
