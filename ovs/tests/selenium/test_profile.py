@@ -11,9 +11,6 @@ class TestProfile(SeleniumBaseTestCase):
 
     def go_to_resident_profile_page(self):
         """ Runs the Selenium steps necessary to navigate to the edit profile page """
-        from ovs.datagen import DataGen
-        DataGen.create_defaults()
-
         super().login_with_credentials('resident@gmail.com', 'abcd1234')
 
         # Click on account dropdown and go to Profile link

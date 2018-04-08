@@ -14,6 +14,8 @@ class SeleniumBaseTestCase(OVSBaseTestCase):
     def setUp(self):
         """ Creates a headless chrome instance for selenium and clears the DB """
         super().setUp()
+        from ovs.datagen import DataGen
+        DataGen.create_defaults()
 
         chrome_options = Options()
         chrome_options.add_argument("--headless")

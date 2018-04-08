@@ -10,9 +10,6 @@ class TestRegisterRoom(SeleniumBaseTestCase):
 
     def test_register_room(self):
         """ Tests whether all fields can be edited in a register room page """
-        from ovs.datagen import DataGen
-        DataGen.create_defaults()
-
         self.browser.get(self.base_url)
         self.assertIn('Overseer', self.browser.title)
 
@@ -49,7 +46,6 @@ class TestRegisterRoom(SeleniumBaseTestCase):
         wait.until(EC.invisibility_of_element_located((By.CLASS_NAME, 'close')))
 
         # Verify fields are empty and ready for new account registration
-
         self.assertEqual(self.browser.find_element_by_id('room_number').get_attribute('value'), '')
         self.assertEqual(self.browser.find_element_by_id('room_status').get_attribute('value'), '')
         self.assertEqual(self.browser.find_element_by_id('room_type').get_attribute('value'), '')

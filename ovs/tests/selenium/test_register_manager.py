@@ -10,9 +10,6 @@ class TestRegisterManager(SeleniumBaseTestCase):
 
     def test_register_manager(self):
         """ Tests whether all fields can be edited in a register manager page """
-        from ovs.datagen import DataGen
-        DataGen.create_defaults()
-
         self.browser.get(self.base_url)
         self.assertIn('Overseer', self.browser.title)
 
@@ -48,7 +45,6 @@ class TestRegisterManager(SeleniumBaseTestCase):
         wait.until(EC.invisibility_of_element_located((By.CLASS_NAME, 'close')))
 
         # Verify fields are empty and ready for new account registration
-
         self.assertEqual(self.browser.find_element_by_id('email').get_attribute('value'), '')
         self.assertEqual(self.browser.find_element_by_id('first_name').get_attribute('value'), '')
         self.assertEqual(self.browser.find_element_by_id('last_name').get_attribute('value'), '')
