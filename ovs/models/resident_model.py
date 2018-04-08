@@ -5,10 +5,10 @@ from flask import jsonify
 from sqlalchemy import Integer, Column, CHAR, text, DateTime
 from sqlalchemy.orm import relationship
 
-from ovs import app
+from ovs import BaseModel
 
 
-class Resident(app.BaseModel):
+class Resident(BaseModel):
     """
     Defines a Resident as represented in the database. Along with some utility functions.
     """
@@ -16,6 +16,7 @@ class Resident(app.BaseModel):
 
     user_id = Column(Integer, primary_key=True)
     room_number = Column(CHAR(255))
+    mealplan_pin = Column(Integer, autoincrement=True)
     created = Column(DateTime, server_default=text('CURRENT_TIMESTAMP'))
     updated = Column(DateTime, server_default=text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))
     profile = relationship('Profile', uselist=False, back_populates='resident', cascade='all, delete, delete-orphan')

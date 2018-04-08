@@ -1,8 +1,8 @@
 """ Form with data required to login for a meal"""
+from flask import current_app
 from flask_wtf import FlaskForm
 from wtforms import IntegerField, ValidationError
 from wtforms.validators import DataRequired
-from flask import current_app
 
 from ovs.models.meal_plan_model import MealPlan
 
@@ -18,6 +18,7 @@ def validate_meal_pin(form, field):  # pylint: disable=unused-argument
         raise ValidationError('Invalid Pin')
 
 
-class MealLoginForm(FlaskForm):
+class AddMealForm(FlaskForm):
     """ Form with data required to login for a meal"""
     pin = IntegerField('PIN', validators=[DataRequired(), validate_meal_pin])
+    number = IntegerField('Number', validators=[DataRequired()])

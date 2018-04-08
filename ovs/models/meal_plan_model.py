@@ -4,19 +4,19 @@ Defines a MealPlan as represented in the database
 from datetime import datetime, timedelta
 
 from flask import jsonify
-from sqlalchemy import Integer, Enum, Column, text, DateTime
+from sqlalchemy import Integer, Enum, Column, text, DateTime, Sequence
 
-from ovs import app
+from ovs import BaseModel
 
 
-class MealPlan(app.BaseModel):
+class MealPlan(BaseModel):
     """
     Defines a MealPlan as represented in the database. Along with some utility functions.
     """
     __tablename__ = 'mealplan'
 
-    id = Column(Integer, primary_key=True)
-    pin = Column(Integer, unique=True)
+    id = Column(Integer)
+    pin = Column(Integer, Sequence('meal_pin_seq'), primary_key=True, autoincrement=True)
     credits = Column(Integer, nullable=False)
     meal_plan = Column(Integer, nullable=False)
     reset_date = Column(DateTime, default=datetime.utcnow())
@@ -24,9 +24,8 @@ class MealPlan(app.BaseModel):
     created = Column(DateTime, server_default=text('CURRENT_TIMESTAMP'))
     updated = Column(DateTime, server_default=text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))
 
-    def __init__(self, pin, meal_plan, plan_type):
+    def __init__(self, meal_plan, plan_type):
         super(MealPlan, self).__init__(
-            pin=pin,
             credits=meal_plan,
             meal_plan=meal_plan,
             plan_type=plan_type)

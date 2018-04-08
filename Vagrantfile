@@ -21,7 +21,7 @@ Vagrant.configure("2") do |config|
     apt-get update
 
     echo "Installing system packages (this may take a while)"
-    apt-get -y -q install make g++ mysql-server-5.7
+    apt-get -y -q install make g++ mysql-server-5.7 chromium-browser
 
     echo "Configuring MySQL"
     mysql_ssl_rsa_setup --uid=mysql &>/dev/null

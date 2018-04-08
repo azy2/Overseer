@@ -1,11 +1,11 @@
 """ Form with data required to register a resident """
 from flask_wtf import FlaskForm
 from wtforms import StringField
-from wtforms.validators import DataRequired, Length
+from wtforms.validators import Email, DataRequired, Length
 
 
 class RegisterResidentForm(FlaskForm):
     """ Form with data required to register a resident """
-    email = StringField('Email Address', validators=[Length(min=6, max=35), DataRequired()])
+    email = StringField('Email Address', validators=[Email(), DataRequired()])
     first_name = StringField('First Name', validators=[Length(min=1, max=255), DataRequired()])
     last_name = StringField('Last Name', validators=[Length(min=1, max=255), DataRequired()])

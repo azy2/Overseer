@@ -1,13 +1,30 @@
 {% extends "base.html" %}
 {% block title %}Meals{% endblock %}
 {% block content %}
-    <div class="container mt-5" >
-        {% from "_formhelper.html" import field_inline %}
-        <form method="post">
-            <dl>
-                {{ field_inline(form.pin) }}
-            </dl>
-            <input type="submit" value="Login">
-        </form>
+    {% from "_formhelper.html" import field_inline %}
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-2">
+                <form method="post" action ="/manager/meal_login/">
+                    {{ form.csrf_token }}
+                    {{ field_inline(form.pin) }}
+                </form>
+                <br>
+                {% if submitted and success %}
+                    <form method="post" action="/manager/meal_undo/">
+                        {{ form.csrf_token }}
+                        <input type="submit" value="Undo" name="undo">
+                    </form>
+                {% endif %}
+            </div>
+            <div class="col-10">
+                <center><img id="profile_image" {% if submitted %}src="data:image/png;base64,{{ pict }}"{% else %}src="/static/default_profile.png"{% endif %} class="rounded img-thumbnail" height="200" width="200"></center>
+                {% if submitted and success %}
+                    <center><p>{{ current_meals }} of {{ max_meals }} meals remaining.</p></center>
+                {% elif submitted and not success %}
+                    <center><p style="color: red;">No meals remaining</p></center>
+                {% endif %}
+            </div>
+        </div>
     </div>
 {% endblock %}

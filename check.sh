@@ -2,24 +2,25 @@
 
 function usage() {
     echo 'Usage ./check.sh [-p|pylint] [-u|unittests] [-s|selenium] [-a|all]'
+    return 0
 }
 
 function run_pylint() {
     echo '========================= pylint ========================='
     pylint --rcfile=./pylintrc ovs
+    return $?
 }
 
 function run_unittests() {
     echo '======================== unittests ========================'
     nose2 -s ovs/tests/unittests
+    return $?
 }
 
 function run_selenium() {
     echo '======================== selenium ========================='
-    (FLASK_APP=main.py APP_ENV=TEST flask run --port=5000 --host=localhost > /dev/null 2>&1) &
-    PID=$!
     PATH=.:$PATH nose2 -s ovs/tests/selenium
-    kill $PID
+    return $?
 }
 
 if [ $# == 0 ]; then
@@ -30,20 +31,25 @@ while [ "$1" != "" ]; do
     case $1 in
         -u|unittests)
             run_unittests
+            exit $?
             ;;
         -p|pylint)
             run_pylint
+            exit $?
             ;;
         -s|selenium)
             run_selenium
+            exit $?
             ;;
         -a|all)
-            run_pylint
-            run_unittests
+            run_pylint &&
+            run_unittests &&
             run_selenium
+            exit $?
             ;;
         *)
             usage
     esac
     shift
 done
+

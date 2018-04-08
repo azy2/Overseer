@@ -6,3 +6,4 @@ __pycache__
 .vscode/
 ovs/data/test
 ovs/data/test/*
+ovs/tests/selenium/Screenshots

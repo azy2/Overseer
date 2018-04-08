@@ -2,10 +2,9 @@
 import base64
 import imghdr
 
-from flask import Blueprint, redirect, render_template, request, url_for, flash
+from flask import Blueprint, redirect, render_template, request, url_for, flash, current_app
 from flask_login import current_user, login_required
 
-from ovs import app
 from ovs.forms.edit_resident_profile_form import EditResidentProfileForm
 from ovs.forms.upload_profile_picture_form import UploadProfilePictureForm
 from ovs.services.profile_service import ProfileService
@@ -15,7 +14,7 @@ from ovs.middleware import permissions
 from ovs.utils import roles
 
 residents_bp = Blueprint('resident', __name__)
-db = app.database.instance()
+db = current_app.extensions['database'].instance()
 
 
 @residents_bp.route('/')
@@ -41,8 +40,8 @@ def edit_profile():
     if profile is None:
         return 'Could not find profile information for user with id: ' + resident_id
 
-    profile_form = EditResidentProfileForm(obj=profile, csrf_enabled=False)
-    picture_form = UploadProfilePictureForm(csrf_enabled=False)
+    profile_form = EditResidentProfileForm(obj=profile)
+    picture_form = UploadProfilePictureForm()
 
     if request.method == 'POST':
         if profile_form.validate():
@@ -71,7 +70,8 @@ def edit_profile():
                 flash('Unknown error', 'error')
                 return redirect(url_for('resident.edit_profile'))
         else:
-            return str(profile_form.errors)
+            flash('Invalid input', 'error')
+            return redirect(url_for('resident.edit_profile'))
     else:
         pict = base64.b64encode(ProfilePictureService.get_profile_picture(profile.picture_id)).decode()
         return render_template('resident/profile.html', role=roles.RESIDENT, profile=profile, pict=pict,

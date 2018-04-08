@@ -1,9 +1,9 @@
 """ DB and utility functions for Packages """
-from ovs import app
+from flask import current_app
 from ovs.models.package_model import Package
 from ovs.services.user_service import UserService
 
-db = app.database.instance()
+db = current_app.extensions['database'].instance()
 
 
 class PackageService:

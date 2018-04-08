@@ -1,15 +1,14 @@
 """ DB and utility functions for Users """
 from sqlalchemy import exc
 
-from ovs import app
+from flask import current_app
 from ovs.models.user_model import User
 from ovs.services.mail_service import MailService
-from ovs.services.meal_service import MealService
 from ovs.services.resident_service import ResidentService
 from ovs.utils import crypto
 from ovs.mail import templates
 
-db = app.database.instance()
+db = current_app.extensions['database'].instance()
 
 
 class UserService:
@@ -43,6 +42,45 @@ class UserService:
         if role == 'RESIDENT':
             ResidentService.create_resident(new_user)
 
+        UserService.send_setup_email(email, first_name, last_name, role, password)
+
+        return new_user
+
+    @staticmethod
+    def edit_user(user_id, email, first_name, last_name):
+        """
+        Edits user with user_id with new information
+        """
+        user = UserService.get_user_by_id(user_id).first()
+        if user is None: #Error : bad user_id
+            return False
+
+        email_user = UserService.get_user_by_email(email).first()
+        if email_user is None or email_user == user: #We don't want to overwrite somebody else
+            user.update(email, first_name, last_name)
+            db.commit()
+            return True
+        return False
+
+    @staticmethod
+    def delete_user(user_id):
+        """
+        Deletes existing user
+        """
+        user = UserService.get_user_by_id(user_id).first()
+        if user is None:
+            return False
+        if user.role == 'RESIDENT':
+            ResidentService.delete_resident(user_id)
+        db.delete(user)
+        db.commit()
+        return True
+
+    @staticmethod
+    def send_setup_email(email, first_name, last_name, role, password):
+        """
+        Sends setup email to a provided user
+        """
         user_info_substitution = {
             "first_name": first_name,
             "last_name": last_name,
@@ -52,8 +90,6 @@ class UserService:
         MailService.send_email(email, 'User Account Creation',
                                templates['user_creation_email'],
                                substitutions=user_info_substitution)
-
-        return new_user
 
     @staticmethod
     def get_user_by_email(email):
@@ -70,16 +106,3 @@ class UserService:
         Gets a user by their id
         """
         return db.query(User).filter(User.id == user_id)
-
-    @staticmethod
-    def create_meal_plan_for_user_by_email(pin, meal_plan, plan_type, email):  # pylint: disable=unused-argument
-        """
-        Adds a new meal plan to the DB
-        :param email: User to link to, TODO:implement
-        :param pin: The plan's pin
-        :param meal_plan: The plan's maximum credit count
-        :param plan_type: The plan's reset period
-        :return: True for success, False for failure
-        """
-        valid = MealService.create_meal_plan(pin, meal_plan, plan_type)
-        return valid

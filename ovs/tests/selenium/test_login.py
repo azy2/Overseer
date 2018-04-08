@@ -1,65 +1,56 @@
 """ Test whether users can log in """
-from unittest import TestCase
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.keys import Keys
-from ovs import app
-from ovs import DataGen
+from flask import current_app
 
+from ovs.tests.selenium.selenium_base_test import SeleniumBaseTestCase
 
-class TestLogin(TestCase):
+class TestLogin(SeleniumBaseTestCase):
     """ Test whether users can log in """
-
-    def setUp(self):
-        """ Creates a headless chrome instance for selenium and clears the DB """
-        chrome_options = Options()
-        chrome_options.add_argument("--headless")
-        self.browser = webdriver.Chrome(chrome_options=chrome_options)
-        self.browser.implicitly_wait(1)
-        self.base_url = 'http://localhost:5000'
-        DataGen.clear_db()
-        DataGen.create_defaults()
-
-    def tearDown(self):
-        """ Closes selenium driver and clears the DB """
-        self.browser.quit()
-        DataGen.clear_db()
 
     def test_resident_login(self):
         """ Tests whether residents can log in or not """
         self.browser.get(self.base_url)
         self.assertIn('Overseer', self.browser.title)
 
-        name_box = self.browser.find_element_by_name('email')
-        name_box.send_keys("resident@gmail.com")
-        pass_box = self.browser.find_element_by_name('password')
-        pass_box.send_keys('abcd1234')
-        pass_box.send_keys(Keys.ENTER)
+        default_resident_email = current_app.config['RESIDENT']['email']
+        default_resident_password = current_app.config['RESIDENT']['password']
+        super().login_with_credentials(default_resident_email, default_resident_password)
 
-        self.assertIn('John', self.browser.title)
+        # Should be at resident greeting page
+        default_resident_name = current_app.config['RESIDENT']['first_name']
+        self.assertIn(default_resident_name, self.browser.title)
+
+    def test_resident_logout(self):
+        """ Tests whether residents can log out or not """
+        self.test_resident_login()
+
+        # Open dropdown with logout link option
+        account_dropdown = self.browser.find_element_by_id('accountDropdown')
+        account_dropdown.click()
+        logout_link = self.browser.find_element_by_link_text('Logout')
+        logout_link.click()
+
+        # Should be back at Overseer home page
+        self.assertIn('Overseer', self.browser.title)
 
     def test_manager_login(self):
         """ Tests whether managers can log in or not """
         self.browser.get(self.base_url)
         self.assertIn('Overseer', self.browser.title)
 
-        name_box = self.browser.find_element_by_name('email')
-        name_box.send_keys('admin@gmail.com')
-        pass_box = self.browser.find_element_by_name('password')
-        pass_box.send_keys('abcd1234')
-        pass_box.send_keys(Keys.ENTER)
+        default_admin_email = current_app.config['ADMIN']['email']
+        default_admin_password = current_app.config['ADMIN']['password']
+        super().login_with_credentials(default_admin_email, default_admin_password)
 
-        self.assertIn(app.config['ADMIN']['first_name'], self.browser.title)
+        # Should be at manager greeting page
+        default_admin_name = current_app.config['ADMIN']['first_name']
+        self.assertIn(default_admin_name, self.browser.title)
 
     def test_bad_login(self):
-        """ Tests whether a random email  can log in or not """
+        """ Tests whether a random email can log in or not """
         self.browser.get(self.base_url)
         self.assertIn('Overseer', self.browser.title)
 
-        name_box = self.browser.find_element_by_name('email')
-        name_box.send_keys('testtesttest@gmail.com')
-        pass_box = self.browser.find_element_by_name('password')
-        pass_box.send_keys('abcd1234')
-        pass_box.send_keys(Keys.ENTER)
+        super().login_with_credentials('testtesttest@gmail.com', 'password_goes_here')
 
+        # Page should not have changed
         self.assertEqual('Overseer', self.browser.title)
