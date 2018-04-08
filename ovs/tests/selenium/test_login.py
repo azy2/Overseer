@@ -1,4 +1,6 @@
 """ Test whether users can log in """
+from flask import current_app
+
 from ovs.tests.selenium.selenium_base_test import SeleniumBaseTestCase
 
 class TestLogin(SeleniumBaseTestCase):
