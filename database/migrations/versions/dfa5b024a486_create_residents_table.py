@@ -21,6 +21,7 @@ def upgrade():
         'residents',
         sa.Column('user_id', sa.Integer, primary_key=True),
         sa.Column('room_number', sa.CHAR(255)),
+        sa.Column('mealplan_pin', sa.Integer, autoincrement=True),
         sa.Column('created', sa.DateTime, server_default=sa.text('CURRENT_TIMESTAMP')),
         sa.Column('updated', sa.DateTime, server_default=sa.text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP')),
     )
