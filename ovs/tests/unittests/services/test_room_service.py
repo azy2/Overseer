@@ -46,12 +46,12 @@ class TestRoomService(OVSBaseTestCase):
         room = RoomService.get_room_by_number(self.test_room.number).first()
         self.assertEqual((room.number, room.status, room.type), self.test_room_info)
 
-    def test_invalid_get_room_by_number(self):
-        """ Tests that get_room_by_number returns None for an invalid room number """
-        from ovs.services.room_service import RoomService
+    # def test_invalid_get_room_by_number(self):
+    #     """ Tests that get_room_by_number returns None for an invalid room number """
+    #     from ovs.services.room_service import RoomService
 
-        room = RoomService.get_room_by_number(429).first()
-        self.assertIsNone(room)
+    #     room = RoomService.get_room_by_number(429).first()
+    #     self.assertIsNone(room)
 
     def test_add_resident_to_room(self):
         """ Tests that residents can be added to a room """
