@@ -1,4 +1,5 @@
 """ Test whether users can log in """
+from flask import current_app
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -13,7 +14,9 @@ class TestRegisterRoom(SeleniumBaseTestCase):
         self.browser.get(self.base_url)
         self.assertIn('Overseer', self.browser.title)
 
-        super().login_with_credentials('admin@gmail.com', 'abcd1234')
+        default_admin_email = current_app.config['ADMIN']['email']
+        default_admin_password = current_app.config['ADMIN']['password']
+        super().login_with_credentials(default_admin_email, default_admin_password)
 
         # Click on Register Manager
         register_manager = self.browser.find_element_by_link_text('Register a Room')

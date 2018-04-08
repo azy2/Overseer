@@ -1,5 +1,6 @@
 """ Test whether profiles can be edited """
 import os
+from flask import current_app
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -10,8 +11,10 @@ class TestProfile(SeleniumBaseTestCase):
     """ Test whether profiles can be edited """
 
     def go_to_resident_profile_page(self):
-        """ Runs the Selenium steps necessary to navigate to the edit profile page """
-        super().login_with_credentials('resident@gmail.com', 'abcd1234')
+        """ Runs the Selenium steps necessary to navigate to the edit resident profile page """
+        default_resident_email = current_app.config['RESIDENT']['email']
+        default_resident_password = current_app.config['RESIDENT']['password']
+        super().login_with_credentials(default_resident_email, default_resident_password)
 
         # Click on account dropdown and go to Profile link
         account_dropdown = self.browser.find_element_by_id('accountDropdown')
