@@ -70,7 +70,8 @@ def edit_profile():
                 flash('Unknown error', 'error')
                 return redirect(url_for('resident.edit_profile'))
         else:
-            return str(profile_form.errors)
+            flash('Invalid input', 'error')
+            return redirect(url_for('resident.edit_profile'))
     else:
         pict = base64.b64encode(ProfilePictureService.get_profile_picture(profile.picture_id)).decode()
         return render_template('resident/profile.html', role=roles.RESIDENT, profile=profile, pict=pict,
