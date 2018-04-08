@@ -33,8 +33,6 @@ class TestMealPlanModel(OVSBaseTestCase):
 
     def test_use_meal_no_credits(self):
         """ Tests use_meal fails when no credits are available """
-        from ovs.services.meal_service import MealService
-
         # Test flaky if reset_date is between the first call and last call to use_meal
         for _ in range(self.test_meal_plan.meal_plan):
             self.assertTrue(self.test_meal_plan.update_meal_count())

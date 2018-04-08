@@ -1,7 +1,6 @@
 """
 DB and utility functions for Meals
 """
-from datetime import datetime
 
 from flask import current_app
 
