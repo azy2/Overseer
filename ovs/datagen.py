@@ -41,18 +41,19 @@ class DataGen:
     @staticmethod
     def clear_db():
         """ Empty the DB for tests """
-        db.query(Profile).delete()
-        db.query(User).delete()
-        db.query(Resident).delete()
-        db.query(Room).delete()
-        db.query(MealPlan).delete()
+        profile = db.query(Profile)
+        if profile:
+            profile.delete()
+        user = db.query(User)
+        if user:
+            user.delete()
+        resident = db.query(Resident)
+        if resident:
+            resident.delete()
+        room = db.query(Room)
+        if room:
+            room.delete()
+        mealplan = db.query(MealPlan)
+        if mealplan:
+            mealplan.delete()
         db.commit()
-
-    @staticmethod
-    def clear_db_except_defaults():
-        """ Empty the DB except for the default users """
-        db.query(Profile).filter(Profile.user_id not in current_app.config['DEFAULT_IDS']).delete()
-        db.query(User).filter(User.id not in current_app.config['DEFAULT_IDS']).delete()
-        db.query(Resident).filter(Resident.user_id not in current_app.config['DEFAULT_IDS']).delete()
-        db.query(Room).delete()
-        db.query(MealPlan).delete()
