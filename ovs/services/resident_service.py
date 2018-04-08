@@ -1,17 +1,15 @@
 """
 DB and utility functions for Residents
 """
+from flask import current_app
 from sqlalchemy import exc
 
-from flask import current_app
-
-from ovs.models.user_model import User
 from ovs.models.profile_model import Profile
 from ovs.models.resident_model import Resident
-from ovs.services.profile_picture_service import ProfilePictureService
+from ovs.models.user_model import User
 from ovs.services.meal_service import MealService
+from ovs.services.profile_picture_service import ProfilePictureService
 from ovs.utils import genders
-
 
 db = current_app.extensions['database'].instance()
 
@@ -157,3 +155,12 @@ class ResidentService:
             return None
 
         return meal_plan
+
+    @staticmethod
+    def get_all_residents():
+        """
+        Join based on user_id
+        :return: Lists of residents, users tuples
+        :rtype: [(Resident(...), User(...)), ...]
+        """
+        return db.query(Resident, User).join(User, Resident.user_id == User.id).all()
