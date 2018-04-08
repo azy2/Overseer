@@ -23,7 +23,7 @@ class Database:
         self._engine = create_engine(url, pool_size=database['pool']['size'],
                                      pool_timeout=
                                      database['pool']['idleTimeout'])
-        self._db = sessionmaker(bind=self._engine)()
+        self._db = sessionmaker(bind=self._engine, expire_on_commit=False)()
 
     def __del__(self):
         self._db.close()
