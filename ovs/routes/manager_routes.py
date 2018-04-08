@@ -1,5 +1,6 @@
 """ Routes under /manager/ """
 import datetime
+import base64
 
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import current_user, login_required
@@ -12,6 +13,7 @@ from ovs.services.package_service import PackageService
 from ovs.services.room_service import RoomService
 from ovs.services.user_service import UserService
 from ovs.services.resident_service import ResidentService
+from ovs.services.profile_picture_service import ProfilePictureService
 from ovs.middleware import permissions
 from ovs.utils import roles
 from ovs.utils import log_types
@@ -185,35 +187,28 @@ def meal_login():
     user_id = current_user.get_id()
     user = UserService.get_user_by_id(user_id).first()
     role = user.role
+
     if request.method == 'POST':
         # Valid Form
         if form.validate():
             mealplan = MealService.get_meal_plan_by_pin(form.pin.data)
-            if mealplan is None:
-                # Should not hit here. Form validator should have already caught this.
-                flash('PIN is not valid.', 'error')
-                return redirect(url_for('manager.meal_login'))
+            success = MealService.use_meal(form.pin.data, user_id)
+
             resident = ResidentService.get_resident_by_pin(mealplan.pin)
-            if resident is None:
-                flash('Meal plan login unsuccessful. There is no resident associated with this PIN.', 'error')
-                return redirect(url_for('manager.meal_login'))
-            # Update meal plan
-            update_successful = MealService.update_meal_count(mealplan)
-            message = ('%s has %d out of %d meals remaining.' % (resident.profile.preferred_name,
-                                                                 mealplan.credits,
-                                                                 mealplan.meal_plan))
-            if update_successful:
-                MealService.log_meal_use(resident.user_id, mealplan.pin, user_id)
-                flash('Meal plan login successful! ' + message, 'message')
-            else:
-                flash('Meal plan login unsuccessful. ' + message, 'error')
-            return redirect(url_for('manager.meal_login'))
+            profile = resident.profile
+            pict = base64.b64encode(ProfilePictureService.get_profile_picture(profile.picture_id)).decode()
+            name = resident.profile.preferred_name
+            current_meals = mealplan.credits
+            max_meals = mealplan.meal_plan
+            return render_template('manager/meal_login.html', role=role, user=user, form=form,
+                                   pict=pict, name=name, current_meals=current_meals, max_meals=max_meals
+                                   , success=success)
 
         # Invalid form
         else:
-            return render_template('manager/meal_login.html', role=role, user=user, form=form)
+            return render_template('manager/meal_login.html', role=role, user=user, form=form, name=None)
     else:
-        return render_template('manager/meal_login.html', role=role, user=user, form=form)
+        return render_template('manager/meal_login.html', role=role, user=user, form=form, name=None)
 
 
 @manager_bp.route('/meal_undo', methods=['POST'])
@@ -224,20 +219,31 @@ def meal_undo():
     /manager/meal_undo accepts that form (POST) and undo the use of a meal plan
     Currently uses manager id to distinguish frontends. Should use session token.
     """
+    form = MealLoginForm()
     user_id = current_user.get_id()
+    user = UserService.get_user_by_id(user_id).first()
+    role = user.role
 
     if request.method == 'POST':
         meal_log = MealService.get_last_log(user_id)
 
         if meal_log is None or meal_log.log_type == log_types.UNDO:
-            flash('Undo invalid for current manager', 'error')
+            flash('Undo invalid', 'error')
             return redirect(url_for('manager.meal_login'))
-
-        if MealService.undo_meal_use(user_id, meal_log.resident_id, meal_log.mealplan_pin):
-            flash('Undo successfully', 'message')
-        else:
+        success = MealService.undo_meal_use(user_id, meal_log.resident_id, meal_log.mealplan_pin)
+        if not success:
             flash('Undo unsuccessfully', 'error')
-        return redirect(url_for('manager.meal_login'))
+
+        resident = ResidentService.get_resident_by_id(meal_log.resident_id).first()
+        mealplan = MealService.get_meal_plan_by_pin(meal_log.mealplan_pin)
+        profile = resident.profile
+        pict = base64.b64encode(ProfilePictureService.get_profile_picture(profile.picture_id)).decode()
+        name = resident.profile.preferred_name
+        current_meals = mealplan.credits
+        max_meals = mealplan.meal_plan
+        
+        return render_template('manager/meal_login.html', role=role, user=user, form=form,
+                               pict=pict, name=name, current_meals=current_meals, max_meals=max_meals)
     else:
         return redirect(url_for('manager.meal_login'))
 
