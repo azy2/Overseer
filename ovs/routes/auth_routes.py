@@ -20,10 +20,10 @@ def login():
         password = form.password.data
         user = UserService.get_user_by_email(email).one_or_none()
         if user is None:
-            flash('Invalid Email.', 'error')
+            flash('Invalid email or password.', 'error')
             return redirect(url_for('/.landing_page'))
         elif not AuthService.verify_auth(user, password):
-            flash('Invalid password.', 'error')
+            flash('Invalid email or password.', 'error')
             return redirect(url_for('/.landing_page'))
         login_user(user)
         if user.role == UserRole.RESIDENT:
@@ -31,7 +31,8 @@ def login():
         else:
             return redirect(url_for('manager.landing_page'))
     else:
-        return str(form.errors)
+        flash('Invalid email or password.', 'error')
+        return redirect(url_for('/.landing_page'))
 
 
 @auth_bp.route('/logout')

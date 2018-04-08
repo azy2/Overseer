@@ -55,7 +55,8 @@ def register_room():
             flash('Residents added to rooms successfully!', 'message')
             return redirect(url_for('manager.register_room'))
         else:
-            return str(form.errors)
+            flash('Input invalid', 'error')
+            return redirect(url_for('manager.register_room'))
     else:
         user = UserService.get_user_by_id(current_user.get_id()).first()
         role = user.role
@@ -114,8 +115,8 @@ def manage_residents():
                 flash('Resident room number does not exist or User ID wrong!', 'error')
             return redirect(url_for('manager.manage_residents'))
         else:
-            # Todo: display form validation errors on html form fields
-            return str(form.errors)
+            flash('Input invalid', 'error')
+            return redirect(url_for('manager.manage_residents'))
     else:
         return render_template('manager/manage_residents.html', role=role, user=user,
                                residents=ManagerService.get_all_residents(), form=form)
@@ -167,7 +168,8 @@ def manage_packages():
 
             # Should not reach here
             else:
-                return str(add_form.errors) + "\n-----\n" + str(edit_form.errors)
+                flash(str(add_form.errors) + "\n-----\n" + str(edit_form.errors), 'error')
+                return redirect(url_for('manager.manage_packages'))
 
     else:
         return render_template('manager/manage_packages.html', role=role, user=user,
