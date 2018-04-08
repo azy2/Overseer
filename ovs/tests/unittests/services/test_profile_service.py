@@ -3,6 +3,7 @@ Tests for profile services
 """
 from ovs.tests.unittests.base_test import OVSBaseTestCase
 
+
 class TestProfileService(OVSBaseTestCase):
     """
     Tests for profile services
@@ -16,8 +17,10 @@ class TestProfileService(OVSBaseTestCase):
         super().setUp()
         test_user_info = ('test@gmail.com', 'Bob', 'Smith', 'RESIDENT')
         UserService.create_user(*test_user_info)
-        self.test_user = UserService.get_user_by_email('test@gmail.com').first()
-        self.test_resident = ResidentService.get_resident_by_id(self.test_user.id).first()
+        self.test_user = UserService.get_user_by_email(
+            'test@gmail.com').first()
+        self.test_resident = ResidentService.get_resident_by_id(
+            self.test_user.id).first()
 
     def test_update_profile(self):
         """ Tests that profiles can be updated """
@@ -49,14 +52,14 @@ class TestProfileService(OVSBaseTestCase):
     def test_delete_profile(self):
         """ Tests that profiles can be deleted """
         from ovs.services.profile_service import ProfileService
-        #from ovs.models.profile_model import Profile
+        from ovs.models.profile_model import Profile
 
-        #expected = self.db.query(Profile).count()-1
-        expected = 0
-        self.assertTrue(ProfileService.delete_profile(self.test_user.id)) #method returns success
+        expected = self.db.query(Profile).count() - 1
+
+        # check if deletion successful
+        self.assertTrue(ProfileService.delete_profile(self.test_user.id))
 
         self.assertEqual(len(ProfileService.get_all_profiles()), expected)
-        #self.assertEqual(self.db.query(Profile).count(), expected)
 
     def test_delete_profile_null(self):
         """ Tests that nothing breaks when deleting a nonexistant profile """
@@ -64,11 +67,17 @@ class TestProfileService(OVSBaseTestCase):
         from ovs.models.profile_model import Profile
 
         expected = self.db.query(Profile).count()
-        self.assertFalse(ProfileService.delete_profile(self.test_user.id + 3)) #This random id is NOT the resident
+
+        # This id is NOT the resident
+        self.assertFalse(ProfileService.delete_profile(self.test_user.id + 1))
 
         self.assertEqual(self.db.query(Profile).count(), expected)
 
     def test_get_all_profiles(self):
         """ Tests that get_all_profiles returns the correct number of profiles """
         from ovs.services.profile_service import ProfileService
-        self.assertEqual(len(ProfileService.get_all_profiles()), 1)
+        from ovs.models.profile_model import Profile
+
+        expected = self.db.query(Profile).count()
+
+        self.assertEqual(len(ProfileService.get_all_profiles()), expected)
