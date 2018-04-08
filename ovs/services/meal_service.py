@@ -34,6 +34,26 @@ class MealService:
         return new_plan
 
     @staticmethod
+    def use_meal(pin, manager_id):
+        """
+        Uses a meal with given pin and logs it
+        :param pin: PIN for the given resident's mealplan
+        :param manager_id: id for the manager logging the resident's usage of a meal
+        """
+        from ovs.services.resident_service import ResidentService
+
+        mealplan = MealService.get_meal_plan_by_pin(pin)
+        if mealplan is None:
+            return False
+        resident = ResidentService.get_resident_by_pin(pin)
+        if resident is None:
+            return False
+        update = MealService.update_meal_count(mealplan)
+        if update:
+            MealService.log_meal_use(resident.user_id, mealplan.pin, manager_id)
+        return update
+
+    @staticmethod
     def add_meals(pin, number):
         """
         Add numbers of meal credits
@@ -62,13 +82,7 @@ class MealService:
         :return: whether a credit was available
         :rtype: bool
         """
-        if meal_plan.reset_date is None or datetime.utcnow() > meal_plan.reset_date:
-            meal_plan.reset_date = meal_plan.get_next_reset_date()
-            meal_plan.credits = meal_plan.meal_plan
-        was_updated = False
-        if meal_plan.credits > 0:
-            meal_plan.credits -= 1
-            was_updated = True
+        was_updated = meal_plan.update_meal_count()
         db.commit()
         return was_updated
 

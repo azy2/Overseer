@@ -31,6 +31,18 @@ class TestMealPlanModel(OVSBaseTestCase):
         # Add 1 minute to the reset time to avoid any flaky tests right around the reset period
         self.assertTrue(datetime.utcnow() < self.test_meal_plan.reset_date.replace(minute=1))
 
+    def test_use_meal_no_credits(self):
+        """ Tests use_meal fails when no credits are available """
+        from ovs.services.meal_service import MealService
+
+        # Test flaky if reset_date is between the first call and last call to use_meal
+        for _ in range(self.test_meal_plan.meal_plan):
+            self.assertTrue(self.test_meal_plan.update_meal_count())
+
+        # Account should have no credits and future use_meal calls should fail
+        self.assertEqual(0, self.test_meal_plan.credits)
+        self.assertFalse(self.test_meal_plan.update_meal_count())
+
     def test_get_next_reset_date_weekly(self):
         """ Tests get_next_reset_date for WEEKLY plan_type """
         self.assertEqual(self.test_meal_plan.get_next_reset_date().weekday(), 0)  # Is it a Monday?
