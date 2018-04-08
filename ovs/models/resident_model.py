@@ -16,6 +16,7 @@ class Resident(BaseModel):
 
     user_id = Column(Integer, primary_key=True)
     room_number = Column(CHAR(255))
+    mealplan_pin = Column(Integer, autoincrement=True)
     created = Column(DateTime, server_default=text('CURRENT_TIMESTAMP'))
     updated = Column(DateTime, server_default=text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))
     profile = relationship('Profile', uselist=False, back_populates='resident', cascade='all, delete, delete-orphan')

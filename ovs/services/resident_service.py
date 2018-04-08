@@ -2,10 +2,16 @@
 DB and utility functions for Residents
 """
 from flask import current_app
+
+from sqlalchemy import exc
+
+from ovs.models.user_model import User
 from ovs.models.profile_model import Profile
-from ovs.services.profile_picture_service import ProfilePictureService
 from ovs.models.resident_model import Resident
+from ovs.services.profile_picture_service import ProfilePictureService
+from ovs.services.meal_service import MealService
 from ovs.utils import genders
+
 
 db = current_app.extensions['database'].instance()
 
@@ -46,8 +52,66 @@ class ResidentService:
         ProfilePictureService.create_profile_picture(picture_id, file_bytes)
 
     @staticmethod
+    def get_resident_by_email(email):
+        """
+        Gets a user by their email
+        :param email: The email of the user
+        :return: The db entry of that user
+        """
+        user_resident = db.query(User, Resident).join(Resident, User.id == Resident.user_id).filter(User.email == email)
+        if user_resident is None:
+            return None
+        return user_resident.first()[1]
+
+    @staticmethod
     def get_resident_by_id(user_id):
         """
         Returns the resident given by user_id
         """
         return db.query(Resident).filter(Resident.user_id == user_id)
+
+    @staticmethod
+    def get_resident_by_pin(pin):
+        """
+        Returns the resident given pin
+        """
+        return db.query(Resident).filter(Resident.mealplan_pin == pin).first()
+
+    @staticmethod
+    def set_resident_pin(user_id, new_pin):
+        """
+        Returns the resident given by user_id
+        """
+        try:
+            db.query(Resident).filter(Resident.user_id == user_id).update({Resident.mealplan_pin: new_pin})
+            db.commit()
+        except exc.SQLAlchemyError:
+            db.rollback()
+            return False
+        return True
+
+    @staticmethod
+    def create_meal_plan_for_resident_by_email(meal_plan, plan_type, email):  # pylint: disable=unused-argument
+        """
+        Adds a new meal plan to the DB
+        :param email: User to link to, TODO:implement
+        :param pin: The plan's pin
+        :param meal_plan: The plan's maximum credit count
+        :param plan_type: The plan's reset period
+        :return: True for success, False for failure
+        """
+        # Verify resident exists
+        resident = ResidentService.get_resident_by_email(email)
+        if resident is None:
+            return None
+
+        # Create mealplan
+        meal_plan = MealService.create_meal_plan(meal_plan, plan_type)
+        try:
+            resident.mealplan_pin = meal_plan.pin
+            db.commit()
+        except exc.SQLAlchemyError:
+            db.rollback()
+            return None
+
+        return meal_plan
