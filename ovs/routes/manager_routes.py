@@ -107,7 +107,8 @@ def manage_residents():
                 flash('Residents not successfully registered! Email already exists!', 'error')
         else:
             flash('Input invalid', 'error')
-            return redirect(url_for('manager.manage_residents'))
+
+        return redirect(url_for('manager.manage_residents'))
     else:
         return render_template('manager/manage_residents.html', role=role, user=user,
                                residents=ManagerService.get_all_residents(),
