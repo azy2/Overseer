@@ -1,18 +1,22 @@
 """ Routes under /manager/ """
 import datetime
+import base64
 
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import current_user, login_required
 
 from ovs.forms import RegisterRoomForm, RegisterResidentForm, ManageResidentsForm, \
-    AddPackageForm, EditPackageForm, MealLoginForm, CreateMealPlanForm
+    AddPackageForm, EditPackageForm, MealLoginForm, CreateMealPlanForm, AddMealForm
 from ovs.services.manager_service import ManagerService
 from ovs.services.meal_service import MealService
 from ovs.services.package_service import PackageService
 from ovs.services.room_service import RoomService
 from ovs.services.user_service import UserService
+from ovs.services.resident_service import ResidentService
+from ovs.services.profile_picture_service import ProfilePictureService
 from ovs.middleware import permissions
 from ovs.utils import roles
+from ovs.utils import log_types
 
 manager_bp = Blueprint('manager', __name__, )
 
@@ -180,20 +184,68 @@ def meal_login():
     and accepts that form (POST) and logs the use to a meal plan
     """
     form = MealLoginForm()
+    user_id = current_user.get_id()
+    user = UserService.get_user_by_id(user_id).first()
+    role = user.role
+
     if request.method == 'POST':
+        # Valid Form
         if form.validate():
-            MealService.use_meal(form.pin.data)
-            user_plan = MealService.get_meal_plan_by_pin(form.pin.data)
-            if user_plan is None:
-                return "Invalid login"
-            flash('Meal plan login successfully!', 'message')
-            return redirect(url_for('manager.meal_login'))
+            mealplan = MealService.get_meal_plan_by_pin(form.pin.data)
+            success = MealService.use_meal(form.pin.data, user_id)
+
+            resident = ResidentService.get_resident_by_pin(mealplan.pin)
+            profile = resident.profile
+            pict = base64.b64encode(ProfilePictureService.get_profile_picture(profile.picture_id)).decode()
+            name = resident.profile.preferred_name
+            current_meals = mealplan.credits
+            max_meals = mealplan.meal_plan
+            return render_template('manager/meal_login.html', role=role, user=user, form=form,
+                                   pict=pict, name=name, current_meals=current_meals, max_meals=max_meals
+                                   , success=success)
+
+        # Invalid form
         else:
-            return str(form.errors)
+            return render_template('manager/meal_login.html', role=role, user=user, form=form, name=None)
     else:
-        user = UserService.get_user_by_id(current_user.get_id()).first()
-        role = user.role
-        return render_template('manager/meal_login.html', role=role, user=user, form=form)
+        return render_template('manager/meal_login.html', role=role, user=user, form=form, name=None)
+
+
+@manager_bp.route('/meal_undo', methods=['POST'])
+@login_required
+@permissions(roles.STAFF)
+def meal_undo():
+    """
+    /manager/meal_undo accepts that form (POST) and undo the use of a meal plan
+    Currently uses manager id to distinguish frontends. Should use session token.
+    """
+    form = MealLoginForm()
+    user_id = current_user.get_id()
+    user = UserService.get_user_by_id(user_id).first()
+    role = user.role
+
+    if request.method == 'POST':
+        meal_log = MealService.get_last_log(user_id)
+
+        if meal_log is None or meal_log.log_type == log_types.UNDO:
+            flash('Undo invalid', 'error')
+            return redirect(url_for('manager.meal_login'))
+        success = MealService.undo_meal_use(user_id, meal_log.resident_id, meal_log.mealplan_pin)
+        if not success:
+            flash('Undo unsuccessfully', 'error')
+
+        resident = ResidentService.get_resident_by_id(meal_log.resident_id).first()
+        mealplan = MealService.get_meal_plan_by_pin(meal_log.mealplan_pin)
+        profile = resident.profile
+        pict = base64.b64encode(ProfilePictureService.get_profile_picture(profile.picture_id)).decode()
+        name = resident.profile.preferred_name
+        current_meals = mealplan.credits
+        max_meals = mealplan.meal_plan
+
+        return render_template('manager/meal_login.html', role=role, user=user, form=form,
+                               pict=pict, name=name, current_meals=current_meals, max_meals=max_meals)
+    else:
+        return redirect(url_for('manager.meal_login'))
 
 
 @manager_bp.route('/create_meal_plan/', methods=['GET', 'POST'])
@@ -205,23 +257,53 @@ def create_meal_plan():
     and accepts that form (POST) and logs the use to a meal plan
     """
     form = CreateMealPlanForm()
+    user_id = current_user.get_id()
+    user = UserService.get_user_by_id(user_id).first()
+    role = user.role
     if request.method == 'POST':
         if form.validate():
-            valid = UserService.create_meal_plan_for_user_by_email(
-                form.pin.data,
+            meal_plan = ResidentService.create_meal_plan_for_resident_by_email(
                 form.meal_plan.data,
                 form.plan_type.data,
                 form.email.data)
-            MealService.get_meal_plan_by_pin(form.pin.data)
-            # Todo: create meal plan by email not fully implemented yet
-            if valid:
-                flash('Meal plan created successfully!', 'message')
+            if meal_plan is not None:
+                flash('Meal plan created successfully with pin: %d' % (meal_plan.pin), 'message')
             else:
                 flash('Meal plan not created', 'error')
             return redirect(url_for('manager.create_meal_plan'))
         else:
-            return str(form.errors)
+            return render_template('manager/create_meal_plan.html', role=role, user=user, form=form)
     else:
-        user = UserService.get_user_by_id(current_user.get_id()).first()
-        role = user.role
         return render_template('manager/create_meal_plan.html', role=role, user=user, form=form)
+
+
+@manager_bp.route('/add_meals/', methods=['GET', 'POST'])
+@login_required
+@permissions(roles.OFFICE_MANAGER)
+def add_meals():
+    """
+    /manager/meal_login serves an html form with input field pin
+    and accepts that form (POST) and logs the use to a meal plan
+    """
+    form = AddMealForm()
+    user = UserService.get_user_by_id(current_user.get_id()).first()
+    role = user.role
+    if request.method == 'POST':
+        if form.validate():
+            valid = MealService.add_meals(
+                form.pin.data,
+                form.number.data)
+            if valid:
+                user_meal_plan = MealService.get_meal_plan_by_pin(form.pin.data)
+                resident = ResidentService.get_resident_by_pin(user_meal_plan.pin)
+                message = ('%s has %d out of %d meals now.' % (resident.profile.preferred_name,
+                                                               user_meal_plan.credits,
+                                                               user_meal_plan.meal_plan))
+                flash('Meals added successfully!' + message, 'message')
+            else:
+                flash('Invalid pin', 'error')
+            return redirect(url_for('manager.add_meals'))
+        else:
+            return render_template('manager/add_meals.html', role=role, user=user, form=form)
+    else:
+        return render_template('manager/add_meals.html', role=role, user=user, form=form)
