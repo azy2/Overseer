@@ -44,8 +44,7 @@ def create_app():
         app.register_blueprint(routes.AuthRoutes, url_prefix='/auth')
         app.register_blueprint(routes.DevRoutes, url_prefix='/dev')
 
-        if os.environ.get("WERKZEUG_RUN_MAIN") == "true":
-            from ovs.datagen import DataGen
-            DataGen.create_defaults()
+        from ovs.datagen import DataGen
+        DataGen.create_defaults()
 
     return app

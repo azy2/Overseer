@@ -22,7 +22,7 @@ class Profile(BaseModel):
     phone_number = Column(CHAR(255))
     preferred_email = Column(CHAR(255))
     race = Column(CHAR(31))
-    gender = Column(Enum(genders.MALE, genders.FEMALE))
+    gender = Column(Enum(genders.MALE, genders.FEMALE, genders.UNSPECIFIED))
     picture_id = Column(CHAR(63))
     created = Column(DateTime, server_default=text('CURRENT_TIMESTAMP'))
     updated = Column(DateTime, server_default=text(
