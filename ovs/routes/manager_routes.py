@@ -241,7 +241,7 @@ def meal_undo():
         name = resident.profile.preferred_name
         current_meals = mealplan.credits
         max_meals = mealplan.meal_plan
-        
+
         return render_template('manager/meal_login.html', role=role, user=user, form=form,
                                pict=pict, name=name, current_meals=current_meals, max_meals=max_meals)
     else:
