@@ -1,4 +1,6 @@
 """ DB and utility functions for Packages """
+from sqlalchemy import exc
+
 from ovs import db
 from ovs.models.package_model import Package
 from ovs.services.user_service import UserService
@@ -23,8 +25,12 @@ class PackageService:
         new_package = Package(recipient_id=recipient_id, checked_by_id=checked_by_id,
                               checked_at=checked_at, description=description)
         db.session.add(new_package)
-        db.session.commit()
-        return new_package
+        try:
+            db.session.commit()
+            return new_package
+        except exc.SQLAlchemyError:
+            db.session.rollback()
+            return None
 
     @staticmethod
     def get_package_by_id(package_id):
@@ -42,5 +48,9 @@ class PackageService:
         db.session.query(Package) \
             .filter(Package.id == package_id) \
             .update({Package.recipient_id: recipient_id, Package.description: description})
-        db.session.commit()
-        return PackageService.get_package_by_id(package_id).first()
+        try:
+            db.session.commit()
+            return PackageService.get_package_by_id(package_id).first()
+        except exc.SQLAlchemyError:
+            db.session.rollback()
+            return None

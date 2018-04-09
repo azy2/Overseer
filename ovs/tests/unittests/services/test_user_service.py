@@ -93,7 +93,6 @@ class TestUserService(OVSBaseTestCase):
 
         # check if deletion successful
         self.assertTrue(UserService.delete_user(self.test_user.id))
-        self.db.session.commit()
 
         self.assertEqual(self.db.session.query(User).count(), expected)
 
@@ -103,7 +102,6 @@ class TestUserService(OVSBaseTestCase):
 
         # This id is NOT the resident
         self.assertFalse(UserService.delete_user(self.test_user.id + 1))
-        self.db.session.commit()
 
         self.assertEqual(self.db.session.query(User).count(), expected)
 
@@ -115,7 +113,6 @@ class TestUserService(OVSBaseTestCase):
         expected_resident = self.db.session.query(Resident).count() - 1
 
         self.assertTrue(UserService.delete_user(resident.id))
-        self.db.session.commit()
 
         self.assertEqual(self.db.session.query(User).count(), expected_user)
         self.assertEqual(self.db.session.query(Resident).count(), expected_resident)

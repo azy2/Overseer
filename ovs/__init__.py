@@ -55,4 +55,6 @@ def create_app():
         from ovs.datagen import DataGen
         DataGen.create_defaults()
 
+        db.session.commit()
+
     return app

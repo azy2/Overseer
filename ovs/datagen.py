@@ -40,12 +40,12 @@ class DataGen:
             for user_role in [roles.RESIDENT, roles.RESIDENT_ADVISOR, roles.STAFF,
                               roles.OFFICE_MANAGER, roles.BUILDING_MANAGER]:
                 DataGen.create_user(user_role)
-        db.session.commit()
 
 
     @staticmethod
     def clear_db():
         """ Empty the DB for tests """
-        import ovs.models # pylint: disable=unused-variable
+        import ovs.models  # pylint: disable=unused-variable
+        db.session.commit()
         db.drop_all()
         db.create_all()

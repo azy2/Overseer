@@ -1,6 +1,8 @@
 """
 DB and utility functions for Meals
 """
+from sqlalchemy import exc
+
 from ovs import db
 from ovs.models.mealplan_history_model import MealplanHistory
 from ovs.models.meal_plan_model import MealPlan
@@ -24,8 +26,12 @@ class MealService:
         """
         new_plan = MealPlan(meal_plan, plan_type)
         db.session.add(new_plan)
-        db.session.commit()
-        return new_plan
+        try:
+            db.session.commit()
+            return new_plan
+        except exc.SQLAlchemyError:
+            db.session.rollback()
+            return None
 
     @staticmethod
     def use_meal(pin, manager_id):
@@ -62,8 +68,12 @@ class MealService:
         if meal_plan is None:
             return False
         meal_plan.credits += number
-        db.session.commit()
-        return True
+        try:
+            db.session.commit()
+            return True
+        except exc.SQLAlchemyError:
+            db.session.rollback()
+            return False
 
     @staticmethod
     def update_meal_count(meal_plan):
@@ -77,8 +87,12 @@ class MealService:
         :rtype: bool
         """
         was_updated = meal_plan.update_meal_count()
-        db.session.commit()
-        return was_updated
+        try:
+            db.session.commit()
+            return was_updated
+        except exc.SQLAlchemyError:
+            db.session.rollback()
+            return False
 
     @staticmethod
     def undo_meal_use(manager_id, resident_id, pin):
@@ -113,7 +127,12 @@ class MealService:
         """
         new_mealplan_history_item = MealplanHistory(resident_id, pin, manager_id, log_types.MEAL_USED)
         db.session.add(new_mealplan_history_item)
-        db.session.commit()
+        try:
+            db.session.commit()
+            return True
+        except exc.SQLAlchemyError:
+            db.session.rollback()
+            return False
 
     @staticmethod
     def log_undo_meal_use(resident_id, pin, manager_id):
@@ -125,7 +144,12 @@ class MealService:
         """
         new_mealplan_history_item = MealplanHistory(resident_id, pin, manager_id, log_types.UNDO)
         db.session.add(new_mealplan_history_item)
-        db.session.commit()
+        try:
+            db.session.commit()
+            return True
+        except exc.SQLAlchemyError:
+            db.session.rollback()
+            return False
 
     @staticmethod
     def get_last_log(manager_id):

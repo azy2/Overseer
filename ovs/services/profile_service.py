@@ -1,6 +1,8 @@
 """
 DB access and other services for profiles
 """
+from sqlalchemy import exc
+
 from ovs import db
 from ovs.models.profile_model import Profile
 from ovs.services.resident_service import ResidentService
@@ -35,8 +37,14 @@ class ProfileService:
             profile.race = race
         if gender:
             profile.gender = gender
-        db.session.commit()
-        return True
+
+        try:
+            db.session.commit()
+            return True
+        except exc.SQLAlchemyError:
+            db.session.rollback()
+            return False
+
 
     @staticmethod
     def delete_profile(resident_id):

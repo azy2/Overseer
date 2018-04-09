@@ -34,7 +34,11 @@ class ResidentService:
 
         db.session.add(new_resident)
         db.session.add(new_resident_profile)
-        db.session.commit()
+        try:
+            db.session.commit()
+        except exc.SQLAlchemyError:
+            db.session.rollback()
+            return None
 
         return new_resident
 

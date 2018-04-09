@@ -34,7 +34,7 @@ class UserService:
         try:
             db.session.add(new_user)
             db.session.commit()
-        except exc.IntegrityError:
+        except exc.SQLAlchemyError:
             db.session.rollback()
             return None
         if role == 'RESIDENT':
@@ -56,8 +56,12 @@ class UserService:
         email_user = UserService.get_user_by_email(email).first()
         if email_user is None or email_user == user: #We don't want to overwrite somebody else
             user.update(email, first_name, last_name)
-            db.session.commit()
-            return True
+            try:
+                db.session.commit()
+                return True
+            except exc.SQLAlchemyError:
+                db.session.rollback()
+                return False
         return False
 
     @staticmethod
@@ -71,8 +75,12 @@ class UserService:
         if user.role == 'RESIDENT':
             ResidentService.delete_resident(user_id)
         db.session.delete(user)
-        db.session.commit()
-        return True
+        try:
+            db.session.commit()
+            return True
+        except exc.SQLAlchemyError:
+            db.session.rollback()
+            return False
 
     @staticmethod
     def send_setup_email(email, first_name, last_name, role, password):

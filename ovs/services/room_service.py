@@ -24,7 +24,7 @@ class RoomService:
         try:
             db.session.add(new_room)
             db.session.commit()
-        except exc.IntegrityError:
+        except exc.SQLAlchemyError:
             db.session.rollback()
             return None
 
@@ -71,6 +71,10 @@ class RoomService:
         if user.role == "RESIDENT":
             resident = ResidentService.get_resident_by_id(user.id).first()
             resident.room_number = room_number
-            db.session.commit()
-            return {'message': 'Success', 'status': True}
+            try:
+                db.session.commit()
+                return {'message': 'Success', 'status': True}
+            except exc.SQLAlchemyError:
+                db.session.rollback()
+                return {'message': 'Failed to updated room number', 'status': False}
         return {'message': 'User role is not resident', 'status': False}
