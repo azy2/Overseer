@@ -2,10 +2,10 @@
 from flask import jsonify
 from sqlalchemy import Integer, Column, VARCHAR, Boolean, DateTime
 
-from ovs import BaseModel
+from ovs import db
 
 
-class Package(BaseModel):
+class Package(db.Model):
     """ Defines a Package as represented in the database """
     __tablename__ = 'packages'
 

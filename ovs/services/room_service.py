@@ -3,12 +3,10 @@ DB access and other services for Rooms
 """
 from sqlalchemy import exc
 
-from flask import current_app
+from ovs import db
 from ovs.models.room_model import Room
 from ovs.services.resident_service import ResidentService
 from ovs.services.user_service import UserService
-
-db = current_app.extensions['database'].instance()
 
 
 class RoomService:
@@ -24,10 +22,10 @@ class RoomService:
         """ Adds a room to the database """
         new_room = Room(number=number, status=status, type=room_type)
         try:
-            db.add(new_room)
-            db.commit()
+            db.session.add(new_room)
+            db.session.commit()
         except exc.IntegrityError:
-            db.rollback()
+            db.session.rollback()
             return None
 
         emails = occupants.split(';')
@@ -43,7 +41,7 @@ class RoomService:
         :param room_id: The Room's id
         :return: The Room
         """
-        return db.query(Room).filter(Room.id == room_id)
+        return db.session.query(Room).filter(Room.id == room_id)
 
     @staticmethod
     def get_room_by_number(number):
@@ -52,14 +50,14 @@ class RoomService:
         :param number: The room number
         :return: The Room
         """
-        return db.query(Room).filter(Room.number == number)
+        return db.session.query(Room).filter(Room.number == number)
 
     @staticmethod
     def get_all_rooms():
         """
         Get all the rooms in the database
         """
-        return db.query(Room).all()
+        return db.session.query(Room).all()
 
     @staticmethod
     def add_resident_to_room(email, room_number):
@@ -73,6 +71,6 @@ class RoomService:
         if user.role == "RESIDENT":
             resident = ResidentService.get_resident_by_id(user.id).first()
             resident.room_number = room_number
-            db.commit()
+            db.session.commit()
             return {'message': 'Success', 'status': True}
         return {'message': 'User role is not resident', 'status': False}

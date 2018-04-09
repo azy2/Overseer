@@ -1,14 +1,12 @@
 """ DB and utility functions for Users """
 from sqlalchemy import exc
 
-from flask import current_app
+from ovs import db
 from ovs.models.user_model import User
 from ovs.services.mail_service import MailService
 from ovs.services.resident_service import ResidentService
 from ovs.utils import crypto
 from ovs.mail import templates
-
-db = current_app.extensions['database'].instance()
 
 
 class UserService:
@@ -34,10 +32,10 @@ class UserService:
             password = crypto.generate_password()
         new_user = User(email, first_name, last_name, password, role)
         try:
-            db.add(new_user)
-            db.commit()
+            db.session.add(new_user)
+            db.session.commit()
         except exc.IntegrityError:
-            db.rollback()
+            db.session.rollback()
             return None
         if role == 'RESIDENT':
             ResidentService.create_resident(new_user)
@@ -58,7 +56,7 @@ class UserService:
         email_user = UserService.get_user_by_email(email).first()
         if email_user is None or email_user == user: #We don't want to overwrite somebody else
             user.update(email, first_name, last_name)
-            db.commit()
+            db.session.commit()
             return True
         return False
 
@@ -72,8 +70,8 @@ class UserService:
             return False
         if user.role == 'RESIDENT':
             ResidentService.delete_resident(user_id)
-        db.delete(user)
-        db.commit()
+        db.session.delete(user)
+        db.session.commit()
         return True
 
     @staticmethod
@@ -98,11 +96,11 @@ class UserService:
         :param email: The email of the user
         :return: The db entry of that user
         """
-        return db.query(User).filter(User.email == email)
+        return db.session.query(User).filter(User.email == email)
 
     @staticmethod
     def get_user_by_id(user_id):
         """
         Gets a user by their id
         """
-        return db.query(User).filter(User.id == user_id)
+        return db.session.query(User).filter(User.id == user_id)

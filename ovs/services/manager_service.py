@@ -1,12 +1,10 @@
 """ Services related to managers """
 from sqlalchemy.orm import aliased
 
-from flask import current_app
+from ovs import db
 from ovs.models.package_model import Package
 from ovs.models.resident_model import Resident
 from ovs.models.user_model import User
-
-db = current_app.extensions['database'].instance()
 
 
 class ManagerService:
@@ -22,14 +20,14 @@ class ManagerService:
         :return: Lists of residents, users tuples
         :rtype: [(Resident(...), User(...)), ...]
         """
-        return db.query(Resident, User).join(User, Resident.user_id == User.id).all()
+        return db.session.query(Resident, User).join(User, Resident.user_id == User.id).all()
 
     @staticmethod
     def get_resident_by_id(user_id):
         """
         Returns the Resident identified by user_id
         """
-        return db.query(Resident).filter(Resident.user_id == user_id).first()
+        return db.session.query(Resident).filter(Resident.user_id == user_id).first()
 
     @staticmethod
     def get_all_packages_recipients_checkers():
@@ -40,6 +38,6 @@ class ManagerService:
         """
         user_1 = aliased(User)
         user_2 = aliased(User)
-        return db.query(Package, user_1, user_2) \
+        return db.session.query(Package, user_1, user_2) \
             .join(user_1, Package.recipient_id == user_1.id) \
             .join(user_2, Package.checked_by_id == user_2.id).all()

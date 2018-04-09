@@ -6,10 +6,10 @@ from datetime import datetime, timedelta
 from flask import jsonify
 from sqlalchemy import Integer, Enum, Column, text, DateTime, Sequence
 
-from ovs import BaseModel
+from ovs import db
 
 
-class MealPlan(BaseModel):
+class MealPlan(db.Model):
     """
     Defines a MealPlan as represented in the database. Along with some utility functions.
     """

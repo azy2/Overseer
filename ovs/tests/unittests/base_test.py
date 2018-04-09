@@ -2,8 +2,9 @@
 The base test case that all other test cases should inherit from
 """
 from flask_testing import LiveServerTestCase
-from flask import current_app
 from ovs import create_app
+from ovs import db
+from ovs.datagen import DataGen
 
 
 class OVSBaseTestCase(LiveServerTestCase):
@@ -19,16 +20,12 @@ class OVSBaseTestCase(LiveServerTestCase):
 
     def setUp(self):
         """ Runs before every test and clears relevant tables """
-        with current_app.app_context():
-            from ovs.datagen import DataGen
-            DataGen.clear_db()
-            self.db = current_app.extensions['database'].instance()
+        DataGen.clear_db()
+        self.db = db
 
     def tearDown(self):
         """
         Runs after every tests and clears relevant tables. Subclasses should
         override this if they require additional teardown code to be run
         """
-        with current_app.app_context():
-            from ovs.datagen import DataGen
-            DataGen.clear_db()
+        DataGen.clear_db()

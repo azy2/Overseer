@@ -5,7 +5,10 @@ import os
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
+
+from ovs.datagen import DataGen
 from ovs.tests.unittests.base_test import OVSBaseTestCase
+
 
 class SeleniumBaseTestCase(OVSBaseTestCase):
     """
@@ -14,7 +17,6 @@ class SeleniumBaseTestCase(OVSBaseTestCase):
     def setUp(self):
         """ Creates a headless chrome instance for selenium and clears the DB """
         super().setUp()
-        from ovs.datagen import DataGen
         DataGen.create_defaults()
 
         chrome_options = Options()

@@ -4,10 +4,10 @@ Keeps track of mealplan history as represented in the database
 from flask import jsonify
 from sqlalchemy import Integer, Enum, Column, text, DateTime
 
-from ovs import BaseModel
+from ovs import db
 
 
-class MealplanHistory(BaseModel):
+class MealplanHistory(db.Model):
     """
     Defines a Mealplan History Item as represented in the database.
     """
