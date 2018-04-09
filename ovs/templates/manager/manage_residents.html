@@ -1,66 +1,55 @@
 {% extends "base.html" %}
 {% block title %}Manage Residents{% endblock %}
 {% block head %}
-    <style>
-        table {
-            font-family: arial, sans-serif;
-            border-collapse: collapse;
-            width: 100%;
-        }
-
-        td, th {
-            border: 1px solid #000000;
-            text-align: left;
-            padding: 8px;
-        }
-
-        tr:nth-child(even) {
-            background-color: #dddddd;
-        }
-    </style>
 {% endblock %}
 {% block content %}
-    {% from "_formhelper.html" import field_inline %}
-    <div class="container mt-5" >
-        <h2>Register Resident</h2>
-        <div class="row card" >
-            <div class="card-body"
+    {% from "_formhelper.html" import field_stacked, field_plain %}
+    <div class="container mt-5">
+        <div class="row card">
+            <div class="card-body">
+                <h2>Register Resident</h2>
                 <div class="col" >
                     <form method="post", name="Register Form">
                         {{ register_form.csrf_token }}
-                        {{ field_inline(register_form.email) }}
-                        {{ field_inline(register_form.first_name) }}
-                        {{ field_inline(register_form.last_name) }}
-                        <input type="submit" value="Register Resident" name="register_btn">
+                        {{ field_stacked(register_form.email) }}
+                        {{ field_stacked(register_form.first_name) }}
+                        {{ field_stacked(register_form.last_name) }}
+                        <input type="submit" value="Register Resident" name="register_btn" class="btn btn-primary float-right">
                     </form>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="container mt-5" >
-    <table>
-        <tr>
-            <th>{{edit_form.email.label}}</th>
-            <th>{{edit_form.first_name.label}}</th>
-            <th>{{edit_form.last_name.label}}</th>
-            <th>{{edit_form.room_number.label}}</th>
-            <th></th>
-            <th></th>
-        </tr>
-	{% for (resident, user) in residents %}
-        <tr>
-            <form method="post" name="Edit Form" id="edit-resident-submit">
-                {{ edit_form.csrf_token }}
-                {{ edit_form.user_id(value=user.id, type="hidden")      |safe }}
-                <td>{{ edit_form.email(value=user.email)                |safe }}</td>
-                <td>{{ edit_form.first_name(value=user.first_name)      |safe }}</td>
-                <td>{{ edit_form.last_name(value=user.last_name)        |safe }}</td>
-                <td>{{ edit_form.room_number(value=resident.room_number)|safe }}</td>
-                <td><input type="submit" value="Update Row" name="edit_btn"></td>
-                <td><input type="submit" value="Delete" name="delete_btn"></td>
-            </form>
-        </tr>
-	{% endfor %}
-    </table>
+        <div class="row mt-5">
+            <div class="col">
+                <table class="table table-bordered table-responsive">
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col">{{edit_form.email.label}}</th>
+                            <th scope="col">{{edit_form.first_name.label}}</th>
+                            <th scope="col">{{edit_form.last_name.label}}</th>
+                            <th scope="col">{{edit_form.room_number.label}}</th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for (resident, user) in residents %}
+                            <tr>
+                                <form method="post" name="Edit Form" id="edit-resident-submit">
+                                    {{ edit_form.csrf_token }}
+                                    {{ edit_form.user_id(value=user.id, type="hidden")      |safe }}
+                                    <td>{{ field_plain(edit_form.email, value=user.email) }}</td>
+                                    <td>{{ field_plain(edit_form.first_name, value=user.first_name) }}</td>
+                                    <td>{{ field_plain(edit_form.last_name, value=user.last_name) }}</td>
+                                    <td>{{ field_plain(edit_form.room_number, value=user.room_number) }}</td>
+                                    <td><input type="submit" value="Update Row" name="edit_btn" class="btn btn-secondary"></td>
+                                    <td><input type="submit" value="Delete" name="delete_btn" class="btn btn-secondary"></td>
+                                </form>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 {% endblock %}
