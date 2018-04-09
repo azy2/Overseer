@@ -4,11 +4,6 @@ from flask import current_app
 from ovs import db
 from ovs.services import UserService
 from ovs.services import RoomService
-from ovs.models.user_model import User
-from ovs.models.resident_model import Resident
-from ovs.models.room_model import Room
-from ovs.models.profile_model import Profile
-from ovs.models.meal_plan_model import MealPlan
 from ovs.utils import roles
 
 class DataGen:
