@@ -148,5 +148,28 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
         <script src="{{ url_for('static', filename="js/material.min.js") }}"></script>
+        <script>
+         // Example starter JavaScript for disabling form submissions if there are invalid fields
+         (function() {
+             'use strict';
+             window.addEventListener('load', function() {
+                 // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                 var forms = document.getElementsByClassName('needs-validation');
+                 // Loop over them and prevent submission
+                 var validation = Array.prototype.filter.call(forms, function(form) {
+                     form.addEventListener('submit', function(event) {
+                         if (form.checkValidity() === false) {
+                             event.preventDefault();
+                             event.stopPropagation();
+                         }
+                         form.classList.add('was-validated');
+                     }, false);
+                 });
+             }, false);
+         })();
+        </script>
+
+        {% block scripts %}
+        {% endblock %}
     </body>
 </html>
