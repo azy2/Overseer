@@ -35,27 +35,22 @@ def edit_profile():
     """
     resident_id = current_user.get_id()
     profile = ResidentService.get_resident_by_id(resident_id).first().profile
-    if profile is None:
-        return 'Could not find profile information for user with id: ' + resident_id
 
     profile_form = EditResidentProfileForm(obj=profile)
     picture_form = UploadProfilePictureForm()
 
-    if request.method == 'POST':
-        if profile_form.validate_on_submit():
-            # Set profile data in database with non-null values from the form
-            ProfileService.update_profile(resident_id,
-                                          profile_form.preferred_email.data,
-                                          profile_form.preferred_name.data,
-                                          profile_form.phone_number.data,
-                                          profile_form.race.data,
-                                          profile_form.gender.data)
-        elif picture_form.validate_on_submit():
-            picture_data = picture_form.profile_picture.data.read()
-            ProfilePictureService.update_profile_picture(profile.picture_id, picture_data)
+    if 'profile_btn' in request.form and profile_form.validate_on_submit():
+        # Set profile data in database with non-null values from the form
+        ProfileService.update_profile(resident_id,
+                                      profile_form.preferred_email.data,
+                                      profile_form.preferred_name.data,
+                                      profile_form.phone_number.data,
+                                      profile_form.race.data,
+                                      profile_form.gender.data)
+    elif 'picture_btn' in request.form and picture_form.validate_on_submit():
+        picture_data = picture_form.profile_picture.data.read()
+        ProfilePictureService.update_profile_picture(profile.picture_id, picture_data)
 
     pict = base64.b64encode(ProfilePictureService.get_profile_picture(profile.picture_id)).decode()
-    print(profile_form.errors)
-    print(picture_form.errors)
     return render_template('resident/profile.html', role=roles.RESIDENT, profile=profile, pict=pict,
                            profile_form=profile_form, picture_form=picture_form)
