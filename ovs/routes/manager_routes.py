@@ -42,25 +42,19 @@ def register_room():
     room is an available option.
     """
     form = RegisterRoomForm()
-    if request.method == 'POST':
-        if form.validate():
-            room = RoomService.create_room(
+    if form.validate_on_submit():
+        if RoomService.create_room(
                 form.room_number.data,
                 form.room_status.data,
                 form.room_type.data,
-                form.occupants.data)
-            if room is None:
-                flash('Room number already exists! Creation Failed!', 'error')
-                return redirect((url_for('manager.register_room')))
-            flash('Residents added to rooms successfully!', 'message')
-            return redirect(url_for('manager.register_room'))
-        else:
-            flash('Input invalid', 'error')
-            return redirect(url_for('manager.register_room'))
-    else:
-        user = UserService.get_user_by_id(current_user.get_id()).first()
-        role = user.role
-        return render_template('manager/register_room.html', role=role, user=user, form=form)
+                form.occupants.data) is None:
+            flash('Creating a room failed', 'error')
+
+        return redirect(url_for('manager.register_room'))
+
+    user = UserService.get_user_by_id(current_user.get_id()).first()
+    role = user.role
+    return render_template('manager/register_room.html', role=role, user=user, form=form)
 
 
 @manager_bp.route('/manage_residents/', methods=['GET', 'POST'])

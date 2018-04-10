@@ -24,20 +24,14 @@ def register_manager():
     user = UserService.get_user_by_id(current_user.get_id()).first()
     role = user.role
     form = RegisterManagerForm()
-    if request.method == 'POST':
-        if form.validate():
-            new_user = UserService.create_user(
+    if form.validate_on_submit():
+        if UserService.create_user(
                 form.email.data,
                 form.first_name.data,
                 form.last_name.data,
-                form.role.data)
+                form.role.data) is None:
+            flash('An error was encountered')
 
-            if new_user:
-                flash('User successfully added!', 'message')
-            else:
-                flash('User not successfully added! Email already exists!', 'error')
-            return redirect(url_for('admin.register_manager'))
-        else:
-            return render_template('admin/register_manager.html', role=role, user=user, form=form)
-    else:
-        return render_template('admin/register_manager.html', role=role, user=user, form=form)
+        return redirect(url_for('admin.register_manager'))
+
+    return render_template('admin/register_manager.html', role=role, user=user, form=form)

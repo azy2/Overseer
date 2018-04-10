@@ -47,9 +47,11 @@ def edit_profile():
                                       profile_form.phone_number.data,
                                       profile_form.race.data,
                                       profile_form.gender.data)
+        return redirect(url_for('resident.edit_profile'))
     elif 'picture_btn' in request.form and picture_form.validate_on_submit():
         picture_data = picture_form.profile_picture.data.read()
         ProfilePictureService.update_profile_picture(profile.picture_id, picture_data)
+        return redirect(url_for('resident.edit_profile'))
 
     pict = base64.b64encode(ProfilePictureService.get_profile_picture(profile.picture_id)).decode()
     return render_template('resident/profile.html', role=roles.RESIDENT, profile=profile, pict=pict,

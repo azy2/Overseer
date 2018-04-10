@@ -1,7 +1,10 @@
 """ Form with data required to register a manager """
 from flask_wtf import FlaskForm
-from wtforms import StringField, SelectField
+from wtforms import StringField, SelectField, ValidationError
 from wtforms.validators import Email, Length, DataRequired
+
+from ovs import db
+from ovs.services.user_service import UserService
 
 
 class RegisterManagerForm(FlaskForm):
@@ -14,3 +17,7 @@ class RegisterManagerForm(FlaskForm):
                                         ('OFFICE_MANAGER', 'Office Manager'),
                                         ('STAFF', 'Staff'),
                                         ('RESIDENT_ADVISOR', 'Resident Advisor')])
+
+    def validate_email(form, field):
+        if UserService.get_user_by_email(field.data).one_or_none() is not None:
+            raise ValidationError('An account with this email already exists')
