@@ -1,14 +1,14 @@
 """ Form with data to edit the current user's profile """
 from flask_wtf import FlaskForm
 from wtforms import StringField, RadioField
-from wtforms.validators import Length, Email
+from wtforms.validators import Length, Email, DataRequired
 
 from ovs.utils import genders
 
 
 class EditResidentProfileForm(FlaskForm):
     """ Form with data to edit the current user's profile """
-    preferred_name = StringField('Preferred Name', validators=[Length(max=255)])
+    preferred_name = StringField('Preferred Name', validators=[Length(max=255), DataRequired()])
     phone_number = StringField('Phone Number', validators=[Length(max=31)])
     preferred_email = StringField('Preferred Contact Email', validators=[Email(), Length(max=255)])
     race = StringField('Race/Ethnicity', validators=[Length(max=31)])

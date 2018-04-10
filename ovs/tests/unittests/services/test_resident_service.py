@@ -51,6 +51,16 @@ class TestResidentService(OVSBaseTestCase):
         resident = ResidentService.get_resident_by_id(4).first()
         self.assertIsNone(resident)
 
+    def test_get_resident_by_email(self):
+        """ Tests that get_resident_by_email successfully finds a resident """
+        resident = ResidentService.get_resident_by_email(self.test_resident_info[0])
+        self.assertIsNotNone(resident)
+
+    def test_get_resident_by_email_invalid(self):
+        """ Tests that get_resident_by_email returns none if an invalid email is provided """
+        resident = ResidentService.get_resident_by_email('invalid@invalid.com')
+        self.assertIsNone(resident)
+
     def test_update_resident_room_number(self):
         """ Tests that a resident's room number can be updated """
         ResidentService.update_resident_room_number(self.test_user.id, '1')

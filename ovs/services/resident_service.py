@@ -89,7 +89,7 @@ class ResidentService:
         user_resident = db.session.query(User, Resident)\
                                   .join(Resident, User.id == Resident.user_id)\
                                   .filter(User.email == email)
-        if user_resident is None:
+        if user_resident.count() == 0:
             return None
         return user_resident.first()[1]
 
