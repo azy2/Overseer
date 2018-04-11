@@ -66,47 +66,52 @@ def manage_residents():
     It allows a manager to add/edit/delete residents with form inputs.
     """
     register_form = RegisterResidentForm(prefix='register_form')
-    edit_form = ManageResidentsForm(prefix='edit_form')
+    residents = ManagerService.get_all_residents()
+    edit_forms = []
+    for (_, user) in residents:
+        edit_forms.append(ManageResidentsForm(prefix=str(user.id)))
 
     user = UserService.get_user_by_id(current_user.get_id()).first()
     role = user.role
 
-    if request.method == 'POST':
-        if 'delete_btn' in request.form:
-            success = UserService.delete_user(edit_form.user_id.data)
-            if success:
-                flash('Resident successfully deleted')
-            else:
-                flash('Something went wrong. Could not find resident to delete')
-        elif edit_form.validate_on_submit() and 'edit_btn' in request.form:
-            success = ResidentService.edit_resident(
-                edit_form.user_id.data,
-                edit_form.email.data,
-                edit_form.first_name.data,
-                edit_form.last_name.data,
-                edit_form.room_number.data)
-            if success:
-                flash('Resident updated successfully!', 'message')
-            else:
-                flash('Room does not exist or duplicate email detected!', 'error')
-        elif register_form.validate_on_submit():
-            new_user = UserService.create_user(
+    if 'register_btn' in request.form and register_form.validate_on_submit():
+        if UserService.create_user(
                 register_form.email.data,
                 register_form.first_name.data,
                 register_form.last_name.data,
-                "RESIDENT")
-            if new_user:
-                flash('Residents successfully registered!', 'message')
-            else:
-                flash('Residents not successfully registered! Email already exists!', 'error')
+                "RESIDENT") is None:
+            flash('Failed to register resident', 'error')
         else:
-            flash('Input invalid', 'error')
+            flash('{} {} registered.'.format(register_form.first_name.data, register_form.last_name.data), 'success')
 
         return redirect(url_for('manager.manage_residents'))
-    else:
-        return render_template('manager/manage_residents.html', role=role, user=user,
-                               residents=ManagerService.get_all_residents(),
-                               register_form=register_form, edit_form=edit_form)
+
+    for edit_form in edit_forms:
+        if edit_form.delete_button.data and edit_form.validate_on_submit():
+            print('delete_button for ' + edit_form.user_id.data)
+            if not UserService.delete_user(edit_form.user_id.data):
+                flash('Failed to delete resident.', 'error')
+            else:
+                flash('Resident deleted.', 'success')
+
+            return redirect(url_for('manager.manage_residents'))
+
+        elif edit_form.update_button.data and edit_form.validate_on_submit():
+            print('update_button for ' + edit_form.user_id.data)
+            if not ResidentService.edit_resident(
+                    edit_form.user_id.data,
+                    edit_form.email.data,
+                    edit_form.first_name.data,
+                    edit_form.last_name.data,
+                    edit_form.room_number.data):
+                flash('Failed to update resident', 'error')
+            else:
+                flash('Resident updated!', 'success')
+
+            return redirect(url_for('manager.manage_residents'))
+
+    return render_template('manager/manage_residents.html', role=role, user=user,
+                           register_form=register_form, form_data=zip(edit_forms, residents))
 
 
 @manager_bp.route('/manage_packages/', methods=['GET', 'POST'])

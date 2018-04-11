@@ -9,7 +9,7 @@
             <div class="card-body">
                 <h2>Register Resident</h2>
                 <div class="col" >
-                    <form method="post", name="Register Form">
+                    <form method="post", name="Register Form" class="needs-validation" novalidate>
                         {{ register_form.csrf_token }}
                         {{ field_stacked(register_form.email) }}
                         {{ field_stacked(register_form.first_name) }}
@@ -24,26 +24,33 @@
                 <table class="table table-bordered table-responsive">
                     <thead class="thead-light">
                         <tr>
-                            <th scope="col">{{edit_form.email.label}}</th>
-                            <th scope="col">{{edit_form.first_name.label}}</th>
-                            <th scope="col">{{edit_form.last_name.label}}</th>
-                            <th scope="col">{{edit_form.room_number.label}}</th>
+                            <th scope="col">Email Address</th>
+                            <th scope="col">First Name</th>
+                            <th scope="col">Last Name</th>
+                            <th scope="col">Room</th>
                             <th scope="col"></th>
                             <th scope="col"></th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for (resident, user) in residents %}
+                        {% for (edit_form, (resident, user)) in form_data %}
                             <tr>
-                                <form method="post" name="Edit Form" id="edit-resident-submit">
+                                <form method="post" name="Edit Form" id="edit-resident-submit" class="needs-validation" novalidate>
                                     {{ edit_form.csrf_token }}
-                                    {{ edit_form.user_id(value=user.id, type="hidden")      |safe }}
+                                    {#{ edit_form.user_id(value=user.id, type="hidden")      |safe }#}
+                                    {{ field_plain(edit_form.user_id, value=user.id) }}
                                     <td>{{ field_plain(edit_form.email, value=user.email) }}</td>
                                     <td>{{ field_plain(edit_form.first_name, value=user.first_name) }}</td>
                                     <td>{{ field_plain(edit_form.last_name, value=user.last_name) }}</td>
-                                    <td>{{ field_plain(edit_form.room_number, value=user.room_number) }}</td>
-                                    <td><input type="submit" value="Update Row" name="edit_btn" class="btn btn-secondary"></td>
-                                    <td><input type="submit" value="Delete" name="delete_btn" class="btn btn-secondary"></td>
+                                    {% if resident.room_number == 'None' %}
+                                        <td>{{ field_plain(edit_form.room_number) }}</td>
+                                    {% else %}
+                                        <td>{{ field_plain(edit_form.room_number, value=resident.room_number) }}</td>
+                                    {% endif %}
+                                    <td>{{ field_plain(edit_form.update_button, class="btn btn-secondary") }}</td>
+                                    <td>{{ field_plain(edit_form.delete_button, class="btn btn-secondary") }}</td>
+                                    <!-- <td><input type="submit" value="Update Row" name="edit_btn" class="btn btn-secondary"></td>
+                                         <td><input type="submit" value="Delete" name="delete_btn" class="btn btn-secondary"></td> -->
                                 </form>
                             </tr>
                         {% endfor %}

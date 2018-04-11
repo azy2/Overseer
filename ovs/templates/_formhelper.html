@@ -13,6 +13,8 @@
                 </div>
             {% endif %}
         {% endfor %}
+    {% elif field.type == 'SubmitField' %}
+        {{ field(class="btn", **kwargs)|safe }}
     {% else %}
         {% if field.errors %}
             {{ field(class="form-control is-invalid", **kwargs)|safe }}
