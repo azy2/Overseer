@@ -9,6 +9,7 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='css/material.min.css') }}">
         <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i,700,700i" rel="stylesheet">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/animate.css') }}" rel="stylesheet">
         <link rel="apple-touch-icon" href="/apple-touch-icon.png">
         <style>
          body {
@@ -95,19 +96,6 @@
             {% endif %}
         </nav>
 
-        <!-- Notification modal which displays any flashed message as a pop up -->
-        {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-        {% with (message_category, message) = messages[0] %}
-            <div class="alert alert-dismissible fade show float-right rounded mx-5 my-2 {% if message_category == "error" %}alert-danger{% else %}alert-success{% endif %}" role="alert">
-                {{ message }}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        {% endwith %}
-        {% endif %}
-        {% endwith %}
 
         <main role="main">
             {% block content %}
@@ -118,6 +106,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
         <script src="{{ url_for('static', filename="js/material.min.js") }}"></script>
+        <script src="{{ url_for('static', filename="js/bootstrap-notify.min.js") }}"></script>
         <script>
          // Example starter JavaScript for disabling form submissions if there are invalid fields
          (function() {
@@ -138,6 +127,56 @@
              }, false);
          })();
         </script>
+
+        <!-- Notification modal which displays any flashed message as a pop up -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% with (message_category, message) = messages[0] %}
+            <script>
+             $.notify({
+                 // options
+                 message: '{{ message }}',
+                 target: '_blank'
+             },{
+                 // settings
+                 element: 'body',
+                 position: null,
+                 type: "{{ message_category }}",
+                 allow_dismiss: true,
+                 newest_on_top: false,
+                 showProgressbar: false,
+                 placement: {
+                     from: "top",
+                     align: "right"
+                 },
+                 offset: {
+                     x: 20,
+                     y: 70
+                 },
+                 spacing: 10,
+                 z_index: 1031,
+                 delay: 5000,
+                 timer: 1000,
+                 url_target: '_blank',
+                 mouse_over: null,
+                 animate: {
+                     enter: 'animated fadeInDown',
+                     exit: 'animated fadeOutUp'
+                 },
+                 onShow: null,
+                 onShown: null,
+                 onClose: null,
+                 onClosed: null,
+                 icon_type: 'class',
+                 template: '<div data-notify="container" class="col-xs-3 col-sm-3 alert alert-{0}" role="alert">' +
+                           '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+                           '<span data-notify="message">{2}</span>' +
+                           '</div>'
+             });
+            </script>
+        {% endwith %}
+        {% endif %}
+        {% endwith %}
 
         {% block scripts %}
         {% endblock %}

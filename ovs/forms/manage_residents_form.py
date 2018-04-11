@@ -36,5 +36,5 @@ class ManageResidentsForm(FlaskForm):
             raise ValidationError('A user with that email already exists')
 
     def validate_room_number(form, field):
-        if RoomService.get_room_by_number(field.data).one_or_none() is None:
+        if field.data != '' and RoomService.get_room_by_number(field.data).one_or_none() is None:
             raise ValidationError("Room doesn't exist")

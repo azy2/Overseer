@@ -48,7 +48,7 @@ def register_room():
                 form.room_status.data,
                 form.room_type.data,
                 form.occupants.data) is None:
-            flash('Creating a room failed', 'error')
+            flash('Creating a room failed', 'danger')
 
         return redirect(url_for('manager.register_room'))
 
@@ -80,7 +80,7 @@ def manage_residents():
                 register_form.first_name.data,
                 register_form.last_name.data,
                 "RESIDENT") is None:
-            flash('Failed to register resident', 'error')
+            flash('Failed to register resident', 'danger')
         else:
             flash('{} {} registered.'.format(register_form.first_name.data, register_form.last_name.data), 'success')
 
@@ -90,7 +90,7 @@ def manage_residents():
         if edit_form.delete_button.data and edit_form.validate_on_submit():
             print('delete_button for ' + edit_form.user_id.data)
             if not UserService.delete_user(edit_form.user_id.data):
-                flash('Failed to delete resident.', 'error')
+                flash('Failed to delete resident.', 'danger')
             else:
                 flash('Resident deleted.', 'success')
 
@@ -104,7 +104,7 @@ def manage_residents():
                     edit_form.first_name.data,
                     edit_form.last_name.data,
                     edit_form.room_number.data):
-                flash('Failed to update resident', 'error')
+                flash('Failed to update resident', 'danger')
             else:
                 flash('Resident updated!', 'success')
 
@@ -155,12 +155,12 @@ def manage_packages():
                                        packages_recipients_checkers=packages_recipients_checkers,
                                        add_form=add_form, edit_form=edit_form)
             elif 'edit_btn' in request.form:
-                flash(str(edit_form.errors['recipient_email'][0]), 'error')
+                flash(str(edit_form.errors['recipient_email'][0]), 'danger')
                 return redirect(url_for('manager.manage_packages'))
 
             # Should not reach here
             else:
-                flash(str(add_form.errors) + "\n-----\n" + str(edit_form.errors), 'error')
+                flash(str(add_form.errors) + "\n-----\n" + str(edit_form.errors), 'danger')
                 return redirect(url_for('manager.manage_packages'))
 
     else:
@@ -218,11 +218,11 @@ def meal_undo():
         meal_log = MealService.get_last_log(user_id)
 
         if meal_log is None or meal_log.log_type == log_types.UNDO:
-            flash('Undo invalid', 'error')
+            flash('Undo invalid', 'danger')
             return redirect(url_for('manager.meal_login'))
         success = MealService.undo_meal_use(user_id, meal_log.resident_id, meal_log.mealplan_pin)
         if not success:
-            flash('Undo failed', 'error')
+            flash('Undo failed', 'danger')
 
         resident = ResidentService.get_resident_by_id(meal_log.resident_id).first()
         mealplan = MealService.get_meal_plan_by_pin(meal_log.mealplan_pin)
@@ -256,7 +256,7 @@ def create_meal_plan():
             if meal_plan is not None:
                 flash('Meal plan created successfully with pin: %d' % (meal_plan.pin), 'message')
             else:
-                flash('Meal plan not created', 'error')
+                flash('Meal plan not created', 'danger')
             return redirect(url_for('manager.create_meal_plan'))
         else:
             return render_template('manager/create_meal_plan.html', role=role, user=user, form=form)
@@ -288,7 +288,7 @@ def add_meals():
                                                                user_meal_plan.meal_plan))
                 flash('Meals added successfully! ' + message, 'message')
             else:
-                flash('Invalid pin', 'error')
+                flash('Invalid pin', 'danger')
             return redirect(url_for('manager.add_meals'))
         else:
             return render_template('manager/add_meals.html', role=role, user=user, form=form)
