@@ -1,9 +1,9 @@
 """ DB and utility functions for Packages """
-from flask import current_app
+from sqlalchemy import exc
+
+from ovs import db
 from ovs.models.package_model import Package
 from ovs.services.user_service import UserService
-
-db = current_app.extensions['database'].instance()
 
 
 class PackageService:
@@ -24,9 +24,13 @@ class PackageService:
         """
         new_package = Package(recipient_id=recipient_id, checked_by_id=checked_by_id,
                               checked_at=checked_at, description=description)
-        db.add(new_package)
-        db.commit()
-        return new_package
+        db.session.add(new_package)
+        try:
+            db.session.commit()
+            return new_package
+        except exc.SQLAlchemyError:
+            db.session.rollback()
+            return None
 
     @staticmethod
     def get_package_by_id(package_id):
@@ -35,14 +39,18 @@ class PackageService:
         :param package_id: The package ID of the package
         :return: The db entry of that package
         """
-        return db.query(Package).filter(Package.id == package_id)
+        return db.session.query(Package).filter(Package.id == package_id)
 
     @staticmethod
     def update_package(package_id, recipient_email, description):
         """ Changes the receiver and description of Package identified by package_id """
         recipient_id = UserService.get_user_by_email(recipient_email).first().id
-        db.query(Package) \
+        db.session.query(Package) \
             .filter(Package.id == package_id) \
             .update({Package.recipient_id: recipient_id, Package.description: description})
-        db.commit()
-        return PackageService.get_package_by_id(package_id).first()
+        try:
+            db.session.commit()
+            return PackageService.get_package_by_id(package_id).first()
+        except exc.SQLAlchemyError:
+            db.session.rollback()
+            return None

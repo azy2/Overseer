@@ -5,10 +5,10 @@ from flask import jsonify
 from sqlalchemy import Integer, Column, CHAR, text, DateTime
 from sqlalchemy.orm import relationship
 
-from ovs import BaseModel
+from ovs import db
 
 
-class Resident(BaseModel):
+class Resident(db.Model):
     """
     Defines a Resident as represented in the database. Along with some utility functions.
     """

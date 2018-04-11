@@ -5,6 +5,7 @@ from sqlalchemy import exc
 
 from flask import current_app
 
+from ovs import db
 from ovs.models.user_model import User
 from ovs.models.profile_model import Profile
 from ovs.models.resident_model import Resident
@@ -12,8 +13,6 @@ from ovs.services.profile_picture_service import ProfilePictureService
 from ovs.services.meal_service import MealService
 from ovs.utils import genders
 
-
-db = current_app.extensions['database'].instance()
 
 class ResidentService:
     """ DB and utility functions for Residents """
@@ -33,9 +32,13 @@ class ResidentService:
         new_resident_profile.gender = genders.UNSPECIFIED
         ResidentService.set_default_picture(new_resident_profile.picture_id)
 
-        db.add(new_resident)
-        db.add(new_resident_profile)
-        db.commit()
+        db.session.add(new_resident)
+        db.session.add(new_resident_profile)
+        try:
+            db.session.commit()
+        except exc.SQLAlchemyError:
+            db.session.rollback()
+            return None
 
         return new_resident
 
@@ -61,7 +64,7 @@ class ResidentService:
             return False
         success = ProfileService.delete_profile(user_id)
         if success:
-            db.delete(resident)
+            db.session.delete(resident)
         return success
 
 
@@ -83,7 +86,9 @@ class ResidentService:
         :param email: The email of the user
         :return: The db entry of that user
         """
-        user_resident = db.query(User, Resident).join(Resident, User.id == Resident.user_id).filter(User.email == email)
+        user_resident = db.session.query(User, Resident)\
+                                  .join(Resident, User.id == Resident.user_id)\
+                                  .filter(User.email == email)
         if user_resident is None:
             return None
         return user_resident.first()[1]
@@ -93,7 +98,7 @@ class ResidentService:
         """
         Returns the resident given by user_id
         """
-        return db.query(Resident).filter(Resident.user_id == user_id)
+        return db.session.query(Resident).filter(Resident.user_id == user_id)
 
     @staticmethod
     def update_resident_room_number(user_id, room_number):
@@ -104,10 +109,10 @@ class ResidentService:
             return None
         # Todo: Catch specific exceptions for join and update
         try:
-            db.query(Resident).filter(Resident.user_id == user_id).update({Resident.room_number: room_number})
-            db.commit()
+            db.session.query(Resident).filter(Resident.user_id == user_id).update({Resident.room_number: room_number})
+            db.session.commit()
         except exc.SQLAlchemyError:
-            db.rollback()
+            db.session.rollback()
             return None
 
         return ResidentService.get_resident_by_id(user_id).first()
@@ -117,7 +122,7 @@ class ResidentService:
         """
         Returns the resident given pin
         """
-        return db.query(Resident).filter(Resident.mealplan_pin == pin).first()
+        return db.session.query(Resident).filter(Resident.mealplan_pin == pin).first()
 
     @staticmethod
     def set_resident_pin(user_id, new_pin):
@@ -125,10 +130,10 @@ class ResidentService:
         Returns the resident given by user_id
         """
         try:
-            db.query(Resident).filter(Resident.user_id == user_id).update({Resident.mealplan_pin: new_pin})
-            db.commit()
+            db.session.query(Resident).filter(Resident.user_id == user_id).update({Resident.mealplan_pin: new_pin})
+            db.session.commit()
         except exc.SQLAlchemyError:
-            db.rollback()
+            db.session.rollback()
             return False
         return True
 
@@ -151,9 +156,9 @@ class ResidentService:
         meal_plan = MealService.create_meal_plan(meal_plan, plan_type)
         try:
             resident.mealplan_pin = meal_plan.pin
-            db.commit()
+            db.session.commit()
         except exc.SQLAlchemyError:
-            db.rollback()
+            db.session.rollback()
             return None
 
         return meal_plan

@@ -6,11 +6,11 @@ from flask import jsonify
 from sqlalchemy import Integer, Enum, Column, CHAR, text, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 
-from ovs import BaseModel
+from ovs import db
 from ovs.utils import genders
 
 
-class Profile(BaseModel):
+class Profile(db.Model):
     """
     Defines a Profile as represented in the database.
     """

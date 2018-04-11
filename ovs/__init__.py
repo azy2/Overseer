@@ -2,13 +2,11 @@
 ovs is the root module of the Overseer application. It sets up flask and makes
 a database connection. The networking code can be found in `../main.py`
 """
-
-import os
-
 from flask import Flask
-from sqlalchemy.ext.declarative import declarative_base
+from flask_sqlalchemy import SQLAlchemy
 
-BaseModel = declarative_base()
+
+db = SQLAlchemy()
 
 def create_app():
     """ Creates a Flask app instance and returns it """
@@ -16,17 +14,27 @@ def create_app():
     app.config.from_object('ovs.config.Config')
 
     with app.app_context():
-        from ovs.database import Database
-        app.extensions['database'] = Database(app)
+        dbconfig = app.config['DATABASE']
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://' + \
+                                                dbconfig['primary']['user'] + ':' + \
+                                                dbconfig['primary']['password'] + '@' + \
+                                                dbconfig['primary']['host'] + ':' + \
+                                                dbconfig['primary']['port'] + '/' + \
+                                                dbconfig['primary']['name']
+        app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-        from ovs.blob import Blob
-        app.extensions['blob'] = Blob(app)
+        db.init_app(app)
+        import ovs.models # pylint: disable=unused-variable
+        db.create_all()
 
-        from flask_sendgrid import SendGrid
-        app.extensions['mail'] = SendGrid(app)
+        from ovs.blob import blob
+        blob.init_app(app)
 
-        from flask_bcrypt import Bcrypt
-        app.extensions['bcrypt'] = Bcrypt(app)
+        from ovs.services.mail_service import mail
+        mail.init_app(app)
+
+        from ovs.models.user_model import bcrypt_app
+        bcrypt_app.init_app(app)
 
         from ovs.services.auth_service import LOGIN_MANAGER
         LOGIN_MANAGER.init_app(app)
@@ -46,5 +54,7 @@ def create_app():
 
         from ovs.datagen import DataGen
         DataGen.create_defaults()
+
+        db.session.commit()
 
     return app

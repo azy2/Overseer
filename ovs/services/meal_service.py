@@ -1,15 +1,12 @@
 """
 DB and utility functions for Meals
 """
+from sqlalchemy import exc
 
-from flask import current_app
-
+from ovs import db
 from ovs.models.mealplan_history_model import MealplanHistory
 from ovs.models.meal_plan_model import MealPlan
 from ovs.utils import log_types
-
-
-db = current_app.extensions['database'].instance()
 
 
 class MealService:
@@ -28,9 +25,13 @@ class MealService:
         :return: True for success, False for failure
         """
         new_plan = MealPlan(meal_plan, plan_type)
-        db.add(new_plan)
-        db.commit()
-        return new_plan
+        db.session.add(new_plan)
+        try:
+            db.session.commit()
+            return new_plan
+        except exc.SQLAlchemyError:
+            db.session.rollback()
+            return None
 
     @staticmethod
     def use_meal(pin, manager_id):
@@ -67,8 +68,12 @@ class MealService:
         if meal_plan is None:
             return False
         meal_plan.credits += number
-        db.commit()
-        return True
+        try:
+            db.session.commit()
+            return True
+        except exc.SQLAlchemyError:
+            db.session.rollback()
+            return False
 
     @staticmethod
     def update_meal_count(meal_plan):
@@ -82,8 +87,12 @@ class MealService:
         :rtype: bool
         """
         was_updated = meal_plan.update_meal_count()
-        db.commit()
-        return was_updated
+        try:
+            db.session.commit()
+            return was_updated
+        except exc.SQLAlchemyError:
+            db.session.rollback()
+            return False
 
     @staticmethod
     def undo_meal_use(manager_id, resident_id, pin):
@@ -106,7 +115,7 @@ class MealService:
         :param pin: account to use
         :return: The account
         """
-        return db.query(MealPlan).filter(MealPlan.pin == pin).first()
+        return db.session.query(MealPlan).filter(MealPlan.pin == pin).first()
 
     @staticmethod
     def log_meal_use(resident_id, pin, manager_id):
@@ -117,8 +126,13 @@ class MealService:
         :param manager_id: id for the manager logging the resident's usage of a meal
         """
         new_mealplan_history_item = MealplanHistory(resident_id, pin, manager_id, log_types.MEAL_USED)
-        db.add(new_mealplan_history_item)
-        db.commit()
+        db.session.add(new_mealplan_history_item)
+        try:
+            db.session.commit()
+            return True
+        except exc.SQLAlchemyError:
+            db.session.rollback()
+            return False
 
     @staticmethod
     def log_undo_meal_use(resident_id, pin, manager_id):
@@ -129,8 +143,13 @@ class MealService:
         :param manager_id: id for the manager who logged the resident's usage of a meal and wishes to undo that
         """
         new_mealplan_history_item = MealplanHistory(resident_id, pin, manager_id, log_types.UNDO)
-        db.add(new_mealplan_history_item)
-        db.commit()
+        db.session.add(new_mealplan_history_item)
+        try:
+            db.session.commit()
+            return True
+        except exc.SQLAlchemyError:
+            db.session.rollback()
+            return False
 
     @staticmethod
     def get_last_log(manager_id):
@@ -139,5 +158,5 @@ class MealService:
         :param manager_id: id of manager
         :return: latest row logged in the meal plan history table or None
         """
-        meal_log = db.query(MealplanHistory).filter(manager_id).order_by(MealplanHistory.id.desc()).first()
+        meal_log = db.session.query(MealplanHistory).filter(manager_id).order_by(MealplanHistory.id.desc()).first()
         return meal_log

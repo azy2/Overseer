@@ -2,11 +2,9 @@
 from flask_wtf import FlaskForm
 from wtforms import  StringField, ValidationError
 from wtforms.validators import DataRequired, Length, Email
-from flask import current_app
 
+from ovs import db
 from ovs.models.resident_model import Resident
-
-db = current_app.extensions['database'].instance()
 
 
 def validate_user_id(form, field):  # pylint: disable=unused-argument
@@ -14,9 +12,7 @@ def validate_user_id(form, field):  # pylint: disable=unused-argument
     Validates that the provided user_id exists.
     This is to thwart malicious input.
     """
-    print('db.query(Resident).filter(Resident.user_id == field.data)')
-    print(db.query(Resident).filter(Resident.user_id == field.data))
-    if db.query(Resident).filter(Resident.user_id == field.data).count() == 0:
+    if db.session.query(Resident).filter(Resident.user_id == field.data).count() == 0:
         raise ValidationError('Resident does not exist')
 
 

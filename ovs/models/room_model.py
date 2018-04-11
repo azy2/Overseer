@@ -4,10 +4,10 @@ Defines a Room as represented in the database
 from flask import jsonify
 from sqlalchemy import Integer, Column, CHAR, text, DateTime
 
-from ovs import BaseModel
+from ovs import db
 
 
-class Room(BaseModel):
+class Room(db.Model):
     """
     Defines a Room as represented in the database. Along with some utility functions.
     """

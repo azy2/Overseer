@@ -1,16 +1,11 @@
 """ Data generation class """
 from flask import current_app
 
+from ovs import db
 from ovs.services import UserService
 from ovs.services import RoomService
-from ovs.models.user_model import User
-from ovs.models.resident_model import Resident
-from ovs.models.room_model import Room
-from ovs.models.profile_model import Profile
-from ovs.models.meal_plan_model import MealPlan
 from ovs.utils import roles
 
-db = current_app.extensions['database'].instance()
 class DataGen:
     """ Data generation class """
     @staticmethod
@@ -45,25 +40,12 @@ class DataGen:
             for user_role in [roles.RESIDENT, roles.RESIDENT_ADVISOR, roles.STAFF,
                               roles.OFFICE_MANAGER, roles.BUILDING_MANAGER]:
                 DataGen.create_user(user_role)
-        db.commit()
 
 
     @staticmethod
     def clear_db():
         """ Empty the DB for tests """
-        profile = db.query(Profile)
-        if profile:
-            profile.delete()
-        user = db.query(User)
-        if user:
-            user.delete()
-        resident = db.query(Resident)
-        if resident:
-            resident.delete()
-        room = db.query(Room)
-        if room:
-            room.delete()
-        mealplan = db.query(MealPlan)
-        if mealplan:
-            mealplan.delete()
-        db.commit()
+        import ovs.models  # pylint: disable=unused-variable
+        db.session.commit()
+        db.drop_all()
+        db.create_all()

@@ -4,16 +4,24 @@ Blob interface code
 import os
 from azure.storage.blob import BlockBlobService
 
+
 class Blob():
     """
     Blob is the implementation for azure blob storage
     """
     #The container name can only contain letters, chars or '-'
     PROFILE_PICTURE_CONTAINER = 'profile-picture'
-    def __init__(self, app):
-        self._is_production = app.config['PRODUCTION']
+    def __init__(self, app=None):
+        """ Initializes the Blob object. If app is not provided init_app must be called before use. """
+        if app:
+            self.init_app(app)
+
+    def init_app(self, app):
+        """ Initializes the Blob object """
+        self.app = app
+        self._is_production = self.app.config['PRODUCTION']
         if self._is_production:
-            blob_config = app.config['BLOB']
+            blob_config = self.app.config['BLOB']
             self._service = BlockBlobService(account_name=blob_config['account'],
                                              account_key=blob_config['key'])
             if not self._service.exists(self.PROFILE_PICTURE_CONTAINER):
@@ -74,3 +82,6 @@ def make_file_name(container, name):
     Builds filename for testing from container and id
     """
     return 'ovs/data/test/' + container + '/' + name
+
+
+blob = Blob()

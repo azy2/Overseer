@@ -2,7 +2,7 @@
 import base64
 import imghdr
 
-from flask import Blueprint, redirect, render_template, request, url_for, flash, current_app
+from flask import Blueprint, redirect, render_template, request, url_for, flash
 from flask_login import current_user, login_required
 
 from ovs.forms.edit_resident_profile_form import EditResidentProfileForm
@@ -14,7 +14,6 @@ from ovs.middleware import permissions
 from ovs.utils import roles
 
 residents_bp = Blueprint('resident', __name__)
-db = current_app.extensions['database'].instance()
 
 
 @residents_bp.route('/')
