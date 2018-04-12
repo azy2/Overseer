@@ -2,9 +2,11 @@
 import logging
 
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.orm import aliased
 
 from ovs import db
 from ovs.models.package_model import Package
+from ovs.models.user_model import User
 from ovs.services.user_service import UserService
 
 
@@ -82,3 +84,17 @@ class PackageService:
             logging.exception('Failed to update package.')
             db.session.rollback()
             return False
+
+    @staticmethod
+    def get_all_packages_recipients_checkers():
+        """
+        Fetch all related packages, recipients, and checkers in db.
+
+        Returns:
+            A list of (Package, User, User) db model tuples.
+        """
+        recipient = aliased(User)
+        checker = aliased(User)
+        return db.session.query(Package, recipient, checker) \
+            .join(recipient, Package.recipient_id == recipient.id) \
+            .join(checker, Package.checked_by_id == checker.id).all()

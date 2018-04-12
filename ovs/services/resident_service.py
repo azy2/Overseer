@@ -258,3 +258,19 @@ class ResidentService:
                 'Failed to create meal plan for resident identified by email.')
             db.session.rollback()
             return None
+
+        return meal_plan
+
+    @staticmethod
+    def get_all_residents_users():
+        """
+        Fetch all related residents and users in db.
+
+        Returns:
+            A list of (Resident, User) db model tuples.
+        """
+        try:
+            return db.session.query(Resident, User).join(User, Resident.user_id == User.id).all()
+        except SQLAlchemyError:
+            logging.exception('Failed to fetch all residents.')
+            return []
