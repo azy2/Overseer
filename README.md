@@ -30,21 +30,6 @@ source ../venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### Run The Webapp Locally
+### Run the Webapp Locally
 * `source venv/bin/activate`
 * `flask run`
-
-# Environment Variable Configuartion
-| Environment Variable | Config                                    |
-| -------------        | :-------------:                           |
-| APP_ENV              | config['APP_ENV']                         |
-| SECRET_KEY           | config['SECRET']                          |
-| DB_HOSTNAME          | config['DATABASE']['primary']['host']     |
-| DB_NAME              | config['DATABASE']['primary']['name']     |
-| DB_PASSWORD          | config['DATABASE']['primary']['password'] |
-| DB_PORT              | config['DATABASE']['primary']['port']     |
-| DB_USER              | config['DATABASE']['primary']['user']     |
-| DB_POOL_SIZE         | config['DATABASE']['pool']['size']        |
-| DB_POOL_TIMEOUT      | config['DATABASE']['pool']['idleTimeout'] |
-| SUPERUSER_EMAIL      | config['SUPERUSER']['email']              |
-| SUPERUSER_PASSWORD   | config['SUPERUSER']['password']           |
