@@ -18,7 +18,7 @@ class RegisterRoomForm(FlaskForm):
                             validators=[validators.Optional()])
 
     def validate_room_number(form, field):
-        if RoomService.get_room_by_number(field.data).one_or_none() is not None:
+        if RoomService.get_room_by_number(field.data) is not None:
             raise ValidationError('A room with that number already exists')
 
     def validate_occupants(form, field):

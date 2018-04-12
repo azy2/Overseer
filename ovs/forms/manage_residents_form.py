@@ -31,10 +31,14 @@ class ManageResidentsForm(FlaskForm):
 
 
     def validate_email(form, field):
-        email = UserService.get_user_by_id(form.user_id.data).first().email
-        if (field.data != email) and UserService.get_user_by_email(field.data) is not None:
-            raise ValidationError('A user with that email already exists')
+        user = UserService.get_user_by_id(form.user_id.data)
+        if user:
+            email = user.email
+            if (field.data != email) and UserService.get_user_by_email(field.data) is not None:
+                raise ValidationError('A user with that email already exists')
+        else:
+            raise ValidationError('No user with that ID')
 
     def validate_room_number(form, field):
-        if field.data != '' and RoomService.get_room_by_number(field.data).one_or_none() is None:
+        if field.data != '' and RoomService.get_room_by_number(field.data) is None:
             raise ValidationError("Room doesn't exist")

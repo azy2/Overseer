@@ -19,5 +19,5 @@ class RegisterManagerForm(FlaskForm):
                                         ('RESIDENT_ADVISOR', 'Resident Advisor')])
 
     def validate_email(form, field):
-        if UserService.get_user_by_email(field.data).one_or_none() is not None:
+        if UserService.get_user_by_email(field.data) is not None:
             raise ValidationError('An account with this email already exists')

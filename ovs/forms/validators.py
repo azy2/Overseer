@@ -20,7 +20,7 @@ class EmailRegistered(object):
 
     def __call__(self, form, field):
         """ Does the validation """
-        user = UserService.get_user_by_email(field.data).one_or_none()
+        user = UserService.get_user_by_email(field.data)
         b = user is None
         if b == self.check:
             raise ValidationError(self.message)
