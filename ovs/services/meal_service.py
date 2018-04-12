@@ -206,7 +206,16 @@ class MealService:
             A MealPlanHistory db model.
         """
         try:
-            return db.session.query(MealplanHistory).filter_by(manager_id).order_by(MealplanHistory.id.desc()).first()
+            return db.session.query(MealplanHistory).filter_by(manager_id=manager_id)\
+                                                    .order_by(MealplanHistory.id.desc()).first()
         except SQLAlchemyError:
             logging.exception('Failed to fetch most recent meal log.')
+            return None
+
+    @staticmethod
+    def get_logs():
+        try:
+            return db.session.query(MealplanHistory).order_by(MealplanHistory.id.desc()).all()
+        except SQLAlchemyError:
+            logging.exception('Failed to fetch meal logs.')
             return None

@@ -137,7 +137,7 @@ def manage_packages():
             description = add_form.description.data
 
             PackageService.create_package(recipient_id, checked_by_id, checked_at, description)
-            flash('Package added successfully!', 'message')
+            flash('Package added successfully!', 'success')
             return redirect(url_for('manager.manage_packages'))
 
         # Edit package
@@ -145,7 +145,7 @@ def manage_packages():
             PackageService.update_package(edit_form.package_id.data,
                                           edit_form.recipient_email.data,
                                           edit_form.description.data)
-            flash('Package edited successfully!', 'message')
+            flash('Package edited successfully!', 'success')
             return redirect(url_for('manager.manage_packages'))
 
         else:
@@ -181,27 +181,38 @@ def meal_login():
     user = UserService.get_user_by_id(user_id)
     role = user.role
 
-    if request.method == 'POST':
-        # Valid Form
-        if form.validate():
-            mealplan = MealService.get_meal_plan_by_pin(form.pin.data)
-            success = MealService.use_meal(form.pin.data, user_id)
 
-            resident = ResidentService.get_resident_by_pin(mealplan.pin)
-            profile = resident.profile
-            pict = base64.b64encode(ProfilePictureService.get_profile_picture(profile.picture_id)).decode()
-            current_meals = mealplan.credits
-            max_meals = mealplan.meal_plan
-            return render_template('manager/meal_login.html', role=role, user=user, form=form,
-                                   pict=pict, submitted=True, current_meals=current_meals, max_meals=max_meals
-                                   , success=success)
+    if form.validate_on_submit():
+        mealplan = MealService.get_meal_plan_by_pin(form.pin.data)
+        if not MealService.use_meal(form.pin.data, user_id):
+            flash('Failed to sign in. Out of meals.', 'danger')
 
-        # Invalid form
-        else:
-            return render_template('manager/meal_login.html', role=role, user=user, form=form, submitted=False)
-    else:
-        return render_template('manager/meal_login.html', role=role, user=user, form=form, submitted=False)
+        return redirect(url_for('manager.meal_login'))
 
+
+    skip = False
+    for i, log in enumerate(MealService.get_logs()):
+        if skip:
+            skip = False
+            continue
+
+        if log.log_type == 'UNDO':
+            skip = True
+            continue
+
+        resident = ResidentService.get_resident_by_id(log.resident_id)
+        profile = resident.profile
+        pict = base64.b64encode(ProfilePictureService.get_profile_picture(profile.picture_id)).decode()
+        mealplan = MealService.get_meal_plan_by_pin(log.mealplan_pin)
+        current_meals = mealplan.credits
+        max_meals = mealplan.meal_plan
+        return render_template('manager/meal_login.html', role=role, user=user, form=form,
+                               pict=pict, show_undo=(i == 0),
+                               name=profile.preferred_name,
+                               current_meals=current_meals,
+                               max_meals=max_meals)
+
+    return render_template('manager/meal_login.html', role=role, user=user, form=form, no_login=True)
 
 @manager_bp.route('/meal_undo/', methods=['POST'])
 @login_required
@@ -228,7 +239,7 @@ def meal_undo():
         name = resident.profile.preferred_name
         current_meals = mealplan.credits
 
-        flash('{} has {} meals left'.format(name, current_meals), 'message')
+        flash('{} has {} meals left'.format(name, current_meals), 'success')
         return redirect(url_for('manager.meal_login'))
     else:
         return redirect(url_for('manager.meal_login'))
@@ -253,7 +264,7 @@ def create_meal_plan():
                 form.plan_type.data,
                 form.email.data)
             if meal_plan is not None:
-                flash('Meal plan created successfully with pin: %d' % (meal_plan.pin), 'message')
+                flash('Meal plan created successfully with pin: %d' % (meal_plan.pin), 'success')
             else:
                 flash('Meal plan not created', 'danger')
             return redirect(url_for('manager.create_meal_plan'))
@@ -285,7 +296,7 @@ def add_meals():
                 message = ('%s has %d out of %d meals now.' % (resident.profile.preferred_name,
                                                                user_meal_plan.credits,
                                                                user_meal_plan.meal_plan))
-                flash('Meals added successfully! ' + message, 'message')
+                flash('Meals added successfully! ' + message, 'success')
             else:
                 flash('Invalid pin', 'danger')
             return redirect(url_for('manager.add_meals'))

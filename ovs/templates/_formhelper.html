@@ -33,7 +33,7 @@
             <div class="form-group row" >
                 <label class="col-sm-2 col-form-label" >{{ field.label }}</label>
                 <div class="col-sm-10" >
-                    {{ field_plain(field) }}
+                    {{ field_plain(field, **kwargs) }}
                 </div>
             </div>
 {% endmacro %}
@@ -42,7 +42,7 @@
     <div class="form-group" >
 
             <label>{{ field.label }}</label>
-            {{ field_plain(field) }}
+            {{ field_plain(field, **kwargs) }}
     </div>
 {% endmacro %}
 
