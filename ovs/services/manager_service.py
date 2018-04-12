@@ -1,4 +1,7 @@
 """ Services related to managers """
+import logging
+
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import aliased
 
 from ovs import db
@@ -14,30 +17,45 @@ class ManagerService:
         pass
 
     @staticmethod
-    def get_all_residents():
+    def get_all_residents_users():
         """
-        Join based on user_id
-        :return: Lists of residents, users tuples
-        :rtype: [(Resident(...), User(...)), ...]
+        Fetch all related residents and users in db.
+
+        Returns:
+            A list of (Resident, User) db model tuples.
         """
-        return db.session.query(Resident, User).join(User, Resident.user_id == User.id).all()
+        try:
+            return db.session.query(Resident, User).join(User, Resident.user_id == User.id).all()
+        except SQLAlchemyError:
+            logging.exception('Failed to fetch all residents.')
+            return []
 
     @staticmethod
     def get_resident_by_id(user_id):
         """
-        Returns the Resident identified by user_id
+        Fetch the resident identified by user_id.
+
+        Args:
+            user_id: Unique user id.
+
+        Returns:
+            A Resident db model.
         """
-        return db.session.query(Resident).filter(Resident.user_id == user_id).first()
+        try:
+            return db.session.query(Resident).filter_by(user_id=user_id).first()
+        except SQLAlchemyError:
+            logging.exception('Failed to get resident by id.')
 
     @staticmethod
     def get_all_packages_recipients_checkers():
         """
-        Join based on user_id
-        :return: Lists of residents, users tuples
-        :rtype: [(Resident(...), User(...)), ...]
+        Fetch all related packages, recipients, and checkers in db.
+
+        Returns:
+            A list of (Package, User, User) db model tuples.
         """
-        user_1 = aliased(User)
-        user_2 = aliased(User)
-        return db.session.query(Package, user_1, user_2) \
-            .join(user_1, Package.recipient_id == user_1.id) \
-            .join(user_2, Package.checked_by_id == user_2.id).all()
+        recipient = aliased(User)
+        checker = aliased(User)
+        return db.session.query(Package, recipient, checker) \
+            .join(recipient, Package.recipient_id == recipient.id) \
+            .join(checker, Package.checked_by_id == checker.id).all()

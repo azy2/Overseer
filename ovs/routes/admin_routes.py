@@ -21,7 +21,7 @@ def register_manager():
     """
     # pylint: disable=duplicate-code
 
-    user = UserService.get_user_by_id(current_user.get_id()).first()
+    user = UserService.get_user_by_id(current_user.get_id())
     role = user.role
     form = RegisterManagerForm()
     if form.validate_on_submit():

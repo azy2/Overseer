@@ -25,8 +25,7 @@ class TestResidentService(OVSBaseTestCase):
         self.test_admin_info = ('test2@gmail.com', 'Bob', 'Ross', 'ADMIN')
         self.test_user = UserService.create_user(*self.test_resident_info)
         self.test_admin = UserService.create_user(*self.test_admin_info)
-        self.test_resident = ResidentService.get_resident_by_id(
-            self.test_user.id).first()
+        self.test_resident = ResidentService.get_resident_by_id(self.test_user.id)
         self.test_room = RoomService.create_room('1', 'Good', 'Single')
 
     def test_create_resident(self):
@@ -48,7 +47,7 @@ class TestResidentService(OVSBaseTestCase):
 
     def test_invalid_get_resident_by_id(self):
         """ Tests that get_resident_by_id does not find a resident with a non-existent id """
-        resident = ResidentService.get_resident_by_id(4).first()
+        resident = ResidentService.get_resident_by_id(4)
         self.assertIsNone(resident)
 
     def test_get_resident_by_email(self):
@@ -100,7 +99,7 @@ class TestResidentService(OVSBaseTestCase):
         # check if deletion successful
         self.assertTrue(ResidentService.delete_resident(self.test_user.id))
 
-        self.assertEqual(len(ManagerService.get_all_residents()), expected)
+        self.assertEqual(len(ManagerService.get_all_residents_users()), expected)
 
     def test_delete_resident_null(self):
         """ Tests that nothing breaks when deleting a nonexistant resident """

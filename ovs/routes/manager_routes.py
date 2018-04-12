@@ -26,7 +26,7 @@ manager_bp = Blueprint('manager', __name__, )
 @permissions(roles.STAFF)
 def landing_page():
     """ The landing page for managers """
-    user = UserService.get_user_by_id(current_user.get_id()).first()
+    user = UserService.get_user_by_id(current_user.get_id())
     role = user.role
     return render_template('manager/index.html', role=role, user=user)
 
@@ -52,7 +52,7 @@ def register_room():
 
         return redirect(url_for('manager.register_room'))
 
-    user = UserService.get_user_by_id(current_user.get_id()).first()
+    user = UserService.get_user_by_id(current_user.get_id())
     role = user.role
     return render_template('manager/register_room.html', role=role, user=user, form=form)
 
@@ -66,12 +66,12 @@ def manage_residents():
     It allows a manager to add/edit/delete residents with form inputs.
     """
     register_form = RegisterResidentForm(prefix='register_form')
-    residents = ManagerService.get_all_residents()
+    residents = ManagerService.get_all_residents_users()
     edit_forms = []
     for (_, user) in residents:
         edit_forms.append(ManageResidentsForm(prefix=str(user.id)))
 
-    user = UserService.get_user_by_id(current_user.get_id()).first()
+    user = UserService.get_user_by_id(current_user.get_id())
     role = user.role
 
     if 'register_btn' in request.form and register_form.validate_on_submit():
@@ -124,14 +124,14 @@ def manage_packages():
     """
     add_form = AddPackageForm(prefix='add_form')
     edit_form = EditPackageForm(prefix='edit_form')
-    user = UserService.get_user_by_id(current_user.get_id()).first()
+    user = UserService.get_user_by_id(current_user.get_id())
     role = user.role
     packages_recipients_checkers = ManagerService.get_all_packages_recipients_checkers()
     if request.method == 'POST':
         # Add package
         if add_form.validate_on_submit():
             recipient_email = add_form.recipient_email.data
-            recipient_id = UserService.get_user_by_email(recipient_email).first().id
+            recipient_id = UserService.get_user_by_email(recipient_email).id
             checked_by_id = current_user.get_id()
             checked_at = datetime.datetime.now().replace(second=0, microsecond=0)  # Current date/time
             description = add_form.description.data
@@ -178,7 +178,7 @@ def meal_login():
     """
     form = MealLoginForm()
     user_id = current_user.get_id()
-    user = UserService.get_user_by_id(user_id).first()
+    user = UserService.get_user_by_id(user_id)
     role = user.role
 
     if request.method == 'POST':
@@ -223,7 +223,7 @@ def meal_undo():
         if not success:
             flash('Undo failed', 'danger')
 
-        resident = ResidentService.get_resident_by_id(meal_log.resident_id).first()
+        resident = ResidentService.get_resident_by_id(meal_log.resident_id)
         mealplan = MealService.get_meal_plan_by_pin(meal_log.mealplan_pin)
         name = resident.profile.preferred_name
         current_meals = mealplan.credits
@@ -244,7 +244,7 @@ def create_meal_plan():
     """
     form = CreateMealPlanForm()
     user_id = current_user.get_id()
-    user = UserService.get_user_by_id(user_id).first()
+    user = UserService.get_user_by_id(user_id)
     role = user.role
     if request.method == 'POST':
         if form.validate():
@@ -272,7 +272,7 @@ def add_meals():
     and accepts that form (POST) and logs the use to a meal plan
     """
     form = AddMealForm()
-    user = UserService.get_user_by_id(current_user.get_id()).first()
+    user = UserService.get_user_by_id(current_user.get_id())
     role = user.role
     if request.method == 'POST':
         if form.validate():

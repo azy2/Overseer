@@ -17,7 +17,7 @@ def login():
     if form.validate():
         email = form.email.data
         password = form.password.data
-        user = UserService.get_user_by_email(email).one_or_none()
+        user = UserService.get_user_by_email(email)
         if user is None:
             flash('Invalid email or password.', 'danger')
             return redirect(url_for('/.landing_page'))
