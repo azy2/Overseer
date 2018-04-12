@@ -189,7 +189,6 @@ def meal_login():
 
         return redirect(url_for('manager.meal_login'))
 
-
     skip = False
     for i, log in enumerate(MealService.get_logs()):
         if skip:
@@ -240,9 +239,8 @@ def meal_undo():
         current_meals = mealplan.credits
 
         flash('{} has {} meals left'.format(name, current_meals), 'success')
-        return redirect(url_for('manager.meal_login'))
-    else:
-        return redirect(url_for('manager.meal_login'))
+
+    return redirect(url_for('manager.meal_login'))
 
 
 @manager_bp.route('/create_meal_plan/', methods=['GET', 'POST'])

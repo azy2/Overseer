@@ -1,26 +1,29 @@
 {% extends "base.html" %}
 {% block title %}Meals{% endblock %}
 {% block content %}
-    {% from "_formhelper.html" import field_inline, field_plain %}
+    {% from "_formhelper.html" import field_inline %}
     <div class="container mt-5">
         <div class="row">
-            <div class="col-4">
-                <div class="row form-group">
-                        <form method="post" action="/manager/meal_login/" class="form-inline">
+            <div class="col-6">
+                <div class="form-row">
+                    <div class="col">
+                        <form method="post" action="/manager/meal_login/" class="form-inline needsvalidation" novalidate>
                             {{ form.csrf_token }}
-                            <label class="col-form-label mr-3">PIN:</label>
-                            {{ field_plain(form.pin, style="width: 5ch;") }}
-                            <button type="submit" class="btn btn-primary mx-4">Sign-in</button>
+                            {{ field_inline(form.pin) }}
+                            <button type="submit" class="btn btn-primary float-right ml-4">Sign-in</button>
                         </form>
+                    </div>
                     {% if (not no_login) and show_undo %}
-                            <form method="post" action="/manager/meal_undo/">
+                        <div class="col-3">
+                            <form method="post" action="/manager/meal_undo/" class="form-inline">
                                 {{ form.csrf_token }}
-                                <input type="submit" value="Undo" name="undo" class="btn btn-secondary">
+                                <input type="submit" value="Undo" name="undo" class="btn btn-secondary float-right">
                             </form>
+                        </div>
                     {% endif %}
                 </div>
             </div>
-            <div class="col-8">
+            <div class="col-6">
                 {% if not no_login %}
                     <center><img id="profile_image" src="data:image/png;base64,{{ pict }}" class="rounded img-thumbnail" height="200" width="200"></center>
                     <center><p>{{ name }} has {{ current_meals }} of {{ max_meals }} meals remaining.</p></center>
