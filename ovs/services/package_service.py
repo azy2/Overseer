@@ -1,5 +1,7 @@
 """ DB and utility functions for Packages """
-from sqlalchemy import exc
+import logging
+
+from sqlalchemy.exc import SQLAlchemyError
 
 from ovs import db
 from ovs.models.package_model import Package
@@ -15,42 +17,68 @@ class PackageService:
     @staticmethod
     def create_package(recipient_id, checked_by_id, checked_at, description):
         """
-        Creates a new package using the specified parameters
-        :param recipient_id: The user ID of the recipient
-        :param checked_by_id: The user ID of the individual who checked the package
-        :param checked_at: The time at which that individual checked the package
-        :param description: A description of the package
-        :return: The db entry of the newly created package
+        Creates a package db entry.
+
+        Args:
+            recipient_id: Unique user id of recipient.
+            checked_by_id: Unique user id of checker.
+            checked_at: Time when the package was recieved by checker.
+            description: A short description of the package.
+
+        Returns:
+            A Package db model.
         """
         new_package = Package(recipient_id=recipient_id, checked_by_id=checked_by_id,
                               checked_at=checked_at, description=description)
-        db.session.add(new_package)
         try:
+            db.session.add(new_package)
             db.session.commit()
             return new_package
-        except exc.SQLAlchemyError:
+        except SQLAlchemyError:
+            logging.exception('Failed to create package.')
             db.session.rollback()
             return None
 
     @staticmethod
     def get_package_by_id(package_id):
         """
-        Gets a package by their id
-        :param package_id: The package ID of the package
-        :return: The db entry of that package
+        Fetch a package identified by the package id.
+
+        Args:
+            package_id: Unique package id.
+
+        Returns:
+            A Package db model.
         """
-        return db.session.query(Package).filter(Package.id == package_id)
+        try:
+            return db.session.query(Package).filter(Package.id == package_id)
+        except SQLAlchemyError:
+            logging.exception('Failed to get pacakge by id.')
+            return None
 
     @staticmethod
     def update_package(package_id, recipient_email, description):
-        """ Changes the receiver and description of Package identified by package_id """
-        recipient_id = UserService.get_user_by_email(recipient_email).first().id
-        db.session.query(Package) \
-            .filter(Package.id == package_id) \
-            .update({Package.recipient_id: recipient_id, Package.description: description})
+        """
+        Updates the receiver and description of Package identified by package_id.
+
+        Args:
+            package_id: Unique package id.
+            recipient_email: Recipient's email address.
+            description: A short description of the package.
+
+        Returns:
+            If the package was updated successfully.
+        """
+        recipient_id = UserService.get_user_by_email(
+            recipient_email).id
+
         try:
+            db.session.query(Package)\
+                .filter_by(id=package_id)\
+                .update({Package.recipient_id: recipient_id, Package.description: description})
             db.session.commit()
-            return PackageService.get_package_by_id(package_id).first()
-        except exc.SQLAlchemyError:
+            return True
+        except SQLAlchemyError:
+            logging.exception('Failed to update package.')
             db.session.rollback()
-            return None
+            return False

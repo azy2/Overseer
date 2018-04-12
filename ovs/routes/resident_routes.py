@@ -22,7 +22,7 @@ residents_bp = Blueprint('resident', __name__)
 def landing_page():
     """ The landing page for residents """
     resident_id = current_user.get_id()
-    resident = ResidentService.get_resident_by_id(resident_id).first()
+    resident = ResidentService.get_resident_by_id(resident_id)
     profile = resident.profile
     return render_template('resident/index.html', role=roles.RESIDENT, profile=profile)
 
@@ -35,7 +35,7 @@ def edit_profile():
     Allows the user to edit their profile in a wtform
     """
     resident_id = current_user.get_id()
-    profile = ResidentService.get_resident_by_id(resident_id).first().profile
+    profile = ResidentService.get_resident_by_id(resident_id).profile
     if profile is None:
         return 'Could not find profile information for user with id: ' + resident_id
 

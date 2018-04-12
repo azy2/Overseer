@@ -29,22 +29,22 @@ class TestRoomService(OVSBaseTestCase):
 
     def test_get_room_by_id(self):
         """ Tests that get_room_by_id returns the correct room """
-        room = RoomService.get_room_by_id(self.test_room.id).first()
+        room = RoomService.get_room_by_id(self.test_room.id)
         self.assertEqual((room.number, room.status, room.type), self.test_room_info)
 
     def test_invalid_get_room_by_id(self):
         """ Tests that get_room_by_id returns None for an invalid room id """
-        room = RoomService.get_room_by_id(5).first()
+        room = RoomService.get_room_by_id(5)
         self.assertIsNone(room)
 
     def test_get_room_by_number(self):
         """ Tests that get_room_by_number returns the correct room """
-        room = RoomService.get_room_by_number(self.test_room.number).first()
+        room = RoomService.get_room_by_number(self.test_room.number)
         self.assertEqual((room.number, room.status, room.type), self.test_room_info)
 
     def test_invalid_get_room_by_number(self):
         """ Tests that get_room_by_number returns None for an invalid room number """
-        room = RoomService.get_room_by_number(429).first()
+        room = RoomService.get_room_by_number(429)
         self.assertIsNone(room)
 
     def test_add_resident_to_room(self):
@@ -53,7 +53,7 @@ class TestRoomService(OVSBaseTestCase):
         test_user = UserService.create_user(*test_user_info)
         RoomService.add_resident_to_room(test_user.email, self.test_room.number)
 
-        resident = ResidentService.get_resident_by_id(test_user.id).first()
+        resident = ResidentService.get_resident_by_id(test_user.id)
         self.assertEqual(resident.room_number, self.test_room.number)
 
     def test_invalid_add_resident_to_room(self):
@@ -62,7 +62,7 @@ class TestRoomService(OVSBaseTestCase):
         test_user = UserService.create_user(*test_user_info)
 
         RoomService.add_resident_to_room(test_user.email, self.test_room.number)
-        resident = ResidentService.get_resident_by_id(test_user.id).first()
+        resident = ResidentService.get_resident_by_id(test_user.id)
         self.assertIsNone(resident)
 
     def test_get_all_rooms(self):

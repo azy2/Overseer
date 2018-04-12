@@ -1,12 +1,13 @@
 """
 DB access and other services for Rooms
 """
-from sqlalchemy import exc
+import logging
+
+from sqlalchemy.exc import SQLAlchemyError
 
 from ovs import db
 from ovs.models.room_model import Room
 from ovs.services.resident_service import ResidentService
-from ovs.services.user_service import UserService
 
 
 class RoomService:
@@ -18,17 +19,29 @@ class RoomService:
         pass
 
     @staticmethod
-    def create_room(number, status, room_type, occupants=''):
-        """ Adds a room to the database """
+    def create_room(number, status, room_type, occupant_emails=''):
+        """
+        Create a room db entry.
+
+        Args:
+            number: The room number.
+            status: Current room status.
+            room_type: Room type.
+            occupant_emails: Resident's email address seperated by ';'.
+
+        Returns:
+            A Room db model.
+        """
         new_room = Room(number=number, status=status, type=room_type)
         try:
             db.session.add(new_room)
             db.session.commit()
-        except exc.SQLAlchemyError:
+        except SQLAlchemyError:
+            logging.exception('Failed to create new room.')
             db.session.rollback()
             return None
 
-        emails = occupants.split(';')
+        emails = occupant_emails.split(';')
         for email in emails:
             RoomService.add_resident_to_room(email, number)
 
@@ -37,44 +50,86 @@ class RoomService:
     @staticmethod
     def get_room_by_id(room_id):
         """
-        Get a Room from it's id
-        :param room_id: The Room's id
-        :return: The Room
+        Fetch a room identified by room id.
+
+        Args:
+            room_id: Unique room id.
+
+        Returns:
+            A Room db model.
         """
-        return db.session.query(Room).filter(Room.id == room_id)
+        try:
+            return db.session.query(Room).filter_by(id=room_id).first()
+        except SQLAlchemyError:
+            logging.exception('Failed to get room by id.')
+            return None
 
     @staticmethod
     def get_room_by_number(number):
         """
-        Get a room from it's number
-        :param number: The room number
-        :return: The Room
+        Fetch a Room model by room number.
+
+        Args:
+            number: The room nmber.
+
+        Returns:
+            A Room db model.
         """
-        return db.session.query(Room).filter(Room.number == number)
+        try:
+            return db.session.query(Room).filter_by(number=number).first()
+        except SQLAlchemyError:
+            logging.exception('Failed to get room by room number.')
+            return None
+
+    @staticmethod
+    def room_exists(number):
+        """
+        Checks if a room identified by room number exits.
+
+        Args:
+            number: The room number.
+
+        Returns:
+            If a matching room exists.
+        """
+        return RoomService.get_room_by_number(number) is not None
 
     @staticmethod
     def get_all_rooms():
         """
-        Get all the rooms in the database
+        Fetch all rooms in the db.
+
+        Returns:
+           A list of Room db models.
         """
-        return db.session.query(Room).all()
+        try:
+            return db.session.query(Room).all()
+        except SQLAlchemyError:
+            logging.exception('Failed to get all rooms.')
+            return []
 
     @staticmethod
     def add_resident_to_room(email, room_number):
         """
-        Associates a Resident to a room. This involves adding the room
-        to the Residents table and adding the resident to the Rooms table.
+        TODO: Acually update the occupants of the room
+        Associates a resident with a room. Updates resident's room number and occupants of room.
+
+        Args:
+            email: Resident's email address.
+            room_number: The room number.
+
+        Returns:
+            If both resident and rooms were successfully updated.
         """
-        user = UserService.get_user_by_email(email).first()
-        if user is None:
-            return {'message': 'Email provided is not valid', 'status': False}
-        if user.role == "RESIDENT":
-            resident = ResidentService.get_resident_by_id(user.id).first()
+        resident = ResidentService.get_resident_by_email(email)
+        if resident is None:
+            return False
+
+        try:
             resident.room_number = room_number
-            try:
-                db.session.commit()
-                return {'message': 'Success', 'status': True}
-            except exc.SQLAlchemyError:
-                db.session.rollback()
-                return {'message': 'Failed to updated room number', 'status': False}
-        return {'message': 'User role is not resident', 'status': False}
+            db.session.commit()
+            return True
+        except SQLAlchemyError:
+            logging.exception('Failed to associated resident and room.')
+            db.session.rollback()
+            return False
