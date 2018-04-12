@@ -5,7 +5,6 @@ from ovs.tests.unittests.base_test import OVSBaseTestCase
 from ovs.services.user_service import UserService
 from ovs.services.resident_service import ResidentService
 from ovs.services.room_service import RoomService
-from ovs.services.manager_service import ManagerService
 from ovs.models.resident_model import Resident
 
 
@@ -89,7 +88,7 @@ class TestResidentService(OVSBaseTestCase):
         # check if deletion successful
         self.assertTrue(ResidentService.delete_resident(self.test_user.id))
 
-        self.assertEqual(len(ManagerService.get_all_residents_users()), expected)
+        self.assertEqual(len(ResidentService.get_all_residents_users()), expected)
 
     def test_delete_resident_null(self):
         """ Tests that nothing breaks when deleting a nonexistant resident """
@@ -100,3 +99,8 @@ class TestResidentService(OVSBaseTestCase):
             ResidentService.delete_resident(self.test_user.id + 1))
 
         self.assertEqual(self.db.session.query(Resident).count(), expected)
+
+    def test_get_all_residents(self):
+        """ Tests that get_all_residents returns the correct number of residents"""
+        residents = ResidentService.get_all_residents_users()
+        self.assertEqual(len(residents), 1)
