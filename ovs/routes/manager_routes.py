@@ -88,7 +88,6 @@ def manage_residents():
 
     for edit_form in edit_forms:
         if edit_form.delete_button.data and edit_form.validate_on_submit():
-            print('delete_button for ' + edit_form.user_id.data)
             if not UserService.delete_user(edit_form.user_id.data):
                 flash('Failed to delete resident.', 'danger')
             else:
@@ -97,13 +96,13 @@ def manage_residents():
             return redirect(url_for('manager.manage_residents'))
 
         elif edit_form.update_button.data and edit_form.validate_on_submit():
-            print('update_button for ' + edit_form.user_id.data)
+            room_number = 'None' if edit_form.room_number.data == '' else edit_form.room_number.data
             if not ResidentService.edit_resident(
                     edit_form.user_id.data,
                     edit_form.email.data,
                     edit_form.first_name.data,
                     edit_form.last_name.data,
-                    edit_form.room_number.data):
+                    room_number):
                 flash('Failed to update resident', 'danger')
             else:
                 flash('Resident updated!', 'success')
