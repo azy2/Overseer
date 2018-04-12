@@ -1,12 +1,14 @@
 """ DB and utility functions for Users """
-from sqlalchemy import exc
+import logging
+
+from sqlalchemy.exc import SQLAlchemyError
 
 from ovs import db
+from ovs.mail import templates
 from ovs.models.user_model import User
 from ovs.services.mail_service import MailService
 from ovs.services.resident_service import ResidentService
 from ovs.utils import crypto
-from ovs.mail import templates
 
 
 class UserService:
@@ -18,15 +20,17 @@ class UserService:
     @staticmethod
     def create_user(email, first_name, last_name, role, password=None):
         """
-        Adds a new user to the DB and generates a random password
-        for them if none is provided
-        :param email: The User's email
-        :param first_name: The User's first name
-        :param last_name: The User's last name
-        :param role: The User's role. See `ovs.utils.roles`
-        :param password: The User's password. If none is provided a
-        random one will be generated
-        :return: The newly created User
+        Add a user entry to db.
+
+        Args:
+            email: The user's email address.
+            first_name: The user's first name.
+            last_name: The user's last name.
+            role: The user's role.
+            password: The user's password. If None a random one is generated.
+
+        Returns:
+            A User db model.
         """
         if password is None:
             password = crypto.generate_password()
@@ -34,32 +38,45 @@ class UserService:
         try:
             db.session.add(new_user)
             db.session.commit()
-        except exc.SQLAlchemyError:
+        except SQLAlchemyError:
+            logging.exception('Failed to create user.')
             db.session.rollback()
             return None
+
         if role == 'RESIDENT':
             ResidentService.create_resident(new_user)
 
-        UserService.send_setup_email(email, first_name, last_name, role, password)
-
+        UserService.send_setup_email(
+            email, first_name, last_name, role, password)
         return new_user
 
     @staticmethod
     def edit_user(user_id, email, first_name, last_name):
         """
-        Edits user with user_id with new information
+        Edits user identified by user id.
+
+        Args:
+            user_id: Unique user id.
+            email: The user's email.
+            first_name: The user's first_name.
+            last_name: The user's last_name.
+
+        Returns:
+            If user was updated sucessfuly.
         """
-        user = UserService.get_user_by_id(user_id).first()
-        if user is None: #Error : bad user_id
+        user = UserService.get_user_by_id(user_id)
+        if user is None:
             return False
 
-        email_user = UserService.get_user_by_email(email).first()
-        if email_user is None or email_user == user: #We don't want to overwrite somebody else
-            user.update(email, first_name, last_name)
+        email_user = UserService.get_user_by_email(email)
+        # Make user email is not associated with other existing users.
+        if email_user is None or email_user == user:
             try:
+                user.update(email, first_name, last_name)
                 db.session.commit()
                 return True
-            except exc.SQLAlchemyError:
+            except SQLAlchemyError:
+                logging.exception('Failed to edit user.')
                 db.session.rollback()
                 return False
         return False
@@ -67,25 +84,38 @@ class UserService:
     @staticmethod
     def delete_user(user_id):
         """
-        Deletes existing user
+        Deletes an existing user identified by user id.
+
+        Args:
+            user_id: Unique user id.
+
+        Returns if the user was sucessfuly deleted.
         """
-        user = UserService.get_user_by_id(user_id).first()
+        user = UserService.get_user_by_id(user_id)
         if user is None:
             return False
         if user.role == 'RESIDENT':
             ResidentService.delete_resident(user_id)
-        db.session.delete(user)
         try:
+            db.session.delete(user)
             db.session.commit()
             return True
-        except exc.SQLAlchemyError:
+        except SQLAlchemyError:
+            logging.exception('Failed to delete user.')
             db.session.rollback()
             return False
 
     @staticmethod
     def send_setup_email(email, first_name, last_name, role, password):
         """
-        Sends setup email to a provided user
+        Sends a setup email to the email address associated with a user.
+
+        Args:
+            email: The user's email address.
+            first_name: The user's first name.
+            last_name: The user's last name.
+            role: The user's role.
+            password: The user's password.
         """
         user_info_substitution = {
             "first_name": first_name,
@@ -100,15 +130,31 @@ class UserService:
     @staticmethod
     def get_user_by_email(email):
         """
-        Gets a user by their email
-        :param email: The email of the user
-        :return: The db entry of that user
+        Fetch a user identified by email.
+
+        Args:
+            user_id: The user's email address.
+
+        Returns:
+            A User db model.
         """
-        return db.session.query(User).filter(User.email == email)
+        try:
+            return db.session.query(User).filter_by(email=email).first()
+        except SQLAlchemyError:
+            logging.exception('Failed to get user by email.')
 
     @staticmethod
     def get_user_by_id(user_id):
         """
-        Gets a user by their id
+        Fetch a user identified by user id.
+
+        Args:
+            user_id: Unique user id.
+
+        Returns:
+            A User db model.
         """
-        return db.session.query(User).filter(User.id == user_id)
+        try:
+            return db.session.query(User).filter_by(id=user_id).first()
+        except SQLAlchemyError:
+            logging.exception('Failed to get user by id.')

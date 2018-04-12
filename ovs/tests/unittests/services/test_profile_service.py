@@ -19,10 +19,8 @@ class TestProfileService(OVSBaseTestCase):
         super().setUp()
         test_user_info = ('test@gmail.com', 'Bob', 'Smith', 'RESIDENT')
         UserService.create_user(*test_user_info)
-        self.test_user = UserService.get_user_by_email(
-            'test@gmail.com').first()
-        self.test_resident = ResidentService.get_resident_by_id(
-            self.test_user.id).first()
+        self.test_user = UserService.get_user_by_email('test@gmail.com')
+        self.test_resident = ResidentService.get_resident_by_id(self.test_user.id)
 
     def test_update_profile(self):
         """ Tests that profiles can be updated """

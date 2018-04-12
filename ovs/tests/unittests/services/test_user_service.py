@@ -36,22 +36,17 @@ class TestUserService(OVSBaseTestCase):
 
     def test_get_user_by_email(self):
         """ Tests get_user_by_email successfully finds a user """
-        user_list = UserService.get_user_by_email(self.test_user_info[0]).all()
-
-        test_user_info = ('test@gmail.com', 'Bob', 'Ross', 'ADMIN')
+        test_user_info = ('test2@gmail.com', 'Bob', 'Ross', 'ADMIN')
         UserService.create_user(*test_user_info)
+        user = UserService.get_user_by_email(test_user_info[0])
 
-        user_list = UserService.get_user_by_email(test_user_info[0]).all()
-        self.assertEqual(len(user_list), 1)
-
-        user = user_list[0]
-        self.assertEqual((user.email, user.first_name,
-                          user.last_name, user.role), self.test_user_info)
+        self.assertEqual((user.email, user.first_name, user.last_name, user.role),
+                         test_user_info)
         self.assertIsNotNone(user.password)
 
     def test_invalid_get_user_by_email(self):
         """ Tests get_user_by_email does not find anyone with an invalid email """
-        user = UserService.get_user_by_email("dummy@gmail.com").first()
+        user = UserService.get_user_by_email("dummy@gmail.com")
         self.assertIsNone(user)
 
     def test_edit_user(self):  # cases : bad user, overwrite, same email, normal
@@ -74,8 +69,7 @@ class TestUserService(OVSBaseTestCase):
         """ Tests editing a nonexistant user"""
         self.assertFalse(UserService.edit_user(
             self.test_user.id+3, 'test_edit@gmail.com', 'John', 'Smith'))  # random id
-        self.assertIsNone(UserService.get_user_by_email(
-            'test_edit@gmail.com').first())
+        self.assertIsNone(UserService.get_user_by_email('test_edit@gmail.com'))
 
     def test_edit_user_duplicate_email(self):
         """ Tests edit resident to an existing email """
@@ -115,4 +109,5 @@ class TestUserService(OVSBaseTestCase):
         self.assertTrue(UserService.delete_user(resident.id))
 
         self.assertEqual(self.db.session.query(User).count(), expected_user)
-        self.assertEqual(self.db.session.query(Resident).count(), expected_resident)
+        self.assertEqual(self.db.session.query(
+            Resident).count(), expected_resident)

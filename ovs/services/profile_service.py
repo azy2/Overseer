@@ -1,12 +1,14 @@
 """
 DB access and other services for profiles
 """
-from sqlalchemy import exc
+import logging
+
+from sqlalchemy.exc import SQLAlchemyError
 
 from ovs import db
 from ovs.models.profile_model import Profile
-from ovs.services.resident_service import ResidentService
 from ovs.services.profile_picture_service import ProfilePictureService
+from ovs.services.resident_service import ResidentService
 
 
 class ProfileService:
@@ -21,9 +23,20 @@ class ProfileService:
     def update_profile(resident_id, preferred_email=None, preferred_name=None,
                        phone_number=None, race=None, gender=None):
         """
-        Updates a user's profile information
+        Updates a profile associated with resident identified by resident id.
+
+        Args:
+            resident_id: Unique resident id.
+            preferred_email: Resident's preferred email.
+            preferred_name: Resident's preferred name.
+            phone_number: Resident's phone number.
+            race: Resident's race.
+            gender: Resident's gender.
+
+        Returns:
+            If the resident's profile was updated successfully.
         """
-        resident = ResidentService.get_resident_by_id(resident_id).one_or_none()
+        resident = ResidentService.get_resident_by_id(resident_id)
         if resident is None:
             return False
         profile = resident.profile
@@ -41,26 +54,44 @@ class ProfileService:
         try:
             db.session.commit()
             return True
-        except exc.SQLAlchemyError:
+        except SQLAlchemyError:
+            logging.exception('Failed to update resident profile.')
             db.session.rollback()
             return False
-
 
     @staticmethod
     def delete_profile(resident_id):
         """
-        Deletes a user's profile information
+        Deletes a profile associated with resident identified by resident id.
+
+        Args:
+            resident_id: Unique resident id.
+
+        Returns:
+            If the Profile db model was sucessfully deleted.
         """
-        resident = ResidentService.get_resident_by_id(resident_id).one_or_none()
+        resident = ResidentService.get_resident_by_id(resident_id)
         if resident is None:
             return False
         profile = resident.profile
         picture_id = profile.picture_id
         ProfilePictureService.delete_profile_picture(picture_id)
-        db.session.delete(profile)
-        return True
+        try:
+            db.session.delete(profile)
+            return True
+        except SQLAlchemyError:
+            logging.exception('Failed to delete resident profile.')
+            return False
 
     @staticmethod
     def get_all_profiles():
-        """ Returns all profiles. Used only for testing """
-        return db.session.query(Profile).all()
+        """
+        Fetches all profiles.
+
+        Returns:
+            A list of Profile db models..
+        """
+        try:
+            return db.session.query(Profile).all()
+        except SQLAlchemyError:
+            logging.exception('Failed to get all profiles.')

@@ -14,10 +14,10 @@ def landing_page():
     """ The homepage for OVS """
     kwargs = {}
     if current_user.is_authenticated:
-        user = UserService.get_user_by_id(current_user.get_id()).first()
+        user = UserService.get_user_by_id(current_user.get_id())
         kwargs['role'] = user.role
         if user.role == UserRole.RESIDENT:
-            profile = ResidentService.get_resident_by_id(user.id).first().profile
+            profile = ResidentService.get_resident_by_id(user.id).profile
             kwargs['profile'] = profile
 
         else:

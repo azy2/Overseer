@@ -21,9 +21,9 @@ class TestManagerService(OVSBaseTestCase):
         self.test_resident_2 = UserService.create_user('test2@gmail.com', 'Joe', 'Smith', 'RESIDENT')
         self.test_admin = UserService.create_user('test3@gmail.com', 'Jim', 'White', 'ADMIN')
 
-    def test_get_all_residents(self):
-        """ Tests that get_all_residents returns the correct number of residents"""
-        residents = ManagerService.get_all_residents()
+    def test_get_all_residents_users(self):
+        """ Tests that get_all_residents_users returns the correct number of residents"""
+        residents = ManagerService.get_all_residents_users()
         self.assertEqual(len(residents), 2)
 
     def test_get_all_packages_recipients_checkers(self):
