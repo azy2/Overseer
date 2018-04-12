@@ -1,43 +1,40 @@
-This is Overseer.
-# Setup
-Vagrant
--------
-One time setup: `vagrunt up`
+# Windows Setup
+### Install Vagrant: https://www.vagrantup.com/
+### Install Virtual Box: https://www.virtualbox.org/
 
-Using dev env post setup: `vagrant ssh`, `python3 main.py`
+## Excuete in CMD
+### First Time Only
+- `vagrant up`
 
-Local
------
-Example setup using ubuntu:
+### Run the Webapp Locally
+- `vagrant ssh`
+- `cd \overseer`
+- `FLASK_APP=main.py flask run --host=0.0.0.0 -p 8080`
 
-One time setup:
+
+# Ubuntu Setup
+### First Time Only
 ```bash
 #!/bin/bash
+# Install Requirements
 sudo apt update
 sudo apt install -y make g++ mysql-server-5.7 python3 python3-virtualenv
-sudo service mysql restart
+# Set Up MySQL DB
 sudo mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH
 mysql_native_password BY 'pass123'; FUSH PRIVILEGES;"
 mysql -u root -p"pass123" -e "CREATE DATABASE ovs"
-echo "[mysqld]\nbind-address = localhost\n" > sudo tee
-/etc/mysql/mysql.conf.d/overseer.cnf
-sudo service mysql restart
+# Create Python Virtual Environment
 python3 -m venv ../venv
+echo "export DB_USERNAME=root\nexport DB_PASSWORD=pass123\nexport DB_HOSTNAME=127.0.0.1\nexport DB_PORT=3306\nexport DB_NAME=ovs\nexport FLASK_APP=main.py" >> ../venv/bin/activate
 source ../venv/bin/activate
 pip install -r requirements.txt
-export DB_USERNAME=root
-export DB_PASSWORD=pass123
-export DB_HOSTNAME=127.0.0.1
-export DB_PORT=3306
-export DB_NAME=ovs
-cd database
-alembic upgrade head
 ```
 
-Run `source ../venv/bin/activate` everytime you start coding.
+### Run The Webapp Locally
+* `source venv/bin/activate`
+* `flask run`
 
-Manual env configuration
-------------------------
+# Environment Variable Configuartion
 | Environment Variable | Config                                    |
 | -------------        | :-------------:                           |
 | APP_ENV              | config['APP_ENV']                         |
