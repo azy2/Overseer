@@ -41,7 +41,7 @@ class RoomService:
             db.session.rollback()
             return None
 
-        emails = ''.join(occupants.split()).split(',')
+        emails = ''.join(occupant_emails.split()).split(',')
         for email in emails:
             RoomService.add_resident_to_room(email, number)
 

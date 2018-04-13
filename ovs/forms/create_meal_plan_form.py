@@ -15,6 +15,7 @@ class CreateMealPlanForm(FlaskForm):
                                                   ('SEMESTERLY', 'Semesterly'),
                                                   ('LIFETIME', 'Lifetime')])
 
-    def validate_email(form, field):
+    def validate_email(form, field):  # pylint: disable=no-self-argument
+        """ Validates that this email doesn't already have a mealplan. """
         # TODO: Once meals get moved to users. Check if this account doesn't already have a mealplan.
         pass

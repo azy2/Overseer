@@ -47,6 +47,7 @@ def edit_profile():
                                       profile_form.phone_number.data,
                                       profile_form.race.data,
                                       profile_form.gender.data)
+        flash('Updated profile successfully', 'success')
         return redirect(url_for('resident.edit_profile'))
     elif 'picture_btn' in request.form and picture_form.validate_on_submit():
         picture_data = picture_form.profile_picture.data.read()

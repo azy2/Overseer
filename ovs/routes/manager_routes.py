@@ -49,6 +49,8 @@ def register_room():
                 form.room_type.data,
                 form.occupants.data) is None:
             flash('Creating a room failed', 'danger')
+        else:
+            flash('Successfully created room', 'success')
 
         return redirect(url_for('manager.register_room'))
 

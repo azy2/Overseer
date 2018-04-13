@@ -1,5 +1,5 @@
 """ routes under /admin/ """
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, redirect, url_for, flash
 from flask_login import login_required, current_user
 
 from ovs.forms import RegisterManagerForm
@@ -25,12 +25,15 @@ def register_manager():
     role = user.role
     form = RegisterManagerForm()
     if form.validate_on_submit():
-        if UserService.create_user(
-                form.email.data,
-                form.first_name.data,
-                form.last_name.data,
-                form.role.data) is None:
+        user = UserService.create_user(
+            form.email.data,
+            form.first_name.data,
+            form.last_name.data,
+            form.role.data)
+        if user is None:
             flash('An error was encountered')
+        else:
+            flash('{} successfully registered'.format(user.email), 'success')
 
         return redirect(url_for('admin.register_manager'))
 

@@ -214,6 +214,12 @@ class MealService:
 
     @staticmethod
     def get_logs():
+        """
+        Returns a list of all meal logs.
+
+        Returns:
+            A list of MealPlanHistory db model.
+        """
         try:
             return db.session.query(MealplanHistory).order_by(MealplanHistory.id.desc()).all()
         except SQLAlchemyError:

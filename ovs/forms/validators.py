@@ -1,3 +1,4 @@
+""" Validators for reuse in forms """
 from wtforms import ValidationError
 
 from ovs.services.user_service import UserService
@@ -21,6 +22,6 @@ class EmailRegistered(object):
     def __call__(self, form, field):
         """ Does the validation """
         user = UserService.get_user_by_email(field.data)
-        b = user is None
-        if b == self.check:
+        not_registered = user is None
+        if not_registered == self.check:
             raise ValidationError(self.message)

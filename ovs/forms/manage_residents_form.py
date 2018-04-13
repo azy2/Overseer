@@ -4,7 +4,6 @@ from wtforms import  StringField, HiddenField, ValidationError, SubmitField
 from wtforms.validators import DataRequired, Length, Email
 
 from ovs import db
-from ovs.forms.validators import EmailRegistered
 from ovs.models.resident_model import Resident
 from ovs.services.user_service import UserService
 from ovs.services.room_service import RoomService
@@ -30,7 +29,8 @@ class ManageResidentsForm(FlaskForm):
     delete_button = SubmitField('Delete')
 
 
-    def validate_email(form, field):
+    def validate_email(form, field): # pylint: disable=no-self-argument
+        """ Checks whether email is unregistered. """
         user = UserService.get_user_by_id(form.user_id.data)
         if user:
             email = user.email
@@ -39,6 +39,7 @@ class ManageResidentsForm(FlaskForm):
         else:
             raise ValidationError('No user with that ID')
 
-    def validate_room_number(form, field):
+    def validate_room_number(form, field): # pylint: disable=no-self-argument, no-self-use
+        """ Checks whether room number exists """
         if field.data != '' and RoomService.get_room_by_number(field.data) is None:
             raise ValidationError("Room doesn't exist")
