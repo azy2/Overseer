@@ -11,14 +11,14 @@ class DataGen:
     @staticmethod
     def create_user(user_role):
         """ Creates a default user if it doesn't exist """
-        user = UserService.get_user_by_email(
-            current_app.config[user_role]['email'])
+        default_user = current_app.config['USERS'][user_role]
+        user = UserService.get_user_by_email(default_user['email'])
         if not user:
-            user = UserService.create_user(current_app.config[user_role]['email'],
-                                           current_app.config[user_role]['first_name'],
-                                           current_app.config[user_role]['last_name'],
+            user = UserService.create_user(default_user['email'],
+                                           default_user['first_name'],
+                                           default_user['last_name'],
                                            user_role,
-                                           current_app.config[user_role]['password'])
+                                           default_user['password'])
 
         if user is not None:
             current_app.config['DEFAULT_IDS'].add(user.id)

@@ -1,0 +1,31 @@
+{
+    "ENV": "PROD",
+    "SECRET_KEY": "",
+    "DEBUG": false,
+    "TEST_MAIL": false,
+    "TEMPLATES_AUTO_RELOAD": true,
+    "DATABASE": {
+        "NAME": "ovs",
+        "HOSTNAME": "localhost",
+        "PORT": "3306",
+        "USER": "root",
+        "PASSWORD": ""
+    },
+    "SENDGRID": {
+        "DOMAIN_NAME": "ovs.centralus.cloudapp.azure.com",
+        "API_KEY": ""
+    },
+    "BLOBSTORE": {
+        "ACCOUNT": "overseer",
+        "API_KEY": "",
+        "DEFAULT_PATH": "ovs/static/default_profile.png"
+    },
+    "USERS": {
+        "ADMIN": {
+            "email": "",
+            "first_name": "",
+            "last_name": "",
+            "password": ""
+        }
+    }
+}

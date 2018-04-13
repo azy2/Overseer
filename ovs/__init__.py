@@ -4,24 +4,31 @@ a database connection. The networking code can be found in `../main.py`
 """
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-
+from ovs.config import OVSConfig
 
 db = SQLAlchemy()
 
 
-def create_app():
+def create_app(config_path=None):
     """ Creates a Flask app instance and returns it """
     app = Flask(__name__)
-    app.config.from_object('ovs.config.Config')
+    config = OVSConfig(config_path)
+    for key, value in config.items():
+        app.config[key] = value
+
+    env = app.config['ENV']
+    app.config['DEVELOPMENT'] = env == 'DEV'
+    app.config['TESTING'] = env == 'TEST'
+    app.config['PRODUCTION'] = env == 'PROD'
 
     with app.app_context():
-        dbconfig = app.config['DATABASE']
+        db_config = app.config['DATABASE']
         app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://' + \
-                                                dbconfig['primary']['user'] + ':' + \
-                                                dbconfig['primary']['password'] + '@' + \
-                                                dbconfig['primary']['host'] + ':' + \
-                                                dbconfig['primary']['port'] + '/' + \
-                                                dbconfig['primary']['name']
+                                                db_config['USER'] + ':' + \
+                                                db_config['PASSWORD'] + '@' + \
+                                                db_config['HOSTNAME'] + ':' + \
+                                                db_config['PORT'] + '/' + \
+                                                db_config['NAME']
         app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
         db.init_app(app)
