@@ -289,7 +289,8 @@ good-names=i,
            Run,
            _,
            app,
-           db
+           db,
+           sg
 
 # Include a hint for the correct naming format with invalid-name
 include-naming-hint=no

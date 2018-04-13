@@ -1,14 +1,13 @@
 """Test for sending mail."""
-
 import json
-from flask import current_app
 
+from flask import current_app
 from mock import patch
 
-from ovs.services.mail_service import MailService, mail
+from ovs.mail import templates
+from ovs.services.mail_service import MailService
 from ovs.services.user_service import UserService
 from ovs.tests.unittests.base_test import OVSBaseTestCase
-from ovs.mail import templates
 
 
 class TestSendMail(OVSBaseTestCase):
@@ -21,7 +20,7 @@ class TestSendMail(OVSBaseTestCase):
     @patch('python_http_client.Client._make_request')
     def test_send_mail(self, mock_client):
         """Test that mail contains correct information."""
-        MailService.send_email(
+        mail, _ = MailService.send_email(
             to_email='testEmail@test.com',
             subject='TestSubject',
             text='testText')

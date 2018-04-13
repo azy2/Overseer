@@ -8,6 +8,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
+
 def create_app():
     """ Creates a Flask app instance and returns it """
     app = Flask(__name__)
@@ -24,14 +25,11 @@ def create_app():
         app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
         db.init_app(app)
-        import ovs.models # pylint: disable=unused-variable
+        import ovs.models  # pylint: disable=unused-variable
         db.create_all()
 
         from ovs.blob import blob
         blob.init_app(app)
-
-        from ovs.services.mail_service import mail
-        mail.init_app(app)
 
         from ovs.models.user_model import bcrypt_app
         bcrypt_app.init_app(app)

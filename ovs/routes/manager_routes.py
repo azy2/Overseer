@@ -7,7 +7,6 @@ from flask_login import current_user, login_required
 
 from ovs.forms import RegisterRoomForm, RegisterResidentForm, ManageResidentsForm, \
     AddPackageForm, EditPackageForm, MealLoginForm, CreateMealPlanForm, AddMealForm
-from ovs.services.manager_service import ManagerService
 from ovs.services.meal_service import MealService
 from ovs.services.package_service import PackageService
 from ovs.services.room_service import RoomService
@@ -128,7 +127,7 @@ def manage_packages():
     edit_form = EditPackageForm(prefix='edit_form')
     user = UserService.get_user_by_id(current_user.get_id())
     role = user.role
-    packages_recipients_checkers = ManagerService.get_all_packages_recipients_checkers()
+    packages_recipients_checkers = PackageService.get_all_packages_recipients_checkers()
     if request.method == 'POST':
         # Add package
         if add_form.validate_on_submit():

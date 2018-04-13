@@ -51,10 +51,9 @@ Vagrant.configure("2") do |config|
     export DB_HOSTNAME=127.0.0.1
     export DB_PORT=3306
     export DB_NAME=ovs
-    cd database && alembic upgrade head
 
     echo "Finishing Setup"
-    echo "cd /overseer/" >> /home/ubuntu/.bashrc
+    echo "cd /overseer" >> /home/ubuntu/.bashrc
 
   SETUP
 
