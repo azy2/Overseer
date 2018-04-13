@@ -1,16 +1,21 @@
 {% extends "base.html" %}
 {% block title %}Create Meal Plan{% endblock %}
 {% block content %}
-    {% from "_formhelper.html" import field_inline %}
+    {% from "_formhelper.html" import field_stacked %}
     <div class="container mt-5" >
-        <form method="post">
-            {{ form.csrf_token }}
-            <dl>
-                {{ field_inline(form.email) }}
-                {{ field_inline(form.meal_plan) }}
-                {{ field_inline(form.plan_type) }}
-            </dl>
-            <input type="submit" value="Register">
-        </form>
+        <div class="row card">
+            <div class="card-body">
+                <h2>Create a Meal Plan</h2>
+                <div class="col">
+                    <form method="post" class="needs-validation" novalidate>
+                        {{ form.csrf_token }}
+                        {{ field_stacked(form.email) }}
+                        {{ field_stacked(form.meal_plan) }}
+                        {{ field_stacked(form.plan_type) }}
+                        <input type="submit" value="Register" class="btn btn-primary float-right">
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}

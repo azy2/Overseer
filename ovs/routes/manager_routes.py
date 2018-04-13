@@ -255,21 +255,19 @@ def create_meal_plan():
     user_id = current_user.get_id()
     user = UserService.get_user_by_id(user_id)
     role = user.role
-    if request.method == 'POST':
-        if form.validate():
-            meal_plan = ResidentService.create_meal_plan_for_resident_by_email(
-                form.meal_plan.data,
-                form.plan_type.data,
-                form.email.data)
-            if meal_plan is not None:
-                flash('Meal plan created successfully with pin: %d' % (meal_plan.pin), 'success')
-            else:
-                flash('Meal plan not created', 'danger')
-            return redirect(url_for('manager.create_meal_plan'))
+    if form.validate_on_submit():
+        meal_plan = ResidentService.create_meal_plan_for_resident_by_email(
+            form.meal_plan.data,
+            form.plan_type.data,
+            form.email.data)
+        if meal_plan is None:
+            flash('Could not create meal plan.', 'danger')
         else:
-            return render_template('manager/create_meal_plan.html', role=role, user=user, form=form)
-    else:
-        return render_template('manager/create_meal_plan.html', role=role, user=user, form=form)
+            flash('Meal plan created with pin {}'.format(meal_plan.pin), 'success')
+
+        return redirect(url_for('manager.create_meal_plan'))
+
+    return render_template('manager/create_meal_plan.html', role=role, user=user, form=form)
 
 
 @manager_bp.route('/add_meals/', methods=['GET', 'POST'])
@@ -283,22 +281,19 @@ def add_meals():
     form = AddMealForm()
     user = UserService.get_user_by_id(current_user.get_id())
     role = user.role
-    if request.method == 'POST':
-        if form.validate():
-            valid = MealService.add_meals(
-                form.pin.data,
-                form.number.data)
-            if valid:
-                user_meal_plan = MealService.get_meal_plan_by_pin(form.pin.data)
-                resident = ResidentService.get_resident_by_pin(user_meal_plan.pin)
-                message = ('%s has %d out of %d meals now.' % (resident.profile.preferred_name,
-                                                               user_meal_plan.credits,
-                                                               user_meal_plan.meal_plan))
-                flash('Meals added successfully! ' + message, 'success')
-            else:
-                flash('Invalid pin', 'danger')
-            return redirect(url_for('manager.add_meals'))
+    if form.validate_on_submit():
+        valid = MealService.add_meals(
+            form.pin.data,
+            form.number.data)
+        if valid:
+            user_meal_plan = MealService.get_meal_plan_by_pin(form.pin.data)
+            resident = ResidentService.get_resident_by_pin(user_meal_plan.pin)
+            flash('{} has {} out of {} meals now.'.format(resident.profile.preferred_name,
+                                                          user_meal_plan.credits,
+                                                          user_meal_plan.meal_plan), 'success')
         else:
-            return render_template('manager/add_meals.html', role=role, user=user, form=form)
-    else:
-        return render_template('manager/add_meals.html', role=role, user=user, form=form)
+            flash('Invalid pin', 'danger')
+
+        return redirect(url_for('manager.add_meals'))
+
+    return render_template('manager/add_meals.html', role=role, user=user, form=form)
