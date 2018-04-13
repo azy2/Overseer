@@ -67,7 +67,7 @@ def manage_residents():
     It allows a manager to add/edit/delete residents with form inputs.
     """
     register_form = RegisterResidentForm(prefix='register_form')
-    residents = ManagerService.get_all_residents_users()
+    residents = ResidentService.get_all_residents_users()
     edit_forms = []
     for (_, user) in residents:
         edit_forms.append(ManageResidentsForm(prefix=str(user.id)))
