@@ -9,7 +9,7 @@
             <div class="card-body">
                 <h2>Add Package</h2>
                 <div class="col">
-                    <form method="post" name="Add Form">
+                    <form method="post" name="Add Form" class="needs-validation" novalidate>
                         {{ add_form.csrf_token }}
                         {{ field_stacked(add_form.recipient_email) }}
                         {{ field_stacked(add_form.description) }}
@@ -26,21 +26,22 @@
                         <tr>
                             <th scope="col">Recipient</th>
                             <th scope="col">Email</th>
-                            <th scope="col">{{ edit_form.checked_by.label }}</th>
-                            <th scope="col">{{ edit_form.checked_at.label }}</th>
-                            <th scope="col">{{ edit_form.is_signed.label }}</th>
-                            <th scope="col">{{ edit_form.signed_at.label }}</th>
-                            <th scope="col">{{ edit_form.description.label }}</th>
+                            <th scope="col">Checked By</th>
+                            <th scope="col">Checked At</th>
+                            <th scope="col">Is Signed</th>
+                            <th scope="col">Signed At</th>
+                            <th scope="col">Description</th>
+                            <th scope="col"></th>
                             <th scope="col"></th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for (package, recipient, checker) in packages_recipients_checkers %}
+                        {% for (edit_form, (package, recipient, checker)) in form_data %}
                             <tr>
-                                <form method="post" name="Edit Form" id="edit-package-submit">
+                                <form method="post" name="Edit Form" id="edit-package-submit" class="needs-validation"  novalidate>
                                     {{ edit_form.csrf_token }}
-                                    {{edit_form.package_id(value=package.id, type="hidden")|safe}}
-                                    {{edit_form.recipient_id(value=package.recipient_id, type="hidden")|safe}}
+                                    {{ field_plain(edit_form.package_id, value=package.id) }}
+                                    {{ field_plain(edit_form.recipient_id, value=recipient.id) }}
                                     <td>{{ recipient.first_name + " " + recipient.last_name }}</td>
                                     <td>{{ field_plain(edit_form.recipient_email, value=recipient.email) }}</td>
                                     <td>{{ checker.first_name + " " + checker.last_name }}</td>
@@ -48,7 +49,8 @@
                                     <td>{{ package.is_signed }}</td>
                                     <td>{{ package.signed_at }}</td>
                                     <td>{{ field_plain(edit_form.description, value=package.description) }}</td>
-                                    <td><input type="submit" value="Submit" name="edit_btn" class="btn btn-secondary"></td>
+                                    <td>{{ field_plain(edit_form.update_button, class="btn btn-secondary") }}</td>
+                                    <td>{{ field_plain(edit_form.check_button, class="btn btn-secondary") }}</td>
                                 </form>
                             </tr>
                         {% endfor %}

@@ -37,7 +37,6 @@
                             <tr>
                                 <form method="post" name="Edit Form" id="edit-resident-submit" class="needs-validation" novalidate>
                                     {{ edit_form.csrf_token }}
-                                    {#{ edit_form.user_id(value=user.id, type="hidden")      |safe }#}
                                     {{ field_plain(edit_form.user_id, value=user.id) }}
                                     <td>{{ field_plain(edit_form.email, value=user.email) }}</td>
                                     <td>{{ field_plain(edit_form.first_name, value=user.first_name) }}</td>
@@ -49,8 +48,6 @@
                                     {% endif %}
                                     <td>{{ field_plain(edit_form.update_button, class="btn btn-secondary") }}</td>
                                     <td>{{ field_plain(edit_form.delete_button, class="btn btn-secondary") }}</td>
-                                    <!-- <td><input type="submit" value="Update Row" name="edit_btn" class="btn btn-secondary"></td>
-                                         <td><input type="submit" value="Delete" name="delete_btn" class="btn btn-secondary"></td> -->
                                 </form>
                             </tr>
                         {% endfor %}

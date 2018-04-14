@@ -9,18 +9,12 @@ from ovs.services.user_service import UserService
 from ovs.services.room_service import RoomService
 
 
-def validate_user_id(form, field):  # pylint: disable=unused-argument
-    """
-    Validates that the provided user_id exists.
-    This is to thwart malicious input.
-    """
-    if db.session.query(Resident).filter(Resident.user_id == field.data).count() == 0:
-        raise ValidationError('Resident does not exist')
+
 
 
 class ManageResidentsForm(FlaskForm):
     """ Form with data required to edit a resident """
-    user_id = HiddenField('User id', validators=[DataRequired(), validate_user_id])
+    user_id = HiddenField('User id', validators=[DataRequired()])
     email = StringField('Email Address', validators=[Email(), DataRequired()])
     first_name = StringField('First Name', validators=[Length(min=1, max=255), DataRequired()])
     last_name = StringField('Last Name', validators=[Length(min=1, max=255), DataRequired()])
@@ -43,3 +37,11 @@ class ManageResidentsForm(FlaskForm):
         """ Checks whether room number exists """
         if field.data != '' and RoomService.get_room_by_number(field.data) is None:
             raise ValidationError("Room doesn't exist")
+
+    def validate_user_id(form, field):  # pylint: disable=unused-argument
+        """
+        Validates that the provided user_id exists.
+        This is to thwart malicious input.
+        """
+        if db.session.query(Resident).filter(Resident.user_id == field.data).count() == 0:
+            raise ValidationError('Resident does not exist')

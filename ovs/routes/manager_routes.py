@@ -124,49 +124,35 @@ def manage_packages():
     to the user table with a default password.
     """
     add_form = AddPackageForm(prefix='add_form')
-    edit_form = EditPackageForm(prefix='edit_form')
+    packages = PackageService.get_all_packages_recipients_checkers() #(package, recip, checker)
+    edit_forms = []
+    for (package, _, _) in packages:
+        edit_forms.append(EditPackageForm(prefix=str(package.id)))
+
     user = UserService.get_user_by_id(current_user.get_id())
     role = user.role
-    packages_recipients_checkers = PackageService.get_all_packages_recipients_checkers()
-    if request.method == 'POST':
-        # Add package
-        if add_form.validate_on_submit():
-            recipient_email = add_form.recipient_email.data
-            recipient_id = UserService.get_user_by_email(recipient_email).id
-            checked_by_id = current_user.get_id()
-            checked_at = datetime.datetime.now().replace(second=0, microsecond=0)  # Current date/time
-            description = add_form.description.data
 
-            PackageService.create_package(recipient_id, checked_by_id, checked_at, description)
-            flash('Package added successfully!', 'success')
-            return redirect(url_for('manager.manage_packages'))
+    if 'add_btn' in request.form and add_form.validate_on_submit():
+        recipient_email = add_form.recipient_email.data
+        recipient_id = UserService.get_user_by_email(recipient_email).id
+        checked_by_id = current_user.get_id()
+        checked_at = datetime.datetime.now().replace(second=0, microsecond=0)  # Current date/time
+        description = add_form.description.data
 
-        # Edit package
-        elif edit_form.validate_on_submit():
+        PackageService.create_package(recipient_id, checked_by_id, checked_at, description)
+        flash('Package added successfully!', 'success')
+        return redirect(url_for('manager.manage_packages'))
+
+    for edit_form in edit_forms:
+        if edit_form.update_button.data and edit_form.validate_on_submit():
             PackageService.update_package(edit_form.package_id.data,
                                           edit_form.recipient_email.data,
                                           edit_form.description.data)
             flash('Package edited successfully!', 'success')
             return redirect(url_for('manager.manage_packages'))
 
-        else:
-            if 'add_btn' in request.form:
-                return render_template('manager/manage_packages.html', role=role, user=user,
-                                       packages_recipients_checkers=packages_recipients_checkers,
-                                       add_form=add_form, edit_form=edit_form)
-            elif 'edit_btn' in request.form:
-                flash(str(edit_form.errors['recipient_email'][0]), 'danger')
-                return redirect(url_for('manager.manage_packages'))
-
-            # Should not reach here
-            else:
-                flash(str(add_form.errors) + "\n-----\n" + str(edit_form.errors), 'danger')
-                return redirect(url_for('manager.manage_packages'))
-
-    else:
-        return render_template('manager/manage_packages.html', role=role, user=user,
-                               packages_recipients_checkers=packages_recipients_checkers,
-                               add_form=add_form, edit_form=edit_form)
+    return render_template('manager/manage_packages.html', role=role, user=user,
+                           add_form=add_form,  form_data=zip(edit_forms, packages))
 
 
 @manager_bp.route('/meal_login/', methods=['GET', 'POST'])
