@@ -7,6 +7,7 @@ from ovs.services.user_service import UserService
 from ovs.services.resident_service import ResidentService
 from ovs.tests.unittests.base_test import OVSBaseTestCase
 
+
 class TestRoomService(OVSBaseTestCase):
     """
     Tests for room services
@@ -67,9 +68,9 @@ class TestRoomService(OVSBaseTestCase):
 
     def test_get_all_rooms(self):
         """ Tests getting all rooms with 1 entry"""
-        self.assertEqual(len(RoomService.get_all_rooms()), 1)
+        self.assertEqual(len(RoomService.get_all_rooms()), 2)
 
     def tests_get_all_rooms_multiple(self):
         """ Tests getting all rooms with 2 entries"""
         RoomService.create_room('6', 'Bad', 'Double')
-        self.assertEqual(len(RoomService.get_all_rooms()), 2)
+        self.assertEqual(len(RoomService.get_all_rooms()), 3)
