@@ -1,0 +1,61 @@
+{
+    "ENV": "DEV",
+    "SECRET_KEY": "SUPER_SECRET_KEY",
+    "DEBUG": true,
+    "TEST_MAIL": false,
+    "TEMPLATES_AUTO_RELOAD": true,
+    "DATABASE": {
+        "NAME": "ovs",
+        "HOSTNAME": "localhost",
+        "PORT": "3306",
+        "USER": "root",
+        "PASSWORD": "pass123"
+    },
+    "SENDGRID": {
+        "DOMAIN_NAME": "ovs.centralus.cloudapp.azure.com",
+        "API_KEY": "FAKE_API_KEY"
+    },
+    "BLOBSTORE": {
+        "ACCOUNT": "overseer",
+        "ACCOUNT_KEY": "FAKE_ACCOUNT_KEY",
+        "DEFAULT_PATH": "ovs/static/default_profile.png"
+    },
+    "USERS": {
+        "ADMIN": {
+            "email": "admin@gmail.com",
+            "first_name": "Admin",
+            "last_name": "User",
+            "password": "abcd1234"
+        },
+        "BUILDING_MANAGER": {
+            "email": "building_manager@gmail.com",
+            "first_name": "Building",
+            "last_name": "Manager",
+            "password": "abcd1234"
+        },
+        "OFFICE_MANAGER": {
+            "email": "office_manager@gmail.com",
+            "first_name": "Office",
+            "last_name": "Manager",
+            "password": "abcd1234"
+        },
+        "STAFF": {
+            "email": "staff@gmail.com",
+            "first_name": "Staff",
+            "last_name": "Smith",
+            "password": "abcd1234"
+        },
+        "RESIDENT_ADVISOR": {
+            "email": "resident_advisor@gmail.com",
+            "first_name": "Resident",
+            "last_name": "Advisor",
+            "password": "abcd1234"
+        },
+        "RESIDENT": {
+            "email": "resident@gmail.com",
+            "first_name": "John",
+            "last_name": "Smith",
+            "password": "abcd1234"
+        }   
+    }
+}

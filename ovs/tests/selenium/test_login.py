@@ -11,12 +11,13 @@ class TestLogin(SeleniumBaseTestCase):
         self.browser.get(self.base_url)
         self.assertIn('Overseer', self.browser.title)
 
-        default_resident_email = current_app.config['RESIDENT']['email']
-        default_resident_password = current_app.config['RESIDENT']['password']
+        defualt_resident = current_app.config['USERS']['RESIDENT']
+        default_resident_email = defualt_resident['email']
+        default_resident_password = defualt_resident['password']
         super().login_with_credentials(default_resident_email, default_resident_password)
 
         # Should be at resident greeting page
-        default_resident_name = current_app.config['RESIDENT']['first_name']
+        default_resident_name = defualt_resident['first_name']
         self.assertIn(default_resident_name, self.browser.title)
 
     def test_resident_logout(self):
@@ -37,12 +38,13 @@ class TestLogin(SeleniumBaseTestCase):
         self.browser.get(self.base_url)
         self.assertIn('Overseer', self.browser.title)
 
-        default_admin_email = current_app.config['ADMIN']['email']
-        default_admin_password = current_app.config['ADMIN']['password']
+        default_admin = current_app.config['USERS']['ADMIN']
+        default_admin_email = default_admin['email']
+        default_admin_password = default_admin['password']
         super().login_with_credentials(default_admin_email, default_admin_password)
 
         # Should be at manager greeting page
-        default_admin_name = current_app.config['ADMIN']['first_name']
+        default_admin_name = default_admin['first_name']
         self.assertIn(default_admin_name, self.browser.title)
 
     def test_bad_login(self):
