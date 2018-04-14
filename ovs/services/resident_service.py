@@ -37,7 +37,7 @@ class ResidentService:
         new_resident_profile.preferred_name = new_user.first_name
         new_resident_profile.preferred_email = new_user.email
         new_resident_profile.gender = genders.UNSPECIFIED
-        ResidentService.set_default_picture(new_resident_profile.picture_id)
+        ProfilePictureService.set_default_picture(new_resident_profile.user_id)
 
         try:
             db.session.add(new_resident)
@@ -92,21 +92,6 @@ class ResidentService:
                     logging.exception('Failed to delete resident.')
                     return False
         return False
-
-    @staticmethod
-    def set_default_picture(picture_id):
-        """
-        TODO: Refactor in to profile_service.
-        Sets default picture for new residents.
-
-        Args:
-            picture_id: Profile db model picture id.
-        """
-        default_picture_path = current_app.config['BLOBSTORE']['DEFAULT_PATH']
-        with open(default_picture_path, 'rb') as default_image:
-            file_contents = default_image.read()
-            file_bytes = bytearray(file_contents)
-        ProfilePictureService.create_profile_picture(picture_id, file_bytes)
 
     @staticmethod
     def get_resident_by_email(email):

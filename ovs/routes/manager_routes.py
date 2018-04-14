@@ -190,7 +190,7 @@ def meal_login():
 
             resident = ResidentService.get_resident_by_pin(mealplan.pin)
             profile = resident.profile
-            pict = base64.b64encode(ProfilePictureService.get_profile_picture(profile.picture_id)).decode()
+            pict = base64.b64encode(ProfilePictureService.get_profile_picture(profile.user_id)).decode()
             current_meals = mealplan.credits
             max_meals = mealplan.meal_plan
             return render_template('manager/meal_login.html', role=role, user=user, form=form,

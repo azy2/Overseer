@@ -74,8 +74,8 @@ class ProfileService:
         if resident is None:
             return False
         profile = resident.profile
-        picture_id = profile.picture_id
-        ProfilePictureService.delete_profile_picture(picture_id)
+        user_id = profile.user_id
+        ProfilePictureService.delete_profile_picture(user_id)
         try:
             db.session.delete(profile)
             return True

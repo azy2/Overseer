@@ -30,7 +30,6 @@ class TestProfileService(OVSBaseTestCase):
         self.assertEqual(profile.preferred_email, 'test@gmail.com')
         self.assertEqual(profile.race, None)
         self.assertEqual(profile.gender, 'Unspecified')
-        self.assertIsNotNone(profile.picture_id)
 
         ProfileService.update_profile(self.test_user.id,
                                       preferred_name='Jenny',
@@ -44,7 +43,6 @@ class TestProfileService(OVSBaseTestCase):
         self.assertEqual(profile.preferred_email, 'test_new@gmail.com')
         self.assertEqual(profile.race, 'Black')
         self.assertEqual(profile.gender, Gender.FEMALE)
-        self.assertIsNotNone(profile.picture_id)
 
     def test_delete_profile(self):
         """ Tests that profiles can be deleted """

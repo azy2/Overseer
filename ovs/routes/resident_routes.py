@@ -63,7 +63,7 @@ def edit_profile():
                 if imghdr.what(None, h=picture_data) != 'png':
                     flash('File is not a png', 'error')
                     return redirect(url_for('resident.edit_profile'))
-                ProfilePictureService.update_profile_picture(profile.picture_id, picture_data)
+                ProfilePictureService.update_profile_picture(profile.user_id, picture_data)
                 return redirect(url_for('resident.edit_profile'))
             else:
                 flash('Unknown error', 'error')
@@ -72,6 +72,6 @@ def edit_profile():
             flash('Invalid input', 'error')
             return redirect(url_for('resident.edit_profile'))
     else:
-        pict = base64.b64encode(ProfilePictureService.get_profile_picture(profile.picture_id)).decode()
+        pict = base64.b64encode(ProfilePictureService.get_profile_picture(profile.user_id)).decode()
         return render_template('resident/profile.html', role=roles.RESIDENT, profile=profile, pict=pict,
                                profile_form=profile_form, picture_form=picture_form)
