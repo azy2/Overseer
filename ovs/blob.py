@@ -12,12 +12,24 @@ class Blob():
     #The container name can only contain letters, chars or '-'
     PROFILE_PICTURE_CONTAINER = 'profile-picture'
     def __init__(self, app=None):
-        """ Initializes the Blob object. If app is not provided init_app must be called before use. """
+        """
+        Initializes the Blob object. If app is not provided init_app must be called before use.
+
+        Args:
+            self: Blob object
+            app: Application to run with
+        """
         if app:
             self.init_app(app)
 
     def init_app(self, app):
-        """ Initializes the Blob object """
+        """
+        Initializes the Blob object
+
+        Args:
+            self: Blob object
+            app: Application to run with
+        """
         self.app = app
         self._is_production = self.app.config['PRODUCTION']
         if self._is_production:
@@ -30,6 +42,12 @@ class Blob():
     def create_blob_from_bytes(self, container, name, byte_array):
         """
         Wraps create blob from bytes service
+
+        Args:
+            self: Blob object
+            container: Name of container to store blob object in
+            name: Name of blob object
+            byte_array: Bytes of object
         """
         name = str(name)
         if self._is_production:
@@ -45,6 +63,11 @@ class Blob():
     def delete_blob(self, container, name):
         """
         Wraps delete blob service
+
+        Args:
+            self: Blob object
+            container: Name of blob container
+            name: Name of blob object
         """
         name = str(name)
         if self._is_production:
@@ -56,6 +79,11 @@ class Blob():
     def exists(self, container, name):
         """
         Wraps exists blob service
+
+        Args:
+            self: Blob object
+            container: Name of blob container
+            name: Name of blob object
         """
         name = str(name)
         if self._is_production:
@@ -67,6 +95,11 @@ class Blob():
     def get_blob_to_bytes(self, container, name):
         """
         Wraps get blob to bytes service
+
+        Args:
+            self: Blob object
+            container: Name of blob container
+            name: Name of blob object
         """
         name = str(name)
         if self._is_production:
@@ -84,6 +117,10 @@ class Blob():
 def make_file_name(container, name):
     """
     Builds filename for testing from container and id
+
+    Args:
+        container: Name of blob container
+        name: Name of blob object
     """
     name = str(name)
     return 'ovs/data/test/' + container + '/' + name
