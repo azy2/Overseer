@@ -111,7 +111,6 @@ class RoomService:
     @staticmethod
     def add_resident_to_room(email, room_number):
         """
-        TODO: Acually update the occupants of the room
         Associates a resident with a room. Updates resident's room number and occupants of room.
 
         Args:
@@ -123,11 +122,13 @@ class RoomService:
         """
         resident = ResidentService.get_resident_by_email(email)
         room = RoomService.get_room_by_number(room_number)
+
         if resident is None or room is None:
             return False
 
         try:
             resident.room_number = room_number
+            room.occupants.append(resident)
             db.session.commit()
             return True
         except SQLAlchemyError:
