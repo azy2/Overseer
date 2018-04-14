@@ -38,9 +38,7 @@ class MealService:
 
     @staticmethod
     def create_meal_plan_for_resident_by_email(meal_plan, plan_type, email):
-        from ovs.services.resident_service import ResidentService
         """
-        TODO: Move to meal_service
         Create a new meal plan db entry
           and assign a meal plan pin to an existing resident identified by email.
 
@@ -52,6 +50,8 @@ class MealService:
         Returns:
             A MealPlan db model.
         """
+        from ovs.services.resident_service import ResidentService
+
         resident = ResidentService.get_resident_by_email(email)
         if resident is None:
             return None

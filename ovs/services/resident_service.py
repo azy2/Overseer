@@ -20,7 +20,6 @@ class ResidentService:
 
     @staticmethod
     def create_resident(new_user, room_number='None'):
-        from ovs.services.profile_service import ProfileService
         """
         Adds a resident to the Resident table.
 
@@ -31,6 +30,8 @@ class ResidentService:
         Returns:
             The Resident db model that was just created.
         """
+        from ovs.services.profile_service import ProfileService
+
         new_resident = Resident(new_user.id, room_number)
         new_resident_profile = Profile(new_user.id)
         new_resident_profile.preferred_name = new_user.first_name
@@ -43,7 +44,7 @@ class ResidentService:
             db.session.add(new_resident_profile)
             db.session.commit()
         except SQLAlchemyError:
-            # Resident must be unqiue by their email.
+            # Resident must be unique by their email.
             logging.exception('Failed to create resident.')
             db.session.rollback()
             return None
