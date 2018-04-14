@@ -9,7 +9,7 @@
 ### Run the Webapp Locally
 - `vagrant ssh`
 - `cd \overseer`
-- `FLASK_APP=main.py flask run --host=0.0.0.0 -p 8080`
+- `FLASK_APP=wsgi.py flask run --host=0.0.0.0 -p 8080`
 
 
 # Ubuntu Setup
@@ -25,7 +25,7 @@ mysql_native_password BY 'pass123'; FUSH PRIVILEGES;"
 mysql -u root -p"pass123" -e "CREATE DATABASE ovs"
 # Create Python Virtual Environment
 python3 -m venv ../venv
-echo "export DB_USERNAME=root\nexport DB_PASSWORD=pass123\nexport DB_HOSTNAME=127.0.0.1\nexport DB_PORT=3306\nexport DB_NAME=ovs\nexport FLASK_APP=main.py" >> ../venv/bin/activate
+echo "export DB_USERNAME=root\nexport DB_PASSWORD=pass123\nexport DB_HOSTNAME=127.0.0.1\nexport DB_PORT=3306\nexport DB_NAME=ovs\nexport FLASK_APP=wsgi.py" >> ../venv/bin/activate
 source ../venv/bin/activate
 pip install -r requirements.txt
 ```
