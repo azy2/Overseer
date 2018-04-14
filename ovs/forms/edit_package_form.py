@@ -21,7 +21,7 @@ class EditPackageForm(FlaskForm):
     update_button = SubmitField('Update')
     check_button = SubmitField('Check')
 
-    def validate_recipient_id(form, field):  # pylint: disable=unused-argument
+    def validate_recipient_id(form, field):  # pylint: disable=no-self-argument, no-self-use
         """
         Validates that the provided user_id exists.
         This is to thwart malicious input.
@@ -30,7 +30,7 @@ class EditPackageForm(FlaskForm):
             raise ValidationError('Resident does not exist')
 
 
-    def validate_package_id(form, field):  # pylint: disable=unused-argument
+    def validate_package_id(form, field):  # pylint: disable=no-self-argument, no-self-use
         """
         Validates that the provided package_id exists.
         This is to thwart malicious input.
@@ -39,11 +39,10 @@ class EditPackageForm(FlaskForm):
             raise ValidationError('Package does not exist')
 
 
-    def validate_recipient_email(form, field):  # pylint: disable=unused-argument
+    def validate_recipient_email(form, field):  # pylint: disable=no-self-argument, no-self-use
         """
         Validates that the provided resident email exists.
         This is to thwart malicious input.
         """
-        if db.session.query( User).filter(User.email == field.data).count() == 0:
+        if db.session.query(User).filter(User.email == field.data).count() == 0:
             raise ValidationError('Resident does not exist. Please verify resident email.')
-

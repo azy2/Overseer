@@ -38,7 +38,7 @@ class ManageResidentsForm(FlaskForm):
         if field.data != '' and RoomService.get_room_by_number(field.data) is None:
             raise ValidationError("Room doesn't exist")
 
-    def validate_user_id(form, field):  # pylint: disable=unused-argument
+    def validate_user_id(form, field):  # pylint: disable=no-self-argument, no-self-use
         """
         Validates that the provided user_id exists.
         This is to thwart malicious input.

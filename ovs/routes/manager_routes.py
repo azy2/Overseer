@@ -150,9 +150,13 @@ def manage_packages():
                                           edit_form.description.data)
             flash('Package edited successfully!', 'success')
             return redirect(url_for('manager.manage_packages'))
+        if edit_form.check_button.data and edit_form.validate_on_submit():
+            flash('Check package is unimplemented', 'danger')
+            return redirect(url_for('manager.manage_packages'))
+
 
     return render_template('manager/manage_packages.html', role=role, user=user,
-                           add_form=add_form,  form_data=zip(edit_forms, packages))
+                           add_form=add_form, form_data=zip(edit_forms, packages))
 
 
 @manager_bp.route('/meal_login/', methods=['GET', 'POST'])
