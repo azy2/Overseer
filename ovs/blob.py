@@ -21,9 +21,9 @@ class Blob():
         self.app = app
         self._is_production = self.app.config['PRODUCTION']
         if self._is_production:
-            blob_config = self.app.config['BLOB']
-            self._service = BlockBlobService(account_name=blob_config['account'],
-                                             account_key=blob_config['key'])
+            blob_config = self.app.config['BLOBSTORE']
+            self._service = BlockBlobService(account_name=blob_config['ACCOUNT'],
+                                             account_key=blob_config['ACCOUNT_KEY'])
             if not self._service.exists(self.PROFILE_PICTURE_CONTAINER):
                 self._service.create_container(self.PROFILE_PICTURE_CONTAINER)
 

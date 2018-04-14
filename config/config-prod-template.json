@@ -17,7 +17,7 @@
     },
     "BLOBSTORE": {
         "ACCOUNT": "overseer",
-        "API_KEY": "",
+        "ACCOUNT_KEY": "",
         "DEFAULT_PATH": "ovs/static/default_profile.png"
     },
     "USERS": {
