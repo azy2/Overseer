@@ -122,7 +122,8 @@ class RoomService:
             If both resident and rooms were successfully updated.
         """
         resident = ResidentService.get_resident_by_email(email)
-        if resident is None:
+        room = RoomService.get_room_by_number(room_number)
+        if resident is None or room is None:
             return False
 
         try:

@@ -37,6 +37,40 @@ class MealService:
             return None
 
     @staticmethod
+    def create_meal_plan_for_resident_by_email(meal_plan, plan_type, email):
+        from ovs.services.resident_service import ResidentService
+        """
+        TODO: Move to meal_service
+        Create a new meal plan db entry
+          and assign a meal plan pin to an existing resident identified by email.
+
+        Args:
+            meal_plan: The plan's maximum credit.
+            plan_type: The plan's reset period.
+            email: An email address.
+
+        Returns:
+            A MealPlan db model.
+        """
+        resident = ResidentService.get_resident_by_email(email)
+        if resident is None:
+            return None
+
+        meal_plan = MealService.create_meal_plan(meal_plan, plan_type)
+        if meal_plan is None:
+            return None
+
+        try:
+            resident.mealplan_pin = meal_plan.pin
+            db.session.commit()
+            return meal_plan
+        except SQLAlchemyError:
+            logging.exception(
+                'Failed to create meal plan for resident identified by email.')
+            db.session.rollback()
+            return None
+
+    @staticmethod
     def use_meal(pin, manager_id):
         """
         Decrement credit for meal plan identified by meal pin

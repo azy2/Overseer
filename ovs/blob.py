@@ -5,12 +5,13 @@ import os
 from azure.storage.blob import BlockBlobService
 
 
-class Blob():
+class Blob:
     """
     Blob is the implementation for azure blob storage
     """
-    #The container name can only contain letters, chars or '-'
+    # The container name can only contain letters, chars or '-'
     PROFILE_PICTURE_CONTAINER = 'profile-picture'
+
     def __init__(self, app=None):
         """ Initializes the Blob object. If app is not provided init_app must be called before use. """
         if app:
@@ -34,7 +35,7 @@ class Blob():
         if self._is_production:
             self._service.create_blob_from_bytes(container, name, bytes(byte_array))
         else:
-            #this just saves the file locally, used for dev and testing
+            # this just saves the file locally, used for dev and testing
             file_name = make_file_name(container, name)
             if not os.path.exists(os.path.dirname(file_name)):
                 os.makedirs(os.path.dirname(file_name))

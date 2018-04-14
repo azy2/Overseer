@@ -249,7 +249,7 @@ def create_meal_plan():
     role = user.role
     if request.method == 'POST':
         if form.validate():
-            meal_plan = ResidentService.create_meal_plan_for_resident_by_email(
+            meal_plan = MealService.create_meal_plan_for_resident_by_email(
                 form.meal_plan.data,
                 form.plan_type.data,
                 form.email.data)

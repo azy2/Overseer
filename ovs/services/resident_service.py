@@ -2,15 +2,13 @@
 DB and utility functions for Residents
 """
 import logging
-from flask import current_app
+
 from sqlalchemy.exc import SQLAlchemyError
 
 from ovs import db
 from ovs.models.profile_model import Profile
 from ovs.models.resident_model import Resident
 from ovs.models.user_model import User
-from ovs.services.meal_service import MealService
-from ovs.services.profile_picture_service import ProfilePictureService
 from ovs.utils import genders
 
 
@@ -22,6 +20,7 @@ class ResidentService:
 
     @staticmethod
     def create_resident(new_user, room_number='None'):
+        from ovs.services.profile_service import ProfileService
         """
         Adds a resident to the Resident table.
 
@@ -37,7 +36,7 @@ class ResidentService:
         new_resident_profile.preferred_name = new_user.first_name
         new_resident_profile.preferred_email = new_user.email
         new_resident_profile.gender = genders.UNSPECIFIED
-        ResidentService.set_default_picture(new_resident_profile.picture_id)
+        ProfileService.set_default_picture(new_resident_profile.picture_id)
 
         try:
             db.session.add(new_resident)
@@ -92,21 +91,6 @@ class ResidentService:
                     logging.exception('Failed to delete resident.')
                     return False
         return False
-
-    @staticmethod
-    def set_default_picture(picture_id):
-        """
-        TODO: Refactor in to profile_service.
-        Sets default picture for new residents.
-
-        Args:
-            picture_id: Profile db model picture id.
-        """
-        default_picture_path = current_app.config['BLOBSTORE']['DEFAULT_PATH']
-        with open(default_picture_path, 'rb') as default_image:
-            file_contents = default_image.read()
-            file_bytes = bytearray(file_contents)
-        ProfilePictureService.create_profile_picture(picture_id, file_bytes)
 
     @staticmethod
     def get_resident_by_email(email):
@@ -225,41 +209,6 @@ class ResidentService:
             logging.exception('Failed to set new meal pin for resident.')
             db.session.rollback()
             return False
-
-    @staticmethod
-    def create_meal_plan_for_resident_by_email(meal_plan, plan_type, email):
-        """
-        TODO: Move to meal_service
-        Create a new meal plan db entry
-          and assign a meal plan pin to an existing resident identified by email.
-
-        Args:
-            meal_plan: The plan's maximum credit.
-            plan_type: The plan's reset period.
-            email: An email address.
-
-        Returns:
-            A MealPlan db model.
-        """
-        resident = ResidentService.get_resident_by_email(email)
-        if resident is None:
-            return None
-
-        meal_plan = MealService.create_meal_plan(meal_plan, plan_type)
-        if meal_plan is None:
-            return None
-
-        try:
-            resident.mealplan_pin = meal_plan.pin
-            db.session.commit()
-            return meal_plan
-        except SQLAlchemyError:
-            logging.exception(
-                'Failed to create meal plan for resident identified by email.')
-            db.session.rollback()
-            return None
-
-        return meal_plan
 
     @staticmethod
     def get_all_residents_users():
