@@ -20,7 +20,6 @@
         </div>
         <div class="row mt-5">
             <div class="col">
-                <h3>Package List:</h3>
                 <table class="table table-bordered table-responsive">
                     <thead class="thead-light">
                         <tr>
@@ -28,8 +27,6 @@
                             <th scope="col">Email</th>
                             <th scope="col">Checked By</th>
                             <th scope="col">Checked At</th>
-                            <th scope="col">Is Signed</th>
-                            <th scope="col">Signed At</th>
                             <th scope="col">Description</th>
                             <th scope="col"></th>
                             <th scope="col"></th>
@@ -46,8 +43,6 @@
                                     <td>{{ field_plain(edit_form.recipient_email, value=recipient.email) }}</td>
                                     <td>{{ checker.first_name + " " + checker.last_name }}</td>
                                     <td>{{ package.checked_at }}</td>
-                                    <td>{{ package.is_signed }}</td>
-                                    <td>{{ package.signed_at }}</td>
                                     <td>{{ field_plain(edit_form.description, value=package.description) }}</td>
                                     <td>{{ field_plain(edit_form.update_button, class="btn btn-secondary") }}</td>
                                     <td>{{ field_plain(edit_form.check_button, class="btn btn-secondary") }}</td>
