@@ -31,6 +31,7 @@ class Blob():
         """
         Wraps create blob from bytes service
         """
+        name = str(name)
         if self._is_production:
             self._service.create_blob_from_bytes(container, name, bytes(byte_array))
         else:
@@ -45,6 +46,7 @@ class Blob():
         """
         Wraps delete blob service
         """
+        name = str(name)
         if self._is_production:
             self._service.delete_blob(container, name)
         else:
@@ -55,6 +57,7 @@ class Blob():
         """
         Wraps exists blob service
         """
+        name = str(name)
         if self._is_production:
             return self._service.exists(container, name)
         else:
@@ -65,6 +68,7 @@ class Blob():
         """
         Wraps get blob to bytes service
         """
+        name = str(name)
         if self._is_production:
             return bytearray(self._service.get_blob_to_bytes(container, name).content)
         else:
@@ -81,6 +85,7 @@ def make_file_name(container, name):
     """
     Builds filename for testing from container and id
     """
+    name = str(name)
     return 'ovs/data/test/' + container + '/' + name
 
 

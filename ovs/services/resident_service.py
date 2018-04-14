@@ -2,7 +2,6 @@
 DB and utility functions for Residents
 """
 import logging
-from flask import current_app
 from sqlalchemy.exc import SQLAlchemyError
 
 from ovs import db

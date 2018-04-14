@@ -1,8 +1,8 @@
 """ Services related to profile pictures """
+from flask import current_app
 from ovs.blob import blob
 
 CONTAINER = blob.PROFILE_PICTURE_CONTAINER
-
 
 class ProfilePictureService:
     """ Services related to profile pictures """
