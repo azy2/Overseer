@@ -7,10 +7,6 @@ Vagrant.configure("2") do |config|
     vb.name = "overseer-dev"
   end
 
-  config.vm.provider :vmware_workstation do |v|
-    v.name = "overseer-dev"
-  end
-
   config.vm.provision "shell", privileged: true, inline: <<-DEPENDENCIES
     onerror(){ echo "Command failed. Stopping execution..."; exit 1; }
     trap onerror ERR
@@ -21,7 +17,7 @@ Vagrant.configure("2") do |config|
     apt-get update
 
     echo "Installing system packages (this may take a while)"
-    apt-get -y -q install make g++ mysql-server-5.7 chromium-browser
+    apt-get -y -q install make g++ mysql-server-5.7 chromium-browser python3-dev
 
     echo "Configuring MySQL"
     mysql_ssl_rsa_setup --uid=mysql &>/dev/null
@@ -31,7 +27,7 @@ Vagrant.configure("2") do |config|
     mysql -u root -p"pass123" -e "create user 'root'@'10.0.2.2' identified by 'pass123';grant all privileges on *.* to 'root'@'10.0.2.2' with grant option;flush privileges;"
     printf "[mysqld]\nbind-address = 0.0.0.0\n" > /etc/mysql/mysql.conf.d/overseer.cnf
     service mysql restart
-
+    
     echo "Installing pip3"
     wget https://bootstrap.pypa.io/get-pip.py && python3 get-pip.py
 
@@ -40,23 +36,24 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", inline: <<-SETUP
     onerror(){ echo "Command failed. Stopping execution..."; exit 1; }
     trap onerror ERR
+
     cd /overseer/
 
-    echo "Installing API"
-    pip3 install -r requirements.txt
+    echo "Installing Python Requirements"
+    python3 -m pip install -r requirements.txt
 
-    echo "Running migrations"
+    echo "Exporting DB environment variables"
     export DB_USERNAME=root
     export DB_PASSWORD=pass123
     export DB_HOSTNAME=127.0.0.1
     export DB_PORT=3306
     export DB_NAME=ovs
 
+    echo "cd /overseer" >> /home/vagrant/.bashrc
     echo "Finishing Setup"
-    echo "cd /overseer" >> /home/ubuntu/.bashrc
-
   SETUP
 
+  # forward localhost:8080 to host
   config.vm.network "forwarded_port", guest: 8080, host: ENV['VAGRANT_APP_PORT'] || 8080
   config.vm.network "forwarded_port", guest: 3306, host: ENV['VAGRANT_DB_PORT'] || 3306
 end
