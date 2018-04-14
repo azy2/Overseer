@@ -102,7 +102,7 @@ class ResidentService:
         Args:
             picture_id: Profile db model picture id.
         """
-        default_picture_path = current_app.config['BLOB']['default_picture_path']
+        default_picture_path = current_app.config['BLOBSTORE']['DEFAULT_PATH']
         with open(default_picture_path, 'rb') as default_image:
             file_contents = default_image.read()
             file_bytes = bytearray(file_contents)

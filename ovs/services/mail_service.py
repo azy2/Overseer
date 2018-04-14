@@ -26,10 +26,10 @@ class MailService:
         Returns:
             A (mail, response) tuple.
         """
-        sg = SendGridAPIClient(apikey=current_app.config['SENDGRID_API_KEY'])
+        sg = SendGridAPIClient(apikey=current_app.config['SENDGRID']['API_KEY'])
 
         from_email = Email(
-            'no-reply@{domain_name}'.format(domain_name=current_app.config['DOMAIN_NAME']))
+            'no-reply@{domain_name}'.format(domain_name=current_app.config['SENDGRID']['DOMAIN_NAME']))
         to_email = Email(to_email)
         content = Content(
             'text/plain', text if not substitutions else text.format(**substitutions))

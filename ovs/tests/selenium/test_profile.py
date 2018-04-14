@@ -12,8 +12,9 @@ class TestProfile(SeleniumBaseTestCase):
 
     def go_to_resident_profile_page(self):
         """ Runs the Selenium steps necessary to navigate to the edit resident profile page """
-        default_resident_email = current_app.config['RESIDENT']['email']
-        default_resident_password = current_app.config['RESIDENT']['password']
+        default_resident = current_app.config['USERS']['RESIDENT']
+        default_resident_email = default_resident['email']
+        default_resident_password = default_resident['password']
         super().login_with_credentials(default_resident_email, default_resident_password)
 
         # Click on account dropdown and go to Profile link

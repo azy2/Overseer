@@ -14,8 +14,9 @@ class TestRegisterManager(SeleniumBaseTestCase):
         self.browser.get(self.base_url)
         self.assertIn('Overseer', self.browser.title)
 
-        default_admin_email = current_app.config['ADMIN']['email']
-        default_admin_password = current_app.config['ADMIN']['password']
+        default_admin = current_app.config['USERS']['ADMIN']
+        default_admin_email = default_admin['email']
+        default_admin_password = default_admin['password']
         super().login_with_credentials(default_admin_email, default_admin_password)
 
         # Click on Register Manager

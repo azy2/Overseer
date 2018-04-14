@@ -27,7 +27,7 @@ class TestSendMail(OVSBaseTestCase):
         mock_client.assert_called()
         self.assertEqual(json.dumps(mail.get(), sort_keys=True),
                          '{"content": [{"type": "text/plain", "value": "testText"}], "from": {"email": '
-                         '"no-reply@ovs-overseer.azurewebsites.net"}, "personalizations": [{"to": [{"email": '
+                         '"no-reply@ovs.centralus.cloudapp.azure.com"}, "personalizations": [{"to": [{"email": '
                          '"testEmail@test.com"}]}], "subject": "TestSubject"}')
 
     #pylint: disable=no-self-use
