@@ -53,8 +53,7 @@ class UserService:
         #Only time passwords are supplied are on default user creation which
         #for which reset password emails are not necessary
         if send_email:
-            UserService.send_setup_email(
-                email, first_name, last_name, role)
+            UserService.send_setup_email(email, first_name, last_name, role)
         return new_user
 
     @staticmethod

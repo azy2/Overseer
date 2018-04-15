@@ -41,7 +41,7 @@ class TestSendMail(OVSBaseTestCase):
             'confirm_url': ANY
         }
 
-        UserService.create_user('test@gmail.com', 'Bob', 'Ross', 'ADMIN', password='testPassword')
+        UserService.create_user('test@gmail.com', 'Bob', 'Ross', 'ADMIN')
         mock_mail.assert_called_once_with('test@gmail.com',
                                           'User Account Creation',
                                           templates['user_creation_email'],
@@ -50,5 +50,5 @@ class TestSendMail(OVSBaseTestCase):
     @patch('ovs.services.mail_service.MailService.send_email')
     def test_create_user_doesnt_send_email(self, mock_mail):
         """ Tests that creating a user without a default password doesn't send an email """
-        UserService.create_user('test@gmail.com', 'Bob', 'Ross', 'ADMIN', password=None)
+        UserService.create_user('test@gmail.com', 'Bob', 'Ross', 'ADMIN', password='testPassword')
         mock_mail.assert_not_called()
