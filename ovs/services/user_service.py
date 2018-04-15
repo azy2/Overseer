@@ -1,6 +1,7 @@
 """ DB and utility functions for Users """
 import logging
 
+from flask import url_for
 from sqlalchemy.exc import SQLAlchemyError
 
 from ovs import db
@@ -8,7 +9,7 @@ from ovs.mail import templates
 from ovs.models.user_model import User
 from ovs.services.mail_service import MailService
 from ovs.services.resident_service import ResidentService
-from ovs.utils import crypto
+from ovs.utils import crypto, serializer
 
 
 class UserService:
@@ -47,7 +48,7 @@ class UserService:
             ResidentService.create_resident(new_user)
 
         UserService.send_setup_email(
-            email, first_name, last_name, role, password)
+            email, first_name, last_name, role)
         return new_user
 
     @staticmethod
@@ -106,7 +107,7 @@ class UserService:
             return False
 
     @staticmethod
-    def send_setup_email(email, first_name, last_name, role, password):
+    def send_setup_email(email, first_name, last_name, role):
         """
         Sends a setup email to the email address associated with a user.
 
@@ -115,16 +116,33 @@ class UserService:
             first_name: The user's first name.
             last_name: The user's last name.
             role: The user's role.
-            password: The user's password.
         """
+        token = serializer.serialize_attr(email, 'ovs-reset-email')
         user_info_substitution = {
             "first_name": first_name,
             "last_name": last_name,
             "role": role,
-            "password": password
+            "confirm_url": url_for('auth.reset_user', token=token, _external=True)
         }
         MailService.send_email(email, 'User Account Creation',
                                templates['user_creation_email'],
+                               substitutions=user_info_substitution)
+
+    @staticmethod
+    def send_reset_email(email):
+        """
+        Sends a password reset email to the email address associated with a user.
+
+        Args:
+            email: The user's email address.
+        """
+        token = serializer.serialize_attr(email, 'ovs-reset-email')
+        user_info_substitution = {
+            "reset_url": url_for('auth.reset_user', token=token, _external=True)
+        }
+        print(user_info_substitution)
+        MailService.send_email(email, 'Reset Your Overseer Password',
+                               templates['user_reset_email'],
                                substitutions=user_info_substitution)
 
     @staticmethod
@@ -173,7 +191,7 @@ class UserService:
         """
         try:
             reset_user.update_password(new_password)
-            db.commit()
+            db.session().commit()
             return reset_user
         except SQLAlchemyError:
             logging.exception('Faileed to reset user password.')

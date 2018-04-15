@@ -80,16 +80,24 @@
                 <div class="collapse navbar-collapse">
                 </div>
 
-                <form class="form-inline" method="post" action="/auth/login" >
-                    <div class="input-group" >
-                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-                        <input type="text" id="email" name="email" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" >
-                        <input type="password" id="password" name="password" class="form-control" placeholder="Password" aria-label="Username" aria-describedby="basic-addon1" >
-                        <div class="input-group-append" >
-                            <button type="submit" class="btn btn-primary" >Login</button>
+                <div>
+                  <div>
+                    <form class="form-inline" method="post" action="/auth/login" >
+                        <div class="input-group" >
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                            <input type="text" id="email" name="email" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" >
+                            <input type="password" id="password" name="password" class="form-control" placeholder="Password" aria-label="Username" aria-describedby="basic-addon1" >
+                            <div class="input-group-append" >
+                                <button type="submit" class="btn btn-primary" >Login</button>
+                            </div>
                         </div>
-                    </div>
-                </form>
+                    </form>
+                  </div>
+                  <div align="right" style="padding-top: 0.5em">
+                    <a href="/auth/user/reset">Forgot?</a>
+                  </div>
+                </div>
+
             {% endif %}
         </nav>
         <main role="main">
