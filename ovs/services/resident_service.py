@@ -2,15 +2,13 @@
 DB and utility functions for Residents
 """
 import logging
-from flask import current_app
+
 from sqlalchemy.exc import SQLAlchemyError
 
 from ovs import db
 from ovs.models.profile_model import Profile
 from ovs.models.resident_model import Resident
 from ovs.models.user_model import User
-from ovs.services.meal_service import MealService
-from ovs.services.profile_picture_service import ProfilePictureService
 from ovs.utils import genders
 
 
@@ -32,19 +30,28 @@ class ResidentService:
         Returns:
             The Resident db model that was just created.
         """
-        new_resident = Resident(new_user.id, room_number)
+        from ovs.services.profile_service import ProfileService
+        from ovs.services.room_service import RoomService
+
+        new_resident = Resident(new_user.id)
         new_resident_profile = Profile(new_user.id)
         new_resident_profile.preferred_name = new_user.first_name
         new_resident_profile.preferred_email = new_user.email
         new_resident_profile.gender = genders.UNSPECIFIED
-        ResidentService.set_default_picture(new_resident_profile.picture_id)
+        ProfileService.set_default_picture(new_resident_profile.picture_id)
+
+        room = RoomService.get_room_by_number(room_number)
+        if room is None:
+            logging.exception('Failed to create resident because of invalid room number')
+            return None
+        new_resident.room_number = room_number
 
         try:
             db.session.add(new_resident)
             db.session.add(new_resident_profile)
             db.session.commit()
         except SQLAlchemyError:
-            # Resident must be unqiue by their email.
+            # Resident must be unique by their email.
             logging.exception('Failed to create resident.')
             db.session.rollback()
             return None
@@ -67,8 +74,9 @@ class ResidentService:
             If the edit/update was successful.
         """
         from ovs.services.user_service import UserService
+        from ovs.services.room_service import RoomService
         return (UserService.edit_user(user_id, email, first_name, last_name)
-                and ResidentService.update_resident_room_number(user_id, room_number))
+                and RoomService.add_resident_to_room(email, room_number))
 
     @staticmethod
     def delete_resident(user_id):
@@ -92,21 +100,6 @@ class ResidentService:
                     logging.exception('Failed to delete resident.')
                     return False
         return False
-
-    @staticmethod
-    def set_default_picture(picture_id):
-        """
-        TODO: Refactor in to profile_service.
-        Sets default picture for new residents.
-
-        Args:
-            picture_id: Profile db model picture id.
-        """
-        default_picture_path = current_app.config['BLOBSTORE']['DEFAULT_PATH']
-        with open(default_picture_path, 'rb') as default_image:
-            file_contents = default_image.read()
-            file_bytes = bytearray(file_contents)
-        ProfilePictureService.create_profile_picture(picture_id, file_bytes)
 
     @staticmethod
     def get_resident_by_email(email):
@@ -159,33 +152,6 @@ class ResidentService:
         return ResidentService.get_resident_by_id(user_id) is not None
 
     @staticmethod
-    def update_resident_room_number(user_id, room_number):
-        """
-        Changes the room_number of resident identified by user id.
-
-        Args:
-            user_id: Unique user_id that identify a resident.
-            room_number: The new room number to assigned to the resident.
-
-        Returns:
-            If the update was sucuessful.
-        """
-        from ovs.services.room_service import RoomService
-        if not RoomService.room_exists(room_number):
-            return False
-
-        try:
-            db.session.query(Resident)\
-                .filter(Resident.user_id == user_id)\
-                .update({Resident.room_number: room_number})
-            db.session.commit()
-            return True
-        except SQLAlchemyError:
-            logging.exception('Failed to update resident room number.')
-            db.session.rollback()
-            return False
-
-    @staticmethod
     def get_resident_by_pin(pin):
         """
         Fetch resident identified by pin.
@@ -225,41 +191,6 @@ class ResidentService:
             logging.exception('Failed to set new meal pin for resident.')
             db.session.rollback()
             return False
-
-    @staticmethod
-    def create_meal_plan_for_resident_by_email(meal_plan, plan_type, email):
-        """
-        TODO: Move to meal_service
-        Create a new meal plan db entry
-          and assign a meal plan pin to an existing resident identified by email.
-
-        Args:
-            meal_plan: The plan's maximum credit.
-            plan_type: The plan's reset period.
-            email: An email address.
-
-        Returns:
-            A MealPlan db model.
-        """
-        resident = ResidentService.get_resident_by_email(email)
-        if resident is None:
-            return None
-
-        meal_plan = MealService.create_meal_plan(meal_plan, plan_type)
-        if meal_plan is None:
-            return None
-
-        try:
-            resident.mealplan_pin = meal_plan.pin
-            db.session.commit()
-            return meal_plan
-        except SQLAlchemyError:
-            logging.exception(
-                'Failed to create meal plan for resident identified by email.')
-            db.session.rollback()
-            return None
-
-        return meal_plan
 
     @staticmethod
     def get_all_residents_users():

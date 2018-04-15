@@ -22,10 +22,10 @@ def login():
         password = form.password.data
         user = UserService.get_user_by_email(email)
         if user is None:
-            flash('Invalid email or password.', 'error')
+            flash('Invalid email or password.', 'danger')
             return redirect(url_for('/.landing_page'))
         elif not AuthService.verify_auth(user, password):
-            flash('Invalid email or password.', 'error')
+            flash('Invalid email or password.', 'danger')
             return redirect(url_for('/.landing_page'))
         login_user(user)
         if user.role == UserRole.RESIDENT:
@@ -33,7 +33,7 @@ def login():
         else:
             return redirect(url_for('manager.landing_page'))
     else:
-        flash('Invalid email or password.', 'error')
+        flash('Invalid email or password.', 'danger')
         return redirect(url_for('/.landing_page'))
 
 @auth_bp.route('/user/reset', methods=['GET', 'POST'])

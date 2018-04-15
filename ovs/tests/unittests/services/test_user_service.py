@@ -5,6 +5,7 @@ from ovs.tests.unittests.base_test import OVSBaseTestCase
 from ovs.services.user_service import UserService
 from ovs.models.user_model import User
 from ovs.models.resident_model import Resident
+from ovs.datagen import DataGen
 
 
 class TestUserService(OVSBaseTestCase):
@@ -15,6 +16,7 @@ class TestUserService(OVSBaseTestCase):
     def setUp(self):
         """ Runs before every test and clears relevant tables """
         super().setUp()
+        DataGen.create_default_room()
         self.create_test_user()
 
     def create_test_user(self):

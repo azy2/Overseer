@@ -1,5 +1,4 @@
 """ Test whether users can log in """
-from flask import current_app
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -13,11 +12,7 @@ class TestRegisterRoom(SeleniumBaseTestCase):
         """ Tests whether all fields can be edited in a register room page """
         self.browser.get(self.base_url)
         self.assertIn('Overseer', self.browser.title)
-
-        default_admin = current_app.config['USERS']['ADMIN']
-        default_admin_email = default_admin['email']
-        default_admin_password = default_admin['password']
-        super().login_with_credentials(default_admin_email, default_admin_password)
+        super().login_default_admin()
 
         # Click on Register Manager
         register_manager = self.browser.find_element_by_link_text('Register a Room')
@@ -39,15 +34,7 @@ class TestRegisterRoom(SeleniumBaseTestCase):
 
         # Wait for successful notification popup to appear
         wait = WebDriverWait(self.browser, 5)
-        wait.until(EC.visibility_of_element_located((By.CLASS_NAME, 'close')))
-
-        # Handle successful notification popup
-        notification_close_button = self.browser.find_element_by_class_name('close')
-        notification_close_button.click()
-
-        # Wait for successful notification popup to disappear
-        wait = WebDriverWait(self.browser, 5)
-        wait.until(EC.invisibility_of_element_located((By.CLASS_NAME, 'close')))
+        wait.until(EC.visibility_of_element_located((By.ID, 'notification-message')))
 
         # Verify fields are empty and ready for new account registration
         self.assertEqual(self.browser.find_element_by_id('room_number').get_attribute('value'), '')

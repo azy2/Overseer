@@ -3,6 +3,7 @@ Defines a Room as represented in the database
 """
 from flask import jsonify
 from sqlalchemy import Integer, Column, CHAR, text, DateTime
+from sqlalchemy.orm import relationship
 
 from ovs import db
 
@@ -17,6 +18,7 @@ class Room(db.Model):
     number = Column(CHAR(255), unique=True)
     status = Column(CHAR(255), nullable=False)
     type = Column(CHAR(255), nullable=False)
+    occupants = relationship('Resident', backref='rooms', lazy=False, cascade='all, delete, delete-orphan')
     created = Column(DateTime, server_default=text('CURRENT_TIMESTAMP'))
     updated = Column(DateTime, server_default=text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))
 

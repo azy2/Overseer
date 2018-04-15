@@ -1,6 +1,5 @@
 """ Test whether profiles can be edited """
 import os
-from flask import current_app
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -12,10 +11,7 @@ class TestProfile(SeleniumBaseTestCase):
 
     def go_to_resident_profile_page(self):
         """ Runs the Selenium steps necessary to navigate to the edit resident profile page """
-        default_resident = current_app.config['USERS']['RESIDENT']
-        default_resident_email = default_resident['email']
-        default_resident_password = default_resident['password']
-        super().login_with_credentials(default_resident_email, default_resident_password)
+        super().login_default_resident()
 
         # Click on account dropdown and go to Profile link
         account_dropdown = self.browser.find_element_by_id('accountDropdown')
@@ -30,12 +26,11 @@ class TestProfile(SeleniumBaseTestCase):
         """ Tests whether all fields can be edited in a resident profile """
         self.browser.get(self.base_url)
         self.assertIn('Overseer', self.browser.title)
-
         self.go_to_resident_profile_page()
 
         # Change all fields
         self.set_text_field_by_id('preferred_name', 'Megatron')
-        self.set_text_field_by_id('phone_number', '555-555-5555')
+        self.set_text_field_by_id('phone_number', '202-456-1111')
         self.set_text_field_by_id('preferred_email', 'Megatron@mega.tron')
         self.set_text_field_by_id('race', 'Transformer')
 
@@ -50,15 +45,7 @@ class TestProfile(SeleniumBaseTestCase):
 
         # Wait for successful notification popup to appear
         wait = WebDriverWait(self.browser, 5)
-        wait.until(EC.visibility_of_element_located((By.CLASS_NAME, 'close')))
-
-        # Handle successful notification popup
-        notification_close_button = self.browser.find_element_by_class_name('close')
-        notification_close_button.click()
-
-        # Wait for successful notification popup to disappear
-        wait = WebDriverWait(self.browser, 5)
-        wait.until(EC.invisibility_of_element_located((By.CLASS_NAME, 'close')))
+        wait.until(EC.visibility_of_element_located((By.ID, 'notification-message')))
 
         # Verify preferred name changed in account dropdown
         # Dropdown reference must be refreshed because the page has changed after submitting
@@ -71,7 +58,7 @@ class TestProfile(SeleniumBaseTestCase):
         email_text = self.browser.find_element_by_id('preferred_email').get_attribute('value')
         race_text = self.browser.find_element_by_id('race').get_attribute('value')
         self.assertEqual(name_text, 'Megatron')
-        self.assertEqual(phone_text, '555-555-5555')
+        self.assertEqual(phone_text, '202-456-1111')
         self.assertEqual(email_text, 'Megatron@mega.tron')
         self.assertEqual(race_text, 'Transformer')
 
@@ -79,7 +66,6 @@ class TestProfile(SeleniumBaseTestCase):
         """ Tests that non-.png files cannot be uploaded as a profile picture """
         self.browser.get(self.base_url)
         self.assertIn('Overseer', self.browser.title)
-
         self.go_to_resident_profile_page()
 
         # Choose the non-picture file to upload
@@ -90,20 +76,19 @@ class TestProfile(SeleniumBaseTestCase):
         upload_picture_button = self.browser.find_element_by_id('upload_picture')
         upload_picture_button.click()
 
-        # Wait for error dialog to pop up, id='notificationModal'
+        # Wait for error dialog to pop up, id='notification-message'
         wait = WebDriverWait(self.browser, 5)
-        wait.until(EC.visibility_of_element_located((By.ID, 'notificationModal')))
+        wait.until(EC.visibility_of_element_located((By.CLASS_NAME, 'invalid-feedback')))
 
         # Get error message on error dialog
-        error_p_tag = self.browser.find_element_by_id('notificationModal').find_element_by_tag_name('p')
-        error_message = error_p_tag.text
-        self.assertEqual(error_message, 'File is not a png')
+        error_tag = self.browser.find_element_by_class_name('invalid-feedback')
+        error_message = error_tag.text
+        self.assertEqual(error_message, 'Please select a valid png.')
 
     def test_valid_profile_picture(self):
         """ Tests that .png files can be uploaded for a profile picture """
         self.browser.get(self.base_url)
         self.assertIn('Overseer', self.browser.title)
-
         self.go_to_resident_profile_page()
         default_image_src = self.browser.find_element_by_id('profile_image').get_attribute('src')
 
