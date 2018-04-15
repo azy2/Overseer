@@ -1,7 +1,7 @@
 """ Form with data required to create a meal plan """
 from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField, SelectField, ValidationError
-from wtforms.validators import DataRequired, Email
+from wtforms.validators import DataRequired, Email, NumberRange
 
 from ovs import db
 
@@ -12,7 +12,7 @@ from ovs.models.user_model import User
 class CreateMealPlanForm(FlaskForm):
     """ Form with data required to register a resident """
     email = StringField('User Email Address', validators=[Email(), DataRequired()])
-    meal_plan = IntegerField('Meal Plan', validators=[DataRequired()])
+    meal_plan = IntegerField('Meal Plan', validators=[NumberRange(min=1)])
     plan_type = SelectField('Plan Type', choices=[('WEEKLY', 'Weekly'),
                                                   ('SEMESTERLY', 'Semesterly'),
                                                   ('LIFETIME', 'Lifetime')])
