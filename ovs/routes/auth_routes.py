@@ -1,6 +1,7 @@
 """ routes under /auth/ """
-from flask import Blueprint, redirect, url_for, flash, request, render_template
+from flask import Blueprint, redirect, url_for, flash, request, render_template, abort
 from flask_login import login_user, logout_user, login_required
+from itsdangerous import SignatureExpired, BadTimeSignature, BadSignature
 
 from ovs.forms.login_form import LoginForm
 from ovs.forms import ResetRequestForm, ResetPasswordForm
@@ -53,12 +54,13 @@ def request_user_reset():
 
 @auth_bp.route('/reset/<token>', methods=['GET', 'POST'])
 def reset_user(token):
+    """Allows a user with a valid token to reset their password"""
     form = ResetPasswordForm()
     if request.method == 'POST':
         if form.validate_on_submit():
             try:
                 email = serializer.decode_attr(token, 'ovs-reset-email')
-            except:
+            except (SignatureExpired, BadTimeSignature, BadSignature) as _:
                 abort(404)
 
             user = UserService.get_user_by_email(email)

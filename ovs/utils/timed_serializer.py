@@ -1,6 +1,5 @@
-from sys import exit
+"""Houses the timed serializer for secure token generation"""
 from itsdangerous import URLSafeTimedSerializer
-from flask import Flask, current_app
 
 class Serializer():
     """Class to allow secure de/serialization of attributes using a salt."""
