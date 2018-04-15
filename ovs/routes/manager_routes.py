@@ -192,6 +192,8 @@ def meal_login():
             continue
 
         resident = ResidentService.get_resident_by_id(log.resident_id)
+        if resident is None:
+            continue
         profile = resident.profile
         pict = base64.b64encode(ProfilePictureService.get_profile_picture(profile.picture_id)).decode()
         mealplan = MealService.get_meal_plan_by_pin(log.mealplan_pin)
