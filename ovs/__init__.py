@@ -47,6 +47,9 @@ def create_app(config_path=None):
         LOGIN_MANAGER.init_app(app)
         LOGIN_MANAGER.login_view = 'auth.login'
 
+        #This should make the flash red, but it isn't working
+        LOGIN_MANAGER.login_message_category = "danger"
+
         from flask_wtf.csrf import CSRFProtect
         csrf = CSRFProtect()
         csrf.init_app(app)

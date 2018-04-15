@@ -19,7 +19,6 @@ from ovs.utils import log_types
 
 manager_bp = Blueprint('manager', __name__, )
 
-
 @manager_bp.route('/', methods=['GET'])
 @login_required
 @permissions(roles.STAFF)
@@ -237,7 +236,7 @@ def meal_undo():
 
 @manager_bp.route('/create_meal_plan/', methods=['GET', 'POST'])
 @login_required
-@permissions(roles.OFFICE_MANAGER)
+@permissions(roles.STAFF)
 def create_meal_plan():
     """
     /manager/meal_login serves an html form with input field pin
@@ -264,7 +263,7 @@ def create_meal_plan():
 
 @manager_bp.route('/add_meals/', methods=['GET', 'POST'])
 @login_required
-@permissions(roles.OFFICE_MANAGER)
+@permissions(roles.STAFF)
 def add_meals():
     """
     /manager/meal_login serves an html form with input field pin
