@@ -1,0 +1,1048 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>ovs.services package &#8212; Overseer 1.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Overseer 1.0.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="ovs-services-package">
+<h1>ovs.services package<a class="headerlink" href="#ovs-services-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-ovs.services.auth_service">
+<span id="ovs-services-auth-service-module"></span><h2>ovs.services.auth_service module<a class="headerlink" href="#module-ovs.services.auth_service" title="Permalink to this headline">¶</a></h2>
+<p>Service routines and db access for the Auth layer</p>
+<dl class="class">
+<dt id="ovs.services.auth_service.AuthService">
+<em class="property">class </em><code class="descclassname">ovs.services.auth_service.</code><code class="descname">AuthService</code><a class="reference internal" href="_modules/ovs/services/auth_service.html#AuthService"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.auth_service.AuthService" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Contains application methods relevant to the Authentication layer</p>
+<dl class="staticmethod">
+<dt id="ovs.services.auth_service.AuthService.load_user">
+<em class="property">static </em><code class="descname">load_user</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/auth_service.html#AuthService.load_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.auth_service.AuthService.load_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch a user by user id.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>user_id</strong> – Unique user id.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A User db model.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="ovs.services.auth_service.AuthService.verify_auth">
+<em class="property">static </em><code class="descname">verify_auth</code><span class="sig-paren">(</span><em>password</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/auth_service.html#AuthService.verify_auth"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.auth_service.AuthService.verify_auth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verify the password authenticates a given user.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>user</strong> – A User model.</li>
+<li><strong>password</strong> – Input password.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">If the user is authenticated.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ovs.services.mail_service">
+<span id="ovs-services-mail-service-module"></span><h2>ovs.services.mail_service module<a class="headerlink" href="#module-ovs.services.mail_service" title="Permalink to this headline">¶</a></h2>
+<p>Send Mail functions.</p>
+<dl class="class">
+<dt id="ovs.services.mail_service.MailService">
+<em class="property">class </em><code class="descclassname">ovs.services.mail_service.</code><code class="descname">MailService</code><a class="reference internal" href="_modules/ovs/services/mail_service.html#MailService"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.mail_service.MailService" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Contains methods related to the sendgrid mail provider</p>
+<dl class="staticmethod">
+<dt id="ovs.services.mail_service.MailService.send_email">
+<em class="property">static </em><code class="descname">send_email</code><span class="sig-paren">(</span><em>subject</em>, <em>text</em>, <em>substitutions=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/mail_service.html#MailService.send_email"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.mail_service.MailService.send_email" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send an email to the recipient.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>to_email</strong> – Recipient email address.</li>
+<li><strong>subject</strong> – Email subject.</li>
+<li><strong>text</strong> – Email body.</li>
+<li><strong>substitutions</strong> – Text substitution that should be applied.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A (mail, response) tuple.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ovs.services.meal_service">
+<span id="ovs-services-meal-service-module"></span><h2>ovs.services.meal_service module<a class="headerlink" href="#module-ovs.services.meal_service" title="Permalink to this headline">¶</a></h2>
+<p>DB and utility functions for Meals</p>
+<dl class="class">
+<dt id="ovs.services.meal_service.MealService">
+<em class="property">class </em><code class="descclassname">ovs.services.meal_service.</code><code class="descname">MealService</code><a class="reference internal" href="_modules/ovs/services/meal_service.html#MealService"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.meal_service.MealService" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>DB and utility functions for Meals</p>
+<dl class="staticmethod">
+<dt id="ovs.services.meal_service.MealService.add_meals">
+<em class="property">static </em><code class="descname">add_meals</code><span class="sig-paren">(</span><em>number</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/meal_service.html#MealService.add_meals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.meal_service.MealService.add_meals" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add credits to meal plan identified by meal pin.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>pin</strong> – Unique meal pin.</li>
+<li><strong>number</strong> – The number of credits to add.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">If the credits were added successfully.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="ovs.services.meal_service.MealService.create_meal_plan">
+<em class="property">static </em><code class="descname">create_meal_plan</code><span class="sig-paren">(</span><em>plan_type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/meal_service.html#MealService.create_meal_plan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.meal_service.MealService.create_meal_plan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a MealPlan db entry.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>meal_plan</strong> – The plan’s maximum credit.</li>
+<li><strong>plan_type</strong> – The plan’s reset period.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A MealPlan db model.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="ovs.services.meal_service.MealService.create_meal_plan_for_resident_by_email">
+<em class="property">static </em><code class="descname">create_meal_plan_for_resident_by_email</code><span class="sig-paren">(</span><em>plan_type</em>, <em>email</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/meal_service.html#MealService.create_meal_plan_for_resident_by_email"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.meal_service.MealService.create_meal_plan_for_resident_by_email" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Create a new meal plan db entry</dt>
+<dd>and assign a meal plan pin to an existing resident identified by email.</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>meal_plan</strong> – The plan’s maximum credit.</li>
+<li><strong>plan_type</strong> – The plan’s reset period.</li>
+<li><strong>email</strong> – An email address.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A MealPlan db model.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="ovs.services.meal_service.MealService.get_last_log">
+<em class="property">static </em><code class="descname">get_last_log</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/meal_service.html#MealService.get_last_log"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.meal_service.MealService.get_last_log" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch the most recent meal log associated manager identified by manager id.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>manager_id</strong> – Unique user id.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A MealPlanHistory db model.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="ovs.services.meal_service.MealService.get_logs">
+<em class="property">static </em><code class="descname">get_logs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/meal_service.html#MealService.get_logs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.meal_service.MealService.get_logs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of all meal logs.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of MealPlanHistory db model.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="ovs.services.meal_service.MealService.get_meal_plan_by_pin">
+<em class="property">static </em><code class="descname">get_meal_plan_by_pin</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/meal_service.html#MealService.get_meal_plan_by_pin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.meal_service.MealService.get_meal_plan_by_pin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch the mean plan that is associated with the meal pin.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pin</strong> – Unique meal pin.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A MealPlan db model.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="ovs.services.meal_service.MealService.log_meal_history">
+<em class="property">static </em><code class="descname">log_meal_history</code><span class="sig-paren">(</span><em>pin</em>, <em>manager_id</em>, <em>log_type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/meal_service.html#MealService.log_meal_history"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.meal_service.MealService.log_meal_history" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a MealPlanHistory to db that logs the login/undo action.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>resident_id</strong> – Unique resident id that identifies the user that the meal plan is associated with.</li>
+<li><strong>pin</strong> – Unique meal pin.</li>
+<li><strong>manager_id</strong> – Unique user id that identifies the manager that authorized the undo action.</li>
+<li><strong>log_type</strong> – log_types.MEAL_USED or log_types.UNDO</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">If the meal history was logged successfully.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="ovs.services.meal_service.MealService.undo_meal_use">
+<em class="property">static </em><code class="descname">undo_meal_use</code><span class="sig-paren">(</span><em>resident_id</em>, <em>pin</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/meal_service.html#MealService.undo_meal_use"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.meal_service.MealService.undo_meal_use" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Adds a single credit back to meal plan identified by meal pin</dt>
+<dd>and adds a MealService db entry.</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>manager_id</strong> – Unique user id that identifies the manager that authorized the undo.</li>
+<li><strong>resident_id</strong> – Unique id that identifies the resident that the meal plan is associated with.</li>
+<li><strong>pin</strong> – Unique meal pin.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">If the credit and loggs was added successfully.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="ovs.services.meal_service.MealService.use_meal">
+<em class="property">static </em><code class="descname">use_meal</code><span class="sig-paren">(</span><em>manager_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/meal_service.html#MealService.use_meal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.meal_service.MealService.use_meal" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Decrement credit for meal plan identified by meal pin</dt>
+<dd>and log a MealService db entry.</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>pin</strong> – Unique meal pin.</li>
+<li><strong>manager_id</strong> – Unique user id.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">If the meal credit was deducted and logged succesfully.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ovs.services.package_service">
+<span id="ovs-services-package-service-module"></span><h2>ovs.services.package_service module<a class="headerlink" href="#module-ovs.services.package_service" title="Permalink to this headline">¶</a></h2>
+<p>DB and utility functions for Packages</p>
+<dl class="class">
+<dt id="ovs.services.package_service.PackageService">
+<em class="property">class </em><code class="descclassname">ovs.services.package_service.</code><code class="descname">PackageService</code><a class="reference internal" href="_modules/ovs/services/package_service.html#PackageService"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.package_service.PackageService" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>DB and utility functions for Packages</p>
+<dl class="staticmethod">
+<dt id="ovs.services.package_service.PackageService.create_package">
+<em class="property">static </em><code class="descname">create_package</code><span class="sig-paren">(</span><em>checked_by_id</em>, <em>checked_at</em>, <em>description</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/package_service.html#PackageService.create_package"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.package_service.PackageService.create_package" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a package db entry.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>recipient_id</strong> – Unique user id of recipient.</li>
+<li><strong>checked_by_id</strong> – Unique user id of checker.</li>
+<li><strong>checked_at</strong> – Time when the package was recieved by checker.</li>
+<li><strong>description</strong> – A short description of the package.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A Package db model.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="ovs.services.package_service.PackageService.get_all_packages_recipients_checkers">
+<em class="property">static </em><code class="descname">get_all_packages_recipients_checkers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/package_service.html#PackageService.get_all_packages_recipients_checkers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.package_service.PackageService.get_all_packages_recipients_checkers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch all related packages, recipients, and checkers in db.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of (Package, User, User) db model tuples.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="ovs.services.package_service.PackageService.get_package_by_id">
+<em class="property">static </em><code class="descname">get_package_by_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/package_service.html#PackageService.get_package_by_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.package_service.PackageService.get_package_by_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch a package identified by the package id.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>package_id</strong> – Unique package id.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A Package db model.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="ovs.services.package_service.PackageService.update_package">
+<em class="property">static </em><code class="descname">update_package</code><span class="sig-paren">(</span><em>recipient_email</em>, <em>description</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/package_service.html#PackageService.update_package"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.package_service.PackageService.update_package" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the receiver and description of Package identified by package_id.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>package_id</strong> – Unique package id.</li>
+<li><strong>recipient_email</strong> – Recipient’s email address.</li>
+<li><strong>description</strong> – A short description of the package.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">If the package was updated successfully.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ovs.services.profile_picture_service">
+<span id="ovs-services-profile-picture-service-module"></span><h2>ovs.services.profile_picture_service module<a class="headerlink" href="#module-ovs.services.profile_picture_service" title="Permalink to this headline">¶</a></h2>
+<p>Services related to profile pictures</p>
+<dl class="class">
+<dt id="ovs.services.profile_picture_service.ProfilePictureService">
+<em class="property">class </em><code class="descclassname">ovs.services.profile_picture_service.</code><code class="descname">ProfilePictureService</code><a class="reference internal" href="_modules/ovs/services/profile_picture_service.html#ProfilePictureService"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.profile_picture_service.ProfilePictureService" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Services related to profile pictures</p>
+<dl class="staticmethod">
+<dt id="ovs.services.profile_picture_service.ProfilePictureService.create_profile_picture">
+<em class="property">static </em><code class="descname">create_profile_picture</code><span class="sig-paren">(</span><em>picture</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/profile_picture_service.html#ProfilePictureService.create_profile_picture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.profile_picture_service.ProfilePictureService.create_profile_picture" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a blob object in the profile picture container with the associated id.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>TODO</strong> – Picture ids needs to be a GUID.</li>
+<li><strong>picture_id</strong> – ID of picture.</li>
+<li><strong>picture</strong> – Array of bytes.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="ovs.services.profile_picture_service.ProfilePictureService.delete_profile_picture">
+<em class="property">static </em><code class="descname">delete_profile_picture</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/profile_picture_service.html#ProfilePictureService.delete_profile_picture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.profile_picture_service.ProfilePictureService.delete_profile_picture" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes a blob object in the profile picture container with the associated id.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>picture_id</strong> – ID of picture.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="ovs.services.profile_picture_service.ProfilePictureService.get_profile_picture">
+<em class="property">static </em><code class="descname">get_profile_picture</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/profile_picture_service.html#ProfilePictureService.get_profile_picture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.profile_picture_service.ProfilePictureService.get_profile_picture" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a blob object in the profile picture container with the associated id.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>picture_id</strong> – ID of picture.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Array of bytes.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="ovs.services.profile_picture_service.ProfilePictureService.update_profile_picture">
+<em class="property">static </em><code class="descname">update_profile_picture</code><span class="sig-paren">(</span><em>picture</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/profile_picture_service.html#ProfilePictureService.update_profile_picture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.profile_picture_service.ProfilePictureService.update_profile_picture" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates a blob object in the profile picture container with the associated id.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>picture_id</strong> – ID of picture.</li>
+<li><strong>picture</strong> – Array of bytes.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ovs.services.profile_service">
+<span id="ovs-services-profile-service-module"></span><h2>ovs.services.profile_service module<a class="headerlink" href="#module-ovs.services.profile_service" title="Permalink to this headline">¶</a></h2>
+<p>DB access and other services for profiles</p>
+<dl class="class">
+<dt id="ovs.services.profile_service.ProfileService">
+<em class="property">class </em><code class="descclassname">ovs.services.profile_service.</code><code class="descname">ProfileService</code><a class="reference internal" href="_modules/ovs/services/profile_service.html#ProfileService"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.profile_service.ProfileService" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>DB Access and utility methods for profiles</p>
+<dl class="staticmethod">
+<dt id="ovs.services.profile_service.ProfileService.delete_profile">
+<em class="property">static </em><code class="descname">delete_profile</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/profile_service.html#ProfileService.delete_profile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.profile_service.ProfileService.delete_profile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes a profile associated with resident identified by resident id.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>resident_id</strong> – Unique resident id.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">If the Profile db model was sucessfully deleted.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="ovs.services.profile_service.ProfileService.get_all_profiles">
+<em class="property">static </em><code class="descname">get_all_profiles</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/profile_service.html#ProfileService.get_all_profiles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.profile_service.ProfileService.get_all_profiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetches all profiles.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of Profile db models..</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="ovs.services.profile_service.ProfileService.set_default_picture">
+<em class="property">static </em><code class="descname">set_default_picture</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/profile_service.html#ProfileService.set_default_picture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.profile_service.ProfileService.set_default_picture" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets default picture for new residents.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>picture_id</strong> – Profile db model picture id.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="ovs.services.profile_service.ProfileService.update_profile">
+<em class="property">static </em><code class="descname">update_profile</code><span class="sig-paren">(</span><em>preferred_email=None</em>, <em>preferred_name=None</em>, <em>phone_number=None</em>, <em>race=None</em>, <em>gender=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/profile_service.html#ProfileService.update_profile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.profile_service.ProfileService.update_profile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates a profile associated with resident identified by resident id.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>resident_id</strong> – Unique resident id.</li>
+<li><strong>preferred_email</strong> – Resident’s preferred email.</li>
+<li><strong>preferred_name</strong> – Resident’s preferred name.</li>
+<li><strong>phone_number</strong> – Resident’s phone number.</li>
+<li><strong>race</strong> – Resident’s race.</li>
+<li><strong>gender</strong> – Resident’s gender.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">If the resident’s profile was updated successfully.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ovs.services.resident_service">
+<span id="ovs-services-resident-service-module"></span><h2>ovs.services.resident_service module<a class="headerlink" href="#module-ovs.services.resident_service" title="Permalink to this headline">¶</a></h2>
+<p>DB and utility functions for Residents</p>
+<dl class="class">
+<dt id="ovs.services.resident_service.ResidentService">
+<em class="property">class </em><code class="descclassname">ovs.services.resident_service.</code><code class="descname">ResidentService</code><a class="reference internal" href="_modules/ovs/services/resident_service.html#ResidentService"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.resident_service.ResidentService" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>DB and utility functions for Residents</p>
+<dl class="staticmethod">
+<dt id="ovs.services.resident_service.ResidentService.create_resident">
+<em class="property">static </em><code class="descname">create_resident</code><span class="sig-paren">(</span><em>room_number='None'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/resident_service.html#ResidentService.create_resident"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.resident_service.ResidentService.create_resident" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a resident to the Resident table.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>new_user</strong> – A User db model.</li>
+<li><strong>room_number</strong> – Room number.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">The Resident db model that was just created.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="ovs.services.resident_service.ResidentService.delete_resident">
+<em class="property">static </em><code class="descname">delete_resident</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/resident_service.html#ResidentService.delete_resident"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.resident_service.ResidentService.delete_resident" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes an existing resident identified by user_id.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>user_id</strong> – Unique user id.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">If the user was successfuly deleted.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="ovs.services.resident_service.ResidentService.edit_resident">
+<em class="property">static </em><code class="descname">edit_resident</code><span class="sig-paren">(</span><em>email</em>, <em>first_name</em>, <em>last_name</em>, <em>room_number</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/resident_service.html#ResidentService.edit_resident"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.resident_service.ResidentService.edit_resident" title="Permalink to this definition">¶</a></dt>
+<dd><p>Edits an existing resident identified by user_id.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>user_id</strong> – Unique user id.</li>
+<li><strong>email</strong> – New email.</li>
+<li><strong>first_name</strong> – New first name.</li>
+<li><strong>last_name</strong> – New last name.</li>
+<li><strong>room_number</strong> – New room number.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">If the edit/update was successful.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="ovs.services.resident_service.ResidentService.get_all_residents_users">
+<em class="property">static </em><code class="descname">get_all_residents_users</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/resident_service.html#ResidentService.get_all_residents_users"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.resident_service.ResidentService.get_all_residents_users" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch all related residents and users in db.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of (Resident, User) db model tuples.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="ovs.services.resident_service.ResidentService.get_resident_by_email">
+<em class="property">static </em><code class="descname">get_resident_by_email</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/resident_service.html#ResidentService.get_resident_by_email"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.resident_service.ResidentService.get_resident_by_email" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch resident identified by email.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>email</strong> – A email address.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A Resident db model.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="ovs.services.resident_service.ResidentService.get_resident_by_id">
+<em class="property">static </em><code class="descname">get_resident_by_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/resident_service.html#ResidentService.get_resident_by_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.resident_service.ResidentService.get_resident_by_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch resident identified by user id.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>user_id</strong> – Unique user id.</td>
+</tr>
+</tbody>
+</table>
+<p>Returns Resident db model.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="ovs.services.resident_service.ResidentService.get_resident_by_pin">
+<em class="property">static </em><code class="descname">get_resident_by_pin</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/resident_service.html#ResidentService.get_resident_by_pin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.resident_service.ResidentService.get_resident_by_pin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch resident identified by pin.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pin</strong> – Unique meal plan pin.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A Resident db model.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="ovs.services.resident_service.ResidentService.resident_exists">
+<em class="property">static </em><code class="descname">resident_exists</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/resident_service.html#ResidentService.resident_exists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.resident_service.ResidentService.resident_exists" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if resident identified user id exists.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>user_id</strong> – Unique user id.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">If the residents exists.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="ovs.services.resident_service.ResidentService.set_resident_pin">
+<em class="property">static </em><code class="descname">set_resident_pin</code><span class="sig-paren">(</span><em>new_pin</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/resident_service.html#ResidentService.set_resident_pin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.resident_service.ResidentService.set_resident_pin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a meal pin for a resident identified by user id.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>user_id</strong> – The resident’s unique user id.</li>
+<li><strong>new_pin</strong> – The new meal pin to be assigned to the resident.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">If the pin was set sucessfully.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ovs.services.room_service">
+<span id="ovs-services-room-service-module"></span><h2>ovs.services.room_service module<a class="headerlink" href="#module-ovs.services.room_service" title="Permalink to this headline">¶</a></h2>
+<p>DB access and other services for Rooms</p>
+<dl class="class">
+<dt id="ovs.services.room_service.RoomService">
+<em class="property">class </em><code class="descclassname">ovs.services.room_service.</code><code class="descname">RoomService</code><a class="reference internal" href="_modules/ovs/services/room_service.html#RoomService"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.room_service.RoomService" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>DB Access and utility methods for Rooms</p>
+<dl class="staticmethod">
+<dt id="ovs.services.room_service.RoomService.add_resident_to_room">
+<em class="property">static </em><code class="descname">add_resident_to_room</code><span class="sig-paren">(</span><em>room_number</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/room_service.html#RoomService.add_resident_to_room"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.room_service.RoomService.add_resident_to_room" title="Permalink to this definition">¶</a></dt>
+<dd><p>Associates a resident with a room. Updates resident’s room number and occupants of room.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>email</strong> – Resident’s email address.</li>
+<li><strong>room_number</strong> – The room number.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">If both resident and rooms were successfully updated.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="ovs.services.room_service.RoomService.create_room">
+<em class="property">static </em><code class="descname">create_room</code><span class="sig-paren">(</span><em>status</em>, <em>room_type</em>, <em>occupant_emails=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/room_service.html#RoomService.create_room"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.room_service.RoomService.create_room" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a room db entry.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>number</strong> – The room number.</li>
+<li><strong>status</strong> – Current room status.</li>
+<li><strong>room_type</strong> – Room type.</li>
+<li><strong>occupant_emails</strong> – Resident’s email address seperated by ‘;’.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A Room db model.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="ovs.services.room_service.RoomService.get_all_rooms">
+<em class="property">static </em><code class="descname">get_all_rooms</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/room_service.html#RoomService.get_all_rooms"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.room_service.RoomService.get_all_rooms" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch all rooms in the db.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of Room db models.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="ovs.services.room_service.RoomService.get_room_by_id">
+<em class="property">static </em><code class="descname">get_room_by_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/room_service.html#RoomService.get_room_by_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.room_service.RoomService.get_room_by_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch a room identified by room id.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>room_id</strong> – Unique room id.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A Room db model.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="ovs.services.room_service.RoomService.get_room_by_number">
+<em class="property">static </em><code class="descname">get_room_by_number</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/room_service.html#RoomService.get_room_by_number"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.room_service.RoomService.get_room_by_number" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch a Room model by room number.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>number</strong> – The room nmber.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A Room db model.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="ovs.services.room_service.RoomService.room_exists">
+<em class="property">static </em><code class="descname">room_exists</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/room_service.html#RoomService.room_exists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.room_service.RoomService.room_exists" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if a room identified by room number exits.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>number</strong> – The room number.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">If a matching room exists.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ovs.services.user_service">
+<span id="ovs-services-user-service-module"></span><h2>ovs.services.user_service module<a class="headerlink" href="#module-ovs.services.user_service" title="Permalink to this headline">¶</a></h2>
+<p>DB and utility functions for Users</p>
+<dl class="class">
+<dt id="ovs.services.user_service.UserService">
+<em class="property">class </em><code class="descclassname">ovs.services.user_service.</code><code class="descname">UserService</code><a class="reference internal" href="_modules/ovs/services/user_service.html#UserService"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.user_service.UserService" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>DB and utility functions for Users</p>
+<dl class="staticmethod">
+<dt id="ovs.services.user_service.UserService.create_user">
+<em class="property">static </em><code class="descname">create_user</code><span class="sig-paren">(</span><em>first_name</em>, <em>last_name</em>, <em>role</em>, <em>password=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/user_service.html#UserService.create_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.user_service.UserService.create_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a user entry to db.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>email</strong> – The user’s email address.</li>
+<li><strong>first_name</strong> – The user’s first name.</li>
+<li><strong>last_name</strong> – The user’s last name.</li>
+<li><strong>role</strong> – The user’s role.</li>
+<li><strong>password</strong> – The user’s password. If None a random one is generated.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A User db model.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="ovs.services.user_service.UserService.delete_user">
+<em class="property">static </em><code class="descname">delete_user</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/user_service.html#UserService.delete_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.user_service.UserService.delete_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes an existing user identified by user id.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>user_id</strong> – Unique user id.</td>
+</tr>
+</tbody>
+</table>
+<p>Returns if the user was sucessfuly deleted.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="ovs.services.user_service.UserService.edit_user">
+<em class="property">static </em><code class="descname">edit_user</code><span class="sig-paren">(</span><em>email</em>, <em>first_name</em>, <em>last_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/user_service.html#UserService.edit_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.user_service.UserService.edit_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Edits user identified by user id.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>user_id</strong> – Unique user id.</li>
+<li><strong>email</strong> – The user’s email.</li>
+<li><strong>first_name</strong> – The user’s first_name.</li>
+<li><strong>last_name</strong> – The user’s last_name.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">If user was updated sucessfuly.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="ovs.services.user_service.UserService.get_user_by_email">
+<em class="property">static </em><code class="descname">get_user_by_email</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/user_service.html#UserService.get_user_by_email"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.user_service.UserService.get_user_by_email" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch a user identified by email.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>user_id</strong> – The user’s email address.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A User db model.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="ovs.services.user_service.UserService.get_user_by_id">
+<em class="property">static </em><code class="descname">get_user_by_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/user_service.html#UserService.get_user_by_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.user_service.UserService.get_user_by_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch a user identified by user id.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>user_id</strong> – Unique user id.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A User db model.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="ovs.services.user_service.UserService.send_setup_email">
+<em class="property">static </em><code class="descname">send_setup_email</code><span class="sig-paren">(</span><em>first_name</em>, <em>last_name</em>, <em>role</em>, <em>password</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/user_service.html#UserService.send_setup_email"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.user_service.UserService.send_setup_email" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sends a setup email to the email address associated with a user.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>email</strong> – The user’s email address.</li>
+<li><strong>first_name</strong> – The user’s first name.</li>
+<li><strong>last_name</strong> – The user’s last name.</li>
+<li><strong>role</strong> – The user’s role.</li>
+<li><strong>password</strong> – The user’s password.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ovs.services">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ovs.services" title="Permalink to this headline">¶</a></h2>
+<p>DB Access services</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">ovs.services package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-ovs.services.auth_service">ovs.services.auth_service module</a></li>
+<li><a class="reference internal" href="#module-ovs.services.mail_service">ovs.services.mail_service module</a></li>
+<li><a class="reference internal" href="#module-ovs.services.meal_service">ovs.services.meal_service module</a></li>
+<li><a class="reference internal" href="#module-ovs.services.package_service">ovs.services.package_service module</a></li>
+<li><a class="reference internal" href="#module-ovs.services.profile_picture_service">ovs.services.profile_picture_service module</a></li>
+<li><a class="reference internal" href="#module-ovs.services.profile_service">ovs.services.profile_service module</a></li>
+<li><a class="reference internal" href="#module-ovs.services.resident_service">ovs.services.resident_service module</a></li>
+<li><a class="reference internal" href="#module-ovs.services.room_service">ovs.services.room_service module</a></li>
+<li><a class="reference internal" href="#module-ovs.services.user_service">ovs.services.user_service module</a></li>
+<li><a class="reference internal" href="#module-ovs.services">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/ovs.services.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Overseer 1.0.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Ben Lambeth.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.2.
+    </div>
+  </body>
+</html>
