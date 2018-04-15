@@ -2,7 +2,7 @@
 import json
 
 from flask import current_app
-from mock import patch
+from mock import patch, ANY
 
 from ovs.mail import templates
 from ovs.services.mail_service import MailService
@@ -34,17 +34,21 @@ class TestSendMail(OVSBaseTestCase):
     @patch('ovs.services.mail_service.MailService.send_email')
     def test_create_user_sends_email(self, mock_mail):
         """ Tests that creating a user sends an email """
-
-        test_user_info = ('test@gmail.com', 'Bob', 'Ross', 'ADMIN', 'testPassword')
         expected_substitutions = {
             'first_name': 'Bob',
             'last_name': 'Ross',
             'role': 'ADMIN',
-            'password': 'testPassword'
+            'confirm_url': ANY
         }
 
-        UserService.create_user(*test_user_info)
+        UserService.create_user('test@gmail.com', 'Bob', 'Ross', 'ADMIN', password='testPassword')
         mock_mail.assert_called_once_with('test@gmail.com',
                                           'User Account Creation',
                                           templates['user_creation_email'],
                                           substitutions=expected_substitutions)
+
+    @patch('ovs.services.mail_service.MailService.send_email')
+    def test_create_user_doesnt_send_email(self, mock_mail):
+        """ Tests that creating a user without a default password doesn't send an email """
+        UserService.create_user('test@gmail.com', 'Bob', 'Ross', 'ADMIN', password=None)
+        mock_mail.assert_not_called()

@@ -33,9 +33,12 @@ class UserService:
         Returns:
             A User db model.
         """
+        send_email = False
         if password is None:
             password = crypto.generate_password()
+            send_email = True
         new_user = User(email, first_name, last_name, password, role)
+
         try:
             db.session.add(new_user)
             db.session.commit()
@@ -47,8 +50,11 @@ class UserService:
         if role == 'RESIDENT':
             ResidentService.create_resident(new_user)
 
-        UserService.send_setup_email(
-            email, first_name, last_name, role)
+        #Only time passwords are supplied are on default user creation which
+        #for which reset password emails are not necessary
+        if send_email:
+            UserService.send_setup_email(
+                email, first_name, last_name, role)
         return new_user
 
     @staticmethod
