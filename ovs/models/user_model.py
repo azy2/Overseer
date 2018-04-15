@@ -92,7 +92,7 @@ class User(db.Model):
 
     def update_password(self, new_password):
         """
-        Updates the password of the user
+        Updates the password of the user.
 
         Args:
             new_password: The newpassword to hash and set as the user pass

@@ -10,7 +10,7 @@ class Serializer():
         """
         Initializes the static serializer with the app's secret
         Note that it must be done in this manner because the app_context
-        is not available until the application is created
+        is not available until the application is created.
 
         Args:
             attr: The attribute to serialize

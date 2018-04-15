@@ -188,7 +188,7 @@ class UserService:
 
         Args:
             reset_user: User model to reset password of.
-            new_password: The new password to set for the given user
+            new_password: The new password to set for the given user.
 
         Returns:
             The updated User model.
