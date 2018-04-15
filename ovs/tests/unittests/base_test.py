@@ -22,6 +22,7 @@ class OVSBaseTestCase(LiveServerTestCase):
         """ Runs before every test and clears relevant tables """
         DataGen.clear_db()
         self.db = db
+        DataGen.create_default_room()
 
     def tearDown(self):
         """
