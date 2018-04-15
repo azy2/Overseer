@@ -31,8 +31,9 @@ class ResidentService:
             The Resident db model that was just created.
         """
         from ovs.services.profile_service import ProfileService
+        from ovs.services.room_service import RoomService
 
-        new_resident = Resident(new_user.id, room_number)
+        new_resident = Resident(new_user.id)
         new_resident_profile = Profile(new_user.id)
         new_resident_profile.preferred_name = new_user.first_name
         new_resident_profile.preferred_email = new_user.email
@@ -48,6 +49,9 @@ class ResidentService:
             logging.exception('Failed to create resident.')
             db.session.rollback()
             return None
+
+        #This commits to the database. Do it after the resident has been entered properly.
+        RoomService.add_resident_to_room(new_user.email, room_number)
 
         return new_resident
 
@@ -67,8 +71,9 @@ class ResidentService:
             If the edit/update was successful.
         """
         from ovs.services.user_service import UserService
+        from ovs.services.room_service import RoomService
         return (UserService.edit_user(user_id, email, first_name, last_name)
-                and ResidentService.update_resident_room_number(user_id, room_number))
+                and RoomService.add_resident_to_room(email, room_number))
 
     @staticmethod
     def delete_resident(user_id):
@@ -142,33 +147,6 @@ class ResidentService:
             If the residents exists.
         """
         return ResidentService.get_resident_by_id(user_id) is not None
-
-    @staticmethod
-    def update_resident_room_number(user_id, room_number):
-        """
-        Changes the room_number of resident identified by user id.
-
-        Args:
-            user_id: Unique user_id that identify a resident.
-            room_number: The new room number to assigned to the resident.
-
-        Returns:
-            If the update was sucuessful.
-        """
-        from ovs.services.room_service import RoomService
-        if not RoomService.room_exists(room_number):
-            return False
-
-        try:
-            db.session.query(Resident)\
-                .filter(Resident.user_id == user_id)\
-                .update({Resident.room_number: room_number})
-            db.session.commit()
-            return True
-        except SQLAlchemyError:
-            logging.exception('Failed to update resident room number.')
-            db.session.rollback()
-            return False
 
     @staticmethod
     def get_resident_by_pin(pin):

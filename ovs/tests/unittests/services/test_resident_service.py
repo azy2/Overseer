@@ -6,6 +6,7 @@ from ovs.services.user_service import UserService
 from ovs.services.resident_service import ResidentService
 from ovs.services.room_service import RoomService
 from ovs.models.resident_model import Resident
+from ovs.datagen import DataGen
 
 
 class TestResidentService(OVSBaseTestCase):
@@ -16,6 +17,7 @@ class TestResidentService(OVSBaseTestCase):
     def setUp(self):
         """ Runs before every test and clears relevant tables """
         super().setUp()
+        DataGen.create_default_room()
         self.create_test_resident()
 
     def create_test_resident(self):
@@ -48,11 +50,6 @@ class TestResidentService(OVSBaseTestCase):
         """ Tests that get_resident_by_id does not find a resident with a non-existent id """
         resident = ResidentService.get_resident_by_id(4)
         self.assertIsNone(resident)
-
-    def test_update_resident_room_number(self):
-        """ Tests that a resident's room number can be updated """
-        ResidentService.update_resident_room_number(self.test_user.id, '1')
-        self.assertEqual(self.test_resident.room_number, '1')
 
     def test_edit_resident(self):  # cases - invalid email/id, invalid room, success
         """ Tests that a resident can be edited"""

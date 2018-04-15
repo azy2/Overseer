@@ -21,8 +21,8 @@ class Resident(db.Model):
     updated = Column(DateTime, server_default=text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))
     profile = relationship('Profile', uselist=False, back_populates='resident', cascade='all, delete, delete-orphan')
 
-    def __init__(self, user_id, room_number):
-        super(Resident, self).__init__(user_id=user_id, room_number=room_number)
+    def __init__(self, user_id):
+        super(Resident, self).__init__(user_id=user_id)
 
     def __repr__(self):
         return 'Resident([user_id={user_id}, room_number={room_number},' \

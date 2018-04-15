@@ -128,7 +128,7 @@ class RoomService:
 
         try:
             resident.room_number = room_number
-            room.occupants.append(resident)
+            # occupants are updated automatically by mysql
             db.session.commit()
             return True
         except SQLAlchemyError:
