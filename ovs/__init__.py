@@ -45,7 +45,8 @@ def create_app(config_path=None):
 
         from ovs.services.auth_service import LOGIN_MANAGER
         LOGIN_MANAGER.init_app(app)
-        LOGIN_MANAGER.login_view = 'auth.login'
+        LOGIN_MANAGER.login_view = '/'
+        LOGIN_MANAGER.login_message_category = 'danger'
 
         from flask_wtf.csrf import CSRFProtect
         csrf = CSRFProtect()

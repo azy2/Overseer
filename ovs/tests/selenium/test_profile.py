@@ -30,7 +30,7 @@ class TestProfile(SeleniumBaseTestCase):
 
         # Change all fields
         self.set_text_field_by_id('preferred_name', 'Megatron')
-        self.set_text_field_by_id('phone_number', '555-555-5555')
+        self.set_text_field_by_id('phone_number', '202-456-1111')
         self.set_text_field_by_id('preferred_email', 'Megatron@mega.tron')
         self.set_text_field_by_id('race', 'Transformer')
 
@@ -45,15 +45,7 @@ class TestProfile(SeleniumBaseTestCase):
 
         # Wait for successful notification popup to appear
         wait = WebDriverWait(self.browser, 5)
-        wait.until(EC.visibility_of_element_located((By.CLASS_NAME, 'close')))
-
-        # Handle successful notification popup
-        notification_close_button = self.browser.find_element_by_class_name('close')
-        notification_close_button.click()
-
-        # Wait for successful notification popup to disappear
-        wait = WebDriverWait(self.browser, 5)
-        wait.until(EC.invisibility_of_element_located((By.CLASS_NAME, 'close')))
+        wait.until(EC.visibility_of_element_located((By.ID, 'notification-message')))
 
         # Verify preferred name changed in account dropdown
         # Dropdown reference must be refreshed because the page has changed after submitting
@@ -66,7 +58,7 @@ class TestProfile(SeleniumBaseTestCase):
         email_text = self.browser.find_element_by_id('preferred_email').get_attribute('value')
         race_text = self.browser.find_element_by_id('race').get_attribute('value')
         self.assertEqual(name_text, 'Megatron')
-        self.assertEqual(phone_text, '555-555-5555')
+        self.assertEqual(phone_text, '202-456-1111')
         self.assertEqual(email_text, 'Megatron@mega.tron')
         self.assertEqual(race_text, 'Transformer')
 
@@ -84,14 +76,14 @@ class TestProfile(SeleniumBaseTestCase):
         upload_picture_button = self.browser.find_element_by_id('upload_picture')
         upload_picture_button.click()
 
-        # Wait for error dialog to pop up, id='notificationModal'
+        # Wait for error dialog to pop up, id='notification-message'
         wait = WebDriverWait(self.browser, 5)
-        wait.until(EC.visibility_of_element_located((By.ID, 'notificationModal')))
+        wait.until(EC.visibility_of_element_located((By.CLASS_NAME, 'invalid-feedback')))
 
         # Get error message on error dialog
-        error_p_tag = self.browser.find_element_by_id('notificationModal').find_element_by_tag_name('p')
-        error_message = error_p_tag.text
-        self.assertEqual(error_message, 'File is not a png')
+        error_tag = self.browser.find_element_by_class_name('invalid-feedback')
+        error_message = error_tag.text
+        self.assertEqual(error_message, 'Please select a valid png.')
 
     def test_valid_profile_picture(self):
         """ Tests that .png files can be uploaded for a profile picture """

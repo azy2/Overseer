@@ -13,7 +13,7 @@ def validate_meal_pin(form, field):  # pylint: disable=unused-argument
     This is to thwart malicious input.
     """
     if db.session.query(MealPlan).filter(MealPlan.pin == field.data).count() == 0:
-        raise ValidationError('Invalid Pin')
+        raise ValidationError("Pin doesn't exist.")
 
 
 class AddMealForm(FlaskForm):

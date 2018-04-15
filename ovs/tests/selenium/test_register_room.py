@@ -34,15 +34,7 @@ class TestRegisterRoom(SeleniumBaseTestCase):
 
         # Wait for successful notification popup to appear
         wait = WebDriverWait(self.browser, 5)
-        wait.until(EC.visibility_of_element_located((By.CLASS_NAME, 'close')))
-
-        # Handle successful notification popup
-        notification_close_button = self.browser.find_element_by_class_name('close')
-        notification_close_button.click()
-
-        # Wait for successful notification popup to disappear
-        wait = WebDriverWait(self.browser, 5)
-        wait.until(EC.invisibility_of_element_located((By.CLASS_NAME, 'close')))
+        wait.until(EC.visibility_of_element_located((By.ID, 'notification-message')))
 
         # Verify fields are empty and ready for new account registration
         self.assertEqual(self.browser.find_element_by_id('room_number').get_attribute('value'), '')
