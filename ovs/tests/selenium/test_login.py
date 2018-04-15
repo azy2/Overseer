@@ -1,6 +1,4 @@
 """ Test whether users can log in """
-from flask import current_app
-
 from ovs.tests.selenium.selenium_base_test import SeleniumBaseTestCase
 
 class TestLogin(SeleniumBaseTestCase):
@@ -10,15 +8,10 @@ class TestLogin(SeleniumBaseTestCase):
         """ Tests whether residents can log in or not """
         self.browser.get(self.base_url)
         self.assertIn('Overseer', self.browser.title)
-
-        defualt_resident = current_app.config['USERS']['RESIDENT']
-        default_resident_email = defualt_resident['email']
-        default_resident_password = defualt_resident['password']
-        super().login_with_credentials(default_resident_email, default_resident_password)
+        super().login_default_resident()
 
         # Should be at resident greeting page
-        default_resident_name = defualt_resident['first_name']
-        self.assertIn(default_resident_name, self.browser.title)
+        self.assertIn(self.default_resident_name, self.browser.title)
 
     def test_resident_logout(self):
         """ Tests whether residents can log out or not """
@@ -37,21 +30,15 @@ class TestLogin(SeleniumBaseTestCase):
         """ Tests whether managers can log in or not """
         self.browser.get(self.base_url)
         self.assertIn('Overseer', self.browser.title)
-
-        default_admin = current_app.config['USERS']['ADMIN']
-        default_admin_email = default_admin['email']
-        default_admin_password = default_admin['password']
-        super().login_with_credentials(default_admin_email, default_admin_password)
+        super().login_default_admin()
 
         # Should be at manager greeting page
-        default_admin_name = default_admin['first_name']
-        self.assertIn(default_admin_name, self.browser.title)
+        self.assertIn(self.default_admin_name, self.browser.title)
 
     def test_bad_login(self):
         """ Tests whether a random email can log in or not """
         self.browser.get(self.base_url)
         self.assertIn('Overseer', self.browser.title)
-
         super().login_with_credentials('testtesttest@gmail.com', 'password_goes_here')
 
         # Page should not have changed
