@@ -22,7 +22,7 @@ class Resident(db.Model):
     profile = relationship('Profile', uselist=False, back_populates='resident', cascade='all, delete, delete-orphan')
 
     def __init__(self, user_id):
-        super(Resident, self).__init__(user_id=user_id, mealplan_pin=0) 
+        super(Resident, self).__init__(user_id=user_id, mealplan_pin=0)
 
     def __repr__(self):
         return 'Resident([user_id={user_id}, room_number={room_number},' \

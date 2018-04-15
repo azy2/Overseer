@@ -45,10 +45,8 @@ class ProfileService:
             profile.preferred_email = preferred_email
         if preferred_name:
             profile.preferred_name = preferred_name
-        if phone_number:
-            profile.phone_number = phone_number
-        if race:
-            profile.race = race
+        profile.phone_number = phone_number # I want to be able to set this to None
+        profile.race = race # I want to be able to set this to None
         if gender:
             profile.gender = gender
 

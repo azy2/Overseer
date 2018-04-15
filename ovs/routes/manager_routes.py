@@ -89,7 +89,8 @@ def manage_residents():
 
     for edit_form in edit_forms:
         if edit_form.delete_button.data: #Don't validate. Just delete
-            if not (resident_exists(edit_form.user_id.data) and UserService.delete_user(edit_form.user_id.data)):
+            if not (ResidentService.resident_exists(edit_form.user_id.data) and
+                    UserService.delete_user(edit_form.user_id.data)):
                 flash('Failed to delete resident.', 'danger')
             else:
                 flash('Resident deleted.', 'success')
@@ -247,7 +248,7 @@ def create_meal_plan():
     user = UserService.get_user_by_id(user_id)
     role = user.role
     if form.validate_on_submit():
-        meal_plan = ResidentService.create_meal_plan_for_resident_by_email(
+        meal_plan = MealService.create_meal_plan_for_resident_by_email(
             form.meal_plan.data,
             form.plan_type.data,
             form.email.data)
