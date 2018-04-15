@@ -95,10 +95,10 @@ class User(db.Model):
         Updates the password of the user.
 
         Args:
-            new_password: The newpassword to hash and set as the user pass
+            new_password: The newpassword to hash and set as the user pass.
 
         Returns:
-            The updated model
+            The updated model.
         """
         self.password = bcrypt_app.generate_password_hash(new_password)
         return self

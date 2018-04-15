@@ -38,7 +38,7 @@ def login():
 
 @auth_bp.route('/user/reset', methods=['GET', 'POST'])
 def request_user_reset():
-    """ Allows a user to send a password reset request """
+    """ Allows a user to send a password reset request."""
     form = ResetRequestForm()
     if request.method == 'POST':
         if form.validate_on_submit():
@@ -54,7 +54,7 @@ def request_user_reset():
 
 @auth_bp.route('/reset/<token>', methods=['GET', 'POST'])
 def reset_user(token):
-    """Allows a user with a valid token to reset their password"""
+    """Allows a user with a valid token to reset their password."""
     form = ResetPasswordForm()
     if request.method == 'POST':
         if form.validate_on_submit():

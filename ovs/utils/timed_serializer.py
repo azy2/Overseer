@@ -1,4 +1,4 @@
-"""Houses the timed serializer for secure token generation"""
+"""Houses the timed serializer for secure token generation."""
 from itsdangerous import URLSafeTimedSerializer
 
 class Serializer():
@@ -13,8 +13,8 @@ class Serializer():
         is not available until the application is created.
 
         Args:
-            attr: The attribute to serialize
-            key: The salt to use with the TimedSerializer
+            attr: The attribute to serialize.
+            key: The salt to use with the TimedSerializer.
 
         Returns:
             The serialized string.
@@ -27,8 +27,8 @@ class Serializer():
         Serializes an attribute, using a key as a salt.
 
         Args:
-            attr: The attribute to serialize
-            key: The salt to use with the TimedSerializer
+            attr: The attribute to serialize.
+            key: The salt to use with the TimedSerializer.
 
         Returns:
             The serialized string.
@@ -44,8 +44,8 @@ class Serializer():
         Deserializes an attribute, using a key as a salt.
 
         Args:
-            attr: The attribute to deserialize
-            key: The salt to use with the TimedSerializer
+            attr: The attribute to deserialize.
+            key: The salt to use with the TimedSerializer.
 
         Returns:
             The deserialized string.

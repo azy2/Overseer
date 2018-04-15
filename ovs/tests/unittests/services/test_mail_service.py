@@ -33,7 +33,7 @@ class TestSendMail(OVSBaseTestCase):
     #pylint: disable=no-self-use
     @patch('ovs.services.mail_service.MailService.send_email')
     def test_create_user_sends_email(self, mock_mail):
-        """ Tests that creating a user sends an email """
+        """ Tests that creating a user sends an email."""
         expected_substitutions = {
             'first_name': 'Bob',
             'last_name': 'Ross',
@@ -49,6 +49,6 @@ class TestSendMail(OVSBaseTestCase):
 
     @patch('ovs.services.mail_service.MailService.send_email')
     def test_create_user_doesnt_send_email(self, mock_mail):
-        """ Tests that creating a user without a default password doesn't send an email """
+        """ Tests that creating a user without a default password doesn't send an email."""
         UserService.create_user('test@gmail.com', 'Bob', 'Ross', 'ADMIN', password='testPassword')
         mock_mail.assert_not_called()
