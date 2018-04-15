@@ -1,0 +1,242 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>ovs.routes package &#8212; Overseer 1.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Overseer 1.0.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="ovs-routes-package">
+<h1>ovs.routes package<a class="headerlink" href="#ovs-routes-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-ovs.routes.admin_routes">
+<span id="ovs-routes-admin-routes-module"></span><h2>ovs.routes.admin_routes module<a class="headerlink" href="#module-ovs.routes.admin_routes" title="Permalink to this headline">¶</a></h2>
+<p>routes under /admin/</p>
+<dl class="function">
+<dt id="ovs.routes.admin_routes.register_manager">
+<code class="descclassname">ovs.routes.admin_routes.</code><code class="descname">register_manager</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/routes/admin_routes.html#register_manager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.routes.admin_routes.register_manager" title="Permalink to this definition">¶</a></dt>
+<dd><p>/admin/register_manager serves an html form with input fields for email,
+first name, last name, and role and accepts that form (POST) and adds a user
+to the user table with a default password.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-ovs.routes.auth_routes">
+<span id="ovs-routes-auth-routes-module"></span><h2>ovs.routes.auth_routes module<a class="headerlink" href="#module-ovs.routes.auth_routes" title="Permalink to this headline">¶</a></h2>
+<p>routes under /auth/</p>
+<dl class="function">
+<dt id="ovs.routes.auth_routes.login">
+<code class="descclassname">ovs.routes.auth_routes.</code><code class="descname">login</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/routes/auth_routes.html#login"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.routes.auth_routes.login" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interface for users to login</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ovs.routes.auth_routes.logout">
+<code class="descclassname">ovs.routes.auth_routes.</code><code class="descname">logout</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/routes/auth_routes.html#logout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.routes.auth_routes.logout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Logs a user out</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-ovs.routes.dev_routes">
+<span id="ovs-routes-dev-routes-module"></span><h2>ovs.routes.dev_routes module<a class="headerlink" href="#module-ovs.routes.dev_routes" title="Permalink to this headline">¶</a></h2>
+<p>Routes for developers</p>
+<dl class="function">
+<dt id="ovs.routes.dev_routes.dev_home_page">
+<code class="descclassname">ovs.routes.dev_routes.</code><code class="descname">dev_home_page</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/routes/dev_routes.html#dev_home_page"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.routes.dev_routes.dev_home_page" title="Permalink to this definition">¶</a></dt>
+<dd><p>A home page that displays links to all accessible routes</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ovs.routes.dev_routes.has_no_empty_params">
+<code class="descclassname">ovs.routes.dev_routes.</code><code class="descname">has_no_empty_params</code><span class="sig-paren">(</span><em>rule</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/routes/dev_routes.html#has_no_empty_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.routes.dev_routes.has_no_empty_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if the rule is valid for navigation</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-ovs.routes.manager_routes">
+<span id="ovs-routes-manager-routes-module"></span><h2>ovs.routes.manager_routes module<a class="headerlink" href="#module-ovs.routes.manager_routes" title="Permalink to this headline">¶</a></h2>
+<p>Routes under /manager/</p>
+<dl class="function">
+<dt id="ovs.routes.manager_routes.add_meals">
+<code class="descclassname">ovs.routes.manager_routes.</code><code class="descname">add_meals</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/routes/manager_routes.html#add_meals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.routes.manager_routes.add_meals" title="Permalink to this definition">¶</a></dt>
+<dd><p>/manager/meal_login serves an html form with input field pin
+and accepts that form (POST) and logs the use to a meal plan</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ovs.routes.manager_routes.create_meal_plan">
+<code class="descclassname">ovs.routes.manager_routes.</code><code class="descname">create_meal_plan</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/routes/manager_routes.html#create_meal_plan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.routes.manager_routes.create_meal_plan" title="Permalink to this definition">¶</a></dt>
+<dd><p>/manager/meal_login serves an html form with input field pin
+and accepts that form (POST) and logs the use to a meal plan</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ovs.routes.manager_routes.landing_page">
+<code class="descclassname">ovs.routes.manager_routes.</code><code class="descname">landing_page</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/routes/manager_routes.html#landing_page"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.routes.manager_routes.landing_page" title="Permalink to this definition">¶</a></dt>
+<dd><p>The landing page for managers</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ovs.routes.manager_routes.manage_packages">
+<code class="descclassname">ovs.routes.manager_routes.</code><code class="descname">manage_packages</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/routes/manager_routes.html#manage_packages"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.routes.manager_routes.manage_packages" title="Permalink to this definition">¶</a></dt>
+<dd><p>/manager/register_resident serves an html form with input fields for email,
+first name, and last name and accepts that form (POST) and adds a user
+to the user table with a default password.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ovs.routes.manager_routes.manage_residents">
+<code class="descclassname">ovs.routes.manager_routes.</code><code class="descname">manage_residents</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/routes/manager_routes.html#manage_residents"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.routes.manager_routes.manage_residents" title="Permalink to this definition">¶</a></dt>
+<dd><p>/manager/manage_residents serves a HTML with list of residents with their info.
+It allows a manager to add/edit/delete residents with form inputs.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ovs.routes.manager_routes.meal_login">
+<code class="descclassname">ovs.routes.manager_routes.</code><code class="descname">meal_login</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/routes/manager_routes.html#meal_login"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.routes.manager_routes.meal_login" title="Permalink to this definition">¶</a></dt>
+<dd><p>/manager/meal_login serves an html form with input field pin
+and accepts that form (POST) and logs the use to a meal plan</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ovs.routes.manager_routes.meal_undo">
+<code class="descclassname">ovs.routes.manager_routes.</code><code class="descname">meal_undo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/routes/manager_routes.html#meal_undo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.routes.manager_routes.meal_undo" title="Permalink to this definition">¶</a></dt>
+<dd><p>/manager/meal_undo accepts that form (POST) and undo the use of a meal plan
+Currently uses manager id to distinguish frontends. Should use session token.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ovs.routes.manager_routes.register_room">
+<code class="descclassname">ovs.routes.manager_routes.</code><code class="descname">register_room</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/routes/manager_routes.html#register_room"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.routes.manager_routes.register_room" title="Permalink to this definition">¶</a></dt>
+<dd><p>/manager/register_room serves an HTML form with input fields for room #,
+status, and type and accepts that form (POST) and adds a room to the
+rooms table. The option for admins to add current residents to said
+room is an available option.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-ovs.routes.ovs_routes">
+<span id="ovs-routes-ovs-routes-module"></span><h2>ovs.routes.ovs_routes module<a class="headerlink" href="#module-ovs.routes.ovs_routes" title="Permalink to this headline">¶</a></h2>
+<p>Routes under /</p>
+<dl class="function">
+<dt id="ovs.routes.ovs_routes.landing_page">
+<code class="descclassname">ovs.routes.ovs_routes.</code><code class="descname">landing_page</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/routes/ovs_routes.html#landing_page"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.routes.ovs_routes.landing_page" title="Permalink to this definition">¶</a></dt>
+<dd><p>The homepage for OVS</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-ovs.routes.resident_routes">
+<span id="ovs-routes-resident-routes-module"></span><h2>ovs.routes.resident_routes module<a class="headerlink" href="#module-ovs.routes.resident_routes" title="Permalink to this headline">¶</a></h2>
+<p>under /resident</p>
+<dl class="function">
+<dt id="ovs.routes.resident_routes.edit_profile">
+<code class="descclassname">ovs.routes.resident_routes.</code><code class="descname">edit_profile</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/routes/resident_routes.html#edit_profile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.routes.resident_routes.edit_profile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allows the user to edit their profile in a wtform</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ovs.routes.resident_routes.landing_page">
+<code class="descclassname">ovs.routes.resident_routes.</code><code class="descname">landing_page</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/routes/resident_routes.html#landing_page"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.routes.resident_routes.landing_page" title="Permalink to this definition">¶</a></dt>
+<dd><p>The landing page for residents</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-ovs.routes">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ovs.routes" title="Permalink to this headline">¶</a></h2>
+<p>Routes</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">ovs.routes package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-ovs.routes.admin_routes">ovs.routes.admin_routes module</a></li>
+<li><a class="reference internal" href="#module-ovs.routes.auth_routes">ovs.routes.auth_routes module</a></li>
+<li><a class="reference internal" href="#module-ovs.routes.dev_routes">ovs.routes.dev_routes module</a></li>
+<li><a class="reference internal" href="#module-ovs.routes.manager_routes">ovs.routes.manager_routes module</a></li>
+<li><a class="reference internal" href="#module-ovs.routes.ovs_routes">ovs.routes.ovs_routes module</a></li>
+<li><a class="reference internal" href="#module-ovs.routes.resident_routes">ovs.routes.resident_routes module</a></li>
+<li><a class="reference internal" href="#module-ovs.routes">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/ovs.routes.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Overseer 1.0.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Ben Lambeth.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.2.
+    </div>
+  </body>
+</html>
