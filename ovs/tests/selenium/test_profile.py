@@ -35,7 +35,7 @@ class TestProfile(SeleniumBaseTestCase):
 
         # Change all fields
         self.set_text_field_by_id('preferred_name', 'Megatron')
-        self.set_text_field_by_id('phone_number', '555-555-5555')
+        self.set_text_field_by_id('phone_number', '202-456-1111')
         self.set_text_field_by_id('preferred_email', 'Megatron@mega.tron')
         self.set_text_field_by_id('race', 'Transformer')
 
@@ -63,7 +63,7 @@ class TestProfile(SeleniumBaseTestCase):
         email_text = self.browser.find_element_by_id('preferred_email').get_attribute('value')
         race_text = self.browser.find_element_by_id('race').get_attribute('value')
         self.assertEqual(name_text, 'Megatron')
-        self.assertEqual(phone_text, '555-555-5555')
+        self.assertEqual(phone_text, '202-456-1111')
         self.assertEqual(email_text, 'Megatron@mega.tron')
         self.assertEqual(race_text, 'Transformer')
 
