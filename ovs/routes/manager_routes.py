@@ -32,7 +32,7 @@ def landing_page():
 
 @manager_bp.route('/register_room/', methods=['GET', 'POST'])
 @login_required
-@permissions(roles.OFFICE_MANAGER)
+@permissions(roles.STAFF)
 def register_room():
     """
     /manager/register_room serves an HTML form with input fields for room #,
@@ -60,7 +60,7 @@ def register_room():
 
 @manager_bp.route('/manage_residents/', methods=['GET', 'POST'])
 @login_required
-@permissions(roles.RESIDENT_ADVISOR)
+@permissions(roles.STAFF)
 def manage_residents():
     """
     /manager/manage_residents serves a HTML with list of residents with their info.
@@ -117,7 +117,7 @@ def manage_residents():
 
 @manager_bp.route('/manage_packages/', methods=['GET', 'POST'])
 @login_required
-@permissions(roles.RESIDENT_ADVISOR)
+@permissions(roles.STAFF)
 def manage_packages():
     """
     /manager/register_resident serves an html form with input fields for email,
