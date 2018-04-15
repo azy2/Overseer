@@ -31,7 +31,7 @@ def register_manager():
             form.last_name.data,
             form.role.data)
         if user is None:
-            flash('An error was encountered')
+            flash('An error was encountered', 'danger')
         else:
             flash('{} successfully registered'.format(user.email), 'success')
 
