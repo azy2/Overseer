@@ -88,8 +88,8 @@ def manage_residents():
         return redirect(url_for('manager.manage_residents'))
 
     for edit_form in edit_forms:
-        if edit_form.delete_button.data and edit_form.validate_on_submit():
-            if not UserService.delete_user(edit_form.user_id.data):
+        if edit_form.delete_button.data: #Don't validate. Just delete
+            if not (resident_exists(edit_form.user_id.data) and UserService.delete_user(edit_form.user_id.data)):
                 flash('Failed to delete resident.', 'danger')
             else:
                 flash('Resident deleted.', 'success')
