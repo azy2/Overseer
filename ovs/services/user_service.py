@@ -140,7 +140,6 @@ class UserService:
         user_info_substitution = {
             "reset_url": url_for('auth.reset_user', token=token, _external=True)
         }
-        print(user_info_substitution)
         MailService.send_email(email, 'Reset Your Overseer Password',
                                templates['user_reset_email'],
                                substitutions=user_info_substitution)
