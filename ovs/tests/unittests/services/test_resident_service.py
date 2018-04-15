@@ -35,6 +35,9 @@ class TestResidentService(OVSBaseTestCase):
             Resident.user_id == self.test_user.id).first()
         self.assertIsNotNone(resident)
 
+        old_room = RoomService.get_room_by_number('None')
+        self.assertTrue(resident in old_room.occupants)
+
     def test_create_resident_null(self):
         """ Tests that non-resident user accounts cannot be found in Resident database """
         resident = self.db.session.query(Resident).filter(

@@ -40,6 +40,12 @@ class ResidentService:
         new_resident_profile.gender = genders.UNSPECIFIED
         ProfileService.set_default_picture(new_resident_profile.picture_id)
 
+        room = RoomService.get_room_by_number(room_number)
+        if room is None:
+            logging.exception('Failed to create resident because of invalid room number')
+            return None
+        new_resident.room_number = room_number
+
         try:
             db.session.add(new_resident)
             db.session.add(new_resident_profile)
@@ -49,9 +55,6 @@ class ResidentService:
             logging.exception('Failed to create resident.')
             db.session.rollback()
             return None
-
-        #This commits to the database. Do it after the resident has been entered properly.
-        RoomService.add_resident_to_room(new_user.email, room_number)
 
         return new_resident
 

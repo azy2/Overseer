@@ -7,6 +7,7 @@ from ovs.services.resident_service import ResidentService
 from ovs.services.profile_service import ProfileService
 from ovs.models.profile_model import Profile
 from ovs.utils.genders import Gender
+from ovs.datagen import DataGen
 
 
 class TestProfileService(OVSBaseTestCase):
@@ -17,6 +18,7 @@ class TestProfileService(OVSBaseTestCase):
     def setUp(self):
         """ Runs before every test and clears relevant tables """
         super().setUp()
+        DataGen.create_default_room()
         test_user_info = ('test@gmail.com', 'Bob', 'Smith', 'RESIDENT')
         UserService.create_user(*test_user_info)
         self.test_user = UserService.get_user_by_email('test@gmail.com')
