@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<title>Login</title>
+{% if form %}
+{% from "_formhelper.html" import render_field %}
+<form method=post>
+  <dl>
+    {{ render_field(form.email) }}
+  </dl>
+  <p><input type=submit value=Login>
+</form>
+{% endif %}
+<!-- Error Messages -->
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+   <ul>
+      {% for message in messages %}
+      <li>{{ message }}</li>
+      {% endfor %}
+   </ul>
+{% endif %}
+{% endwith %}

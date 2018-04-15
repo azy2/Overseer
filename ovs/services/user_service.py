@@ -158,3 +158,22 @@ class UserService:
             return db.session.query(User).filter_by(id=user_id).first()
         except SQLAlchemyError:
             logging.exception('Failed to get user by id.')
+
+    @staticmethod
+    def reset_user(reset_user, new_password):
+        """
+        Reset a given user's password.
+
+        Args:
+            reset_user: User model to reset password of.
+            new_password: The new password to set for the given user
+
+        Returns:
+            The updated User model.
+        """
+        try:
+            reset_user.update_password(new_password)
+            db.commit()
+            return reset_user
+        except SQLAlchemyError:
+            logging.exception('Faileed to reset user password.')
