@@ -1,5 +1,4 @@
 """ Test whether users can log in """
-from flask import current_app
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -13,11 +12,7 @@ class TestRegisterManager(SeleniumBaseTestCase):
         """ Tests whether all fields can be edited in a register manager page """
         self.browser.get(self.base_url)
         self.assertIn('Overseer', self.browser.title)
-
-        default_admin = current_app.config['USERS']['ADMIN']
-        default_admin_email = default_admin['email']
-        default_admin_password = default_admin['password']
-        super().login_with_credentials(default_admin_email, default_admin_password)
+        super().login_default_admin()
 
         # Click on Register Manager
         register_manager = self.browser.find_element_by_link_text('Register Manager')

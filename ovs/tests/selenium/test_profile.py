@@ -1,6 +1,5 @@
 """ Test whether profiles can be edited """
 import os
-from flask import current_app
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -12,10 +11,7 @@ class TestProfile(SeleniumBaseTestCase):
 
     def go_to_resident_profile_page(self):
         """ Runs the Selenium steps necessary to navigate to the edit resident profile page """
-        default_resident = current_app.config['USERS']['RESIDENT']
-        default_resident_email = default_resident['email']
-        default_resident_password = default_resident['password']
-        super().login_with_credentials(default_resident_email, default_resident_password)
+        super().login_default_resident()
 
         # Click on account dropdown and go to Profile link
         account_dropdown = self.browser.find_element_by_id('accountDropdown')
@@ -30,7 +26,6 @@ class TestProfile(SeleniumBaseTestCase):
         """ Tests whether all fields can be edited in a resident profile """
         self.browser.get(self.base_url)
         self.assertIn('Overseer', self.browser.title)
-
         self.go_to_resident_profile_page()
 
         # Change all fields
@@ -79,7 +74,6 @@ class TestProfile(SeleniumBaseTestCase):
         """ Tests that non-.png files cannot be uploaded as a profile picture """
         self.browser.get(self.base_url)
         self.assertIn('Overseer', self.browser.title)
-
         self.go_to_resident_profile_page()
 
         # Choose the non-picture file to upload
@@ -103,7 +97,6 @@ class TestProfile(SeleniumBaseTestCase):
         """ Tests that .png files can be uploaded for a profile picture """
         self.browser.get(self.base_url)
         self.assertIn('Overseer', self.browser.title)
-
         self.go_to_resident_profile_page()
         default_image_src = self.browser.find_element_by_id('profile_image').get_attribute('src')
 
