@@ -19,6 +19,7 @@ from ovs.utils import log_types
 
 manager_bp = Blueprint('manager', __name__, )
 
+
 @manager_bp.route('/', methods=['GET'])
 @login_required
 @permissions(roles.STAFF)
