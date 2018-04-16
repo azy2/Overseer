@@ -95,6 +95,36 @@ class MealService:
                 and MealService.log_meal_history(resident.user_id, mealplan.pin, manager_id, log_types.MEAL_USED))
 
     @staticmethod
+    def edit_meal_plan(pin, credits=None, plan_meal_count=None, plan_type=None, reset_date=None, email=None):
+        meal_plan = MealService.get_meal_plan_by_pin(pin)
+        if meal_plan is None:
+            return False
+        if credits:
+            meal_plan.credits = credits
+        if plan_meal_count:
+            meal_plan.meal_plan = plan_meal_count
+        if plan_type:
+            meal_plan.plan_type = plan_type
+        if reset_date:
+            meal_plan.plan_type = reset_date
+        if email:
+            resident = ResidentService.get_resident_by_email(email)
+            if resident:
+                MealService.delete_meal_plan(resident.mealplan_pin) #This checks if it exists
+                ResidentService.set_resident_pin(pin)
+            else:
+                return False
+
+        try:
+            db.session.commit()
+        except SQLAlchemyError:
+            logging.exception('Failed to update meal plan')
+            db.session.rollback()
+            return False
+        return True
+
+
+    @staticmethod
     def add_meals(pin, number):
         """
         Add credits to meal plan identified by meal pin.
