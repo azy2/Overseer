@@ -11,12 +11,12 @@ from ovs.utils import roles
 admin_bp = Blueprint('admin', __name__, )
 
 
-@admin_bp.route('/register_manager/', methods=['GET', 'POST'])
+@admin_bp.route('/manage_managers/', methods=['GET', 'POST'])
 @login_required
 @permissions(roles.ADMIN)
-def register_manager():
+def manage_managers():
     """
-    /admin/register_manager serves an html form with input fields for email,
+    /admin/manage_managers serves an html form with input fields for email,
     first name, last name, and role and accepts that form (POST) and adds a user
     to the user table with a default password.
     """
@@ -37,7 +37,7 @@ def register_manager():
             flash('An error was encountered', 'danger')
         else:
             flash('{} successfully registered'.format(user.email), 'success')
-        return redirect(url_for('admin.register_manager'))
+        return redirect(url_for('admin.manage_managers'))
     for edit_form in edit_forms:
         if edit_form.delete_button.data:
             if not (UserService.get_user_by_id(edit_form.user_id.data) and
@@ -45,7 +45,7 @@ def register_manager():
                 flash('Failed to delete user.', 'danger')
             else:
                 flash('User deleted.', 'success')
-            return redirect(url_for('admin.register_manager'))
+            return redirect(url_for('admin.manage_managers'))
         elif edit_form.update_button.data and edit_form.validate_on_submit():
             if not UserService.edit_user(
                     edit_form.user_id.data,
@@ -56,9 +56,9 @@ def register_manager():
             else:
                 flash('User updated!', 'success')
 
-            return redirect(url_for('admin.register_manager'))
+            return redirect(url_for('admin.manage_managers'))
 
     user = UserService.get_user_by_id(current_user.get_id())
     role = user.role
-    return render_template('admin/register_manager.html', role=role, user=user,
+    return render_template('admin/manage_managers.html', role=role, user=user,
                            register_form=register_form, form_data=zip(edit_forms, managers))

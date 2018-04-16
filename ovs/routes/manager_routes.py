@@ -31,10 +31,10 @@ def landing_page():
     return render_template('manager/index.html', role=role, user=user)
 
 
-@manager_bp.route('/register_room/', methods=['GET', 'POST'])
+@manager_bp.route('/manage_rooms/', methods=['GET', 'POST'])
 @login_required
 @permissions(roles.STAFF)
-def register_room():
+def manage_rooms():
     """
     /manager/register_room serves an HTML form with input fields for room #,
     status, and type and accepts that form (POST) and adds a room to the
@@ -57,7 +57,7 @@ def register_room():
         else:
             flash('Successfully created room', 'success')
 
-        return redirect(url_for('manager.register_room'))
+        return redirect(url_for('manager.manage_rooms'))
 
     for edit_form in edit_forms:
         if edit_form.delete_button.data:
@@ -66,7 +66,7 @@ def register_room():
                 flash('Failed to delete room.', 'danger')
             else:
                 flash('Room deleted.', 'success')
-            return redirect(url_for('manager.register_room'))
+            return redirect(url_for('manager.manage_rooms'))
         elif edit_form.update_button.data and edit_form.validate_on_submit():
             if not RoomService.edit_room(
                     edit_form.room_id.data,
@@ -76,10 +76,10 @@ def register_room():
                 flash('Falied to update room', 'danger')
             else:
                 flash('Room updated!', 'success')
-            return redirect(url_for('manager.register_room'))
+            return redirect(url_for('manager.manage_rooms'))
     user = UserService.get_user_by_id(current_user.get_id())
     role = user.role
-    return render_template('manager/register_room.html', role=role, user=user,
+    return render_template('manager/manage_rooms.html', role=role, user=user,
                            register_form=register_form, form_data=zip(edit_forms, rooms))
 
 
@@ -222,6 +222,8 @@ def meal_login():
         profile = resident.profile
         pict = base64.b64encode(ProfilePictureService.get_profile_picture(profile.picture_id)).decode()
         mealplan = MealService.get_meal_plan_by_pin(log.mealplan_pin)
+        if mealplan is None:
+            continue
         current_meals = mealplan.credits
         max_meals = mealplan.meal_plan
         return render_template('manager/meal_login.html', role=role, user=user, form=form,
@@ -262,10 +264,10 @@ def meal_undo():
     return redirect(url_for('manager.meal_login'))
 
 
-@manager_bp.route('/create_meal_plan/', methods=['GET', 'POST'])
+@manager_bp.route('/manage_meal_plans/', methods=['GET', 'POST'])
 @login_required
 @permissions(roles.STAFF)
-def create_meal_plan():
+def manage_meal_plans():
     """
     /manager/meal_login serves an html form with input field pin
     and accepts that form (POST) and logs the use to a meal plan
@@ -291,7 +293,7 @@ def create_meal_plan():
         else:
             flash('Meal plan created with pin {}'.format(meal_plan.pin), 'success')
 
-        return redirect(url_for('manager.create_meal_plan'))
+        return redirect(url_for('manager.manage_meal_plans'))
 
     for edit_form in edit_forms:
         if edit_form.delete_button.data:
@@ -300,7 +302,7 @@ def create_meal_plan():
                 flash('Failed to delete meal plan.', 'danger')
             else:
                 flash('Meal plan deleted.', 'success')
-            return redirect(url_for('manager.create_meal_plan'))
+            return redirect(url_for('manager.manage_meal_plans'))
         elif edit_form.update_button.data and edit_form.validate_on_submit():
             if not MealService.edit_meal_plan(
                     edit_form.pin.data,
@@ -310,8 +312,8 @@ def create_meal_plan():
                 flash('Falied to update meal plan', 'danger')
             else:
                 flash('Meal plan updated!', 'success')
-            return redirect(url_for('manager.create_meal_plan'))
+            return redirect(url_for('manager.manage_meal_plans'))
     user = UserService.get_user_by_id(current_user.get_id())
     role = user.role
-    return render_template('manager/create_meal_plan.html', role=role, user=user,
+    return render_template('manager/manage_meal_plans.html', role=role, user=user,
                            create_form=create_form, form_data=zip(edit_forms, meal_plans, emails))
