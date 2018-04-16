@@ -87,6 +87,10 @@ class RoomService:
         room = RoomService.get_room_by_id(room_id)
         if room is None:
             return False
+
+        other_room = RoomService.get_room_by_number(room_number)
+        if other_room is not None and other_room != room:
+            return False
         room.room_number = room_number
         room.status = status
         room.type = room_type
