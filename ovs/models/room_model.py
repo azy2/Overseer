@@ -2,7 +2,7 @@
 Defines a Room as represented in the database
 """
 from flask import jsonify
-from sqlalchemy import Integer, Column, CHAR, text, DateTime
+from sqlalchemy import Integer, Column, CHAR, DateTime
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 

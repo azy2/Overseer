@@ -2,7 +2,7 @@
 Keeps track of mealplan history as represented in the database
 """
 from flask import jsonify
-from sqlalchemy import Integer, Enum, Column, text, DateTime
+from sqlalchemy import Integer, Enum, Column, DateTime
 from sqlalchemy.sql import func
 
 from ovs import db

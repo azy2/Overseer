@@ -2,7 +2,7 @@
 Defines a Resident as represented in the database
 """
 from flask import jsonify
-from sqlalchemy import Integer, Column, CHAR, text, DateTime, ForeignKey
+from sqlalchemy import Integer, Column, CHAR, DateTime, ForeignKey
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 

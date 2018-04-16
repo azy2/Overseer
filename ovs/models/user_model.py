@@ -4,7 +4,7 @@ Defines a User as represented in the database
 
 from flask import jsonify
 from flask_bcrypt import Bcrypt, bcrypt
-from sqlalchemy import Integer, Enum, Column, CHAR, String, text, DateTime
+from sqlalchemy import Integer, Enum, Column, CHAR, String, DateTime
 from sqlalchemy.sql import func
 
 from ovs import db

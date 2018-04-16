@@ -6,7 +6,7 @@ import logging
 from datetime import datetime, timedelta
 
 from flask import jsonify
-from sqlalchemy import Integer, Enum, Column, text, DateTime, Sequence
+from sqlalchemy import Integer, Enum, Column, DateTime, Sequence
 from sqlalchemy.sql import func
 from sqlalchemy.exc import SQLAlchemyError
 

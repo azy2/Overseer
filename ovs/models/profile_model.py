@@ -3,7 +3,7 @@ Defines a Profile as represented in the database
 """
 import uuid
 from flask import jsonify
-from sqlalchemy import Integer, Enum, Column, CHAR, text, ForeignKey, DateTime
+from sqlalchemy import Integer, Enum, Column, CHAR, ForeignKey, DateTime
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 
