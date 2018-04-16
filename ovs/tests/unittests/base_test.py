@@ -8,13 +8,25 @@ from ovs import db
 from ovs.datagen import DataGen
 
 
-def mock_generate_password_hash(self, password, rounds=None): # pylint: disable=unused-argument
-    """ Mocks password hashing during tests. """
-    return password
+class MockBcrypt(object):
+    """ Mock the Bcrypt object to avoid expensive security stuff during testing. """
+    def __init__(self, app=None): # pylint: disable=unused-argument
+        """ mock __init__ """
+        pass
 
-def mock_check_password_hash(self, pw_hash, password): # pylint: disable=unused-argument
-    """ Mocks a password compare during tests """
-    return pw_hash == password
+    def init_app(self, app): # pylint: disable=unused-argument
+        """ mock init_app """
+        pass
+
+    def generate_password_hash(self, password, rounds=None): # pylint: disable=unused-argument, no-self-use
+        """ mock generate_password_hash """
+        return password
+
+    def check_password_hash(self, pw_hash, password): # pylint: disable=unused-argument, no-self-use
+        """ mock check_password_hash """
+        return pw_hash == password
+
+bcrypt_mock = MockBcrypt()
 
 class OVSBaseTestCase(LiveServerTestCase):
     """
@@ -22,9 +34,8 @@ class OVSBaseTestCase(LiveServerTestCase):
     """
 
     def create_app(self):
-        app = create_app()
+        app = create_app('config/config-testing.json')
         app.config['LIVESERVER_PORT'] = 0
-        app.config['TESTING'] = True
         return app
 
     def setUp(self):
@@ -32,14 +43,10 @@ class OVSBaseTestCase(LiveServerTestCase):
         DataGen.clear_db()
         self.db = db
         DataGen.create_default_room()
-        self.hash_patch = patch('flask_bcrypt.Bcrypt.generate_password_hash',
-                                new=mock_generate_password_hash)
-        self.addCleanup(self.hash_patch.stop)
-        self.hash_patch.start()
-        self.check_hash_patch = patch('flask_bcrypt.Bcrypt.check_password_hash',
-                                      new=mock_check_password_hash)
-        self.addCleanup(self.check_hash_patch.stop)
-        self.check_hash_patch.start()
+        self.bcrypt_patch = patch('ovs.models.user_model.Bcrypt',
+                                  new=bcrypt_mock)
+        self.addCleanup(self.bcrypt_patch.stop)
+        self.bcrypt_patch.start()
 
     def tearDown(self):
         """

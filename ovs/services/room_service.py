@@ -75,6 +75,7 @@ class RoomService:
         Returns:
             A Room db model.
         """
+        number = str(number)
         try:
             return db.session.query(Room).filter_by(number=number).first()
         except SQLAlchemyError:
