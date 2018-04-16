@@ -119,6 +119,28 @@ class MealService:
             return False
 
     @staticmethod
+    def delete_meal_plan(pin):
+        """
+        Deletes a meal plan from the database.
+
+        Args:
+            pin: Unique meal pin.
+
+        Returns:
+            If the meal plan was deleted successfully
+        """
+        meal_plan = MealService.get_meal_plan_by_pin(pin)
+        if meal_plan is None:
+            return False
+        try:
+            db.session.delete(meal_plan)
+            return True
+        except SQLAlchemyError:
+            logging.exception('Failed to delete meal plan.')
+            db.session.rollback()
+            return False
+
+    @staticmethod
     def undo_meal_use(manager_id, resident_id, pin):
         """
         Adds a single credit back to meal plan identified by meal pin
