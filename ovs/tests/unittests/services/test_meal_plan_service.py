@@ -61,9 +61,7 @@ class TestMealPlanService(OVSBaseTestCase):
         MealService.edit_meal_plan(self.test_meal_plan.pin,
                                    credit=69,
                                    plan_meal_count=19,
-                                   plan_type='LIFETIME',
-                                   reset_date=None,
-                                   email=None)
+                                   plan_type='LIFETIME')
 
         self.assertEqual(self.test_meal_plan.credits, 69)
         self.assertEqual(self.test_meal_plan.meal_plan, 19)
