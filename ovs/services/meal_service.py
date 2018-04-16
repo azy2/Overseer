@@ -61,7 +61,7 @@ class MealService:
             return None
 
         try:
-            resident.mealplan_pin = meal_plan.pin
+            ResidentService.set_resident_pin(resident.user_id, meal_plan.pin)
             db.session.commit()
             return meal_plan
         except SQLAlchemyError:
@@ -161,6 +161,8 @@ class MealService:
             return False
 
         resident = ResidentService.get_resident_by_pin(meal_plan.pin)
+        if not resident:
+            return False
         ResidentService.set_resident_pin(resident.user_id, 0)
 
         try:
