@@ -19,7 +19,7 @@ class TestRegisterRoom(SeleniumBaseTestCase):
         register_manager.click()
 
         # Verify page changed
-        self.assertIn('Register Room', self.browser.title)
+        self.assertIn('Manage Rooms', self.browser.title)
 
         # # Change all fields
         self.set_text_field_by_id('room_number', '429D')

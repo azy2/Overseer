@@ -19,7 +19,7 @@ class TestRegisterManager(SeleniumBaseTestCase):
         register_manager.click()
 
         # Verify page changed
-        self.assertIn('Register Manager', self.browser.title)
+        self.assertIn('Manage Managers', self.browser.title)
 
         # Change all fields
         self.set_text_field_by_id('email', 'email@website.net')
