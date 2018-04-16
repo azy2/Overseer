@@ -26,7 +26,7 @@ class TestSendMail(OVSBaseTestCase):
             text='testText')
         mock_client.assert_called()
         self.assertEqual(json.dumps(mail.get(), sort_keys=True),
-                         '{"content": [{"type": "text/plain", "value": "testText"}], "from": {"email": '
+                         '{"content": [{"type": "text/html", "value": "testText"}], "from": {"email": '
                          '"no-reply@ovs.centralus.cloudapp.azure.com"}, "personalizations": [{"to": [{"email": '
                          '"testEmail@test.com"}]}], "subject": "TestSubject"}')
 
@@ -37,7 +37,7 @@ class TestSendMail(OVSBaseTestCase):
         expected_substitutions = {
             'first_name': 'Bob',
             'last_name': 'Ross',
-            'role': 'ADMIN',
+            'role': 'admin',
             'confirm_url': ANY
         }
 
