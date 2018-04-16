@@ -39,7 +39,7 @@ class TestMealPlanService(OVSBaseTestCase):
         self.assertEqual(meal_plan, None)
 
     def test_delete_meal_plan(self):
-        """ Tests that profiles can be deleted """
+        """ Tests that meal plans can be deleted """
         expected = self.db.session.query(MealPlan).count() - 1
 
         # check if deletion successful
@@ -48,7 +48,7 @@ class TestMealPlanService(OVSBaseTestCase):
         self.assertEqual(self.db.session.query(MealPlan).count(), expected)
 
     def test_delete_meal_plan_null(self):
-        """ Tests that nothing breaks when deleting a nonexistant profile """
+        """ Tests that nothing breaks when deleting a nonexistant meal plan """
         expected = self.db.session.query(MealPlan).count()
 
         # This pin is NOT the meal plan

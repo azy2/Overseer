@@ -93,7 +93,8 @@ class UserService:
         if user is None:
             return False
         if user.role == 'RESIDENT':
-            ResidentService.delete_resident(user_id)
+            if not ResidentService.delete_resident(user_id):
+                return False
 
         if user.role == 'ADMIN': # We don't want to delete the last admin
             if ManagerService.get_admin_count() <= 1:

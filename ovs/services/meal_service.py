@@ -119,6 +119,7 @@ class MealService:
             meal_plan.meal_plan = plan_meal_count
         if plan_type:
             meal_plan.plan_type = plan_type
+        meal_plan.reset_date = meal_plan.get_next_reset_date()
         try:
             db.session.commit()
         except SQLAlchemyError:
@@ -154,11 +155,17 @@ class MealService:
         Returns:
             If the meal plan was deleted successfully
         """
+        from ovs.services.resident_service import ResidentService
         meal_plan = MealService.get_meal_plan_by_pin(pin)
         if meal_plan is None:
             return False
+
+        resident = ResidentService.get_resident_by_pin(meal_plan.pin)
+        ResidentService.set_resident_pin(resident.user_id, 0)
+
         try:
             db.session.delete(meal_plan)
+            db.session.commit()
             return True
         except SQLAlchemyError:
             logging.exception('Failed to delete meal plan.')
@@ -194,10 +201,30 @@ class MealService:
             A MealPlan db model.
         """
         try:
-            return db.session.query(MealPlan).filter_by(pin=pin).first()
+            meal_plan = db.session.query(MealPlan).filter_by(pin=pin).first()
+            if meal_plan is not None:
+                meal_plan.check_reset_date() #update this lazy evaluation
+            return meal_plan
         except SQLAlchemyError:
             logging.exception('Failed to get meal plan by meal pin.')
             return None
+
+    @staticmethod
+    def get_all_meal_plans():
+        """
+        Fetch all meal plans in the database
+
+        Returns:
+            A list of MealPlan db models.
+        """
+        try:
+            meal_plans = db.session.query(MealPlan).all()
+            for meal_plan in meal_plans:
+                meal_plan.check_reset_date() #update this lazy evaluation
+            return meal_plans
+        except SQLAlchemyError:
+            logging.exception('Failed to get all meal plans')
+            return []
 
     @staticmethod
     def log_meal_history(resident_id, pin, manager_id, log_type):
