@@ -5,6 +5,7 @@ Defines a User as represented in the database
 from flask import jsonify
 from flask_bcrypt import Bcrypt, bcrypt
 from sqlalchemy import Integer, Enum, Column, CHAR, String, text, DateTime
+from sqlalchemy.sql import func
 
 from ovs import db
 
@@ -27,10 +28,8 @@ class User(db.Model):
     role = Column(Enum('RESIDENT', 'RESIDENT_ADVISOR', 'STAFF',
                        'OFFICE_MANAGER', 'BUILDING_MANAGER', 'ADMIN'),
                   nullable=False)
-    created = Column(
-        DateTime, server_default=text('CURRENT_TIMESTAMP'))
-    updated = Column(DateTime, server_default=text(
-        'CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))
+    created = Column(DateTime, server_default=func.now())
+    updated = Column(DateTime, server_default=func.now(), server_onupdate=func.now())
 
     def __init__(self, email, first_name, last_name, password, role):
         if password is None:

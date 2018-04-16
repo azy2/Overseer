@@ -25,12 +25,15 @@ def create_app(config_path=None):
 
     with app.app_context():
         db_config = app.config['DATABASE']
-        app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://' + \
-                                                db_config['USER'] + ':' + \
-                                                db_config['PASSWORD'] + '@' + \
-                                                db_config['HOSTNAME'] + ':' + \
-                                                db_config['PORT'] + '/' + \
-                                                db_config['NAME']
+        if app.config['TESTING']:
+            app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://'
+        else:
+            app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://' + \
+                                                    db_config['USER'] + ':' + \
+                                                    db_config['PASSWORD'] + '@' + \
+                                                    db_config['HOSTNAME'] + ':' + \
+                                                    db_config['PORT'] + '/' + \
+                                                    db_config['NAME']
         app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
         db.init_app(app)
