@@ -1,5 +1,6 @@
 {
     "ENV": "TEST",
+    "SELENIUM": false,
     "SECRET_KEY": "SUPER_SECRET_KEY",
     "DEBUG": true,
     "TEST_MAIL": false,
