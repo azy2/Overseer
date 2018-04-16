@@ -38,12 +38,10 @@ class TestUserService(OVSBaseTestCase):
 
     def test_get_user_by_email(self):
         """ Tests get_user_by_email successfully finds a user """
-        test_user_info = ('test2@gmail.com', 'Bob', 'Ross', 'ADMIN')
-        UserService.create_user(*test_user_info)
-        user = UserService.get_user_by_email(test_user_info[0])
+        user = UserService.get_user_by_email(self.test_user_info[0])
 
         self.assertEqual((user.email, user.first_name, user.last_name, user.role),
-                         test_user_info)
+                         self.test_user_info)
         self.assertIsNotNone(user.password)
 
     def test_invalid_get_user_by_email(self):
@@ -85,10 +83,20 @@ class TestUserService(OVSBaseTestCase):
 
     def test_delete_user(self):
         """ Tests that a user can be deleted """
+        UserService.create_user('test2@gmail.com', '', '', 'ADMIN')
         expected = self.db.session.query(User).count() - 1
 
         # check if deletion successful
         self.assertTrue(UserService.delete_user(self.test_user.id))
+
+        self.assertEqual(self.db.session.query(User).count(), expected)
+
+    def test_delete_user_last_admin(self):
+        """ Tests that a user can be deleted """
+        expected = self.db.session.query(User).count()
+
+        # check if deletion successful
+        self.assertFalse(UserService.delete_user(self.test_user.id))
 
         self.assertEqual(self.db.session.query(User).count(), expected)
 

@@ -48,6 +48,57 @@ class RoomService:
         return new_room
 
     @staticmethod
+    def delete_room(room_id):
+        """
+        Deletes a room from the database.
+
+        Args:
+            room_id: Unique room id.
+
+        Returns:
+            Whether the room was deleted succesfully
+        """
+        room = RoomService.get_room_by_id(room_id)
+        for occupant in room.occupants:
+            RoomService.add_resident_to_room(occupant.email, 'None')
+
+        try:
+            db.session.delete(room)
+            db.session.commit()
+            return True
+        except SQLAlchemyError:
+            logging.exception('Failed to delete room')
+            return False
+
+    @staticmethod
+    def edit_room(room_id, room_number, status, room_type):
+        """
+        Edits a room in the database.
+
+        Args:
+            room_id: Unique room id.
+            room_number: New room number
+            status: New room status string
+            room_type: New room type string
+
+        Returns:
+            Whether the room was deleted succesfully
+        """
+        room = RoomService.get_room_by_id(room_id)
+        if room is None:
+            return False
+        room.room_number = room_number
+        room.status = status
+        room.type = room_type
+
+        try:
+            db.session.commit()
+            return True
+        except SQLAlchemyError:
+            logging.exception('Failed to edit room')
+            return False
+
+    @staticmethod
     def get_room_by_id(room_id):
         """
         Fetch a room identified by room id.

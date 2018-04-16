@@ -38,9 +38,7 @@ class MealPlan(db.Model):
         Uses a meal credit, as outlined by the plan.
         :return: Boolean, whether a credit was available
         """
-        if self.reset_date is None or datetime.utcnow() > self.reset_date:
-            self.reset_date = self.get_next_reset_date()
-            self.credits = self.meal_plan
+        self.check_reset_date()
         if self.credits > 0:
             self.credits -= 1
             try:
@@ -50,6 +48,18 @@ class MealPlan(db.Model):
                 logging.exception('Failed to update meal plan credits.')
                 db.session.rollback()
                 return False
+        return False
+
+    def check_reset_date(self):
+        """
+        Checks a meal plan's reset date. If it has past,
+        this updates the reset_date and resets the credits.
+        :return Boolean, whether the reset date was changed
+        """
+        if self.reset_date is None or datetime.utcnow() > self.reset_date:
+            self.reset_date = self.get_next_reset_date()
+            self.credits = self.meal_plan
+            return True
         return False
 
     def get_next_reset_date(self):

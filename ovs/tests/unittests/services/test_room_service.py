@@ -78,10 +78,40 @@ class TestRoomService(OVSBaseTestCase):
         self.assertFalse(resident in self.test_room.occupants)
 
     def test_get_all_rooms(self):
-        """ Tests getting all rooms with 1 entry"""
+        """ Tests getting all rooms with 2 entries """
         self.assertEqual(len(RoomService.get_all_rooms()), 2)
 
-    def tests_get_all_rooms_multiple(self):
-        """ Tests getting all rooms with 2 entries"""
+    def test_get_all_rooms_multiple(self):
+        """ Tests getting all rooms with 3 entries"""
         RoomService.create_room('6', 'Bad', 'Double')
         self.assertEqual(len(RoomService.get_all_rooms()), 3)
+
+    def test_delete_room(self):
+        """ Tests that rooms can be deleted """
+        expected = self.db.session.query(Room).count() - 1
+
+        # check if deletion successful
+        self.assertTrue(RoomService.delete_room(self.test_room.id))
+
+        self.assertEqual(self.db.session.query(Room).count(), expected)
+
+    def test_delete_room_invalid(self):
+        """ Tests that a nonexistant room cannot be deleted """
+        expected = self.db.session.query(Room).count()
+
+        # check if deletion successful
+        self.assertTrue(RoomService.delete_room(self.test_room.id + 1))
+
+        self.assertEqual(self.db.session.query(Room).count(), expected)
+
+    def test_edit_room(self):
+        """ Tests that rooms can be edited"""
+        self.assertTrue(RoomService.edit_room(
+            self.test_room.id, '6', 'Bad', 'Double'))
+        self.assertEqual((self.test_room.number, self.test_room.status, self.test_room.type),
+                         self.test_room_info)
+
+    def test_edit_room_invalid(self):
+        self.assertFalse(RoomService.edit_room(
+            self.test_room.id+3, '6', 'Bad', 'Double'))
+        self.assertIsNone(RoomService.get_room_by_number('6'))

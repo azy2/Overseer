@@ -92,7 +92,7 @@ class TestResidentService(OVSBaseTestCase):
         self.assertEqual(self.test_resident.room_number, 'None')
 
     def test_delete_resident(self):
-        """ Tests that profiles can be deleted """
+        """ Tests that residents can be deleted """
         expected = self.db.session.query(Resident).count() - 1
 
         # check if deletion successful

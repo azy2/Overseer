@@ -8,14 +8,12 @@ from ovs.mail import templates
 from ovs.models.user_model import User
 from ovs.services.mail_service import MailService
 from ovs.services.resident_service import ResidentService
+from ovs.services.manager_service import ManagerService
 from ovs.utils import crypto
 
 
 class UserService:
     """ DB and utility functions for Users """
-
-    def __init__(self):
-        pass
 
     @staticmethod
     def create_user(email, first_name, last_name, role, password=None):
@@ -96,6 +94,10 @@ class UserService:
             return False
         if user.role == 'RESIDENT':
             ResidentService.delete_resident(user_id)
+
+        if user.role == 'ADMIN': # We don't want to delete the last admin
+            if ManagerService.get_admin_count() <= 1:
+                return False
         try:
             db.session.delete(user)
             db.session.commit()

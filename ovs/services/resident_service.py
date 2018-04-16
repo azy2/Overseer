@@ -16,9 +16,6 @@ from ovs.utils import genders
 class ResidentService:
     """ DB and utility functions for Residents """
 
-    def __init__(self):
-        pass
-
     @staticmethod
     def create_resident(new_user, room_number='None'):
         """

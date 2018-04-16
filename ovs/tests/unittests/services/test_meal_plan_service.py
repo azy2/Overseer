@@ -55,3 +55,16 @@ class TestMealPlanService(OVSBaseTestCase):
         self.assertFalse(MealService.delete_meal_plan(9999999))
 
         self.assertEqual(self.db.session.query(MealPlan).count(), expected)
+
+    def test_update_meal_plan(self):
+        """ Tests that meal plans can be updated """
+        MealService.edit_meal_plan(self.test_meal_plan.pin,
+                                   credit=69,
+                                   plan_meal_count=19,
+                                   plan_type='LIFETIME',
+                                   reset_date=None,
+                                   email=None)
+
+        self.assertEqual(self.test_meal_plan.credits, 69)
+        self.assertEqual(self.test_meal_plan.meal_plan, 19)
+        self.assertEqual(self.test_meal_plan.plan_type, 'LIFETIME')

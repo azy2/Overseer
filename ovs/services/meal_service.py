@@ -95,12 +95,27 @@ class MealService:
                 and MealService.log_meal_history(resident.user_id, mealplan.pin, manager_id, log_types.MEAL_USED))
 
     @staticmethod
-    def edit_meal_plan(pin, credits=None, plan_meal_count=None, plan_type=None, reset_date=None, email=None):
+    def edit_meal_plan(pin, credit=None, plan_meal_count=None, plan_type=None, reset_date=None, email=None):
+        """
+        Updates a meal plan with any provided info.
+
+        Args:
+            pin: Unique meal pin.
+            credit: Number of credits until the next reset_date.
+            plan_meal_count: Number of meals given at each reset_date.
+            plan_type: The plans reset period.
+            reset_date: Next time the credits get reset to the plan's count
+            email: email of the resident to associate with this meal plan
+        """
+        from ovs.services.resident_service import ResidentService
         meal_plan = MealService.get_meal_plan_by_pin(pin)
+
         if meal_plan is None:
             return False
-        if credits:
-            meal_plan.credits = credits
+        meal_plan.check_reset_date()
+
+        if credit:
+            meal_plan.credits = credit
         if plan_meal_count:
             meal_plan.meal_plan = plan_meal_count
         if plan_type:
@@ -111,7 +126,7 @@ class MealService:
             resident = ResidentService.get_resident_by_email(email)
             if resident:
                 MealService.delete_meal_plan(resident.mealplan_pin) #This checks if it exists
-                ResidentService.set_resident_pin(pin)
+                ResidentService.set_resident_pin(resident.user_id, pin)
             else:
                 return False
 
