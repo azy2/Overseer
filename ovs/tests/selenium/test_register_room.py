@@ -15,11 +15,11 @@ class TestRegisterRoom(SeleniumBaseTestCase):
         super().login_default_admin()
 
         # Click on Register Manager
-        register_manager = self.browser.find_element_by_link_text('Register a Room')
+        register_manager = self.browser.find_element_by_link_text('Rooms')
         register_manager.click()
 
         # Verify page changed
-        self.assertIn('Manage Rooms', self.browser.title)
+        self.assertIn('Rooms', self.browser.title)
 
         # # Change all fields
         self.set_text_field_by_id('room_number', '429D')

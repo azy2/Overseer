@@ -15,11 +15,11 @@ class TestRegisterManager(SeleniumBaseTestCase):
         super().login_default_admin()
 
         # Click on Register Manager
-        register_manager = self.browser.find_element_by_link_text('Register Manager')
+        register_manager = self.browser.find_element_by_link_text('Managers')
         register_manager.click()
 
         # Verify page changed
-        self.assertIn('Manage Managers', self.browser.title)
+        self.assertIn('Managers', self.browser.title)
 
         # Change all fields
         self.set_text_field_by_id('email', 'email@website.net')
