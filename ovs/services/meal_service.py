@@ -152,16 +152,7 @@ class MealService:
             If the credits were added successfully.
         """
         meal_plan = MealService.get_meal_plan_by_pin(pin)
-        if meal_plan is None:
-            return False
-        meal_plan.credits += number
-        try:
-            db.session.commit()
-            return True
-        except SQLAlchemyError:
-            logging.exception('Failed to add credits to meal plan.')
-            db.session.rollback()
-            return False
+        return MealService.edit_meal_plan(pin, credit=meal_plan.credits+number)
 
     @staticmethod
     def delete_meal_plan(pin):

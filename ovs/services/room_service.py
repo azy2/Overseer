@@ -59,9 +59,10 @@ class RoomService:
             Whether the room was deleted succesfully
         """
         room = RoomService.get_room_by_id(room_id)
+        if room is None:
+            return False
         for occupant in room.occupants:
             RoomService.add_resident_to_room(occupant.email, 'None')
-
         try:
             db.session.delete(room)
             db.session.commit()

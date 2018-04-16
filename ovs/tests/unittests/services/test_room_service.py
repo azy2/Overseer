@@ -100,7 +100,7 @@ class TestRoomService(OVSBaseTestCase):
         expected = self.db.session.query(Room).count()
 
         # check if deletion successful
-        self.assertTrue(RoomService.delete_room(self.test_room.id + 1))
+        self.assertFalse(RoomService.delete_room(self.test_room.id + 1))
 
         self.assertEqual(self.db.session.query(Room).count(), expected)
 
@@ -108,10 +108,12 @@ class TestRoomService(OVSBaseTestCase):
         """ Tests that rooms can be edited"""
         self.assertTrue(RoomService.edit_room(
             self.test_room.id, '6', 'Bad', 'Double'))
-        self.assertEqual((self.test_room.number, self.test_room.status, self.test_room.type),
-                         self.test_room_info)
+        self.assertEqual(self.test_room.room_number, '6')
+        self.assertEqual(self.test_room.status, 'Bad')
+        self.assertEqual(self.test_room.type, 'Double')
 
     def test_edit_room_invalid(self):
+        """ Tests that rooms can be edited"""
         self.assertFalse(RoomService.edit_room(
             self.test_room.id+3, '6', 'Bad', 'Double'))
         self.assertIsNone(RoomService.get_room_by_number('6'))
