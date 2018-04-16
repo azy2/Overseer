@@ -9,7 +9,7 @@ from ovs.services.user_service import UserService
 
 
 class ManageUsersForm(FlaskForm):
-    """ Form with data required to edit a resident """
+    """ Form with data required to edit a user """
     user_id = HiddenField('User id', validators=[DataRequired()])
     email = StringField('Email Address', validators=[Email(), DataRequired()])
     first_name = StringField('First Name', validators=[Length(min=1, max=255), DataRequired()])
