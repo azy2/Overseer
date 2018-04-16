@@ -2,12 +2,12 @@
 """Contains the templates for sendgrid mailing"""
 TEMPLATES = {
     'user_creation_email':
-        'Hi {first_name} {last_name},\n \
-        Your {role} account was successfully created. Please click the link below<br>\n \
+        'Hi $first_name $last_name,\n \
+        Your $role account was successfully created. Please click the link below\n \
         to confirm your email address and activate your account:\n \
-        <p><a href="{{ confirm_url }}">{{ confirm_url }}</a></p>',
+        <html><p><a href="$confirm_url">Activate your account</a></p></html>',
     'user_reset_email':
-        'Hi, you asked for a password reset email! Please click the link below<br>\n \
+        'Hi, you asked for a password reset email! Please click the link below\n \
         to reset your password:\n \
-        <p><a href="{{ reset_url }}">{{ reset_url }}</a></p>'
+        <html><p><a href="$reset_url">Reset your password</a></p></html>'
 }

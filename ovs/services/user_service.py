@@ -126,7 +126,7 @@ class UserService:
         user_info_substitution = {
             "first_name": first_name,
             "last_name": last_name,
-            "role": role,
+            "role": role.lower(),
             "confirm_url": url_for('auth.reset_user', token=token, _external=True)
         }
         MailService.send_email(email, 'User Account Creation',
