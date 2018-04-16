@@ -9,9 +9,6 @@ from ovs.services.user_service import UserService
 from ovs.services.room_service import RoomService
 
 
-
-
-
 class ManageResidentsForm(FlaskForm):
     """ Form with data required to edit a resident """
     user_id = HiddenField('User id', validators=[DataRequired()])

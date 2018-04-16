@@ -6,7 +6,8 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import current_user, login_required
 
 from ovs.forms import RegisterRoomForm, RegisterResidentForm, ManageResidentsForm, \
-    AddPackageForm, EditPackageForm, MealLoginForm, CreateMealPlanForm, AddMealForm
+    AddPackageForm, EditPackageForm, MealLoginForm, CreateMealPlanForm, AddMealForm, \
+    ManageRoomForm
 from ovs.services.meal_service import MealService
 from ovs.services.package_service import PackageService
 from ovs.services.room_service import RoomService
@@ -40,22 +41,46 @@ def register_room():
     rooms table. The option for admins to add current residents to said
     room is an available option.
     """
-    form = RegisterRoomForm()
-    if form.validate_on_submit():
+    register_form = RegisterRoomForm()
+    rooms = RoomService.get_all_rooms()
+    edit_forms = []
+    for room in rooms:
+        edit_forms.append(ManageRoomForm(prefix=str(room.id)))
+
+    if 'register_btn' in request.form and register_form.validate_on_submit():
         if RoomService.create_room(
-                form.room_number.data,
-                form.room_status.data,
-                form.room_type.data,
-                form.occupants.data) is None:
+                register_form.room_number.data,
+                register_form.room_status.data,
+                register_form.room_type.data,
+                register_form.occupants.data) is None:
             flash('Creating a room failed', 'danger')
         else:
             flash('Successfully created room', 'success')
 
         return redirect(url_for('manager.register_room'))
 
+    for edit_form in edit_forms:
+        if edit_form.delete_button.data:
+            if not (RoomService.get_room_by_id(edit_form.room_id.data) and
+                    RoomService.delete_room(edit_form.room_id.data)):
+                flash('Failed to delete room.', 'danger')
+            else:
+                flash('Room deleted.', 'success')
+            return redirect(url_for('manager.register_room'))
+        elif edit_form.update_button.data and edit_form.validate_on_submit():
+            if not RoomService.edit_room(
+                    edit_form.room_id.data,
+                    edit_form.room_number.data,
+                    edit_form.status.data,
+                    edit_form.room_type.data):
+                flash('Falied to update room', 'danger')
+            else:
+                flash('Room updated!', 'success')
+            return redirect(url_for('manager.register_room'))
     user = UserService.get_user_by_id(current_user.get_id())
     role = user.role
-    return render_template('manager/register_room.html', role=role, user=user, form=form)
+    return render_template('manager/register_room.html', role=role, user=user,
+                           register_form=register_form, form_data=zip(edit_forms, rooms))
 
 
 @manager_bp.route('/manage_residents/', methods=['GET', 'POST'])

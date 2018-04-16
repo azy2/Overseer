@@ -78,13 +78,13 @@ class TestRoomService(OVSBaseTestCase):
         self.assertFalse(resident in self.test_room.occupants)
 
     def test_get_all_rooms(self):
-        """ Tests getting all rooms with 2 entries """
-        self.assertEqual(len(RoomService.get_all_rooms()), 2)
+        """ Tests getting all rooms with 1 entry """
+        self.assertEqual(len(RoomService.get_all_rooms()), 1)
 
     def test_get_all_rooms_multiple(self):
-        """ Tests getting all rooms with 3 entries"""
+        """ Tests getting all rooms with 2 entries"""
         RoomService.create_room('6', 'Bad', 'Double')
-        self.assertEqual(len(RoomService.get_all_rooms()), 3)
+        self.assertEqual(len(RoomService.get_all_rooms()), 2)
 
     def test_delete_room(self):
         """ Tests that rooms can be deleted """

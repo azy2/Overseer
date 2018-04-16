@@ -8,15 +8,13 @@ from sqlalchemy.exc import SQLAlchemyError
 from ovs import db
 from ovs.models.room_model import Room
 from ovs.services.resident_service import ResidentService
+from ovs.services.user_service import UserService
 
 
 class RoomService:
     """
     DB Access and utility methods for Rooms
     """
-
-    def __init__(self):
-        pass
 
     @staticmethod
     def create_room(number, status, room_type, occupant_emails=''):
@@ -62,7 +60,8 @@ class RoomService:
         if room is None:
             return False
         for occupant in room.occupants:
-            RoomService.add_resident_to_room(occupant.email, 'None')
+            user = UserService.get_user_by_id(occupant.user_id)
+            RoomService.add_resident_to_room(user.email, 'None')
         try:
             db.session.delete(room)
             db.session.commit()
@@ -150,13 +149,13 @@ class RoomService:
     @staticmethod
     def get_all_rooms():
         """
-        Fetch all rooms in the db.
+        Fetch all rooms except the default in the db.
 
         Returns:
            A list of Room db models.
         """
         try:
-            return db.session.query(Room).all()
+            return db.session.query(Room).filter(Room.number != 'None').all()
         except SQLAlchemyError:
             logging.exception('Failed to get all rooms.')
             return []
