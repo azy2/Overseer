@@ -23,7 +23,8 @@ def landing_page():
     resident_id = current_user.get_id()
     resident = ResidentService.get_resident_by_id(resident_id)
     profile = resident.profile
-    return render_template('resident/index.html', role=roles.RESIDENT, profile=profile)
+    pict = base64.b64encode(ProfilePictureService.get_profile_picture(profile.picture_id)).decode()
+    return render_template('resident/index.html', role=roles.RESIDENT, profile=profile, pict=pict)
 
 
 @residents_bp.route('/profile/', methods=['GET', 'POST'])
