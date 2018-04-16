@@ -60,7 +60,8 @@ def create_app(config_path=None):
         app.register_blueprint(routes.AuthRoutes, url_prefix='/auth')
         app.register_blueprint(routes.DevRoutes, url_prefix='/dev')
 
-        if os.environ.get("WERKZEUG_RUN_MAIN") == "true" or os.environ.get("FLASK_DEBUG") != "True":
+        if (os.environ.get("WERKZEUG_RUN_MAIN") == "true" or os.environ.get("FLASK_DEBUG") != "True")\
+           and not app.config['TESTING']:
             from ovs.datagen import DataGen
             DataGen.create_defaults()
 

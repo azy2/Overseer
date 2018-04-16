@@ -48,7 +48,7 @@ class TestRoomService(OVSBaseTestCase):
 
     def test_invalid_get_room_by_number(self):
         """ Tests that get_room_by_number returns None for an invalid room number """
-        room = RoomService.get_room_by_number(429)
+        room = RoomService.get_room_by_number('429')
         self.assertIsNone(room)
 
     def test_add_resident_to_room(self):
