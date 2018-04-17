@@ -13,7 +13,7 @@ from ovs.utils import genders
 
 
 class ResidentService:
-    """ DB and utility functions for Residents """
+    """ DB and utility functions for Residents. """
 
     def __init__(self):
         pass
@@ -30,7 +30,7 @@ class ResidentService:
         Returns:
             The Resident db model that was just created.
         """
-        from ovs.services.profile_service import ProfileService
+        from ovs.services.profile_picture_service import ProfilePictureService
         from ovs.services.room_service import RoomService
 
         new_resident = Resident(new_user.id)
