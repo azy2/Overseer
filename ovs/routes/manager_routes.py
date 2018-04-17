@@ -173,7 +173,7 @@ def manage_packages():
         user = UserService.get_user_by_id(current_user.get_id())
         role = user.role
 
-        if 'add_btn' in request.form and add_form.validate_on_submit():
+        if 'check_btn' in request.form and add_form.validate_on_submit():
             recipient_email = add_form.recipient_email.data
             recipient_id = UserService.get_user_by_email(recipient_email).id
             checked_by = '{} {}'.format(user.first_name, user.last_name)
@@ -187,7 +187,7 @@ def manage_packages():
             return redirect(url_for('manager.manage_packages'))
 
         for edit_form in edit_forms:
-            if edit_form.complete_button.data:
+            if edit_form.deliver_button.data:
                 PackageService.delete_package(edit_form.package_id.data)
                 db.session.commit()
                 flash('Package delivery completed.', 'success')

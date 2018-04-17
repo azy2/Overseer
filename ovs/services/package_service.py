@@ -43,7 +43,7 @@ class PackageService:
             A Package db model.
         """
 
-        return Package.query.filter_by(id == package_id).first()
+        return Package.query.filter_by(id=package_id).first()
 
     @staticmethod
     def update_package(package_id, recipient_email, description):
