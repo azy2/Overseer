@@ -33,13 +33,7 @@ class RoomService:
             A Room db model.
         """
         new_room = Room(number=number, status=status, type=room_type)
-        try:
-            db.session.add(new_room)
-            db.session.commit()
-        except SQLAlchemyError:
-            logging.exception('Failed to create new room.')
-            db.session.rollback()
-            return None
+        db.session.add(new_room)
 
         emails = ''.join(occupant_emails.split()).split(',')
         for email in emails:
@@ -58,11 +52,7 @@ class RoomService:
         Returns:
             A Room db model.
         """
-        try:
-            return db.session.query(Room).filter_by(id=room_id).first()
-        except SQLAlchemyError:
-            logging.exception('Failed to get room by id.')
-            return None
+        return Room.query.filter_by(id=room_id).first()
 
     @staticmethod
     def get_room_by_number(number):
@@ -75,11 +65,7 @@ class RoomService:
         Returns:
             A Room db model.
         """
-        try:
-            return db.session.query(Room).filter_by(number=number).first()
-        except SQLAlchemyError:
-            logging.exception('Failed to get room by room number.')
-            return None
+        return Room.query.filter_by(number=number).first()
 
     @staticmethod
     def room_exists(number):
@@ -102,11 +88,7 @@ class RoomService:
         Returns:
            A list of Room db models.
         """
-        try:
-            return db.session.query(Room).all()
-        except SQLAlchemyError:
-            logging.exception('Failed to get all rooms.')
-            return []
+        return Room.query.all()
 
     @staticmethod
     def add_resident_to_room(email, room_number):
@@ -122,16 +104,4 @@ class RoomService:
         """
         resident = ResidentService.get_resident_by_email(email)
         room = RoomService.get_room_by_number(room_number)
-
-        if resident is None or room is None:
-            return False
-
-        try:
-            resident.room_number = room_number
-            # occupants are updated automatically by mysql
-            db.session.commit()
-            return True
-        except SQLAlchemyError:
-            logging.exception('Failed to associated resident and room.')
-            db.session.rollback()
-            return False
+        resident.room_number = room_number

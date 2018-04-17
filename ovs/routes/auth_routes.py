@@ -1,7 +1,11 @@
 """ routes under /auth/ """
+import logging
+import traceback
+
 from flask import Blueprint, redirect, url_for, flash
 from flask_login import login_user, logout_user, login_required
 
+from ovs import db
 from ovs.forms.login_form import LoginForm
 from ovs.services import AuthService
 from ovs.utils.roles import UserRole
@@ -13,25 +17,30 @@ auth_bp = Blueprint('auth', __name__, )
 @auth_bp.route('/login', methods=['POST'])
 def login():
     """ Interface for users to login """
-    form = LoginForm()
-    if form.validate():
-        email = form.email.data
-        password = form.password.data
-        user = UserService.get_user_by_email(email)
-        if user is None:
-            flash('Invalid email or password.', 'danger')
-            return redirect(url_for('/.landing_page'))
-        elif not AuthService.verify_auth(user, password):
-            flash('Invalid email or password.', 'danger')
-            return redirect(url_for('/.landing_page'))
-        login_user(user)
-        if user.role == UserRole.RESIDENT:
-            return redirect(url_for('resident.landing_page'))
+    try:
+        form = LoginForm()
+        if form.validate():
+            email = form.email.data
+            password = form.password.data
+            user = UserService.get_user_by_email(email)
+            if user is None:
+                flash('Invalid email or password.', 'danger')
+                return redirect(url_for('/.landing_page'))
+            elif not AuthService.verify_auth(user, password):
+                flash('Invalid email or password.', 'danger')
+                return redirect(url_for('/.landing_page'))
+            login_user(user)
+            if user.role == UserRole.RESIDENT:
+                return redirect(url_for('resident.landing_page'))
+            else:
+                return redirect(url_for('manager.landing_page'))
         else:
-            return redirect(url_for('manager.landing_page'))
-    else:
-        flash('Invalid email or password.', 'danger')
-        return redirect(url_for('/.landing_page'))
+            flash('Invalid email or password.', 'danger')
+            return redirect(url_for('/.landing_page'))
+    except: # pylint: disable=bare-except
+        db.session.rollback()
+        flash('Could not log in', 'danger')
+        logging.exception(traceback.format_exc())
 
 
 @auth_bp.route('/logout')

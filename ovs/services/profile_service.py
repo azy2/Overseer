@@ -38,8 +38,6 @@ class ProfileService:
             If the resident's profile was updated successfully.
         """
         resident = ResidentService.get_resident_by_id(resident_id)
-        if resident is None:
-            return False
         profile = resident.profile
         if preferred_email:
             profile.preferred_email = preferred_email
@@ -49,14 +47,6 @@ class ProfileService:
         profile.race = race # I want to be able to set this to None
         if gender:
             profile.gender = gender
-
-        try:
-            db.session.commit()
-            return True
-        except SQLAlchemyError:
-            logging.exception('Failed to update resident profile.')
-            db.session.rollback()
-            return False
 
     @staticmethod
     def delete_profile(resident_id):
@@ -70,17 +60,10 @@ class ProfileService:
             If the Profile db model was sucessfully deleted.
         """
         resident = ResidentService.get_resident_by_id(resident_id)
-        if resident is None:
-            return False
         profile = resident.profile
         picture_id = profile.picture_id
         ProfilePictureService.delete_profile_picture(picture_id)
-        try:
-            db.session.delete(profile)
-            return True
-        except SQLAlchemyError:
-            logging.exception('Failed to delete resident profile.')
-            return False
+        db.session.delete(profile)
 
     @staticmethod
     def get_all_profiles():
@@ -90,10 +73,7 @@ class ProfileService:
         Returns:
             A list of Profile db models..
         """
-        try:
-            return db.session.query(Profile).all()
-        except SQLAlchemyError:
-            logging.exception('Failed to get all profiles.')
+        return db.session.query(Profile).all()
 
     @staticmethod
     def set_default_picture(picture_id):

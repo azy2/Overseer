@@ -26,10 +26,7 @@ class AuthService:
         Returns:
             A User db model.
         """
-        try:
-            return db.session.query(User).get(int(user_id))
-        except SQLAlchemyError:
-            logging.exception('Faied to fetch user by user id.')
+        return db.session.query(User).get(int(user_id))
 
     @staticmethod
     def verify_auth(user, password):

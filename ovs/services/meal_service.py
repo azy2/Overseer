@@ -7,6 +7,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from ovs import db
 from ovs.models.meal_plan_model import MealPlan
+from ovs.services.resident_service import ResidentService
 from ovs.models.mealplan_history_model import MealplanHistory
 from ovs.utils import log_types
 
@@ -28,13 +29,7 @@ class MealService:
         """
         new_plan = MealPlan(meal_plan, plan_type)
         db.session.add(new_plan)
-        try:
-            db.session.commit()
-            return new_plan
-        except SQLAlchemyError:
-            logging.exception('Failed to create meal plan.')
-            db.session.rollback()
-            return None
+        return new_plan
 
     @staticmethod
     def create_meal_plan_for_resident_by_email(meal_plan, plan_type, email):
@@ -50,25 +45,10 @@ class MealService:
         Returns:
             A MealPlan db model.
         """
-        from ovs.services.resident_service import ResidentService
-
         resident = ResidentService.get_resident_by_email(email)
-        if resident is None:
-            return None
-
         meal_plan = MealService.create_meal_plan(meal_plan, plan_type)
-        if meal_plan is None:
-            return None
-
-        try:
-            resident.mealplan_pin = meal_plan.pin
-            db.session.commit()
-            return meal_plan
-        except SQLAlchemyError:
-            logging.exception(
-                'Failed to create meal plan for resident identified by email.')
-            db.session.rollback()
-            return None
+        resident.mealplan_pin = meal_plan.pin
+        return meal_plan
 
     @staticmethod
     def use_meal(pin, manager_id):
@@ -83,14 +63,8 @@ class MealService:
         Returns:
             If the meal credit was deducted and logged succesfully.
         """
-        from ovs.services.resident_service import ResidentService
-
         mealplan = MealService.get_meal_plan_by_pin(pin)
-        if mealplan is None:
-            return False
         resident = ResidentService.get_resident_by_pin(pin)
-        if resident is None:
-            return False
         return (mealplan.update_meal_count()
                 and MealService.log_meal_history(resident.user_id, mealplan.pin, manager_id, log_types.MEAL_USED))
 
@@ -107,16 +81,7 @@ class MealService:
             If the credits were added successfully.
         """
         meal_plan = MealService.get_meal_plan_by_pin(pin)
-        if meal_plan is None:
-            return False
         meal_plan.credits += number
-        try:
-            db.session.commit()
-            return True
-        except SQLAlchemyError:
-            logging.exception('Failed to add credits to meal plan.')
-            db.session.rollback()
-            return False
 
     @staticmethod
     def undo_meal_use(manager_id, resident_id, pin):
@@ -146,11 +111,7 @@ class MealService:
         Returns:
             A MealPlan db model.
         """
-        try:
-            return db.session.query(MealPlan).filter_by(pin=pin).first()
-        except SQLAlchemyError:
-            logging.exception('Failed to get meal plan by meal pin.')
-            return None
+        return db.session.query(MealPlan).filter_by(pin=pin).first()
 
     @staticmethod
     def log_meal_history(resident_id, pin, manager_id, log_type):
@@ -168,14 +129,7 @@ class MealService:
         """
         new_mealplan_history_item = MealplanHistory(
             resident_id, pin, manager_id, log_type)
-        try:
-            db.session.add(new_mealplan_history_item)
-            db.session.commit()
-            return True
-        except SQLAlchemyError:
-            logging.exception('Failed to log meal usage.')
-            db.session.rollback()
-            return False
+        db.session.add(new_mealplan_history_item)
 
     @staticmethod
     def get_last_log(manager_id):
@@ -188,12 +142,8 @@ class MealService:
         Returns:
             A MealPlanHistory db model.
         """
-        try:
-            return db.session.query(MealplanHistory).filter_by(manager_id=manager_id)\
-                                                    .order_by(MealplanHistory.id.desc()).first()
-        except SQLAlchemyError:
-            logging.exception('Failed to fetch most recent meal log.')
-            return None
+        return db.session.query(MealplanHistory).filter_by(manager_id=manager_id)\
+                                                .order_by(MealplanHistory.id.desc()).first()
 
     @staticmethod
     def get_logs():
@@ -203,8 +153,4 @@ class MealService:
         Returns:
             A list of MealPlanHistory db model.
         """
-        try:
-            return db.session.query(MealplanHistory).order_by(MealplanHistory.id.desc()).all()
-        except SQLAlchemyError:
-            logging.exception('Failed to fetch meal logs.')
-            return None
+        return db.session.query(MealplanHistory).order_by(MealplanHistory.id.desc()).all()

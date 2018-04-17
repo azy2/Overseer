@@ -45,6 +45,5 @@ class DataGen:
     def clear_db():
         """ Empty the DB for tests """
         import ovs.models  # pylint: disable=unused-variable
-        db.session.commit()
         db.drop_all()
         db.create_all()

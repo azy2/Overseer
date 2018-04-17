@@ -43,14 +43,6 @@ class MealPlan(db.Model):
             self.credits = self.meal_plan
         if self.credits > 0:
             self.credits -= 1
-            try:
-                db.session.commit()
-                return True
-            except SQLAlchemyError:
-                logging.exception('Failed to update meal plan credits.')
-                db.session.rollback()
-                return False
-        return False
 
     def get_next_reset_date(self):
         """
