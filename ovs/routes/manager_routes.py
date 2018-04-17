@@ -67,7 +67,7 @@ def get_residents():
     """
     residents_users = ResidentService.get_all_residents_users()
     emails = []
-    for resident, user in residents_users:
+    for _, user in residents_users:
         emails.append(user.email)
     return jsonify(emails)
 
