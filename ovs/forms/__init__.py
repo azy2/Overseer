@@ -8,3 +8,5 @@ from .meal_login_form import MealLoginForm as MealLoginForm
 from .register_manager_form import RegisterManagerForm as RegisterManagerForm
 from .register_resident_form import RegisterResidentForm as RegisterResidentForm
 from .register_room_form import RegisterRoomForm as RegisterRoomForm
+from .reset_request_form import ResetRequestForm as ResetRequestForm
+from .reset_password_form import ResetPasswordForm as ResetPasswordForm

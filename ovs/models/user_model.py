@@ -85,3 +85,16 @@ class User(db.Model):
     def get_id(self):
         """ :returns the user's unique id in the database """
         return str(self.id)
+
+    def update_password(self, new_password):
+        """
+        Updates the password of the user.
+
+        Args:
+            new_password: The newpassword to hash and set as the user pass.
+
+        Returns:
+            The updated model.
+        """
+        self.password = bcrypt_app.generate_password_hash(new_password)
+        return self

@@ -86,14 +86,21 @@
                 <div class="collapse navbar-collapse">
                 </div>
 
-                <form class="form-inline" method="post" action="/auth/login" >
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-                    <input type="text" id="email" name="email" class="form-control mr-2" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" >
-                    <input type="password" id="password" name="password" class="form-control" placeholder="Password" aria-label="Username" aria-describedby="basic-addon1" >
-                    <div class="input-group-append" >
-                        <button type="submit" class="btn btn-primary" >Login</button>
-                    </div>
-                </form>
+                <div>
+                  <div>
+                    <form class="form-inline" method="post" action="/auth/login" >
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                        <input type="text" id="email" name="email" class="form-control mr-2" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" >
+                        <input type="password" id="password" name="password" class="form-control" placeholder="Password" aria-label="Username" aria-describedby="basic-addon1" >
+                        <div class="input-group-append" >
+                            <button type="submit" class="btn btn-primary" >Login</button>
+                        </div>
+                    </form>
+                  </div>
+                  <div align="right" style="padding-top: 0.5em; padding-right: .75em">
+                    <a href="/auth/user/reset" style="color: white">Forgot?</a>
+                  </div>
+                </div>
             {% endif %}
         </nav>
 
