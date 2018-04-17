@@ -1,9 +1,4 @@
 """ DB and utility functions for Managers """
-import logging
-
-from sqlalchemy.exc import SQLAlchemyError
-
-from ovs import db
 from ovs.models.user_model import User
 from ovs.utils import roles
 
@@ -18,11 +13,7 @@ class ManagerService:
         Returns:
             A list of User model tuples.
         """
-        try:
-            return db.session.query(User).filter(User.role != roles.RESIDENT).all()
-        except SQLAlchemyError:
-            logging.exception('Failed to fetch all managers.')
-            return []
+        return User.query.filter(User.role != roles.RESIDENT).all()
 
     @staticmethod
     def get_admin_count():
@@ -32,8 +23,4 @@ class ManagerService:
         Returns:
             Number of admin users
         """
-        try:
-            return db.session.query(User).filter(User.role == roles.ADMIN).count()
-        except SQLAlchemyError:
-            logging.exception('Failed to count admins')
-            return 0
+        return User.query.filter_by(role=roles.ADMIN).count()

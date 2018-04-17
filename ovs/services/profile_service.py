@@ -1,10 +1,7 @@
 """
 DB access and other services for profiles
 """
-import logging
-
 from flask import current_app
-from sqlalchemy.exc import SQLAlchemyError
 
 from ovs import db
 from ovs.models.profile_model import Profile
@@ -38,8 +35,6 @@ class ProfileService:
             If the resident's profile was updated successfully.
         """
         resident = ResidentService.get_resident_by_id(resident_id)
-        if resident is None:
-            return False
         profile = resident.profile
         if preferred_email:
             profile.preferred_email = preferred_email
@@ -50,33 +45,8 @@ class ProfileService:
         if gender:
             profile.gender = gender
 
-        try:
-            db.session.commit()
-            return True
-        except SQLAlchemyError:
-            logging.exception('Failed to update resident profile.')
-            db.session.rollback()
-            return False
-
-    @staticmethod
-    def delete_profile(resident_id):
-        """
-        Deletes a profile associated with resident identified by resident id.
-
-        Args:
-            resident_id: Unique resident id.
-
-        Returns:
-            If the Profile db model was sucessfully deleted.
-        """
-        resident = ResidentService.get_resident_by_id(resident_id)
-        if resident is None:
-            return False
-        profile = resident.profile
-        picture_id = profile.picture_id
-        ProfilePictureService.delete_profile_picture(picture_id)
-        #db.session.delete(profile) This happens automatically by a sql relationship
-        return True
+        db.session.flush()
+        db.session.refresh(profile)
 
     @staticmethod
     def get_all_profiles():
@@ -86,10 +56,7 @@ class ProfileService:
         Returns:
             A list of Profile db models..
         """
-        try:
-            return db.session.query(Profile).all()
-        except SQLAlchemyError:
-            logging.exception('Failed to get all profiles.')
+        return db.session.query(Profile).all()
 
     @staticmethod
     def set_default_picture(picture_id):

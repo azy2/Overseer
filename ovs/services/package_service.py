@@ -1,8 +1,4 @@
 """ DB and utility functions for Packages """
-import logging
-
-from sqlalchemy.exc import SQLAlchemyError
-
 from ovs import db
 from ovs.models.package_model import Package
 from ovs.models.user_model import User
@@ -31,14 +27,9 @@ class PackageService:
         """
         new_package = Package(recipient_id=recipient_id, checked_by=checked_by,
                               checked_at=checked_at, description=description)
-        try:
-            db.session.add(new_package)
-            db.session.commit()
-            return new_package
-        except SQLAlchemyError:
-            logging.exception('Failed to create package.')
-            db.session.rollback()
-            return None
+        db.session.add(new_package)
+        db.session.flush()
+        return new_package
 
     @staticmethod
     def get_package_by_id(package_id):
@@ -51,11 +42,8 @@ class PackageService:
         Returns:
             A Package db model.
         """
-        try:
-            return db.session.query(Package).filter(Package.id == package_id).first()
-        except SQLAlchemyError:
-            logging.exception('Failed to get pacakge by id.')
-            return None
+
+        return Package.query.filter_by(id == package_id).first()
 
     @staticmethod
     def update_package(package_id, recipient_email, description):
@@ -73,16 +61,10 @@ class PackageService:
         recipient_id = UserService.get_user_by_email(
             recipient_email).id
 
-        try:
-            db.session.query(Package)\
-                .filter_by(id=package_id)\
-                .update({Package.recipient_id: recipient_id, Package.description: description})
-            db.session.commit()
-            return True
-        except SQLAlchemyError:
-            logging.exception('Failed to update package.')
-            db.session.rollback()
-            return False
+        db.session.query(Package)\
+                  .filter_by(id=package_id)\
+                  .update({Package.recipient_id: recipient_id, Package.description: description})
+        db.session.flush()
 
     @staticmethod
     def delete_package(package_id):
@@ -96,16 +78,7 @@ class PackageService:
             If the package was deleted successfully.
         """
         package = PackageService.get_package_by_id(package_id)
-        if not package:
-            return False
-        try:
-            db.session.delete(package)
-            db.session.commit()
-            return True
-        except SQLAlchemyError:
-            logging.exception('Failed to delete package.')
-            db.session.rollback()
-            return False
+        db.session.delete(package)
 
     @staticmethod
     def get_all_packages_recipients():

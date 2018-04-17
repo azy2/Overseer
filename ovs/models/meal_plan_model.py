@@ -1,14 +1,11 @@
 """
 Defines a MealPlan as represented in the database
 """
-import logging
-
 from datetime import datetime, timedelta
 
 from flask import jsonify
 from sqlalchemy import Integer, Enum, Column, DateTime, Sequence
 from sqlalchemy.sql import func
-from sqlalchemy.exc import SQLAlchemyError
 
 from ovs import db
 
@@ -42,13 +39,9 @@ class MealPlan(db.Model):
         self.check_reset_date()
         if self.credits > 0:
             self.credits -= 1
-            try:
-                db.session.commit()
-                return True
-            except SQLAlchemyError:
-                logging.exception('Failed to update meal plan credits.')
-                db.session.rollback()
-                return False
+            db.session.flush()
+            return True
+        db.session.flush()
         return False
 
     def check_reset_date(self):

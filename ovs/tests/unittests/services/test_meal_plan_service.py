@@ -24,7 +24,7 @@ class TestMealPlanService(OVSBaseTestCase):
 
     def test_create_meal_plan(self):
         """ Tests that meal plans can be created """
-        meal_list = self.db.session.query(MealPlan).filter(MealPlan.pin == self.test_meal_plan.pin).all()
+        meal_list = MealPlan.query.filter_by(pin=self.test_meal_plan.pin).all()
         self.assertEqual(len(meal_list), 1)
 
         actual_meal_info = (meal_list[0].meal_plan, meal_list[0].plan_type)
@@ -40,7 +40,7 @@ class TestMealPlanService(OVSBaseTestCase):
         expected = self.db.session.query(MealPlan).count() - 1
 
         # check if deletion successful
-        self.assertTrue(MealService.delete_meal_plan(self.test_meal_plan.pin))
+        MealService.delete_meal_plan(self.test_meal_plan.pin)
 
         self.assertEqual(self.db.session.query(MealPlan).count(), expected)
 
@@ -49,7 +49,7 @@ class TestMealPlanService(OVSBaseTestCase):
         expected = self.db.session.query(MealPlan).count()
 
         # This pin is NOT the meal plan
-        self.assertFalse(MealService.delete_meal_plan(9999999))
+        self.assertRaises(AttributeError, MealService.delete_meal_plan, 9999999)
 
         self.assertEqual(self.db.session.query(MealPlan).count(), expected)
 
