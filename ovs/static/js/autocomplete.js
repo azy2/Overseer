@@ -1,8 +1,21 @@
 $(document).ready(function() {
-  alert("P");
-  var emails = ['resident@gmail.com','xyu37@illinois.edu'];
+  var emails = [];
 
-  $( "#add_form-recipient_email" ).autocomplete({
+  function getResidentEmails() {
+    $.ajax({
+        method: 'get',
+        url: '/manager/get_residents/',
+        success: function (data) {
+            for (var i = 0; i < data.length; i++) {
+              emails.push(data[i]);
+            }
+		}
+    });
+  }
+
+  getResidentEmails();
+
+  $( "#add_form-recipient_email,#email" ).autocomplete({
     source: emails
   });
 });

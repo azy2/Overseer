@@ -2,7 +2,7 @@
 import datetime
 import base64
 
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
 from flask_login import current_user, login_required
 
 from ovs.forms import RegisterRoomForm, RegisterResidentForm, ManageResidentsForm, \
@@ -56,6 +56,20 @@ def register_room():
     user = UserService.get_user_by_id(current_user.get_id())
     role = user.role
     return render_template('manager/register_room.html', role=role, user=user, form=form)
+
+
+@manager_bp.route('/get_residents/', methods=['GET'])
+@login_required
+@permissions(roles.STAFF)
+def get_residents():
+    """
+    /manager/get_residents returns lists of resident emails from db
+    """
+    residents_users = ResidentService.get_all_residents_users()
+    emails = []
+    for resident, user in residents_users:
+        emails.append(user.email)
+    return jsonify(emails)
 
 
 @manager_bp.route('/manage_residents/', methods=['GET', 'POST'])
@@ -172,7 +186,6 @@ def meal_login():
     user = UserService.get_user_by_id(user_id)
     role = user.role
 
-
     if form.validate_on_submit():
         mealplan = MealService.get_meal_plan_by_pin(form.pin.data)
         if not MealService.use_meal(form.pin.data, user_id):
@@ -205,6 +218,7 @@ def meal_login():
                                max_meals=max_meals)
 
     return render_template('manager/meal_login.html', role=role, user=user, form=form, no_login=True)
+
 
 @manager_bp.route('/meal_undo/', methods=['POST'])
 @login_required
