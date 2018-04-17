@@ -73,7 +73,7 @@ def register_room():
         return redirect(url_for('manager.register_room'))
 
 
-@manager_bp.route('/get_residents/', methods=['GET'])
+@manager_bp.route('/get_residents/', methods=['POST'])
 @login_required
 @permissions(roles.STAFF)
 def get_residents():
