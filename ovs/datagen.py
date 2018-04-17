@@ -10,15 +10,21 @@ class DataGen:
     """ Data generation class """
     @staticmethod
     def create_user(user_role):
-        """ Creates a default user if it doesn't exist """
+        """
+        Creates a default user if it doesn't exist.
+
+        Args:
+            user_role: The role of the default user to create.
+                       current_app.config['USERS'][user_role] must exist.
+        """
         default_user = current_app.config['USERS'][user_role]
         user = UserService.get_user_by_email(default_user['email'])
         if not user:
-            user = UserService.create_user(default_user['email'],
-                                           default_user['first_name'],
-                                           default_user['last_name'],
-                                           user_role,
-                                           default_user['password'])
+            UserService.create_user(default_user['email'],
+                                    default_user['first_name'],
+                                    default_user['last_name'],
+                                    user_role,
+                                    default_user['password'])
 
     @staticmethod
     def create_default_room():

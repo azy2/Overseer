@@ -12,7 +12,7 @@ class AddMealForm(FlaskForm):
     pin = IntegerField('PIN', validators=[DataRequired()])
     number = IntegerField('Number', validators=[DataRequired()])
 
-    def validate_meal_pin(form, field):  # pylint: disable=unused-argument, no-self-use
+    def validate_meal_pin(form, field):  # pylint: disable=unused-argument, no-self-use, no-self-argument
         """
         Validates that the provided pin exists.
         This is to thwart malicious input.
