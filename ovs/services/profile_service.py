@@ -75,12 +75,8 @@ class ProfileService:
         profile = resident.profile
         picture_id = profile.picture_id
         ProfilePictureService.delete_profile_picture(picture_id)
-        try:
-            db.session.delete(profile)
-            return True
-        except SQLAlchemyError:
-            logging.exception('Failed to delete resident profile.')
-            return False
+        #db.session.delete(profile) This happens automatically by a sql relationship
+        return True
 
     @staticmethod
     def get_all_profiles():
