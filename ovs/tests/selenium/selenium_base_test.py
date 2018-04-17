@@ -1,7 +1,6 @@
 """
 The base test case for selenium that all other selenium tests should inherit from
 """
-import os
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
