@@ -1,6 +1,5 @@
 """ under /resident """
 import base64
-import imghdr
 
 from flask import Blueprint, redirect, render_template, request, url_for, flash
 from flask_login import current_user, login_required
@@ -36,42 +35,25 @@ def edit_profile():
     """
     resident_id = current_user.get_id()
     profile = ResidentService.get_resident_by_id(resident_id).profile
-    if profile is None:
-        return 'Could not find profile information for user with id: ' + resident_id
 
     profile_form = EditResidentProfileForm(obj=profile)
     picture_form = UploadProfilePictureForm()
 
-    if request.method == 'POST':
-        if profile_form.validate():
-            # Set profile data in database with non-null values from the form
-            ProfileService.update_profile(resident_id,
-                                          profile_form.preferred_email.data,
-                                          profile_form.preferred_name.data,
-                                          profile_form.phone_number.data,
-                                          profile_form.race.data,
-                                          profile_form.gender.data)
-            flash('Profile edit successfully!', 'message')
-            return redirect(url_for('resident.edit_profile'))
-        elif picture_form.validate():
-            file = request.files[picture_form.profile_picture.name]
-            if file.filename == '':
-                flash('No selected file', 'error')
-                return redirect(url_for('resident.edit_profile'))
-            if file:
-                picture_data = file.stream.read()
-                if imghdr.what(None, h=picture_data) != 'png':
-                    flash('File is not a png', 'error')
-                    return redirect(url_for('resident.edit_profile'))
-                ProfilePictureService.update_profile_picture(profile.user_id, picture_data)
-                return redirect(url_for('resident.edit_profile'))
-            else:
-                flash('Unknown error', 'error')
-                return redirect(url_for('resident.edit_profile'))
-        else:
-            flash('Invalid input', 'error')
-            return redirect(url_for('resident.edit_profile'))
-    else:
-        pict = base64.b64encode(ProfilePictureService.get_profile_picture(profile.user_id)).decode()
-        return render_template('resident/profile.html', role=roles.RESIDENT, profile=profile, pict=pict,
-                               profile_form=profile_form, picture_form=picture_form)
+    if 'profile_btn' in request.form and profile_form.validate_on_submit():
+        # Set profile data in database with non-null values from the form
+        ProfileService.update_profile(resident_id,
+                                      profile_form.preferred_email.data,
+                                      profile_form.preferred_name.data,
+                                      profile_form.phone_number.data,
+                                      profile_form.race.data,
+                                      profile_form.gender.data)
+        flash('Updated profile successfully', 'success')
+        return redirect(url_for('resident.edit_profile'))
+    elif 'picture_btn' in request.form and picture_form.validate_on_submit():
+        picture_data = picture_form.profile_picture.data.read()
+        ProfilePictureService.update_profile_picture(profile.user_id, picture_data)
+        return redirect(url_for('resident.edit_profile'))
+
+    pict = base64.b64encode(ProfilePictureService.get_profile_picture(profile.user_id)).decode()
+    return render_template('resident/profile.html', role=roles.RESIDENT, profile=profile, pict=pict,
+                           profile_form=profile_form, picture_form=picture_form)

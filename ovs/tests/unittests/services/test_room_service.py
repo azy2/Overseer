@@ -7,6 +7,9 @@ from ovs.services.user_service import UserService
 from ovs.services.resident_service import ResidentService
 from ovs.tests.unittests.base_test import OVSBaseTestCase
 
+from ovs.datagen import DataGen
+
+
 class TestRoomService(OVSBaseTestCase):
     """
     Tests for room services
@@ -14,6 +17,7 @@ class TestRoomService(OVSBaseTestCase):
     def setUp(self):
         """ Runs before every test and clears relevant tables """
         super().setUp()
+        DataGen.create_default_room()
         self.create_test_room()
 
     def create_test_room(self):
@@ -44,17 +48,22 @@ class TestRoomService(OVSBaseTestCase):
 
     def test_invalid_get_room_by_number(self):
         """ Tests that get_room_by_number returns None for an invalid room number """
-        room = RoomService.get_room_by_number(429)
+        room = RoomService.get_room_by_number('429')
         self.assertIsNone(room)
 
     def test_add_resident_to_room(self):
         """ Tests that residents can be added to a room """
         test_user_info = ('test@gmail.com', 'Bob', 'Ross', 'RESIDENT')
         test_user = UserService.create_user(*test_user_info)
+        resident = ResidentService.get_resident_by_id(test_user.id)
+        old_room = RoomService.get_room_by_number('None')
+
+        self.assertTrue(resident in old_room.occupants)
         RoomService.add_resident_to_room(test_user.email, self.test_room.number)
 
-        resident = ResidentService.get_resident_by_id(test_user.id)
         self.assertEqual(resident.room_number, self.test_room.number)
+        self.assertTrue(resident in self.test_room.occupants)
+        self.assertFalse(resident in old_room.occupants)
 
     def test_invalid_add_resident_to_room(self):
         """ Tests that non-resident users cannot be added to a room """
@@ -62,14 +71,17 @@ class TestRoomService(OVSBaseTestCase):
         test_user = UserService.create_user(*test_user_info)
 
         RoomService.add_resident_to_room(test_user.email, self.test_room.number)
+
         resident = ResidentService.get_resident_by_id(test_user.id)
+
         self.assertIsNone(resident)
+        self.assertFalse(resident in self.test_room.occupants)
 
     def test_get_all_rooms(self):
         """ Tests getting all rooms with 1 entry"""
-        self.assertEqual(len(RoomService.get_all_rooms()), 1)
+        self.assertEqual(len(RoomService.get_all_rooms()), 2)
 
     def tests_get_all_rooms_multiple(self):
         """ Tests getting all rooms with 2 entries"""
         RoomService.create_room('6', 'Bad', 'Double')
-        self.assertEqual(len(RoomService.get_all_rooms()), 2)
+        self.assertEqual(len(RoomService.get_all_rooms()), 3)

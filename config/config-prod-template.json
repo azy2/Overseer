@@ -1,5 +1,6 @@
 {
     "ENV": "PROD",
+    "SELENIUM": false,
     "SECRET_KEY": "",
     "DEBUG": false,
     "TEST_MAIL": false,

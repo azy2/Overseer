@@ -15,7 +15,7 @@ class Permissions(object):
         def authorize_and_call(*args, **kwargs):
             """Calls the decorated function on successful perm check"""
             if not roles.has_permission(current_user.role, self.role):
-                flash('Unauthorized Access!', 'error')
+                flash('Unauthorized Access!', 'danger')
                 print(request.referrer)
                 return redirect(request.referrer or '/')
             return func(*args, **kwargs)

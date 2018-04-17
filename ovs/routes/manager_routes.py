@@ -32,7 +32,7 @@ def landing_page():
 
 @manager_bp.route('/register_room/', methods=['GET', 'POST'])
 @login_required
-@permissions(roles.OFFICE_MANAGER)
+@permissions(roles.STAFF)
 def register_room():
     """
     /manager/register_room serves an HTML form with input fields for room #,
@@ -41,82 +41,83 @@ def register_room():
     room is an available option.
     """
     form = RegisterRoomForm()
-    if request.method == 'POST':
-        if form.validate():
-            room = RoomService.create_room(
+    if form.validate_on_submit():
+        if RoomService.create_room(
                 form.room_number.data,
                 form.room_status.data,
                 form.room_type.data,
-                form.occupants.data)
-            if room is None:
-                flash('Room number already exists! Creation Failed!', 'error')
-                return redirect((url_for('manager.register_room')))
-            flash('Residents added to rooms successfully!', 'message')
-            return redirect(url_for('manager.register_room'))
+                form.occupants.data) is None:
+            flash('Creating a room failed', 'danger')
         else:
-            flash('Input invalid', 'error')
-            return redirect(url_for('manager.register_room'))
-    else:
-        user = UserService.get_user_by_id(current_user.get_id())
-        role = user.role
-        return render_template('manager/register_room.html', role=role, user=user, form=form)
+            flash('Successfully created room', 'success')
+
+        return redirect(url_for('manager.register_room'))
+
+    user = UserService.get_user_by_id(current_user.get_id())
+    role = user.role
+    return render_template('manager/register_room.html', role=role, user=user, form=form)
 
 
 @manager_bp.route('/manage_residents/', methods=['GET', 'POST'])
 @login_required
-@permissions(roles.RESIDENT_ADVISOR)
+@permissions(roles.STAFF)
 def manage_residents():
     """
     /manager/manage_residents serves a HTML with list of residents with their info.
     It allows a manager to add/edit/delete residents with form inputs.
     """
     register_form = RegisterResidentForm(prefix='register_form')
-    edit_form = ManageResidentsForm(prefix='edit_form')
+    residents = ResidentService.get_all_residents_users()
+    edit_forms = []
+    for (_, user) in residents:
+        edit_forms.append(ManageResidentsForm(prefix=str(user.id)))
 
     user = UserService.get_user_by_id(current_user.get_id())
     role = user.role
 
-    if request.method == 'POST':
-        if 'delete_btn' in request.form:
-            success = UserService.delete_user(edit_form.user_id.data)
-            if success:
-                flash('Resident successfully deleted')
-            else:
-                flash('Something went wrong. Could not find resident to delete')
-        elif edit_form.validate_on_submit() and 'edit_btn' in request.form:
-            success = ResidentService.edit_resident(
-                edit_form.user_id.data,
-                edit_form.email.data,
-                edit_form.first_name.data,
-                edit_form.last_name.data,
-                edit_form.room_number.data)
-            if success:
-                flash('Resident updated successfully!', 'message')
-            else:
-                flash('Room does not exist or duplicate email detected!', 'error')
-        elif register_form.validate_on_submit():
-            new_user = UserService.create_user(
+    if 'register_btn' in request.form and register_form.validate_on_submit():
+        if UserService.create_user(
                 register_form.email.data,
                 register_form.first_name.data,
                 register_form.last_name.data,
-                "RESIDENT")
-            if new_user:
-                flash('Residents successfully registered!', 'message')
-            else:
-                flash('Residents not successfully registered! Email already exists!', 'error')
+                "RESIDENT") is None:
+            flash('Failed to register resident', 'danger')
         else:
-            flash('Input invalid', 'error')
+            flash('{} {} registered.'.format(register_form.first_name.data, register_form.last_name.data), 'success')
 
         return redirect(url_for('manager.manage_residents'))
-    else:
-        return render_template('manager/manage_residents.html', role=role, user=user,
-                               residents=ResidentService.get_all_residents_users(),
-                               register_form=register_form, edit_form=edit_form)
+
+    for edit_form in edit_forms:
+        if edit_form.delete_button.data: #Don't validate. Just delete
+            if not (ResidentService.resident_exists(edit_form.user_id.data) and
+                    UserService.delete_user(edit_form.user_id.data)):
+                flash('Failed to delete resident.', 'danger')
+            else:
+                flash('Resident deleted.', 'success')
+
+            return redirect(url_for('manager.manage_residents'))
+
+        elif edit_form.update_button.data and edit_form.validate_on_submit():
+            room_number = 'None' if edit_form.room_number.data == '' else edit_form.room_number.data
+            if not ResidentService.edit_resident(
+                    edit_form.user_id.data,
+                    edit_form.email.data,
+                    edit_form.first_name.data,
+                    edit_form.last_name.data,
+                    room_number):
+                flash('Failed to update resident', 'danger')
+            else:
+                flash('Resident updated!', 'success')
+
+            return redirect(url_for('manager.manage_residents'))
+
+    return render_template('manager/manage_residents.html', role=role, user=user,
+                           register_form=register_form, form_data=zip(edit_forms, residents))
 
 
 @manager_bp.route('/manage_packages/', methods=['GET', 'POST'])
 @login_required
-@permissions(roles.RESIDENT_ADVISOR)
+@permissions(roles.STAFF)
 def manage_packages():
     """
     /manager/register_resident serves an html form with input fields for email,
@@ -124,49 +125,39 @@ def manage_packages():
     to the user table with a default password.
     """
     add_form = AddPackageForm(prefix='add_form')
-    edit_form = EditPackageForm(prefix='edit_form')
+    packages = PackageService.get_all_packages_recipients_checkers() #(package, recip, checker)
+    edit_forms = []
+    for (package, _, _) in packages:
+        edit_forms.append(EditPackageForm(prefix=str(package.id)))
+
     user = UserService.get_user_by_id(current_user.get_id())
     role = user.role
-    packages_recipients_checkers = PackageService.get_all_packages_recipients_checkers()
-    if request.method == 'POST':
-        # Add package
-        if add_form.validate_on_submit():
-            recipient_email = add_form.recipient_email.data
-            recipient_id = UserService.get_user_by_email(recipient_email).id
-            checked_by_id = current_user.get_id()
-            checked_at = datetime.datetime.now().replace(second=0, microsecond=0)  # Current date/time
-            description = add_form.description.data
 
-            PackageService.create_package(recipient_id, checked_by_id, checked_at, description)
-            flash('Package added successfully!', 'message')
-            return redirect(url_for('manager.manage_packages'))
+    if 'add_btn' in request.form and add_form.validate_on_submit():
+        recipient_email = add_form.recipient_email.data
+        recipient_id = UserService.get_user_by_email(recipient_email).id
+        checked_by_id = current_user.get_id()
+        checked_at = datetime.datetime.now().replace(second=0, microsecond=0)  # Current date/time
+        description = add_form.description.data
 
-        # Edit package
-        elif edit_form.validate_on_submit():
+        PackageService.create_package(recipient_id, checked_by_id, checked_at, description)
+        flash('Package added successfully!', 'success')
+        return redirect(url_for('manager.manage_packages'))
+
+    for edit_form in edit_forms:
+        if edit_form.update_button.data and edit_form.validate_on_submit():
             PackageService.update_package(edit_form.package_id.data,
                                           edit_form.recipient_email.data,
                                           edit_form.description.data)
-            flash('Package edited successfully!', 'message')
+            flash('Package edited successfully!', 'success')
+            return redirect(url_for('manager.manage_packages'))
+        if edit_form.check_button.data and edit_form.validate_on_submit():
+            flash('Check package is unimplemented', 'danger')
             return redirect(url_for('manager.manage_packages'))
 
-        else:
-            if 'add_btn' in request.form:
-                return render_template('manager/manage_packages.html', role=role, user=user,
-                                       packages_recipients_checkers=packages_recipients_checkers,
-                                       add_form=add_form, edit_form=edit_form)
-            elif 'edit_btn' in request.form:
-                flash(str(edit_form.errors['recipient_email'][0]), 'error')
-                return redirect(url_for('manager.manage_packages'))
 
-            # Should not reach here
-            else:
-                flash(str(add_form.errors) + "\n-----\n" + str(edit_form.errors), 'error')
-                return redirect(url_for('manager.manage_packages'))
-
-    else:
-        return render_template('manager/manage_packages.html', role=role, user=user,
-                               packages_recipients_checkers=packages_recipients_checkers,
-                               add_form=add_form, edit_form=edit_form)
+    return render_template('manager/manage_packages.html', role=role, user=user,
+                           add_form=add_form, form_data=zip(edit_forms, packages))
 
 
 @manager_bp.route('/meal_login/', methods=['GET', 'POST'])
@@ -182,27 +173,39 @@ def meal_login():
     user = UserService.get_user_by_id(user_id)
     role = user.role
 
-    if request.method == 'POST':
-        # Valid Form
-        if form.validate():
-            mealplan = MealService.get_meal_plan_by_pin(form.pin.data)
-            success = MealService.use_meal(form.pin.data, user_id)
 
-            resident = ResidentService.get_resident_by_pin(mealplan.pin)
-            profile = resident.profile
-            pict = base64.b64encode(ProfilePictureService.get_profile_picture(profile.user_id)).decode()
-            current_meals = mealplan.credits
-            max_meals = mealplan.meal_plan
-            return render_template('manager/meal_login.html', role=role, user=user, form=form,
-                                   pict=pict, submitted=True, current_meals=current_meals, max_meals=max_meals
-                                   , success=success)
+    if form.validate_on_submit():
+        mealplan = MealService.get_meal_plan_by_pin(form.pin.data)
+        if not MealService.use_meal(form.pin.data, user_id):
+            flash('Failed to sign in. Out of meals.', 'danger')
 
-        # Invalid form
-        else:
-            return render_template('manager/meal_login.html', role=role, user=user, form=form, submitted=False)
-    else:
-        return render_template('manager/meal_login.html', role=role, user=user, form=form, submitted=False)
+        return redirect(url_for('manager.meal_login'))
 
+    skip = False
+    for i, log in enumerate(MealService.get_logs()):
+        if skip:
+            skip = False
+            continue
+
+        if log.log_type == 'UNDO':
+            skip = True
+            continue
+
+        resident = ResidentService.get_resident_by_id(log.resident_id)
+        if resident is None:
+            continue
+        profile = resident.profile
+        pict = base64.b64encode(ProfilePictureService.get_profile_picture(profile.picture_id)).decode()
+        mealplan = MealService.get_meal_plan_by_pin(log.mealplan_pin)
+        current_meals = mealplan.credits
+        max_meals = mealplan.meal_plan
+        return render_template('manager/meal_login.html', role=role, user=user, form=form,
+                               pict=pict, show_undo=(i == 0),
+                               name=profile.preferred_name,
+                               current_meals=current_meals,
+                               max_meals=max_meals)
+
+    return render_template('manager/meal_login.html', role=role, user=user, form=form, no_login=True)
 
 @manager_bp.route('/meal_undo/', methods=['POST'])
 @login_required
@@ -218,26 +221,25 @@ def meal_undo():
         meal_log = MealService.get_last_log(user_id)
 
         if meal_log is None or meal_log.log_type == log_types.UNDO:
-            flash('Undo invalid', 'error')
+            flash('Undo invalid', 'danger')
             return redirect(url_for('manager.meal_login'))
         success = MealService.undo_meal_use(user_id, meal_log.resident_id, meal_log.mealplan_pin)
         if not success:
-            flash('Undo failed', 'error')
+            flash('Undo failed', 'danger')
 
         resident = ResidentService.get_resident_by_id(meal_log.resident_id)
         mealplan = MealService.get_meal_plan_by_pin(meal_log.mealplan_pin)
         name = resident.profile.preferred_name
         current_meals = mealplan.credits
 
-        flash('{} has {} meals left'.format(name, current_meals), 'message')
-        return redirect(url_for('manager.meal_login'))
-    else:
-        return redirect(url_for('manager.meal_login'))
+        flash('{} has {} meals left'.format(name, current_meals), 'success')
+
+    return redirect(url_for('manager.meal_login'))
 
 
 @manager_bp.route('/create_meal_plan/', methods=['GET', 'POST'])
 @login_required
-@permissions(roles.OFFICE_MANAGER)
+@permissions(roles.STAFF)
 def create_meal_plan():
     """
     /manager/meal_login serves an html form with input field pin
@@ -247,26 +249,24 @@ def create_meal_plan():
     user_id = current_user.get_id()
     user = UserService.get_user_by_id(user_id)
     role = user.role
-    if request.method == 'POST':
-        if form.validate():
-            meal_plan = ResidentService.create_meal_plan_for_resident_by_email(
-                form.meal_plan.data,
-                form.plan_type.data,
-                form.email.data)
-            if meal_plan is not None:
-                flash('Meal plan created successfully with pin: %d' % (meal_plan.pin), 'message')
-            else:
-                flash('Meal plan not created', 'error')
-            return redirect(url_for('manager.create_meal_plan'))
+    if form.validate_on_submit():
+        meal_plan = MealService.create_meal_plan_for_resident_by_email(
+            form.meal_plan.data,
+            form.plan_type.data,
+            form.email.data)
+        if meal_plan is None:
+            flash('Could not create meal plan.', 'danger')
         else:
-            return render_template('manager/create_meal_plan.html', role=role, user=user, form=form)
-    else:
-        return render_template('manager/create_meal_plan.html', role=role, user=user, form=form)
+            flash('Meal plan created with pin {}'.format(meal_plan.pin), 'success')
+
+        return redirect(url_for('manager.create_meal_plan'))
+
+    return render_template('manager/create_meal_plan.html', role=role, user=user, form=form)
 
 
 @manager_bp.route('/add_meals/', methods=['GET', 'POST'])
 @login_required
-@permissions(roles.OFFICE_MANAGER)
+@permissions(roles.STAFF)
 def add_meals():
     """
     /manager/meal_login serves an html form with input field pin
@@ -275,22 +275,19 @@ def add_meals():
     form = AddMealForm()
     user = UserService.get_user_by_id(current_user.get_id())
     role = user.role
-    if request.method == 'POST':
-        if form.validate():
-            valid = MealService.add_meals(
-                form.pin.data,
-                form.number.data)
-            if valid:
-                user_meal_plan = MealService.get_meal_plan_by_pin(form.pin.data)
-                resident = ResidentService.get_resident_by_pin(user_meal_plan.pin)
-                message = ('%s has %d out of %d meals now.' % (resident.profile.preferred_name,
-                                                               user_meal_plan.credits,
-                                                               user_meal_plan.meal_plan))
-                flash('Meals added successfully! ' + message, 'message')
-            else:
-                flash('Invalid pin', 'error')
-            return redirect(url_for('manager.add_meals'))
+    if form.validate_on_submit():
+        valid = MealService.add_meals(
+            form.pin.data,
+            form.number.data)
+        if valid:
+            user_meal_plan = MealService.get_meal_plan_by_pin(form.pin.data)
+            resident = ResidentService.get_resident_by_pin(user_meal_plan.pin)
+            flash('{} has {} out of {} meals now.'.format(resident.profile.preferred_name,
+                                                          user_meal_plan.credits,
+                                                          user_meal_plan.meal_plan), 'success')
         else:
-            return render_template('manager/add_meals.html', role=role, user=user, form=form)
-    else:
-        return render_template('manager/add_meals.html', role=role, user=user, form=form)
+            flash('Invalid pin', 'danger')
+
+        return redirect(url_for('manager.add_meals'))
+
+    return render_template('manager/add_meals.html', role=role, user=user, form=form)

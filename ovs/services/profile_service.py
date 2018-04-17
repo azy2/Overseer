@@ -3,6 +3,7 @@ DB access and other services for profiles
 """
 import logging
 
+from flask import current_app
 from sqlalchemy.exc import SQLAlchemyError
 
 from ovs import db
@@ -44,10 +45,8 @@ class ProfileService:
             profile.preferred_email = preferred_email
         if preferred_name:
             profile.preferred_name = preferred_name
-        if phone_number:
-            profile.phone_number = phone_number
-        if race:
-            profile.race = race
+        profile.phone_number = phone_number # I want to be able to set this to None
+        profile.race = race # I want to be able to set this to None
         if gender:
             profile.gender = gender
 
@@ -95,3 +94,17 @@ class ProfileService:
             return db.session.query(Profile).all()
         except SQLAlchemyError:
             logging.exception('Failed to get all profiles.')
+
+    @staticmethod
+    def set_default_picture(picture_id):
+        """
+        Sets default picture for new residents.
+
+        Args:
+            picture_id: Profile db model picture id.
+        """
+        default_picture_path = current_app.config['BLOBSTORE']['DEFAULT_PATH']
+        with open(default_picture_path, 'rb') as default_image:
+            file_contents = default_image.read()
+            file_bytes = bytearray(file_contents)
+        ProfilePictureService.create_profile_picture(picture_id, file_bytes)

@@ -16,9 +16,8 @@ Vagrant.configure("2") do |config|
     export DEBIAN_FRONTEND=noninteractive
     apt-get update
 
-    echo "Installing system packages (This may take a while)"
-    apt-get -y -q install make g++ mysql-server-5.7 chromium-browser python3-dev python3-pip
-    python3 -m pip install --upgrade pip
+    echo "Installing system packages (this may take a while)"
+    apt-get -y -q install make g++ mysql-server-5.7 chromium-browser python3-dev sqlite
 
     echo "Configuring MySQL"
     mysql_ssl_rsa_setup --uid=mysql &>/dev/null
@@ -28,6 +27,9 @@ Vagrant.configure("2") do |config|
     mysql -u root -p"pass123" -e "create user 'root'@'10.0.2.2' identified by 'pass123';grant all privileges on *.* to 'root'@'10.0.2.2' with grant option;flush privileges;"
     printf "[mysqld]\nbind-address = 0.0.0.0\n" > /etc/mysql/mysql.conf.d/overseer.cnf
     service mysql restart
+
+    echo "Installing pip3"
+    wget https://bootstrap.pypa.io/get-pip.py && python3 get-pip.py
 
   DEPENDENCIES
 

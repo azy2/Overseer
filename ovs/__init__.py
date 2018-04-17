@@ -2,6 +2,8 @@
 ovs is the root module of the Overseer application. It sets up flask and makes
 a database connection. The networking code can be found in `../main.py`
 """
+import os
+
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from ovs.config import OVSConfig
@@ -23,12 +25,17 @@ def create_app(config_path=None):
 
     with app.app_context():
         db_config = app.config['DATABASE']
-        app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://' + \
-                                                db_config['USER'] + ':' + \
-                                                db_config['PASSWORD'] + '@' + \
-                                                db_config['HOSTNAME'] + ':' + \
-                                                db_config['PORT'] + '/' + \
-                                                db_config['NAME']
+        if app.config['SELENIUM']:
+            app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/ovs.db'
+        elif app.config['TESTING']:
+            app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://'
+        else:
+            app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://' + \
+                                                    db_config['USER'] + ':' + \
+                                                    db_config['PASSWORD'] + '@' + \
+                                                    db_config['HOSTNAME'] + ':' + \
+                                                    db_config['PORT'] + '/' + \
+                                                    db_config['NAME']
         app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
         db.init_app(app)
@@ -43,7 +50,8 @@ def create_app(config_path=None):
 
         from ovs.services.auth_service import LOGIN_MANAGER
         LOGIN_MANAGER.init_app(app)
-        LOGIN_MANAGER.login_view = 'auth.login'
+        LOGIN_MANAGER.login_view = '/'
+        LOGIN_MANAGER.login_message_category = 'danger'
 
         from flask_wtf.csrf import CSRFProtect
         csrf = CSRFProtect()
@@ -57,8 +65,10 @@ def create_app(config_path=None):
         app.register_blueprint(routes.AuthRoutes, url_prefix='/auth')
         app.register_blueprint(routes.DevRoutes, url_prefix='/dev')
 
-        from ovs.datagen import DataGen
-        DataGen.create_defaults()
+        if (os.environ.get("WERKZEUG_RUN_MAIN") == "true" or os.environ.get("FLASK_DEBUG") != "True")\
+           and not app.config['TESTING']:
+            from ovs.datagen import DataGen
+            DataGen.create_defaults()
 
         db.session.commit()
 

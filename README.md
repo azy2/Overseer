@@ -18,7 +18,7 @@
 #!/bin/bash
 # Install Requirements
 sudo apt update
-sudo apt install -y make g++ mysql-server-5.7 python3 python3-virtualenv
+sudo apt install -y make g++ mysql-server-5.7 python3 python3-virtualenv sqlite
 # Set Up MySQL DB
 sudo mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH
 mysql_native_password BY 'pass123'; FUSH PRIVILEGES;"

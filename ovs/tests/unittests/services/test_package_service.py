@@ -5,6 +5,7 @@ from ovs.tests.unittests.base_test import OVSBaseTestCase
 from ovs.services.user_service import UserService
 from ovs.services.package_service import PackageService
 from ovs.models.package_model import Package
+from ovs.datagen import DataGen
 
 
 class TestPackageServce(OVSBaseTestCase):
@@ -17,6 +18,7 @@ class TestPackageServce(OVSBaseTestCase):
 
     def create_test_users(self):
         """ Creates two RESIDENT accounts and one ADMIN account for use in testing """
+        DataGen.create_default_room()
         self.test_resident_1 = UserService.create_user('test@gmail.com', 'Bob', 'Ross', 'RESIDENT')
         self.test_resident_2 = UserService.create_user('test2@gmail.com', 'Joe', 'Smith', 'RESIDENT')
         self.test_admin = UserService.create_user('test3@gmail.com', 'Jim', 'White', 'ADMIN')
