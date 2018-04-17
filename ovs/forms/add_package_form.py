@@ -14,7 +14,7 @@ class AddPackageForm(FlaskForm):
                                   validators=[Length(min=6, max=35), DataRequired()])
     description = StringField('Package Description', validators=[Length(min=0, max=2047)])
 
-    def validate_resident_email(form, field):  # pylint: disable=unused-argument, no-self-use
+    def validate_resident_email(form, field):  # pylint: disable=unused-argument, no-self-use, no-self-argument
         """
         Validates that the provided resident email exists.
         This is to thwart malicious input.

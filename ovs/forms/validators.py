@@ -9,17 +9,11 @@ class EmailRegistered(object):
 
     Args:
         check: Whether to validate that the email is registered or unregistered.
-        message (str, optional): The message to be displayed to the user on the form if the check fails.
+        message: The message to be displayed to the user on the form if the check fails.
                                  If no message is provided the message will either be:
                                  "Email must be an existing user" or
                                  "Email already in use"
     """
-    """ If check is true validates that the given email is registered.
-        If check is false validates that the given email is unregistered.
-        If the validation is failed message will be displayed.
-        If message is ommitted 'Email must be an existing user' is printed for check=True
-        and 'Email already in use' is printed for check=False """
-
     def __init__(self, check, message=None):
         """ Recieves paramaters for the validator """
         self.check = check

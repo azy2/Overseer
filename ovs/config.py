@@ -39,13 +39,38 @@ class OVSConfig:
                 sys.exit(1)
 
     def __getitem__(self, item):
+        """
+        Allows [] on OVSConfig.
+        Args:
+            item: The item to get
+
+        Returns:
+            The value of item from the JSON file passed in.
+        """
         return self._config[item]
 
     def __contains__(self, item):
+        """
+        Allows `in` on OVSConfig.
+        Args:
+            item: The item to test.
+
+        Returns:
+            bool: If the item was in the JSON file.
+        """
         return item in self._config
 
     def __setitem__(self, key, value):
-        raise Exception('OVSConfig is static, and cannot be edited.')
+        """
+        Disallows `OVSConfig[] = _`.
+        Args:
+            key: key
+            value: value
+
+        Raises:
+            Exception: Always. OVSConfig is not mutable.
+        """
+        raise Exception('OVSConfig is not mutable, and cannot be edited.')
 
     def get(self, key, default_value):
         """
