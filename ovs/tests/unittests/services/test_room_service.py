@@ -28,7 +28,7 @@ class TestRoomService(OVSBaseTestCase):
 
     def test_create_room(self):
         """ Tests that rooms can be created """
-        room = self.db.session.query(Room).filter(Room.id == self.test_room.id).first()
+        room = Room.query.filter(Room.id == self.test_room.id).first()
         self.assertEqual((room.number, room.status, room.type), self.test_room_info)
 
     def test_get_room_by_id(self):
@@ -70,7 +70,8 @@ class TestRoomService(OVSBaseTestCase):
         test_user_info = ('test@gmail.com', 'Bob', 'Ross', 'ADMIN')
         test_user = UserService.create_user(*test_user_info)
 
-        RoomService.add_resident_to_room(test_user.email, self.test_room.number)
+        with self.assertRaises(ValueError):
+            RoomService.add_resident_to_room(test_user.email, self.test_room.number)
 
         resident = ResidentService.get_resident_by_id(test_user.id)
 

@@ -1,7 +1,6 @@
 """
 The base test case for selenium that all other selenium tests should inherit from
 """
-import os
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
@@ -24,7 +23,7 @@ class SeleniumBaseTestCase(OVSBaseTestCase):
         """ Creates a headless chrome instance for selenium and clears the DB """
         super().setUp()
         DataGen.create_defaults()
-        db.session.commit()
+        db.session.flush()
 
         chrome_options = Options()
         chrome_options.add_argument("--headless")
@@ -43,17 +42,6 @@ class SeleniumBaseTestCase(OVSBaseTestCase):
         self.default_admin_email = default_admin['email']
         self.default_admin_password = default_admin['password']
         self.default_admin_name = default_admin['first_name']
-
-    def tearDown(self):
-        """ Closes selenium driver and OVSBaseTestCase clears the DB """
-        # Take screenshot at end of every test because Python unittesting is deficient
-        #  and has no non-hack way to detect a failed test case
-        test_screenshot_dir = 'ovs/tests/selenium/Screenshots/' + type(self).__name__
-        if not os.path.exists(test_screenshot_dir):
-            os.makedirs(test_screenshot_dir)
-        self.browser.save_screenshot(test_screenshot_dir + '/%s-last-test-run.png' % self._testMethodName)
-
-        super().tearDown()
 
     def login_default_resident(self):
         """ Convenience method to login with the default resident information """
