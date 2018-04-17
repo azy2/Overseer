@@ -155,7 +155,6 @@ def manage_packages():
             flash('Check package is unimplemented', 'danger')
             return redirect(url_for('manager.manage_packages'))
 
-
     return render_template('manager/manage_packages.html', role=role, user=user,
                            add_form=add_form, form_data=zip(edit_forms, packages))
 
