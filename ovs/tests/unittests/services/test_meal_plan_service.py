@@ -22,7 +22,7 @@ class TestMealPlanService(OVSBaseTestCase):
 
     def database_contains_test_meal_plan(self):
         """ Returns true if the database contains exactly the test meal plan, false otherwise """
-        meal_list = self.db.session.query(MealPlan).filter(MealPlan.pin == self.test_meal_plan.pin).all()
+        meal_list = MealPlan.query.filter_by(pin=self.test_meal_plan.pin).all()
         if len(meal_list) != 1:
             return False
 

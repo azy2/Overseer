@@ -1,5 +1,6 @@
 {
     "ENV": "DEV",
+    "SELENIUM": false,
     "SECRET_KEY": "SUPER_SECRET_KEY",
     "DEBUG": true,
     "TEST_MAIL": false,
@@ -56,6 +57,6 @@
             "first_name": "John",
             "last_name": "Smith",
             "password": "abcd1234"
-        }   
+        }
     }
 }

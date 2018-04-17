@@ -4,7 +4,8 @@ Defines a User as represented in the database
 
 from flask import jsonify
 from flask_bcrypt import Bcrypt, bcrypt
-from sqlalchemy import Integer, Enum, Column, CHAR, String, text, DateTime
+from sqlalchemy import Integer, Enum, Column, CHAR, String, DateTime
+from sqlalchemy.sql import func
 
 from ovs import db
 
@@ -27,10 +28,8 @@ class User(db.Model):
     role = Column(Enum('RESIDENT', 'RESIDENT_ADVISOR', 'STAFF',
                        'OFFICE_MANAGER', 'BUILDING_MANAGER', 'ADMIN'),
                   nullable=False)
-    created = Column(
-        DateTime, server_default=text('CURRENT_TIMESTAMP'))
-    updated = Column(DateTime, server_default=text(
-        'CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))
+    created = Column(DateTime, server_default=func.now())
+    updated = Column(DateTime, server_default=func.now(), server_onupdate=func.now())
 
     def __init__(self, email, first_name, last_name, password, role):
         if password is None:
@@ -49,10 +48,7 @@ class User(db.Model):
 
     def has_password(self, password):
         """ Checks if inputted password matches the one stored in DB """
-        to_check = password.encode('utf-8')
-        actual = self.password.encode('utf-8')
-
-        return bcrypt_app.check_password_hash(actual, to_check)
+        return bcrypt_app.check_password_hash(self.password, password)
 
     def json(self):
         """ Returns a JSON representation of this User """

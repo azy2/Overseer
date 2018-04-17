@@ -1,8 +1,5 @@
 """ DB and utility functions for Users """
-import logging
-
 from flask import url_for
-from sqlalchemy.exc import SQLAlchemyError
 
 from ovs import db
 from ovs.mail import templates
@@ -38,14 +35,8 @@ class UserService:
             password = crypto.generate_password()
             send_email = True
         new_user = User(email, first_name, last_name, password, role)
-
-        try:
-            db.session.add(new_user)
-            db.session.commit()
-        except SQLAlchemyError:
-            logging.exception('Failed to create user.')
-            db.session.rollback()
-            return None
+        db.session.add(new_user)
+        db.session.flush()
 
         if role == 'RESIDENT':
             ResidentService.create_resident(new_user)
@@ -71,21 +62,14 @@ class UserService:
             If user was updated sucessfuly.
         """
         user = UserService.get_user_by_id(user_id)
-        if user is None:
-            return False
-
         email_user = UserService.get_user_by_email(email)
         # Make user email is not associated with other existing users.
         if email_user is None or email_user == user:
-            try:
-                user.update(email, first_name, last_name)
-                db.session.commit()
-                return True
-            except SQLAlchemyError:
-                logging.exception('Failed to edit user.')
-                db.session.rollback()
-                return False
-        return False
+            user.update(email, first_name, last_name)
+            db.session.flush()
+            db.session.refresh(user)
+        else:
+            raise ValueError("Email already exists")
 
     @staticmethod
     def delete_user(user_id):
@@ -98,18 +82,11 @@ class UserService:
         Returns if the user was sucessfuly deleted.
         """
         user = UserService.get_user_by_id(user_id)
-        if user is None:
-            return False
         if user.role == 'RESIDENT':
             ResidentService.delete_resident(user_id)
-        try:
+        else:
             db.session.delete(user)
-            db.session.commit()
-            return True
-        except SQLAlchemyError:
-            logging.exception('Failed to delete user.')
-            db.session.rollback()
-            return False
+            db.session.flush()
 
     @staticmethod
     def send_setup_email(email, first_name, last_name, role):
@@ -160,10 +137,7 @@ class UserService:
         Returns:
             A User db model.
         """
-        try:
-            return db.session.query(User).filter_by(email=email).first()
-        except SQLAlchemyError:
-            logging.exception('Failed to get user by email.')
+        return User.query.filter_by(email=email).first()
 
     @staticmethod
     def get_user_by_id(user_id):
@@ -176,10 +150,7 @@ class UserService:
         Returns:
             A User db model.
         """
-        try:
-            return db.session.query(User).filter_by(id=user_id).first()
-        except SQLAlchemyError:
-            logging.exception('Failed to get user by id.')
+        return User.query.filter_by(id=user_id).first()
 
     @staticmethod
     def reset_user(reset_user, new_password):
@@ -193,9 +164,6 @@ class UserService:
         Returns:
             The updated User model.
         """
-        try:
-            reset_user.update_password(new_password)
-            db.session().commit()
-            return reset_user
-        except SQLAlchemyError:
-            logging.exception('Faileed to reset user password.')
+        reset_user.update_password(new_password)
+        db.session().commit()
+        return reset_user

@@ -1,10 +1,8 @@
 """
 Service routines and db access for the Auth layer
 """
-import logging
 
 from flask_login import LoginManager
-from sqlalchemy.exc import SQLAlchemyError
 
 from ovs import db
 from ovs.models.user_model import User
@@ -26,10 +24,7 @@ class AuthService:
         Returns:
             A User db model.
         """
-        try:
-            return db.session.query(User).get(int(user_id))
-        except SQLAlchemyError:
-            logging.exception('Faied to fetch user by user id.')
+        return db.session.query(User).get(int(user_id))
 
     @staticmethod
     def verify_auth(user, password):

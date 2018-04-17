@@ -8,8 +8,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from ovs.config import OVSConfig
 
-db = SQLAlchemy()
-
+db = SQLAlchemy(session_options={"autoflush": True})
 
 def create_app(config_path=None):
     """ Creates a Flask app instance and returns it """
@@ -25,12 +24,17 @@ def create_app(config_path=None):
 
     with app.app_context():
         db_config = app.config['DATABASE']
-        app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://' + \
-                                                db_config['USER'] + ':' + \
-                                                db_config['PASSWORD'] + '@' + \
-                                                db_config['HOSTNAME'] + ':' + \
-                                                db_config['PORT'] + '/' + \
-                                                db_config['NAME']
+        if app.config['SELENIUM']:
+            app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/ovs.db'
+        elif app.config['TESTING']:
+            app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://'
+        else:
+            app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://' + \
+                                                    db_config['USER'] + ':' + \
+                                                    db_config['PASSWORD'] + '@' + \
+                                                    db_config['HOSTNAME'] + ':' + \
+                                                    db_config['PORT'] + '/' + \
+                                                    db_config['NAME']
         app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
         db.init_app(app)
@@ -61,9 +65,9 @@ def create_app(config_path=None):
         app.register_blueprint(routes.ManagerRoutes, url_prefix='/manager')
         app.register_blueprint(routes.ResidentRoutes, url_prefix='/resident')
         app.register_blueprint(routes.AuthRoutes, url_prefix='/auth')
-        app.register_blueprint(routes.DevRoutes, url_prefix='/dev')
 
-        if os.environ.get("WERKZEUG_RUN_MAIN") == "true" or os.environ.get("FLASK_DEBUG") != "True":
+        if (os.environ.get("WERKZEUG_RUN_MAIN") == "true" or os.environ.get("FLASK_DEBUG") != "True")\
+           and not app.config['TESTING']:
             from ovs.datagen import DataGen
             DataGen.create_defaults()
 

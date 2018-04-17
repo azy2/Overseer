@@ -8,7 +8,7 @@ from ovs.models.package_model import Package
 from ovs.datagen import DataGen
 
 
-class TestPackageServce(OVSBaseTestCase):
+class TestPackageService(OVSBaseTestCase):
     """ Tests for package services"""
 
     def setUp(self):
@@ -31,7 +31,7 @@ class TestPackageServce(OVSBaseTestCase):
                                                      checked_at, package_description)
         new_package_description = "NOT Fragile"
         PackageService.update_package(test_package.id, self.test_resident_2.email, new_package_description)
-        updated_test_package = self.db.session.query(Package).filter(Package.id == test_package.id).first()
+        updated_test_package = Package.query.filter(Package.id == test_package.id).first()
 
         self.assertEqual(updated_test_package.recipient_id, self.test_resident_2.id)
         self.assertEqual(updated_test_package.description, new_package_description)
