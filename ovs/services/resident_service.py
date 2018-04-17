@@ -88,12 +88,15 @@ class ResidentService:
             If the user was successfuly deleted.
         """
         from ovs.services.profile_service import ProfileService
+        from ovs.services.package_service import PackageService
+
         resident = ResidentService.get_resident_by_id(user_id)
         if resident is not None:
             meal_delete = True
             if resident.mealplan_pin != 0:
                 meal_delete = MealService.delete_meal_plan(resident.mealplan_pin)
-            if ProfileService.delete_profile(user_id) and meal_delete:
+            if ProfileService.delete_profile(user_id) and meal_delete \
+               and PackageService.delete_packages_for_user(user_id):
                 try:
                     db.session.delete(resident)
                     return True

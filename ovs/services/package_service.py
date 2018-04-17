@@ -2,7 +2,6 @@
 import logging
 
 from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.orm import aliased
 
 from ovs import db
 from ovs.models.package_model import Package
@@ -17,20 +16,20 @@ class PackageService:
         pass
 
     @staticmethod
-    def create_package(recipient_id, checked_by_id, checked_at, description):
+    def create_package(recipient_id, checked_by, checked_at, description):
         """
         Creates a package db entry.
 
         Args:
             recipient_id: Unique user id of recipient.
-            checked_by_id: Unique user id of checker.
+            checked_by: Name of checker.
             checked_at: Time when the package was recieved by checker.
             description: A short description of the package.
 
         Returns:
             A Package db model.
         """
-        new_package = Package(recipient_id=recipient_id, checked_by_id=checked_by_id,
+        new_package = Package(recipient_id=recipient_id, checked_by=checked_by,
                               checked_at=checked_at, description=description)
         try:
             db.session.add(new_package)
@@ -53,7 +52,7 @@ class PackageService:
             A Package db model.
         """
         try:
-            return db.session.query(Package).filter(Package.id == package_id)
+            return db.session.query(Package).filter(Package.id == package_id).first()
         except SQLAlchemyError:
             logging.exception('Failed to get pacakge by id.')
             return None
@@ -86,15 +85,65 @@ class PackageService:
             return False
 
     @staticmethod
-    def get_all_packages_recipients_checkers():
+    def delete_package(package_id):
         """
-        Fetch all related packages, recipients, and checkers in db.
+        Deletes Package identified by package_id.
+
+        Args:
+            package_id: Unique package id.
 
         Returns:
-            A list of (Package, User, User) db model tuples.
+            If the package was deleted successfully.
         """
-        recipient = aliased(User)
-        checker = aliased(User)
-        return db.session.query(Package, recipient, checker) \
-            .join(recipient, Package.recipient_id == recipient.id) \
-            .join(checker, Package.checked_by_id == checker.id).all()
+        package = PackageService.get_package_by_id(package_id)
+        if not package:
+            return False
+        try:
+            db.session.delete(package)
+            db.session.commit()
+            return True
+        except SQLAlchemyError:
+            logging.exception('Failed to delete package.')
+            db.session.rollback()
+            return False
+
+    @staticmethod
+    def get_all_packages_recipients():
+        """
+        Fetch all related packages and recipients in db.
+
+        Returns:
+            A list of (Package, User) db model tuples.
+        """
+        return db.session.query(Package, User) \
+            .join(User, Package.recipient_id == User.id).all()
+
+    @staticmethod
+    def get_all_packages_by_recipient(user_id):
+        """
+        Fetch all packages for a resident in db.
+
+        Args:
+            user_id: Unique resident id
+
+        Returns:
+            A list of Packages
+        """
+        return Package.query.filter_by(recipient_id=user_id)
+
+    @staticmethod
+    def delete_packages_for_user(user_id):
+        """
+        Deletes all packages for recipient user_id
+
+        Args:
+            user_id: Unique resident id.
+
+        Returns:
+            If the packages were deleted successfully.
+        """
+        packages = PackageService.get_all_packages_by_recipient(user_id)
+        for package in packages:
+            if not PackageService.delete_package(package.id):
+                return False
+        return True

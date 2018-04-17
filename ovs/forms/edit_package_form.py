@@ -19,7 +19,7 @@ class EditPackageForm(FlaskForm):
     recipient_email = StringField('Package Recipient', validators=[DataRequired()])
     description = StringField('Package Description', validators=[Length(min=0, max=2047), DataRequired()])
     update_button = SubmitField('Update')
-    check_button = SubmitField('Check')
+    complete_button = SubmitField('Complete')
 
     def validate_recipient_id(form, field):  # pylint: disable=no-self-argument, no-self-use
         """

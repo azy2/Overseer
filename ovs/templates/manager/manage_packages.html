@@ -24,16 +24,16 @@
                     <thead class="thead-light">
                         <tr>
                             <th style="width:10%" scope="col">Recipient</th>
-                            <th style="width:30%" scope="col">Email</th>
+                            <th style="width:27%" scope="col">Email</th>
                             <th style="width:10%" scope="col">Checked By</th>
-                            <th style="width:10%" scope="col">Checked At</th>
-                            <th style="width:30%" scope="col">Description</th>
-                            <th style="width:5%" scope="col"></th>
-                            <th style="width:5%" scope="col"></th>
+                            <th style="width:13%" scope="col">Checked At</th>
+                            <th style="width:20%" scope="col">Description</th>
+                            <th style="width:10%" scope="col"></th>
+                            <th style="width:10%" scope="col"></th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for (edit_form, (package, recipient, checker)) in form_data %}
+                        {% for (edit_form, (package, recipient)) in form_data %}
                             <tr>
                                 <form method="post" name="Edit Form" id="edit-package-submit" class="needs-validation"  novalidate>
                                     {{ edit_form.csrf_token }}
@@ -41,11 +41,11 @@
                                     {{ field_plain(edit_form.recipient_id, value=recipient.id) }}
                                     <td>{{ recipient.first_name + " " + recipient.last_name }}</td>
                                     <td>{{ field_plain(edit_form.recipient_email, value=recipient.email) }}</td>
-                                    <td>{{ checker.first_name + " " + checker.last_name }}</td>
+                                    <td>{{ package.checked_by }}</td>
                                     <td>{{ package.checked_at }}</td>
                                     <td>{{ field_plain(edit_form.description, value=package.description) }}</td>
                                     <td>{{ field_plain(edit_form.update_button, class="btn btn-secondary") }}</td>
-                                    <td>{{ field_plain(edit_form.check_button, class="btn btn-secondary") }}</td>
+                                    <td>{{ field_plain(edit_form.complete_button, class="btn btn-secondary") }}</td>
                                 </form>
                             </tr>
                         {% endfor %}
