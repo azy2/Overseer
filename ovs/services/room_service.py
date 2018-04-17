@@ -65,7 +65,7 @@ class RoomService:
         Returns:
             A Room db model.
         """
-        return Room.query.filter_by(number=number).first()
+        return Room.query.filter_by(number=str(number)).first()
 
     @staticmethod
     def room_exists(number):

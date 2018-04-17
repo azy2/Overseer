@@ -6,6 +6,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
 from flask import current_app
+from ovs import create_app, db
 from ovs.datagen import DataGen
 from ovs.tests.unittests.base_test import OVSBaseTestCase
 
@@ -13,10 +14,17 @@ class SeleniumBaseTestCase(OVSBaseTestCase):
     """
     The base test case for selenium that all other selenium tests should inherit from
     """
+
+    def create_app(self):
+        app = create_app('config/config-selenium.json')
+        app.config['LIVESERVER_PORT'] = 0
+        return app
+
     def setUp(self):
         """ Creates a headless chrome instance for selenium and clears the DB """
         super().setUp()
         DataGen.create_defaults()
+        db.session.commit()
 
         chrome_options = Options()
         chrome_options.add_argument("--headless")
