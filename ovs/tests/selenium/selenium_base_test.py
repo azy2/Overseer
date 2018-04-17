@@ -44,17 +44,6 @@ class SeleniumBaseTestCase(OVSBaseTestCase):
         self.default_admin_password = default_admin['password']
         self.default_admin_name = default_admin['first_name']
 
-    def tearDown(self):
-        """ Closes selenium driver and OVSBaseTestCase clears the DB """
-        # Take screenshot at end of every test because Python unittesting is deficient
-        #  and has no non-hack way to detect a failed test case
-        test_screenshot_dir = 'ovs/tests/selenium/Screenshots/' + type(self).__name__
-        if not os.path.exists(test_screenshot_dir):
-            os.makedirs(test_screenshot_dir)
-        self.browser.save_screenshot(test_screenshot_dir + '/%s-last-test-run.png' % self._testMethodName)
-
-        super().tearDown()
-
     def login_default_resident(self):
         """ Convenience method to login with the default resident information """
         self.login_with_credentials(self.default_resident_email, self.default_resident_password)
