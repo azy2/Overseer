@@ -17,7 +17,7 @@ class ResidentService:
     """ DB and utility functions for Residents """
 
     @staticmethod
-    def create_resident(new_user, room_number='None'):
+    def create_resident(new_user, room_number=''):
         """
         Adds a resident to the Resident table.
 

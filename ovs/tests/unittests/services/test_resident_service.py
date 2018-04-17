@@ -35,7 +35,7 @@ class TestResidentService(OVSBaseTestCase):
             Resident.user_id == self.test_user.id).first()
         self.assertIsNotNone(resident)
 
-        old_room = RoomService.get_room_by_number('None')
+        old_room = RoomService.get_room_by_number('')
         self.assertTrue(resident in old_room.occupants)
 
     def test_create_resident_null(self):
@@ -78,7 +78,7 @@ class TestResidentService(OVSBaseTestCase):
         """ Tests that a bad room number will be rejected """
         self.assertFalse(ResidentService.edit_resident(
             self.test_user.id, 'test_edit@gmail.com', 'Joe', 'Smith', '2'))
-        self.assertEqual(self.test_resident.room_number, 'None')
+        self.assertEqual(self.test_resident.room_number, '')
 
     # cases - invalid email/id, invalid room, success
     def test_edit_resident_bad_email(self):
@@ -89,7 +89,7 @@ class TestResidentService(OVSBaseTestCase):
         # Check user is not updated
         self.assertEqual(self.test_user.email, 'test@gmail.com')
         # Check room number is not updated
-        self.assertEqual(self.test_resident.room_number, 'None')
+        self.assertEqual(self.test_resident.room_number, '')
 
     def test_delete_resident(self):
         """ Tests that residents can be deleted """

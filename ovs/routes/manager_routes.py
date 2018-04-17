@@ -123,13 +123,12 @@ def manage_residents():
             return redirect(url_for('manager.manage_residents'))
 
         elif edit_form.update_button.data and edit_form.validate_on_submit():
-            room_number = 'None' if edit_form.room_number.data == '' else edit_form.room_number.data
             if not ResidentService.edit_resident(
                     edit_form.user_id.data,
                     edit_form.email.data,
                     edit_form.first_name.data,
                     edit_form.last_name.data,
-                    room_number):
+                    edit_form.room_number.data):
                 flash('Failed to update resident', 'danger')
             else:
                 flash('Resident updated!', 'success')

@@ -56,7 +56,7 @@ class TestRoomService(OVSBaseTestCase):
         test_user_info = ('test@gmail.com', 'Bob', 'Ross', 'RESIDENT')
         test_user = UserService.create_user(*test_user_info)
         resident = ResidentService.get_resident_by_id(test_user.id)
-        old_room = RoomService.get_room_by_number('None')
+        old_room = RoomService.get_room_by_number('')
 
         self.assertTrue(resident in old_room.occupants)
         RoomService.add_resident_to_room(test_user.email, self.test_room.number)

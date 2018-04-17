@@ -61,7 +61,7 @@ class RoomService:
             return False
         for occupant in room.occupants:
             user = UserService.get_user_by_id(occupant.user_id)
-            RoomService.add_resident_to_room(user.email, 'None')
+            RoomService.add_resident_to_room(user.email, '')
         try:
             db.session.delete(room)
             db.session.commit()
@@ -159,7 +159,7 @@ class RoomService:
            A list of Room db models.
         """
         try:
-            return db.session.query(Room).filter(Room.number != 'None').all()
+            return db.session.query(Room).filter(Room.number != '').all()
         except SQLAlchemyError:
             logging.exception('Failed to get all rooms.')
             return []
