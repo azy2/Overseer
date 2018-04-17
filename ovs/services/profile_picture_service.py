@@ -13,7 +13,6 @@ class ProfilePictureService:
         Creates a blob object in the profile picture container with the associated id.
 
         Args:
-            TODO: Picture ids needs to be a GUID.
             picture_id: ID of picture.
             picture: Array of bytes.
         """

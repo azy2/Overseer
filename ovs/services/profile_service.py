@@ -30,9 +30,6 @@ class ProfileService:
             phone_number: Resident's phone number.
             race: Resident's race.
             gender: Resident's gender.
-
-        Returns:
-            If the resident's profile was updated successfully.
         """
         resident = ResidentService.get_resident_by_id(resident_id)
         profile = resident.profile

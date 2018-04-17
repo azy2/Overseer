@@ -11,6 +11,14 @@ from ovs import db
 class MealplanHistory(db.Model):
     """
     Defines a Mealplan History Item as represented in the database.
+    Args:
+        resident_id (int): The resident's id who signed in.
+        mealplan_pin (int): The pin of the mealplan used to sign in.
+        manager_id (int): The id of the manager who was logged in at the time.
+        log_type (Enum): Must be either 'MEAL_USED' or 'UNDO'.
+
+    Returns:
+        A MealplanHistory Model.
     """
     __tablename__ = 'mealplan_history'
     id = Column(Integer, primary_key=True)
@@ -29,12 +37,21 @@ class MealplanHistory(db.Model):
             log_type=log_type)
 
     def __repr__(self):
+        """
+        Allows MealplanHistory objects to be printed.
+        Returns:
+            str: A string representation of MealplanHistory.
+        """
         return 'MealplanHistory([id={id}, resident_id={resident_id}, mealplan_pin={mealplan_pin}, ' \
                'manager_id={manager_id}, log_type={log_type}, created={created}, updated={updated}])'\
             .format(**self.__dict__)
 
     def json(self):
-        """ Returns a JSON representation of this Mealplan History Item"""
+        """
+        Get a JSON represntation of this MealplanHistory.
+        Returns:
+             A JSON representation of this MealplanHistory Item.
+        """
         return jsonify(
             id=self.id,
             resident_id=self.resident_id,

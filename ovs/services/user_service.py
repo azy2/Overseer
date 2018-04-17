@@ -53,8 +53,8 @@ class UserService:
             first_name: The user's first_name.
             last_name: The user's last_name.
 
-        Returns:
-            If user was updated sucessfuly.
+        Raises:
+            ValueError: If email is already registered.
         """
         user = UserService.get_user_by_id(user_id)
         email_user = UserService.get_user_by_email(email)
@@ -111,7 +111,7 @@ class UserService:
         Fetch a user identified by email.
 
         Args:
-            user_id: The user's email address.
+            email: The user's email address.
 
         Returns:
             A User db model.

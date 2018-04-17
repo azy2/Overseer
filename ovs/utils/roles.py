@@ -18,7 +18,15 @@ class UserRole:
 
     @staticmethod
     def has_permission(user_role, min_access_role):
-        """Checks user perms a given user_role and minimum access role"""
+        """
+        Checks that user_role has permission to access recourse with permission level min_access_role.
+        Args:
+            user_role (UserRole): The current users role.
+            min_access_role (UserRole): The minimum role that can access this recourse.
+
+        Returns:
+            bool: True if the user is above min_access_role, False otherwise.
+        """
         permission_levels = {
             'ADMIN': 100,
             'OFFICE_MANAGER': 2,

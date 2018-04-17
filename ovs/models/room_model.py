@@ -24,11 +24,20 @@ class Room(db.Model):
     updated = Column(DateTime, server_default=func.now(), server_onupdate=func.now())
 
     def __repr__(self):
+        """
+        Allows Room to be printed.
+        Returns:
+            str: A string representation of this Room.
+        """
         return 'Room([id={id}, number={number}, status={status}, type={type}, created={created}, ' \
                'updated={updated}])'.format(**self.__dict__)
 
     def json(self):
-        """ Returns a JSON representation of this Room """
+        """
+        Get a JSON object representing this Room.
+        Returns:
+             A JSON representation of this Room.
+        """
         return jsonify(
             id=self.id,
             number=self.number,

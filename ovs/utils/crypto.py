@@ -10,5 +10,10 @@ class Crypto:
 
     @staticmethod
     def generate_password():
-        """ Generate a random password """
+        """
+        Get a default password
+
+        Returns:
+            Generate a random password
+        """
         return uuid4().hex

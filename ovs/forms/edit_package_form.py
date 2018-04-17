@@ -25,24 +25,43 @@ class EditPackageForm(FlaskForm):
         """
         Validates that the provided user_id exists.
         This is to thwart malicious input.
+
+        Args:
+            form: The EditPackageForm that was submitted.
+            field: The recipient_id field.
+
+        Raises:
+            ValidationError: If recipient_id does not correspond to an existing resident.
         """
         if db.session.query(Resident).filter(Resident.user_id == field.data).count() == 0:
             raise ValidationError('Resident does not exist')
-
 
     def validate_package_id(form, field):  # pylint: disable=no-self-argument, no-self-use
         """
         Validates that the provided package_id exists.
         This is to thwart malicious input.
+
+        Args:
+            form: The EditPackageForm that was submitted.
+            field: The package_id field.
+
+        Raises:
+            ValidationError: If package_id not correspond to an existing package.
         """
         if db.session.query(Package).filter(Package.id == field.data).count() == 0:
             raise ValidationError('Package does not exist')
-
 
     def validate_recipient_email(form, field):  # pylint: disable=no-self-argument, no-self-use
         """
         Validates that the provided resident email exists.
         This is to thwart malicious input.
+
+        Args:
+            form: The EditPackageForm that was submitted.
+            field: The recipient_email field.
+
+        Raises:
+            ValidationError: If package_id not correspond to an existing package.
         """
         if db.session.query(User).filter(User.email == field.data).count() == 0:
             raise ValidationError('Resident does not exist. Please verify resident email.')

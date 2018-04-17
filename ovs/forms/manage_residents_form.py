@@ -24,7 +24,16 @@ class ManageResidentsForm(FlaskForm):
 
 
     def validate_email(form, field): # pylint: disable=no-self-argument
-        """ Checks whether email is unregistered. """
+        """
+        Checks whether email is unregistered.
+
+        Args:
+            form: The ManageResidentsForm that was submitted.
+            field: The email field.
+
+        Raises:
+            ValidationError: If email is already in use.
+        """
         user = UserService.get_user_by_id(form.user_id.data)
         if user:
             email = user.email
@@ -34,7 +43,16 @@ class ManageResidentsForm(FlaskForm):
             raise ValidationError('No user with that ID')
 
     def validate_room_number(form, field): # pylint: disable=no-self-argument, no-self-use
-        """ Checks whether room number exists """
+        """
+        Checks whether room number exists.
+
+        Args:
+            form: The ManageResidentsForm that was submitted.
+            field: The room_number field.
+
+        Raises:
+            ValidationError: If room_number does not exist.
+        """
         if field.data != '' and RoomService.get_room_by_number(field.data) is None:
             raise ValidationError("Room doesn't exist")
 
@@ -42,6 +60,13 @@ class ManageResidentsForm(FlaskForm):
         """
         Validates that the provided user_id exists.
         This is to thwart malicious input.
+
+        Args:
+            form: The ManageResidentsForm that was submitted.
+            field: The user_id field.
+
+        Raises:
+            ValidationError: If user_id does not exist.
         """
         if db.session.query(Resident).filter(Resident.user_id == field.data).count() == 0:
             raise ValidationError('Resident does not exist')

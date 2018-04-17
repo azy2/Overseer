@@ -54,9 +54,6 @@ class ResidentService:
             first_name: New first name.
             last_name: New last name.
             room_number: New room number.
-
-        Returns:
-            If the edit/update was successful.
         """
         from ovs.services.user_service import UserService
         from ovs.services.room_service import RoomService
@@ -70,9 +67,6 @@ class ResidentService:
 
         Args:
             user_id: Unique user id.
-
-        Returns:
-            If the user was successfuly deleted.
         """
         from ovs.services.profile_picture_service import ProfilePictureService
         from ovs.services import UserService
@@ -106,7 +100,8 @@ class ResidentService:
         Args:
             user_id: Unique user id.
 
-        Returns Resident db model.
+        Returns:
+            A Resident db model.
         """
         return Resident.query.filter_by(user_id=user_id).first()
 
@@ -144,9 +139,6 @@ class ResidentService:
         Args:
             user_id: The resident's unique user id.
             new_pin: The new meal pin to be assigned to the resident.
-
-        Returns:
-            If the pin was set sucessfully.
         """
         Resident.query\
                 .filter_by(user_id=user_id)\

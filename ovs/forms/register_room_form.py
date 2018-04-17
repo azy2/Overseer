@@ -18,12 +18,30 @@ class RegisterRoomForm(FlaskForm):
                             validators=[validators.Optional()])
 
     def validate_room_number(form, field): # pylint: disable=no-self-argument, no-self-use
-        """ Validates that room number does not already exist """
+        """
+        Validates that room number does not already exist
+
+        Args:
+            form: The RegisterRoomForm that was submitted.
+            field: The room_number field.
+
+        Raises:
+            ValidationError: If room number already exists.
+        """
         if RoomService.get_room_by_number(field.data) is not None:
             raise ValidationError('A room with that number already exists')
 
     def validate_occupants(form, field): # pylint: disable=no-self-argument, no-self-use
-        """ Validates thet occupants exist and don't already have a room """
+        """
+        Validates that occupants exist and don't already have a room.
+
+        Args:
+            form: The RegisterRoomForm that was submitted.
+            field: The occupants field.
+
+        Raises:
+            ValidationError: If occupants is formatted incorrectly or contains invalid residents.
+        """
         occupants = ''.join(field.data.split()).split(',')
         for occupant in occupants:
             resident = ResidentService.get_resident_by_email(occupant)
