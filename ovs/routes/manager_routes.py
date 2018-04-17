@@ -51,15 +51,15 @@ def register_room():
     try:
         form = RegisterRoomForm()
         if form.validate_on_submit():
-            if RoomService.create_room(
-                    form.room_number.data,
-                    form.room_status.data,
-                    form.room_type.data,
-                    form.occupants.data) is None:
-                flash('Creating a room failed', 'danger')
-            else:
-                flash('Successfully created room', 'success')
+            RoomService.create_room(
+                form.room_number.data,
+                form.room_status.data,
+                form.room_type.data,
+                form.occupants.data)
 
+            db.session.commit()
+
+            flash('Successfully created room', 'success')
             return redirect(url_for('manager.register_room'))
 
         user = UserService.get_user_by_id(current_user.get_id())
@@ -90,43 +90,41 @@ def manage_residents():
         role = user.role
 
         if 'register_btn' in request.form and register_form.validate_on_submit():
-            if UserService.create_user(
-                    register_form.email.data,
-                    register_form.first_name.data,
-                    register_form.last_name.data,
-                    "RESIDENT") is None:
-                flash('Failed to register resident', 'danger')
-            else:
-                flash('{} {} registered.'.format(register_form.first_name.data, register_form.last_name.data), 'success')
+            UserService.create_user(
+                register_form.email.data,
+                register_form.first_name.data,
+                register_form.last_name.data,
+                "RESIDENT")
+
+            db.session.commit()
+            flash('{} {} registered.'.format(register_form.first_name.data, register_form.last_name.data), 'success')
 
             return redirect(url_for('manager.manage_residents'))
 
         for edit_form in edit_forms:
             if edit_form.delete_button.data: #Don't validate. Just delete
-                if not (ResidentService.resident_exists(edit_form.user_id.data) and
-                        UserService.delete_user(edit_form.user_id.data)):
-                    flash('Failed to delete resident.', 'danger')
-                else:
-                    flash('Resident deleted.', 'success')
+                UserService.delete_user(edit_form.user_id.data)
+                db.session.commit()
+                flash('Resident deleted.', 'success')
 
                 return redirect(url_for('manager.manage_residents'))
 
             elif edit_form.update_button.data and edit_form.validate_on_submit():
                 room_number = 'None' if edit_form.room_number.data == '' else edit_form.room_number.data
-                if not ResidentService.edit_resident(
-                        edit_form.user_id.data,
-                        edit_form.email.data,
-                        edit_form.first_name.data,
-                        edit_form.last_name.data,
-                        room_number):
-                    flash('Failed to update resident', 'danger')
-                else:
-                    flash('Resident updated!', 'success')
+                ResidentService.edit_resident(
+                    edit_form.user_id.data,
+                    edit_form.email.data,
+                    edit_form.first_name.data,
+                    edit_form.last_name.data,
+                    room_number)
+
+                db.session.commit()
+                flash('Resident updated!', 'success')
 
                 return redirect(url_for('manager.manage_residents'))
 
         return render_template('manager/manage_residents.html', role=role, user=user,
-                            register_form=register_form, form_data=zip(edit_forms, residents))
+                               register_form=register_form, form_data=zip(edit_forms, residents))
     except: # pylint: disable=bare-except
         db.session.rollback()
         flash('An error was encountered', 'danger')
@@ -160,14 +158,17 @@ def manage_packages():
             description = add_form.description.data
 
             PackageService.create_package(recipient_id, checked_by_id, checked_at, description)
+
+            db.session.commit()
             flash('Package added successfully!', 'success')
             return redirect(url_for('manager.manage_packages'))
 
         for edit_form in edit_forms:
             if edit_form.update_button.data and edit_form.validate_on_submit():
                 PackageService.update_package(edit_form.package_id.data,
-                                            edit_form.recipient_email.data,
-                                            edit_form.description.data)
+                                              edit_form.recipient_email.data,
+                                              edit_form.description.data)
+                db.session.commit()
                 flash('Package edited successfully!', 'success')
                 return redirect(url_for('manager.manage_packages'))
             if edit_form.check_button.data and edit_form.validate_on_submit():
@@ -176,7 +177,7 @@ def manage_packages():
 
 
         return render_template('manager/manage_packages.html', role=role, user=user,
-                            add_form=add_form, form_data=zip(edit_forms, packages))
+                               add_form=add_form, form_data=zip(edit_forms, packages))
     except: # pylint: disable=bare-except
         db.session.rollback()
         flash('An error was encountered', 'danger')
@@ -200,7 +201,9 @@ def meal_login():
 
         if form.validate_on_submit():
             mealplan = MealService.get_meal_plan_by_pin(form.pin.data)
-            if not MealService.use_meal(form.pin.data, user_id):
+            used = MealService.use_meal(form.pin.data, user_id)
+            db.session.commit()
+            if not used:
                 flash('Failed to sign in. Out of meals.', 'danger')
 
             return redirect(url_for('manager.meal_login'))
@@ -224,10 +227,10 @@ def meal_login():
             current_meals = mealplan.credits
             max_meals = mealplan.meal_plan
             return render_template('manager/meal_login.html', role=role, user=user, form=form,
-                                pict=pict, show_undo=(i == 0),
-                                name=profile.preferred_name,
-                                current_meals=current_meals,
-                                max_meals=max_meals)
+                                   pict=pict, show_undo=(i == 0),
+                                   name=profile.preferred_name,
+                                   current_meals=current_meals,
+                                   max_meals=max_meals)
 
         return render_template('manager/meal_login.html', role=role, user=user, form=form, no_login=True)
     except: # pylint: disable=bare-except
@@ -247,27 +250,25 @@ def meal_undo():
     try:
         user_id = current_user.get_id()
 
-        if request.method == 'POST':
-            meal_log = MealService.get_last_log(user_id)
+        meal_log = MealService.get_last_log(user_id)
 
-            if meal_log is None or meal_log.log_type == log_types.UNDO:
-                flash('Undo invalid', 'danger')
-                return redirect(url_for('manager.meal_login'))
-            success = MealService.undo_meal_use(user_id, meal_log.resident_id, meal_log.mealplan_pin)
-            if not success:
-                flash('Undo failed', 'danger')
+        if meal_log is None or meal_log.log_type == log_types.UNDO:
+            flash('Undo invalid', 'danger')
+            return redirect(url_for('manager.meal_login'))
+        MealService.undo_meal_use(user_id, meal_log.resident_id, meal_log.mealplan_pin)
 
-            resident = ResidentService.get_resident_by_id(meal_log.resident_id)
-            mealplan = MealService.get_meal_plan_by_pin(meal_log.mealplan_pin)
-            name = resident.profile.preferred_name
-            current_meals = mealplan.credits
+        resident = ResidentService.get_resident_by_id(meal_log.resident_id)
+        mealplan = MealService.get_meal_plan_by_pin(meal_log.mealplan_pin)
+        name = resident.profile.preferred_name
+        current_meals = mealplan.credits
 
-            flash('{} has {} meals left'.format(name, current_meals), 'success')
+        db.session.commit()
+        flash('{} has {} meals left'.format(name, current_meals), 'success')
 
         return redirect(url_for('manager.meal_login'))
     except: # pylint: disable=bare-except
         db.session.rollback()
-        flash('An error was encountered', 'danger')
+        flash('Failed to undo', 'danger')
         logging.exception(traceback.format_exc())
         return redirect(url_for('manager.meal_undo'))
 
@@ -289,6 +290,9 @@ def create_meal_plan():
                 form.meal_plan.data,
                 form.plan_type.data,
                 form.email.data)
+
+            db.session.commit()
+
             if meal_plan is None:
                 flash('Could not create meal plan.', 'danger')
             else:
@@ -316,17 +320,16 @@ def add_meals():
         user = UserService.get_user_by_id(current_user.get_id())
         role = user.role
         if form.validate_on_submit():
-            valid = MealService.add_meals(
+            MealService.add_meals(
                 form.pin.data,
                 form.number.data)
-            if valid:
-                user_meal_plan = MealService.get_meal_plan_by_pin(form.pin.data)
-                resident = ResidentService.get_resident_by_pin(user_meal_plan.pin)
-                flash('{} has {} out of {} meals now.'.format(resident.profile.preferred_name,
-                                                              user_meal_plan.credits,
-                                                              user_meal_plan.meal_plan), 'success')
-            else:
-                flash('Invalid pin', 'danger')
+
+            db.session.commit()
+            user_meal_plan = MealService.get_meal_plan_by_pin(form.pin.data)
+            resident = ResidentService.get_resident_by_pin(user_meal_plan.pin)
+            flash('{} has {} out of {} meals now.'.format(resident.profile.preferred_name,
+                                                          user_meal_plan.credits,
+                                                          user_meal_plan.meal_plan), 'success')
 
             return redirect(url_for('manager.add_meals'))
 

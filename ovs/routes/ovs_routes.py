@@ -31,4 +31,4 @@ def landing_page():
         db.session.rollback()
         flash('An error was encountered', 'danger')
         logging.exception(traceback.format_exc())
-        return redirect(url_for('ovs.landing_page'))
+        return redirect(url_for('/.landing_page'))

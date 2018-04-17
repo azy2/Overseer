@@ -1,13 +1,9 @@
 """
 DB and utility functions for Meals
 """
-import logging
-
-from sqlalchemy.exc import SQLAlchemyError
 
 from ovs import db
 from ovs.models.meal_plan_model import MealPlan
-from ovs.services.resident_service import ResidentService
 from ovs.models.mealplan_history_model import MealplanHistory
 from ovs.utils import log_types
 
@@ -29,6 +25,7 @@ class MealService:
         """
         new_plan = MealPlan(meal_plan, plan_type)
         db.session.add(new_plan)
+        db.session.flush()
         return new_plan
 
     @staticmethod
@@ -45,9 +42,13 @@ class MealService:
         Returns:
             A MealPlan db model.
         """
+        from ovs.services.resident_service import ResidentService
+
         resident = ResidentService.get_resident_by_email(email)
         meal_plan = MealService.create_meal_plan(meal_plan, plan_type)
         resident.mealplan_pin = meal_plan.pin
+        db.session.flush()
+        db.session.refresh(resident)
         return meal_plan
 
     @staticmethod
@@ -63,10 +64,15 @@ class MealService:
         Returns:
             If the meal credit was deducted and logged succesfully.
         """
+        from ovs.services.resident_service import ResidentService
+
         mealplan = MealService.get_meal_plan_by_pin(pin)
         resident = ResidentService.get_resident_by_pin(pin)
-        return (mealplan.update_meal_count()
-                and MealService.log_meal_history(resident.user_id, mealplan.pin, manager_id, log_types.MEAL_USED))
+        if mealplan.update_meal_count():
+            MealService.log_meal_history(resident.user_id, mealplan.pin, manager_id, log_types.MEAL_USED)
+            return True
+        else:
+            return False
 
     @staticmethod
     def add_meals(pin, number):
@@ -82,6 +88,8 @@ class MealService:
         """
         meal_plan = MealService.get_meal_plan_by_pin(pin)
         meal_plan.credits += number
+        db.session.flush()
+        db.session.refresh(meal_plan)
 
     @staticmethod
     def undo_meal_use(manager_id, resident_id, pin):
@@ -97,8 +105,8 @@ class MealService:
         Returns:
             If the credit and loggs was added successfully.
         """
-        return (MealService.add_meals(pin, 1)
-                and MealService.log_meal_history(resident_id, pin, manager_id, log_types.UNDO))
+        MealService.add_meals(pin, 1)
+        MealService.log_meal_history(resident_id, pin, manager_id, log_types.UNDO)
 
     @staticmethod
     def get_meal_plan_by_pin(pin):
@@ -130,6 +138,7 @@ class MealService:
         new_mealplan_history_item = MealplanHistory(
             resident_id, pin, manager_id, log_type)
         db.session.add(new_mealplan_history_item)
+        db.session.flush()
 
     @staticmethod
     def get_last_log(manager_id):

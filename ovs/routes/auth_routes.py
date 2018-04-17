@@ -30,6 +30,7 @@ def login():
                 flash('Invalid email or password.', 'danger')
                 return redirect(url_for('/.landing_page'))
             login_user(user)
+            db.session.commit()
             if user.role == UserRole.RESIDENT:
                 return redirect(url_for('resident.landing_page'))
             else:
@@ -37,15 +38,22 @@ def login():
         else:
             flash('Invalid email or password.', 'danger')
             return redirect(url_for('/.landing_page'))
-    except: # pylint: disable=bare-except
+    except:  # pylint: disable=bare-except
         db.session.rollback()
         flash('Could not log in', 'danger')
         logging.exception(traceback.format_exc())
+        return redirect(url_for('/.landing_page'))
 
 
 @auth_bp.route('/logout')
 @login_required
 def logout():
     """ Logs a user out """
-    logout_user()
-    return redirect(url_for('/.landing_page'))
+    try:
+        logout_user()
+        return redirect(url_for('/.landing_page'))
+    except:  # pylint: disable=bare-except
+        db.session.rollback()
+        flash('An error was encountered', 'danger')
+        logging.exception(traceback.format_exc())
+        return redirect(url_for('/.landing_page'))

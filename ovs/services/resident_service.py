@@ -1,10 +1,6 @@
 """
 DB and utility functions for Residents
 """
-import logging
-
-from sqlalchemy.exc import SQLAlchemyError
-
 from ovs import db
 from ovs.models.profile_model import Profile
 from ovs.models.resident_model import Resident
@@ -31,20 +27,19 @@ class ResidentService:
             The Resident db model that was just created.
         """
         from ovs.services.profile_service import ProfileService
-        from ovs.services.room_service import RoomService
 
         new_resident = Resident(new_user.id)
+        new_resident.room_number = room_number
+        db.session.add(new_resident)
+        db.session.flush()
+
         new_resident_profile = Profile(new_user.id)
         new_resident_profile.preferred_name = new_user.first_name
         new_resident_profile.preferred_email = new_user.email
         new_resident_profile.gender = genders.UNSPECIFIED
         ProfileService.set_default_picture(new_resident_profile.picture_id)
-
-        room = RoomService.get_room_by_number(room_number)
-        new_resident.room_number = room_number
-
-        db.session.add(new_resident)
         db.session.add(new_resident_profile)
+        db.session.flush()
 
         return new_resident
 
@@ -65,8 +60,8 @@ class ResidentService:
         """
         from ovs.services.user_service import UserService
         from ovs.services.room_service import RoomService
-        return (UserService.edit_user(user_id, email, first_name, last_name)
-                and RoomService.add_resident_to_room(email, room_number))
+        UserService.edit_user(user_id, email, first_name, last_name)
+        RoomService.add_resident_to_room(email, room_number)
 
     @staticmethod
     def delete_resident(user_id):
@@ -79,10 +74,16 @@ class ResidentService:
         Returns:
             If the user was successfuly deleted.
         """
-        from ovs.services.profile_service import ProfileService
+        from ovs.services.profile_picture_service import ProfilePictureService
+        from ovs.services import UserService
+        user = UserService.get_user_by_id(user_id)
         resident = ResidentService.get_resident_by_id(user_id)
-        ProfileService.delete_profile(user_id)
+        picture_id = resident.profile.picture_id
+        # The profile gets deleted by cascade
+        db.session.delete(user)
         db.session.delete(resident)
+        db.session.flush()
+        ProfilePictureService.delete_profile_picture(picture_id)
 
     @staticmethod
     def get_resident_by_email(email):
@@ -150,6 +151,7 @@ class ResidentService:
         Resident.query\
                 .filter_by(user_id=user_id)\
                 .update({Resident.mealplan_pin: new_pin})
+        db.session.flush()
 
     @staticmethod
     def get_all_residents_users():

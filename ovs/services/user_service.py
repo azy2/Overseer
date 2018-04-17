@@ -1,7 +1,4 @@
 """ DB and utility functions for Users """
-import logging
-
-from sqlalchemy.exc import SQLAlchemyError
 
 from ovs import db
 from ovs.mail import templates
@@ -36,6 +33,7 @@ class UserService:
             password = crypto.generate_password()
         new_user = User(email, first_name, last_name, password, role)
         db.session.add(new_user)
+        db.session.flush()
 
         if role == 'RESIDENT':
             ResidentService.create_resident(new_user)
@@ -61,7 +59,12 @@ class UserService:
         user = UserService.get_user_by_id(user_id)
         email_user = UserService.get_user_by_email(email)
         # Make user email is not associated with other existing users.
-        user.update(email, first_name, last_name)
+        if email_user is None or email_user == user:
+            user.update(email, first_name, last_name)
+            db.session.flush()
+            db.session.refresh(user)
+        else:
+            raise ValueError("Email already exists")
 
     @staticmethod
     def delete_user(user_id):
@@ -76,8 +79,9 @@ class UserService:
         user = UserService.get_user_by_id(user_id)
         if user.role == 'RESIDENT':
             ResidentService.delete_resident(user_id)
-
-        db.session.delete(user)
+        else:
+            db.session.delete(user)
+            db.session.flush()
 
     @staticmethod
     def send_setup_email(email, first_name, last_name, role, password):

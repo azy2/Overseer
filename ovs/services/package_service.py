@@ -1,7 +1,4 @@
 """ DB and utility functions for Packages """
-import logging
-
-from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import aliased
 
 from ovs import db
@@ -33,6 +30,7 @@ class PackageService:
         new_package = Package(recipient_id=recipient_id, checked_by_id=checked_by_id,
                               checked_at=checked_at, description=description)
         db.session.add(new_package)
+        db.session.flush()
         return new_package
 
     @staticmethod
@@ -67,6 +65,7 @@ class PackageService:
         db.session.query(Package)\
                   .filter_by(id=package_id)\
                   .update({Package.recipient_id: recipient_id, Package.description: description})
+        db.session.flush()
 
     @staticmethod
     def get_all_packages_recipients_checkers():

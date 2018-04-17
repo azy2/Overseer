@@ -35,6 +35,9 @@ def register_manager():
                 form.first_name.data,
                 form.last_name.data,
                 form.role.data)
+
+            db.session.commit()
+
             if user is None:
                 flash('An error was encountered', 'danger')
             else:

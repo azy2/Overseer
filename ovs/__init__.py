@@ -8,8 +8,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from ovs.config import OVSConfig
 
-db = SQLAlchemy()
-
+db = SQLAlchemy(session_options={"autoflush": True})
 
 def create_app(config_path=None):
     """ Creates a Flask app instance and returns it """

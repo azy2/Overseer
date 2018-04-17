@@ -51,21 +51,23 @@ def edit_profile():
         if 'profile_btn' in request.form and profile_form.validate_on_submit():
             # Set profile data in database with non-null values from the form
             ProfileService.update_profile(resident_id,
-                                        profile_form.preferred_email.data,
-                                        profile_form.preferred_name.data,
-                                        profile_form.phone_number.data,
-                                        profile_form.race.data,
-                                        profile_form.gender.data)
+                                          profile_form.preferred_email.data,
+                                          profile_form.preferred_name.data,
+                                          profile_form.phone_number.data,
+                                          profile_form.race.data,
+                                          profile_form.gender.data)
+            db.session.commit()
             flash('Updated profile successfully', 'success')
             return redirect(url_for('resident.edit_profile'))
         elif 'picture_btn' in request.form and picture_form.validate_on_submit():
             picture_data = picture_form.profile_picture.data.read()
             ProfilePictureService.update_profile_picture(profile.picture_id, picture_data)
+            db.session.commit()
             return redirect(url_for('resident.edit_profile'))
 
         pict = base64.b64encode(ProfilePictureService.get_profile_picture(profile.picture_id)).decode()
         return render_template('resident/profile.html', role=roles.RESIDENT, profile=profile, pict=pict,
-                            profile_form=profile_form, picture_form=picture_form)
+                               profile_form=profile_form, picture_form=picture_form)
     except: # pylint: disable=bare-except
         db.session.rollback()
         flash('An error was encountered', 'danger')

@@ -1,10 +1,6 @@
 """
 DB access and other services for Rooms
 """
-import logging
-
-from sqlalchemy.exc import SQLAlchemyError
-
 from ovs import db
 from ovs.models.room_model import Room
 from ovs.services.resident_service import ResidentService
@@ -34,10 +30,12 @@ class RoomService:
         """
         new_room = Room(number=number, status=status, type=room_type)
         db.session.add(new_room)
+        db.session.flush()
 
-        emails = ''.join(occupant_emails.split()).split(',')
-        for email in emails:
-            RoomService.add_resident_to_room(email, number)
+        if occupant_emails != '':
+            emails = ''.join(occupant_emails.split()).split(',')
+            for email in emails:
+                RoomService.add_resident_to_room(email, number)
 
         return new_room
 
@@ -104,4 +102,14 @@ class RoomService:
         """
         resident = ResidentService.get_resident_by_email(email)
         room = RoomService.get_room_by_number(room_number)
+
+        if resident is None or room is None:
+            raise ValueError('Failed to associate resident and room.')
+
+        old_room = RoomService.get_room_by_number(resident.room_number)
         resident.room_number = room_number
+        db.session.flush()
+        # room.occupants should be automatically updated by SQL but we have to refresh the object in the session
+        # in order to see it before a commit.
+        db.session.refresh(room)
+        db.session.refresh(old_room)
