@@ -28,10 +28,10 @@ def landing_page():
         resident = ResidentService.get_resident_by_id(resident_id)
         profile = resident.profile
         packages = resident.packages
-        mealplan = resident.mealplan
+        meal_plan = resident.meal_plan
         pict = base64.b64encode(ProfilePictureService.get_profile_picture(profile.picture_id)).decode()
         return render_template('resident/index.html', role=roles.RESIDENT, profile=profile, pict=pict,
-                               packages=packages, mealplan=mealplan)
+                               packages=packages, mealplan=meal_plan)
     except: # pylint: disable=bare-except
         db.session.rollback()
         flash('An error was encountered', 'danger')
