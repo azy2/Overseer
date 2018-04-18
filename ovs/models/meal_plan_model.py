@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 from flask import jsonify
 from sqlalchemy import Integer, Enum, Column, DateTime, Sequence
 from sqlalchemy.sql import func
+from sqlalchemy.orm import relationship
 
 from ovs import db
 
@@ -24,6 +25,7 @@ class MealPlan(db.Model):
     plan_type = Column(Enum('WEEKLY', 'SEMESTERLY', 'LIFETIME'), nullable=False)
     created = Column(DateTime, server_default=func.now())
     updated = Column(DateTime, server_default=func.now(), server_onupdate=func.now())
+    user = relationship('Resident', uselist=False, single_parent=True)
 
     def __init__(self, meal_plan, plan_type):
         super(MealPlan, self).__init__(

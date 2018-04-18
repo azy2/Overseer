@@ -62,34 +62,6 @@ class ResidentService:
         RoomService.add_resident_to_room(email, room_number)
 
     @staticmethod
-    def delete_resident(user_id):
-        """
-        Deletes an existing resident identified by user_id.
-
-        Args:
-            user_id: Unique user id.
-
-        Returns:
-            If the user was successfuly deleted.
-        """
-        from ovs.services.package_service import PackageService
-
-        from ovs.services.profile_picture_service import ProfilePictureService
-        from ovs.services import UserService
-
-        user = UserService.get_user_by_id(user_id)
-        resident = ResidentService.get_resident_by_id(user_id)
-        if resident.mealplan_pin != 0:
-            MealService.delete_meal_plan(resident.mealplan_pin)
-        PackageService.delete_packages_for_user(user_id)
-        picture_id = resident.profile.picture_id
-        # The profile gets deleted by cascade
-        db.session.delete(user)
-        db.session.delete(resident)
-        db.session.flush()
-        ProfilePictureService.delete_profile_picture(picture_id)
-
-    @staticmethod
     def get_resident_by_email(email):
         """
         Fetch resident identified by email.

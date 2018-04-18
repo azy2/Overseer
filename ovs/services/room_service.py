@@ -51,8 +51,7 @@ class RoomService:
         room = RoomService.get_room_by_id(room_id)
 
         for occupant in room.occupants:
-            user = UserService.get_user_by_id(occupant.user_id)
-            RoomService.add_resident_to_room(user.email, '')
+            RoomService.add_resident_to_room(occupant.user.email, '')
         db.session.delete(room)
 
 

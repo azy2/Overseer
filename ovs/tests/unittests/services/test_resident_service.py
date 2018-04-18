@@ -96,27 +96,6 @@ class TestResidentService(OVSBaseTestCase):
 
         self.assertEqual('', self.test_resident.room_number)
 
-    def test_delete_resident(self):
-        """ Tests that residents can be deleted """
-        self.assertEqual(1, Resident.query.count())
-        expected = Resident.query.count() - 1
-
-        # check if deletion successful
-        ResidentService.delete_resident(self.test_user.id)
-
-        self.assertEqual(expected, Resident.query.count())
-        self.assertEqual(expected, Profile.query.count())
-        self.assertEqual(expected + 1, User.query.count())
-
-    def test_delete_resident_null(self):
-        """ Tests that nothing breaks when deleting a nonexistant resident """
-        expected = Resident.query.count()
-
-        # This id is NOT the resident
-        self.assertRaises(AttributeError, ResidentService.delete_resident, self.test_user.id + 1)
-
-        self.assertEqual(Resident.query.count(), expected)
-
     def test_get_all_residents(self):
         """ Tests that get_all_residents returns the correct number of residents"""
         residents = ResidentService.get_all_residents_users()

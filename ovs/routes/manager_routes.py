@@ -316,8 +316,7 @@ def manage_meal_plans():
             edit_forms.append(EditMealForm(plan_type=meal_plan.plan_type,
                                            prefix=str(meal_plan.pin)))
             resident = ResidentService.get_resident_by_pin(meal_plan.pin)
-            user = UserService.get_user_by_id(resident.user_id)
-            emails.append(user.email)
+            emails.append(resident.user.email)
 
         if 'create_btn' in request.form and create_form.validate_on_submit():
             meal_plan = MealService.create_meal_plan_for_resident_by_email(
