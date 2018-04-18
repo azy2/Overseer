@@ -12,7 +12,7 @@
                             <label>PIN</label>
                             <p class="card-text">{{ mealplan.pin }}</p>
                             <label>Meals</label>
-                            <p class="card-text">{{ mealplan.credits|safe }} out of {{ mealplan.credits|safe }} meals remaining.</p>
+                            <p class="card-text">{{ mealplan.credits|safe }} out of {{ mealplan.meal_plan|safe }} meals remaining.</p>
                             <label>Resets</label>
                             <p class="card-text">{{ mealplan.reset_date.strftime("%A, %B %-d") }}.</p>
                         {% else %}
