@@ -44,5 +44,6 @@ class EditPackageForm(FlaskForm):
         Validates that the provided resident email exists.
         This is to thwart malicious input.
         """
-        if db.session.query(User).filter(User.email == field.data).count() == 0:
+        user = User.query.filter_by(email=field.data).first()
+        if user is None or user.resident is None:
             raise ValidationError('Resident does not exist. Please verify resident email.')

@@ -4,7 +4,7 @@ import base64
 import logging
 import traceback
 
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
 from flask_login import current_user, login_required
 
 from ovs import db
@@ -38,6 +38,7 @@ def landing_page():
         flash('An error was encountered', 'danger')
         logging.exception(traceback.format_exc())
         return redirect(url_for('manager'))
+
 
 @manager_bp.route('/manage_rooms/', methods=['GET', 'POST'])
 @login_required
@@ -96,6 +97,25 @@ def manage_rooms():
         logging.exception(traceback.format_exc())
         return redirect(url_for('manager.manage_rooms'))
 
+
+@manager_bp.route('/get_residents/', methods=['POST'])
+@login_required
+@permissions(roles.STAFF)
+def get_residents():
+    """
+    /manager/get_residents returns lists of resident emails from db
+    """
+    try:
+        residents_users = ResidentService.get_all_residents_users()
+        emails = []
+        for _, user in residents_users:
+            emails.append(user.email)
+        return jsonify(emails)
+    except: # pylint: disable=bare-except
+        flash('An error was encountered', 'danger')
+        logging.exception(traceback.format_exc())
+        return jsonify([])
+
 @manager_bp.route('/manage_residents/', methods=['GET', 'POST'])
 @login_required
 @permissions(roles.STAFF)
@@ -127,7 +147,7 @@ def manage_residents():
             return redirect(url_for('manager.manage_residents'))
 
         for edit_form in edit_forms:
-            if edit_form.delete_button.data: #Don't validate. Just delete
+            if edit_form.delete_button.data:  # Don't validate. Just delete
                 UserService.delete_user(edit_form.user_id.data)
                 db.session.commit()
                 flash('Resident deleted.', 'success')
@@ -153,6 +173,7 @@ def manage_residents():
         flash('An error was encountered', 'danger')
         logging.exception(traceback.format_exc())
         return redirect(url_for('manager.manage_residents'))
+
 
 @manager_bp.route('/manage_packages/', methods=['GET', 'POST'])
 @login_required
@@ -209,6 +230,7 @@ def manage_packages():
         logging.exception(traceback.format_exc())
         return redirect(url_for('manager.manage_packages'))
 
+
 @manager_bp.route('/meal_login/', methods=['GET', 'POST'])
 @login_required
 @permissions(roles.STAFF)
@@ -222,7 +244,6 @@ def meal_login():
         user_id = current_user.get_id()
         user = UserService.get_user_by_id(user_id)
         role = user.role
-
 
         if form.validate_on_submit():
             mealplan = MealService.get_meal_plan_by_pin(form.pin.data)
@@ -266,6 +287,7 @@ def meal_login():
         logging.exception(traceback.format_exc())
         return redirect(url_for('manager.meal_login'))
 
+
 @manager_bp.route('/meal_undo/', methods=['POST'])
 @login_required
 @permissions(roles.STAFF)
@@ -298,6 +320,7 @@ def meal_undo():
         flash('Failed to undo', 'danger')
         logging.exception(traceback.format_exc())
         return redirect(url_for('manager.meal_undo'))
+
 
 @manager_bp.route('/manage_meal_plans/', methods=['GET', 'POST'])
 @login_required
@@ -343,6 +366,7 @@ def manage_meal_plans():
                 db.session.commit()
                 flash('Meal plan updated!', 'success')
                 return redirect(url_for('manager.manage_meal_plans'))
+
         user = UserService.get_user_by_id(current_user.get_id())
         role = user.role
         return render_template('manager/manage_meal_plans.html', role=role, user=user,
