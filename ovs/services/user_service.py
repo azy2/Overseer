@@ -6,14 +6,13 @@ from ovs.mail import templates
 from ovs.models.user_model import User
 from ovs.services.mail_service import MailService
 from ovs.services.resident_service import ResidentService
+from ovs.services.manager_service import ManagerService
+from ovs.services.profile_picture_service import ProfilePictureService
 from ovs.utils import crypto, serializer
 
 
 class UserService:
     """ DB and utility functions for Users """
-
-    def __init__(self):
-        pass
 
     @staticmethod
     def create_user(email, first_name, last_name, role, password=None):
@@ -82,11 +81,22 @@ class UserService:
         Returns if the user was sucessfuly deleted.
         """
         user = UserService.get_user_by_id(user_id)
+        if user.role == 'ADMIN': # We don't want to delete the last admin
+            if ManagerService.get_admin_count() <= 1:
+                return False
+
+        delete_picture = False
         if user.role == 'RESIDENT':
-            ResidentService.delete_resident(user_id)
-        else:
-            db.session.delete(user)
-            db.session.flush()
+            picture_id = user.resident.profile.picture_id
+            delete_picture = True
+
+        db.session.delete(user)
+        db.session.flush()
+
+        if delete_picture:
+            ProfilePictureService.delete_profile_picture(picture_id)
+
+        return True
 
     @staticmethod
     def send_setup_email(email, first_name, last_name, role):

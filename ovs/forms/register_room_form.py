@@ -30,5 +30,5 @@ class RegisterRoomForm(FlaskForm):
             if resident is None:
                 raise ValidationError('One of the emails is not a resident')
 
-            if str(resident.room_number) != 'None':
+            if str(resident.room_number) != '':
                 raise ValidationError('One of the residents already has a room')
