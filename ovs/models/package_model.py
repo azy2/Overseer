@@ -1,6 +1,6 @@
 """ Defines a Package as represented in the database """
 from flask import jsonify
-from sqlalchemy import Integer, Column, VARCHAR, DateTime, ForeignKey
+from sqlalchemy import Integer, Column, VARCHAR, DateTime, ForeignKey, String
 from sqlalchemy.orm import relationship
 
 from ovs import db
@@ -12,7 +12,7 @@ class Package(db.Model):
 
     id = Column('id', Integer, primary_key=True)
     recipient_id = Column('recipient_id', Integer, ForeignKey('residents.user_id'), nullable=False)
-    checked_by = Column('checked_by', VARCHAR(63), nullable=False)
+    checked_by = Column('checked_by', String(511), nullable=False)
     checked_at = Column('checked_at', DateTime, nullable=False)
     description = Column('description', VARCHAR(2047), server_default="")
     user = relationship('Resident', uselist=False, single_parent=True)
