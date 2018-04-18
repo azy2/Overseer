@@ -114,7 +114,7 @@ def get_residents():
     except: # pylint: disable=bare-except
         flash('An error was encountered', 'danger')
         logging.exception(traceback.format_exc())
-        return jsonify('')
+        return jsonify([])
 
 @manager_bp.route('/manage_residents/', methods=['GET', 'POST'])
 @login_required
