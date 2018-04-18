@@ -4,7 +4,6 @@
 {% endblock %}
 {% block content %}
     {% from "_formhelper.html" import field_stacked, field_plain %}
-	<script src="{{ url_for('static', filename="js/autocomplete.js") }}"></script>
     <div class="container mt-5" >
         <div class="row card">
             <div class="card-body">
@@ -55,4 +54,8 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block scripts %}
+	<script src="{{ url_for('static', filename="js/autocomplete.js") }}"></script>
 {% endblock %}
