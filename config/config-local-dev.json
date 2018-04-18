@@ -3,7 +3,7 @@
     "SELENIUM": false,
     "SECRET_KEY": "SUPER_SECRET_KEY",
     "DEBUG": true,
-    "TEST_MAIL": false,
+    "TEST_MAIL": true,
     "TEMPLATES_AUTO_RELOAD": true,
     "DATABASE": {
         "NAME": "ovs",
