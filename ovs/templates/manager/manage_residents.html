@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Manage Residents{% endblock %}
+{% block title %}Residents{% endblock %}
 {% block head %}
 {% endblock %}
 {% block content %}
@@ -41,11 +41,7 @@
                                     <td>{{ field_plain(edit_form.email, value=user.email) }}</td>
                                     <td>{{ field_plain(edit_form.first_name, value=user.first_name) }}</td>
                                     <td>{{ field_plain(edit_form.last_name, value=user.last_name) }}</td>
-                                    {% if resident.room_number == 'None' %}
-                                        <td>{{ field_plain(edit_form.room_number) }}</td>
-                                    {% else %}
-                                        <td>{{ field_plain(edit_form.room_number, value=resident.room_number) }}</td>
-                                    {% endif %}
+                                    <td>{{ field_plain(edit_form.room_number, value=resident.room_number) }}</td>
                                     <td>{{ field_plain(edit_form.update_button, class="btn btn-secondary") }}</td>
                                     <td>{{ field_plain(edit_form.delete_button, class="btn btn-secondary") }}</td>
                                 </form>
