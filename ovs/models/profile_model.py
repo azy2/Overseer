@@ -32,8 +32,8 @@ class Profile(db.Model):
     picture_id = Column(CHAR(63))
     created = Column(DateTime, server_default=func.now())
     updated = Column(DateTime, server_default=func.now(), server_onupdate=func.now())
-    resident = relationship('Resident', uselist=False,
-                            back_populates='profile', single_parent=True)
+    resident = relationship('Resident', uselist=False, back_populates='profile',
+                            single_parent=True, cascade='delete, delete-orphan')
 
     def __init__(self, user_id):
         super(Profile, self).__init__(user_id=user_id, picture_id=str(uuid.uuid4()))

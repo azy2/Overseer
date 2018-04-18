@@ -6,6 +6,7 @@ from flask import jsonify
 from flask_bcrypt import Bcrypt, bcrypt
 from sqlalchemy import Integer, Enum, Column, CHAR, String, DateTime
 from sqlalchemy.sql import func
+from sqlalchemy.orm import relationship
 
 from ovs import db
 
@@ -40,6 +41,7 @@ class User(db.Model):
                   nullable=False)
     created = Column(DateTime, server_default=func.now())
     updated = Column(DateTime, server_default=func.now(), server_onupdate=func.now())
+    resident = relationship('Resident', uselist=False, cascade='delete, delete-orphan')
 
     def __init__(self, email, first_name, last_name, password, role):
         if password is None:
@@ -131,3 +133,16 @@ class User(db.Model):
             str: The user's id.
         """
         return str(self.id)
+
+    def update_password(self, new_password):
+        """
+        Updates the password of the user.
+
+        Args:
+            new_password: The newpassword to hash and set as the user pass.
+
+        Returns:
+            The updated model.
+        """
+        self.password = bcrypt_app.generate_password_hash(new_password)
+        return self

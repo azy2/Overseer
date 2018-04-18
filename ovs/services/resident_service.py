@@ -11,11 +11,8 @@ from ovs.utils import genders
 class ResidentService:
     """ DB and utility functions for Residents """
 
-    def __init__(self):
-        pass
-
     @staticmethod
-    def create_resident(new_user, room_number='None'):
+    def create_resident(new_user, room_number=''):
         """
         Adds a resident to the Resident table.
 
@@ -59,25 +56,6 @@ class ResidentService:
         from ovs.services.room_service import RoomService
         UserService.edit_user(user_id, email, first_name, last_name)
         RoomService.add_resident_to_room(email, room_number)
-
-    @staticmethod
-    def delete_resident(user_id):
-        """
-        Deletes an existing resident identified by user_id.
-
-        Args:
-            user_id: Unique user id.
-        """
-        from ovs.services.profile_picture_service import ProfilePictureService
-        from ovs.services import UserService
-        user = UserService.get_user_by_id(user_id)
-        resident = ResidentService.get_resident_by_id(user_id)
-        picture_id = resident.profile.picture_id
-        # The profile gets deleted by cascade
-        db.session.delete(user)
-        db.session.delete(resident)
-        db.session.flush()
-        ProfilePictureService.delete_profile_picture(picture_id)
 
     @staticmethod
     def get_resident_by_email(email):

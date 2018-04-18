@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 from flask import jsonify
 from sqlalchemy import Integer, Enum, Column, DateTime, Sequence
 from sqlalchemy.sql import func
+from sqlalchemy.orm import relationship
 
 from ovs import db
 
@@ -31,6 +32,7 @@ class MealPlan(db.Model):
     plan_type = Column(Enum('WEEKLY', 'SEMESTERLY', 'LIFETIME'), nullable=False)
     created = Column(DateTime, server_default=func.now())
     updated = Column(DateTime, server_default=func.now(), server_onupdate=func.now())
+    user = relationship('Resident', uselist=False, single_parent=True)
 
     def __init__(self, meal_plan, plan_type):
         super(MealPlan, self).__init__(
@@ -43,14 +45,26 @@ class MealPlan(db.Model):
         Uses a meal credit, as outlined by the plan.
         :return: Boolean, whether a credit was available
         """
-        if self.reset_date is None or datetime.utcnow() > self.reset_date:
-            self.reset_date = self.get_next_reset_date()
-            self.credits = self.meal_plan
+        self.check_reset_date()
         if self.credits > 0:
             self.credits -= 1
             db.session.flush()
             return True
         db.session.flush()
+        return False
+
+    def check_reset_date(self):
+        """
+        Checks a meal plan's reset date. If it has past,
+        this updates the reset_date and resets the credits.
+        :return Boolean, whether the reset date was changed
+        """
+        if self.plan_type == 'LIFETIME':
+            return False
+        if self.reset_date is None or datetime.utcnow() > self.reset_date:
+            self.reset_date = self.get_next_reset_date()
+            self.credits = self.meal_plan
+            return True
         return False
 
     def get_next_reset_date(self):
@@ -61,9 +75,27 @@ class MealPlan(db.Model):
         if self.plan_type == 'WEEKLY':
             date = MealPlan.next_weekday(datetime.utcnow(), 0)
             return date.replace(hour=0, minute=0, second=0, microsecond=0)
+        elif self.plan_type == 'SEMESTERLY':
+            date = MealPlan.next_half_year(datetime.utcnow())
+            return date.replace(hour=0, minute=0, second=0, microsecond=0)
+        else:  # error case. This does give them unlimited meals
+            return datetime.utcnow()
 
-        # error case. This does give them unlimited meals
-        return datetime.utcnow()
+    @staticmethod
+    def next_half_year(date):
+        """
+        Gets the next January or July first after date
+        :param date: DateTime to start
+        :return: DateTime with date as the next half year and time identical to provided date.
+        """
+        month = date.month
+        next_month = 1
+        if month < 7:
+            next_month = 7
+        next_year = date.year
+        if next_month == 1:
+            next_year += 1
+        return date.replace(month=next_month, day=1, year=next_year)
 
     @staticmethod
     def next_weekday(date, weekday):

@@ -36,17 +36,15 @@ class TestPackageService(OVSBaseTestCase):
         self.assertEqual(updated_test_package.recipient_id, self.test_resident_2.id)
         self.assertEqual(updated_test_package.description, new_package_description)
 
-    def test_get_all_packages_recipients_checkers(self):
-        """ Tests get_all_packages_recipients_checkers are expected checkers """
+    def test_get_all_packages_recipients(self):
+        """ Tests get_all_packages_recipients contains a package """
         checked_at = datetime.now().replace(second=0, microsecond=0)
         package_description = 'Fragile'
         PackageService.create_package(self.test_resident_1.id, self.test_admin.id, checked_at, package_description)
-        packages_recipients_checkers = PackageService.get_all_packages_recipients_checkers()
+        packages_recipients = PackageService.get_all_packages_recipients()
 
-        self.assertEqual(len(packages_recipients_checkers), 1)
-        self.assertEqual(packages_recipients_checkers[0][0].description, package_description)
-        self.assertEqual(packages_recipients_checkers[0][0].checked_at, checked_at)
-        self.assertEqual(packages_recipients_checkers[0][1].email, self.test_resident_1.email)
-        self.assertEqual(packages_recipients_checkers[0][1].role, self.test_resident_1.role)
-        self.assertEqual(packages_recipients_checkers[0][2].email, self.test_admin.email)
-        self.assertEqual(packages_recipients_checkers[0][2].role, self.test_admin.role)
+        self.assertEqual(len(packages_recipients), 1)
+        self.assertEqual(packages_recipients[0][0].description, package_description)
+        self.assertEqual(packages_recipients[0][0].checked_at, checked_at)
+        self.assertEqual(packages_recipients[0][1].email, self.test_resident_1.email)
+        self.assertEqual(packages_recipients[0][1].role, self.test_resident_1.role)

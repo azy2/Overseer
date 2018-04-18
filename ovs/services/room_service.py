@@ -11,9 +11,6 @@ class RoomService:
     DB Access and utility methods for Rooms
     """
 
-    def __init__(self):
-        pass
-
     @staticmethod
     def create_room(number, status, room_type, occupant_emails=''):
         """
@@ -38,6 +35,51 @@ class RoomService:
                 RoomService.add_resident_to_room(email, number)
 
         return new_room
+
+    @staticmethod
+    def delete_room(room_id):
+        """
+        Deletes a room from the database.
+
+        Args:
+            room_id: Unique room id.
+
+        Returns:
+            Whether the room was deleted succesfully
+        """
+        room = RoomService.get_room_by_id(room_id)
+
+        for occupant in room.occupants:
+            RoomService.add_resident_to_room(occupant.user.email, '')
+        db.session.delete(room)
+
+
+    @staticmethod
+    def edit_room(room_id, room_number, status, room_type):
+        """
+        Edits a room in the database.
+
+        Args:
+            room_id: Unique room id.
+            room_number: New room number
+            status: New room status string
+            room_type: New room type string
+
+        Returns:
+            Whether the room was updated succesfully
+        """
+        room = RoomService.get_room_by_id(room_id)
+
+        other_room = RoomService.get_room_by_number(room_number)
+        if other_room is not None and other_room != room:
+            return False
+        room.room_number = room_number
+        room.status = status
+        room.type = room_type
+
+        db.session.flush()
+        db.session.refresh(room)
+        return True
 
     @staticmethod
     def get_room_by_id(room_id):
@@ -81,12 +123,12 @@ class RoomService:
     @staticmethod
     def get_all_rooms():
         """
-        Fetch all rooms in the db.
+        Fetch all rooms except the default in the db.
 
         Returns:
            A list of Room db models.
         """
-        return Room.query.all()
+        return Room.query.filter(Room.number != '').all()
 
     @staticmethod
     def add_resident_to_room(email, room_number):

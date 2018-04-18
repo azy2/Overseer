@@ -58,6 +58,9 @@ def create_app(config_path=None):
         from ovs.models.user_model import bcrypt_app
         bcrypt_app.init_app(app)
 
+        from ovs.utils import serializer
+        serializer.init_app(app)
+
         from ovs.services.auth_service import LOGIN_MANAGER
         LOGIN_MANAGER.init_app(app)
         LOGIN_MANAGER.login_view = '/'

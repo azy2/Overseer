@@ -63,6 +63,7 @@ class SeleniumBaseTestCase(OVSBaseTestCase):
             email: Email to log in as.
             password: Password to use.
         """
+        self.browser.find_element_by_id('login').send_keys(Keys.ENTER)
         name_box = self.browser.find_element_by_name('email')
         name_box.send_keys(email)
         pass_box = self.browser.find_element_by_name('password')
