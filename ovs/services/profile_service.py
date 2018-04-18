@@ -54,7 +54,7 @@ class ProfileService:
         Fetches all profiles.
 
         Returns:
-            A list of Profile db models..
+            A list of Profile db models.
         """
         return db.session.query(Profile).all()
 

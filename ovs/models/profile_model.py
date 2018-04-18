@@ -1,7 +1,6 @@
 """
 Defines a Profile as represented in the database
 """
-import uuid
 from flask import jsonify
 from sqlalchemy import Integer, Enum, Column, CHAR, ForeignKey, DateTime
 from sqlalchemy.sql import func
@@ -24,19 +23,18 @@ class Profile(db.Model):
     preferred_email = Column(CHAR(255))
     race = Column(CHAR(31))
     gender = Column(Enum(genders.MALE, genders.FEMALE, genders.UNSPECIFIED))
-    picture_id = Column(CHAR(63))
     created = Column(DateTime, server_default=func.now())
     updated = Column(DateTime, server_default=func.now(), server_onupdate=func.now())
     resident = relationship('Resident', uselist=False, back_populates='profile',
                             single_parent=True, cascade='delete, delete-orphan')
 
     def __init__(self, user_id):
-        super(Profile, self).__init__(user_id=user_id, picture_id=str(uuid.uuid4()))
+        super(Profile, self).__init__(user_id=user_id)
 
     def __repr__(self):
         return 'Profile([user_id={user_id}, preferred_name={preferred_name}, phone_number={phone_number}, ' \
-               'preferred_email={preferred_email}, race={race}, gender={gender}, picture_id={picture_id}, ' \
-               'created={created}, updated={updated}])'.format(**self.__dict__)
+               'preferred_email={preferred_email}, race={race}, gender={gender}, created={created}, ' \
+               'updated={updated}])'.format(**self.__dict__)
 
     def json(self):
         """ Returns a JSON representation of this Profile """
@@ -47,7 +45,6 @@ class Profile(db.Model):
             preferred_email=self.preferred_email,
             race=self.race,
             gender=self.gender,
-            picture_id=self.picture_id,
             created=self.created,
             updated=self.updated
         )

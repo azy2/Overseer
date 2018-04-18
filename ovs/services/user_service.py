@@ -85,16 +85,13 @@ class UserService:
             if ManagerService.get_admin_count() <= 1:
                 return False
 
-        delete_picture = False
-        if user.role == 'RESIDENT':
-            picture_id = user.resident.profile.picture_id
-            delete_picture = True
+        delete_picture = user.role == 'RESIDENT'
 
         db.session.delete(user)
         db.session.flush()
 
         if delete_picture:
-            ProfilePictureService.delete_profile_picture(picture_id)
+            ProfilePictureService.delete_profile_picture(user_id)
 
         return True
 
