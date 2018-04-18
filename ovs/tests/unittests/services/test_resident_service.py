@@ -1,8 +1,6 @@
 """
 Tests for resident services
 """
-from ovs.models.profile_model import Profile
-from ovs.models.user_model import User
 from ovs.tests.unittests.base_test import OVSBaseTestCase
 from ovs.services.user_service import UserService
 from ovs.services.resident_service import ResidentService

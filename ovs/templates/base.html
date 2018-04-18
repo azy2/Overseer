@@ -60,7 +60,7 @@
                 <ul class="navbar-nav">
                     {{ dropdown('#', 'accountDropdown', profile.preferred_name, True, [
                         ('/resident/profile/', 'Profile'),
-                        ('/auth/logout', 'Logout')]) }}
+                        ('/auth/logout/', 'Logout')]) }}
                 </ul>
             {% elif role == 'ADMIN' or role == 'BUILDING_MANAGER' or role == 'OFFICE_MANAGER' or role == 'STAFF' or role == 'RESIDENT_ADVISOR' %}
                 <div class="collapse navbar-collapse" id="ovs-navbar">
@@ -79,20 +79,15 @@
                 </div>
                 <ul class="navbar-nav">
                     {{ dropdown('#', 'accountDropdown', user.first_name, True, [
-                        ('/auth/logout', 'Logout')]) }}
+                        ('/auth/logout/', 'Logout')]) }}
                 </ul>
             {% else %}
                 <div class="collapse navbar-collapse">
                 </div>
 
-                <form class="form-inline" method="post" action="/auth/login" >
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-                    <input type="text" id="email" name="email" class="form-control mr-2" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" >
-                    <input type="password" id="password" name="password" class="form-control" placeholder="Password" aria-label="Username" aria-describedby="basic-addon1" >
-                    <div class="input-group-append" >
-                        <button type="submit" class="btn btn-primary" >Login</button>
-                    </div>
-                </form>
+                {% if request.path[:5] != '/auth' %}
+                    <a href="/auth/login/" class="btn btn-primary">Login</a>
+                {% endif %}
             {% endif %}
         </nav>
 

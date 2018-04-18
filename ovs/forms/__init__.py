@@ -10,3 +10,5 @@ from .register_resident_form import RegisterResidentForm as RegisterResidentForm
 from .register_room_form import RegisterRoomForm as RegisterRoomForm
 from .manage_room_form import ManageRoomForm as ManageRoomForm
 from .manage_users_form import ManageUsersForm as ManageUsersForm
+from .reset_request_form import ResetRequestForm as ResetRequestForm
+from .reset_password_form import ResetPasswordForm as ResetPasswordForm

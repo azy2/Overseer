@@ -1,4 +1,5 @@
 """ DB and utility functions for Users """
+from flask import url_for
 
 from ovs import db
 from ovs.mail import templates
@@ -7,7 +8,7 @@ from ovs.services.mail_service import MailService
 from ovs.services.resident_service import ResidentService
 from ovs.services.manager_service import ManagerService
 from ovs.services.profile_picture_service import ProfilePictureService
-from ovs.utils import crypto
+from ovs.utils import crypto, serializer
 
 
 class UserService:
@@ -28,8 +29,10 @@ class UserService:
         Returns:
             A User db model.
         """
+        send_email = False
         if password is None:
             password = crypto.generate_password()
+            send_email = True
         new_user = User(email, first_name, last_name, password, role)
         db.session.add(new_user)
         db.session.flush()
@@ -37,8 +40,10 @@ class UserService:
         if role == 'RESIDENT':
             ResidentService.create_resident(new_user)
 
-        UserService.send_setup_email(
-            email, first_name, last_name, role, password)
+        #Only time passwords are supplied are on default user creation which
+        #for which reset password emails are not necessary
+        if send_email:
+            UserService.send_setup_email(email, first_name, last_name, role)
         return new_user
 
     @staticmethod
@@ -82,8 +87,8 @@ class UserService:
 
         delete_picture = False
         if user.role == 'RESIDENT':
-             picture_id = user.resident.profile.picture_id
-             delete_picture = True
+            picture_id = user.resident.profile.picture_id
+            delete_picture = True
 
         db.session.delete(user)
         db.session.flush()
@@ -94,7 +99,7 @@ class UserService:
         return True
 
     @staticmethod
-    def send_setup_email(email, first_name, last_name, role, password):
+    def send_setup_email(email, first_name, last_name, role):
         """
         Sends a setup email to the email address associated with a user.
 
@@ -103,16 +108,32 @@ class UserService:
             first_name: The user's first name.
             last_name: The user's last name.
             role: The user's role.
-            password: The user's password.
         """
+        token = serializer.serialize_attr(email, 'ovs-reset-email')
         user_info_substitution = {
             "first_name": first_name,
             "last_name": last_name,
-            "role": role,
-            "password": password
+            "role": role.lower(),
+            "confirm_url": url_for('auth.reset_user', token=token, _external=True)
         }
         MailService.send_email(email, 'User Account Creation',
                                templates['user_creation_email'],
+                               substitutions=user_info_substitution)
+
+    @staticmethod
+    def send_reset_email(email):
+        """
+        Sends a password reset email to the email address associated with a user.
+
+        Args:
+            email: The user's email address.
+        """
+        token = serializer.serialize_attr(email, 'ovs-reset-email')
+        user_info_substitution = {
+            "reset_url": url_for('auth.reset_user', token=token, _external=True)
+        }
+        MailService.send_email(email, 'Reset Your Overseer Password',
+                               templates['user_reset_email'],
                                substitutions=user_info_substitution)
 
     @staticmethod
@@ -140,3 +161,18 @@ class UserService:
             A User db model.
         """
         return User.query.filter_by(id=user_id).first()
+
+    @staticmethod
+    def reset_user(reset_user, new_password):
+        """
+        Reset a given user's password.
+
+        Args:
+            reset_user: User model to reset password of.
+            new_password: The new password to set for the given user.
+
+        Returns:
+            The updated User model.
+        """
+        reset_user.update_password(new_password)
+        return reset_user
