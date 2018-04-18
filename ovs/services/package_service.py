@@ -102,7 +102,7 @@ class PackageService:
         Returns:
             A list of Packages
         """
-        return Package.query.filter_by(recipient_id=user_id)
+        return Package.query.filter_by(recipient_id=user_id).all()
 
     @staticmethod
     def delete_packages_for_user(user_id):

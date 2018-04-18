@@ -4,22 +4,43 @@
 {% block content %}
     <div class="container mt-5">
         <div class="row">
-            <div class="col-4">
+            <div class="col-3">
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Meal plan</h5>
-                        <p class="card-text">Your pin is 971234.</p>
-                        <p class="card-text">You have 10 out of 19 meals remaining.</p>
-                        <p class="card-text">Your meals reset on Sunday, April 22nd at 12:00pm.</p>
+                        {% if mealplan %}
+                            <label>PIN</label>
+                            <p class="card-text">{{ mealplan.pin }}</p>
+                            <label>Meals</label>
+                            <p class="card-text">{{ mealplan.credits|safe }} out of {{ mealplan.credits|safe }} meals remaining.</p>
+                            <label>Resets</label>
+                            <p class="card-text">{{ mealplan.reset_date.strftime("%A, %B %-d") }}.</p>
+                        {% else %}
+                            <p class="card-text">You do not have a mealplan.</p>
+                        {% endif %}
                     </div>
                 </div>
             </div>
-            <div class="col-5">
+            <div class="col-6">
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Packages</h5>
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item">You recieved a package yesterday at 10am.</li>
+                            {% for package in packages %}
+                                <li class="list-group-item">
+                                    <p class="card-text">You recieved a package on {{ package.checked_at.strftime("%A, %B %-d at %I:%M %P") }}.</p>
+                                    <div class="row">
+                                        <div class="col">
+                                            <label>Description</label>
+                                            <p class="card-text">{{ package.description|safe }}</p>
+                                        </div>
+                                        <div class="col">
+                                            <label>Checked by</label>
+                                            <p class="card-text">{{ package.checked_by|safe }}
+                                        </div>
+                                    </div>
+                                </li>
+                            {% endfor %}
                         </ul>
                     </div>
                 </div>
@@ -45,7 +66,7 @@
                             <p class="card-text">None</p>
                         {% endif %}
                         <label>Gender</label>
-                        <p class="card-text">Gender: {{ profile.gender }}</p>
+                        <p class="card-text">{{ profile.gender }}</p>
                         <a href="profile" class="btn btn-primary float-right">Edit</a>
                     </div>
                 </div>
