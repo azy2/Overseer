@@ -23,5 +23,5 @@ class CreateMealPlanForm(FlaskForm):
                                            .filter(User.email == field.data).first()
         if resident_user is None:
             raise ValidationError('Resident does not exist. Please verify resident email.')
-        if resident_user[0].mealplan_pin is not 0:
+        if resident_user[0].meal_plan is not None:
             raise ValidationError('Resident has a meal plan.')

@@ -46,7 +46,8 @@ class MealService:
 
         resident = ResidentService.get_resident_by_email(email)
         meal_plan = MealService.create_meal_plan(meal_plan, plan_type)
-        resident.mealplan_pin = meal_plan.pin
+
+        ResidentService.set_resident_pin(resident.user_id, meal_plan.pin)
         db.session.flush()
         db.session.refresh(resident)
         return meal_plan
@@ -75,6 +76,28 @@ class MealService:
             return False
 
     @staticmethod
+    def edit_meal_plan(pin, credit=None, plan_meal_count=None, plan_type=None):
+        """
+        Updates a meal plan with any provided info.
+
+        Args:
+            pin: Unique meal pin.
+            credit: Number of credits until the next reset_date.
+            plan_meal_count: Number of meals given at each reset_date.
+            plan_type: The plans reset period.
+        """
+        meal_plan = MealService.get_meal_plan_by_pin(pin)
+        if credit:
+            meal_plan.credits = credit
+        if plan_meal_count:
+            meal_plan.meal_plan = plan_meal_count
+        if plan_type:
+            meal_plan.plan_type = plan_type
+        meal_plan.reset_date = meal_plan.get_next_reset_date()
+        db.session.flush()
+
+
+    @staticmethod
     def add_meals(pin, number):
         """
         Add credits to meal plan identified by meal pin.
@@ -87,9 +110,28 @@ class MealService:
             If the credits were added successfully.
         """
         meal_plan = MealService.get_meal_plan_by_pin(pin)
-        meal_plan.credits += number
+        return MealService.edit_meal_plan(pin, credit=meal_plan.credits+number)
+
+    @staticmethod
+    def delete_meal_plan(pin):
+        """
+        Deletes a meal plan from the database.
+
+        Args:
+            pin: Unique meal pin.
+
+        Returns:
+            If the meal plan was deleted successfully
+        """
+        from ovs.services.resident_service import ResidentService
+        meal_plan = MealService.get_meal_plan_by_pin(pin)
+
+        resident = ResidentService.get_resident_by_pin(meal_plan.pin)
+        ResidentService.set_resident_pin(resident.user_id, 0)
+
+        db.session.delete(meal_plan)
         db.session.flush()
-        db.session.refresh(meal_plan)
+
 
     @staticmethod
     def undo_meal_use(manager_id, resident_id, pin):
@@ -119,7 +161,24 @@ class MealService:
         Returns:
             A MealPlan db model.
         """
-        return db.session.query(MealPlan).filter_by(pin=pin).first()
+
+        meal_plan = db.session.query(MealPlan).filter_by(pin=pin).first()
+        if meal_plan is not None:
+            meal_plan.check_reset_date() #update this lazy evaluation
+        return meal_plan
+
+    @staticmethod
+    def get_all_meal_plans():
+        """
+        Fetch all meal plans in the database
+
+        Returns:
+            A list of MealPlan db models.
+        """
+        meal_plans = db.session.query(MealPlan).all()
+        for meal_plan in meal_plans:
+            meal_plan.check_reset_date() #update this lazy evaluation
+        return meal_plans
 
     @staticmethod
     def log_meal_history(resident_id, pin, manager_id, log_type):

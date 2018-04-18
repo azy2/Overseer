@@ -1,8 +1,6 @@
 """
 Tests for resident services
 """
-from ovs.models.profile_model import Profile
-from ovs.models.user_model import User
 from ovs.tests.unittests.base_test import OVSBaseTestCase
 from ovs.services.user_service import UserService
 from ovs.services.resident_service import ResidentService
@@ -37,7 +35,7 @@ class TestResidentService(OVSBaseTestCase):
             Resident.user_id == self.test_user.id).first()
         self.assertIsNotNone(resident)
 
-        old_room = RoomService.get_room_by_number('None')
+        old_room = RoomService.get_room_by_number('')
         self.assertTrue(resident in old_room.occupants)
 
     def test_create_resident_null(self):
@@ -81,7 +79,7 @@ class TestResidentService(OVSBaseTestCase):
         with self.assertRaises(ValueError):
             ResidentService.edit_resident(
                 self.test_user.id, 'test_edit@gmail.com', 'Joe', 'Smith', '2')
-        self.assertEqual(self.test_resident.room_number, 'None')
+        self.assertEqual(self.test_resident.room_number, '')
 
     # cases - invalid email/id, invalid room, success
     def test_edit_resident_bad_email(self):
@@ -93,28 +91,8 @@ class TestResidentService(OVSBaseTestCase):
         # Check user is not updated
         self.assertEqual('test@gmail.com', self.test_user.email)
         # Check room number is not updated
-        self.assertEqual('None', self.test_resident.room_number)
 
-    def test_delete_resident(self):
-        """ Tests that profiles can be deleted """
-        self.assertEqual(1, Resident.query.count())
-        expected = Resident.query.count() - 1
-
-        # check if deletion successful
-        ResidentService.delete_resident(self.test_user.id)
-
-        self.assertEqual(expected, Resident.query.count())
-        self.assertEqual(expected, Profile.query.count())
-        self.assertEqual(expected + 1, User.query.count())
-
-    def test_delete_resident_null(self):
-        """ Tests that nothing breaks when deleting a nonexistant resident """
-        expected = Resident.query.count()
-
-        # This id is NOT the resident
-        self.assertRaises(AttributeError, ResidentService.delete_resident, self.test_user.id + 1)
-
-        self.assertEqual(Resident.query.count(), expected)
+        self.assertEqual('', self.test_resident.room_number)
 
     def test_get_all_residents(self):
         """ Tests that get_all_residents returns the correct number of residents"""
