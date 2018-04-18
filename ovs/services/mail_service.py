@@ -1,6 +1,7 @@
 """
 Send Mail functions.
 """
+from string import Template
 import logging
 
 from flask import current_app
@@ -32,7 +33,7 @@ class MailService:
             'no-reply@{domain_name}'.format(domain_name=current_app.config['SENDGRID']['DOMAIN_NAME']))
         to_email = Email(to_email)
         content = Content(
-            'text/plain', text if not substitutions else text.format(**substitutions))
+            'text/html', text if not substitutions else Template(text).safe_substitute(**substitutions))
         mail = Mail(from_email=from_email,
                     subject=subject,
                     to_email=to_email,
