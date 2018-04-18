@@ -24,7 +24,16 @@ class ManageUsersForm(FlaskForm):
 
 
     def validate_email(form, field): # pylint: disable=no-self-argument
-        """ Checks whether email is unregistered. """
+        """
+        Checks whether email is unregistered.
+
+        Args:
+            form: The ManageUsersForm that was submitted.
+            field: The email field.
+
+        Raises:
+            ValidationError: If the email is already in use.
+        """
         user = UserService.get_user_by_id(form.user_id.data)
         if user:
             email = user.email
@@ -37,6 +46,13 @@ class ManageUsersForm(FlaskForm):
         """
         Validates that the provided user_id exists.
         This is to thwart malicious input.
+
+        Args:
+            form: The ManageUsersForm that was submitted.
+            field: The user_id field.
+
+        Raises:
+            ValidationError: If the user_id does not exist.
         """
         if db.session.query(User).filter(User.id == field.data).count() == 0:
             raise ValidationError('User does not exist')

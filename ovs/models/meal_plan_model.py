@@ -43,7 +43,9 @@ class MealPlan(db.Model):
     def update_meal_count(self):
         """
         Uses a meal credit, as outlined by the plan.
-        :return: Boolean, whether a credit was available
+
+        Returns:
+            bool: Whether a credit was available.
         """
         self.check_reset_date()
         if self.credits > 0:
@@ -57,7 +59,9 @@ class MealPlan(db.Model):
         """
         Checks a meal plan's reset date. If it has past,
         this updates the reset_date and resets the credits.
-        :return Boolean, whether the reset date was changed
+
+        Returns:
+            bool: Whether the reset date was changed.
         """
         if self.plan_type == 'LIFETIME':
             return False
@@ -69,8 +73,10 @@ class MealPlan(db.Model):
 
     def get_next_reset_date(self):
         """
-        Gets the next reset day based off the plan type
-        :return: DateTime value for reset_day
+        Gets the next reset day based off the plan type.
+
+        Returns:
+            DateTime: value for reset_day.
         """
         if self.plan_type == 'WEEKLY':
             date = MealPlan.next_weekday(datetime.utcnow(), 0)
@@ -78,15 +84,20 @@ class MealPlan(db.Model):
         elif self.plan_type == 'SEMESTERLY':
             date = MealPlan.next_half_year(datetime.utcnow())
             return date.replace(hour=0, minute=0, second=0, microsecond=0)
-        else:  # error case. This does give them unlimited meals
-            return datetime.utcnow()
+
+        # error case. This does give them unlimited meals
+        return datetime.utcnow()
 
     @staticmethod
     def next_half_year(date):
         """
-        Gets the next January or July first after date
-        :param date: DateTime to start
-        :return: DateTime with date as the next half year and time identical to provided date.
+        Gets the next January or July first after date.
+
+        Args:
+            date (DateTime): DateTime to start.
+
+        Returns:
+            DateTime: A DateTime with date as the next half year and time identical to provided date.
         """
         month = date.month
         next_month = 1

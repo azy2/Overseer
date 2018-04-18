@@ -59,6 +59,12 @@ class TestSendMail(OVSBaseTestCase):
 
     @patch('ovs.services.mail_service.MailService.send_email')
     def test_create_user_doesnt_send_email(self, mock_mail):
-        """ Tests that creating a user without a default password doesn't send an email."""
+        """
+        Tests that creating a user with a preset password doesn't send an email.
+
+        Args:
+            mock_mail: The mock_client for the patched function. This allows us to check
+                       if an email has been sent.
+        """
         UserService.create_user('test@gmail.com', 'Bob', 'Ross', 'ADMIN', password='testPassword')
         mock_mail.assert_not_called()

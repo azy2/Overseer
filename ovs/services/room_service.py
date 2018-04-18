@@ -43,9 +43,6 @@ class RoomService:
 
         Args:
             room_id: Unique room id.
-
-        Returns:
-            Whether the room was deleted succesfully
         """
         room = RoomService.get_room_by_id(room_id)
 

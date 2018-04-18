@@ -70,9 +70,6 @@ class PackageService:
 
         Args:
             package_id: Unique package id.
-
-        Returns:
-            If the package was deleted successfully.
         """
         package = PackageService.get_package_by_id(package_id)
         db.session.delete(package)

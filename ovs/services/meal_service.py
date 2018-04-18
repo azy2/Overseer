@@ -107,7 +107,7 @@ class MealService:
             number: The number of credits to add.
         """
         meal_plan = MealService.get_meal_plan_by_pin(pin)
-        return MealService.edit_meal_plan(pin, credit=meal_plan.credits+number)
+        MealService.edit_meal_plan(pin, credit=meal_plan.credits+number)
 
     @staticmethod
     def delete_meal_plan(pin):
@@ -116,9 +116,6 @@ class MealService:
 
         Args:
             pin: Unique meal pin.
-
-        Returns:
-            If the meal plan was deleted successfully
         """
         from ovs.services.resident_service import ResidentService
         meal_plan = MealService.get_meal_plan_by_pin(pin)
