@@ -2,9 +2,8 @@
 import logging
 import traceback
 
-from flask import Blueprint, redirect, url_for, flash, request, render_template, abort
+from flask import Blueprint, redirect, url_for, flash, render_template
 from flask_login import login_user, logout_user, login_required
-from itsdangerous import SignatureExpired, BadTimeSignature, BadSignature
 
 from ovs import db
 from ovs.forms.login_form import LoginForm
