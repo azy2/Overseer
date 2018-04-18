@@ -8,8 +8,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from ovs.config import OVSConfig
 
-db = SQLAlchemy()
-
+db = SQLAlchemy(session_options={"autoflush": True})
 
 def create_app(config_path=None):
     """ Creates a Flask app instance and returns it """
@@ -48,6 +47,9 @@ def create_app(config_path=None):
         from ovs.models.user_model import bcrypt_app
         bcrypt_app.init_app(app)
 
+        from ovs.utils import serializer
+        serializer.init_app(app)
+
         from ovs.services.auth_service import LOGIN_MANAGER
         LOGIN_MANAGER.init_app(app)
         LOGIN_MANAGER.login_view = '/'
@@ -63,7 +65,6 @@ def create_app(config_path=None):
         app.register_blueprint(routes.ManagerRoutes, url_prefix='/manager')
         app.register_blueprint(routes.ResidentRoutes, url_prefix='/resident')
         app.register_blueprint(routes.AuthRoutes, url_prefix='/auth')
-        app.register_blueprint(routes.DevRoutes, url_prefix='/dev')
 
         if (os.environ.get("WERKZEUG_RUN_MAIN") == "true" or os.environ.get("FLASK_DEBUG") != "True")\
            and not app.config['TESTING']:

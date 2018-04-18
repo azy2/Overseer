@@ -27,8 +27,7 @@ class TestUserService(OVSBaseTestCase):
     def test_create_user(self):
         """ Tests that users can be created """
         # User was created in setup. We check if it exists
-        user_list = self.db.session.query(User).filter(
-            User.email == self.test_user_info[0]).all()
+        user_list = User.query.filter_by(email=self.test_user_info[0]).all()
         self.assertEqual(len(user_list), 1)
 
         user = user_list[0]
@@ -38,12 +37,10 @@ class TestUserService(OVSBaseTestCase):
 
     def test_get_user_by_email(self):
         """ Tests get_user_by_email successfully finds a user """
-        test_user_info = ('test2@gmail.com', 'Bob', 'Ross', 'ADMIN')
-        UserService.create_user(*test_user_info)
-        user = UserService.get_user_by_email(test_user_info[0])
+        user = UserService.get_user_by_email(self.test_user_info[0])
 
         self.assertEqual((user.email, user.first_name, user.last_name, user.role),
-                         test_user_info)
+                         self.test_user_info)
         self.assertIsNotNone(user.password)
 
     def test_invalid_get_user_by_email(self):
@@ -53,31 +50,29 @@ class TestUserService(OVSBaseTestCase):
 
     def test_edit_user(self):  # cases : bad user, overwrite, same email, normal
         """ Tests editing a user when everything works"""
-        self.assertTrue(UserService.edit_user(
-            self.test_user.id, 'test2@gmail.com', 'John', 'Smith'))
+        UserService.edit_user(self.test_user.id, 'test2@gmail.com', 'John', 'Smith')
         self.assertEqual(self.test_user.email, 'test2@gmail.com')
         self.assertEqual(self.test_user.first_name, 'John')
         self.assertEqual(self.test_user.last_name, 'Smith')
 
     def test_user_same_email(self):
         """ Tests editing a user when everything works. Duplicate email is okay, since it is the one! """
-        self.assertTrue(UserService.edit_user(
-            self.test_user.id, 'test@gmail.com', 'John', 'Smith'))
+        UserService.edit_user(self.test_user.id, 'test@gmail.com', 'John', 'Smith')
         self.assertEqual(self.test_user.email, 'test@gmail.com')
         self.assertEqual(self.test_user.first_name, 'John')
         self.assertEqual(self.test_user.last_name, 'Smith')
 
     def test_edit_user_bad_id(self):
         """ Tests editing a nonexistant user"""
-        self.assertFalse(UserService.edit_user(
-            self.test_user.id+3, 'test_edit@gmail.com', 'John', 'Smith'))  # random id
+        with self.assertRaises(AttributeError):
+            UserService.edit_user(self.test_user.id+3, 'test_edit@gmail.com', 'John', 'Smith') # random id
         self.assertIsNone(UserService.get_user_by_email('test_edit@gmail.com'))
 
     def test_edit_user_duplicate_email(self):
         """ Tests edit resident to an existing email """
         UserService.create_user('test2@gmail.com', '', '', 'ADMIN')
-        self.assertFalse(UserService.edit_user(
-            self.test_user.id, 'test2@gmail.com', 'John', 'Smith'))
+        with self.assertRaises(ValueError):
+            UserService.edit_user(self.test_user.id, 'test2@gmail.com', 'John', 'Smith')
 
         self.assertEqual(self.test_user.email, self.test_user_info[0])
         self.assertEqual(self.test_user.first_name, self.test_user_info[1])
@@ -85,31 +80,42 @@ class TestUserService(OVSBaseTestCase):
 
     def test_delete_user(self):
         """ Tests that a user can be deleted """
-        expected = self.db.session.query(User).count() - 1
+
+        user = UserService.create_user('test2@gmail.com', '', '', 'STAFF')
+        expected = User.query.count() - 1
 
         # check if deletion successful
-        self.assertTrue(UserService.delete_user(self.test_user.id))
+        UserService.delete_user(user.id)
+
+        self.assertEqual(expected, User.query.count())
+
+    def test_delete_user_last_admin(self):
+        """ Tests that a user can be deleted """
+        expected = self.db.session.query(User).count()
+
+        # check if deletion successful
+        self.assertFalse(UserService.delete_user(self.test_user.id))
 
         self.assertEqual(self.db.session.query(User).count(), expected)
 
     def test_delete_user_null(self):
         """ Tests that nothing breaks when deleting a nonexistant resident """
-        expected = self.db.session.query(User).count()
+        expected = User.query.count()
 
         # This id is NOT the resident
-        self.assertFalse(UserService.delete_user(self.test_user.id + 1))
+        with self.assertRaises(AttributeError):
+            UserService.delete_user(self.test_user.id + 1)
 
-        self.assertEqual(self.db.session.query(User).count(), expected)
+        self.assertEqual(User.query.count(), expected)
 
     def test_delete_user_resident(self):
         """ Tests that deleting a user deletes their resident info """
         resident = UserService.create_user(
             'test2@gmail.com', 'John', 'Smith', 'RESIDENT')
-        expected_user = self.db.session.query(User).count() - 1
-        expected_resident = self.db.session.query(Resident).count() - 1
+        expected_user = User.query.count() - 1
+        expected_resident = Resident.query.count() - 1
 
-        self.assertTrue(UserService.delete_user(resident.id))
+        UserService.delete_user(resident.id)
 
-        self.assertEqual(self.db.session.query(User).count(), expected_user)
-        self.assertEqual(self.db.session.query(
-            Resident).count(), expected_resident)
+        self.assertEqual(User.query.count(), expected_user)
+        self.assertEqual(Resident.query.count(), expected_resident)

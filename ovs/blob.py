@@ -75,7 +75,11 @@ class Blob:
             self._service.delete_blob(container, name)
         else:
             file_name = make_file_name(container, name)
-            os.remove(file_name)
+            try:
+                os.remove(file_name)
+            except OSError:
+                pass
+
 
     def exists(self, container, name):
         """

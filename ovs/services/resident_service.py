@@ -1,10 +1,6 @@
 """
 DB and utility functions for Residents
 """
-import logging
-
-from sqlalchemy.exc import SQLAlchemyError
-
 from ovs import db
 from ovs.models.profile_model import Profile
 from ovs.models.resident_model import Resident
@@ -15,11 +11,8 @@ from ovs.utils import genders
 class ResidentService:
     """ DB and utility functions for Residents. """
 
-    def __init__(self):
-        pass
-
     @staticmethod
-    def create_resident(new_user, room_number='None'):
+    def create_resident(new_user, room_number=''):
         """
         Adds a resident to the Resident table.
 
@@ -31,29 +24,20 @@ class ResidentService:
             The Resident db model that was just created.
         """
         from ovs.services.profile_picture_service import ProfilePictureService
-        from ovs.services.room_service import RoomService
+
 
         new_resident = Resident(new_user.id)
+        new_resident.room_number = room_number
+        db.session.add(new_resident)
+        db.session.flush()
+
         new_resident_profile = Profile(new_user.id)
         new_resident_profile.preferred_name = new_user.first_name
         new_resident_profile.preferred_email = new_user.email
         new_resident_profile.gender = genders.UNSPECIFIED
-        ProfilePictureService.set_default_picture(new_resident_profile.user_id)
-        room = RoomService.get_room_by_number(room_number)
-        if room is None:
-            logging.exception('Failed to create resident because of invalid room number')
-            return None
-        new_resident.room_number = room_number
-
-        try:
-            db.session.add(new_resident)
-            db.session.add(new_resident_profile)
-            db.session.commit()
-        except SQLAlchemyError:
-            # Resident must be unique by their email.
-            logging.exception('Failed to create resident.')
-            db.session.rollback()
-            return None
+        ProfilePictureService.set_default_picture(new_resident.user_id)
+        db.session.add(new_resident_profile)
+        db.session.flush()
 
         return new_resident
 
@@ -74,31 +58,8 @@ class ResidentService:
         """
         from ovs.services.user_service import UserService
         from ovs.services.room_service import RoomService
-        return (UserService.edit_user(user_id, email, first_name, last_name)
-                and RoomService.add_resident_to_room(email, room_number))
-
-    @staticmethod
-    def delete_resident(user_id):
-        """
-        Deletes an existing resident identified by user_id.
-
-        Args:
-            user_id: Unique user id.
-
-        Returns:
-            If the user was successfuly deleted.
-        """
-        from ovs.services.profile_service import ProfileService
-        resident = ResidentService.get_resident_by_id(user_id)
-        if resident is not None:
-            if ProfileService.delete_profile(user_id):
-                try:
-                    db.session.delete(resident)
-                    return True
-                except SQLAlchemyError:
-                    logging.exception('Failed to delete resident.')
-                    return False
-        return False
+        UserService.edit_user(user_id, email, first_name, last_name)
+        RoomService.add_resident_to_room(email, room_number)
 
     @staticmethod
     def get_resident_by_email(email):
@@ -111,14 +72,7 @@ class ResidentService:
         Returns:
             A Resident db model.
         """
-        try:
-            query = db.session.query(Resident)\
-                .join(User, User.id == Resident.user_id)
-            return query.filter(User.email == email).first()
-        except SQLAlchemyError:
-            # There should never be multiple user with the same email.
-            logging.exception('Failed to get resident by email.')
-            return None
+        return Resident.query.join(User, User.id == Resident.user_id).filter(User.email == email).first()
 
     @staticmethod
     def get_resident_by_id(user_id):
@@ -130,12 +84,7 @@ class ResidentService:
 
         Returns Resident db model.
         """
-        try:
-            query = db.session.query(Resident)
-            return query.filter_by(user_id=user_id).first()
-        except SQLAlchemyError:
-            logging.exception('Failed to get resident by id.')
-            return None
+        return Resident.query.filter_by(user_id=user_id).first()
 
     @staticmethod
     def resident_exists(user_id):
@@ -161,12 +110,7 @@ class ResidentService:
         Returns:
             A Resident db model.
         """
-        try:
-            query = db.session.query(Resident)
-            return query.filter_by(mealplan_pin=pin).first()
-        except SQLAlchemyError:
-            logging.exception('Failed to get resient by meal pin.')
-            return None
+        return Resident.query.filter_by(mealplan_pin=pin).first()
 
     @staticmethod
     def set_resident_pin(user_id, new_pin):
@@ -180,16 +124,10 @@ class ResidentService:
         Returns:
             If the pin was set sucessfully.
         """
-        try:
-            db.session.query(Resident)\
+        Resident.query\
                 .filter_by(user_id=user_id)\
                 .update({Resident.mealplan_pin: new_pin})
-            db.session.commit()
-            return True
-        except SQLAlchemyError:
-            logging.exception('Failed to set new meal pin for resident.')
-            db.session.rollback()
-            return False
+        db.session.flush()
 
     @staticmethod
     def get_all_residents_users():
@@ -199,8 +137,4 @@ class ResidentService:
         Returns:
             A list of (Resident, User) db model tuples.
         """
-        try:
-            return db.session.query(Resident, User).join(User, Resident.user_id == User.id).all()
-        except SQLAlchemyError:
-            logging.exception('Failed to fetch all residents.')
-            return []
+        return db.session.query(Resident, User).join(User, Resident.user_id == User.id).all()

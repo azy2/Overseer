@@ -31,16 +31,16 @@ class TestResidentService(OVSBaseTestCase):
 
     def test_create_resident(self):
         """ Tests that residents can be created """
-        resident = self.db.session.query(Resident).filter(
+        resident = Resident.query.filter(
             Resident.user_id == self.test_user.id).first()
         self.assertIsNotNone(resident)
 
-        old_room = RoomService.get_room_by_number('None')
+        old_room = RoomService.get_room_by_number('')
         self.assertTrue(resident in old_room.occupants)
 
     def test_create_resident_null(self):
         """ Tests that non-resident user accounts cannot be found in Resident database """
-        resident = self.db.session.query(Resident).filter(
+        resident = Resident.query.filter(
             Resident.user_id == self.test_admin.id).first()
         self.assertIsNone(resident)
 
@@ -66,8 +66,8 @@ class TestResidentService(OVSBaseTestCase):
 
     def test_edit_resident(self):  # cases - invalid email/id, invalid room, success
         """ Tests that a resident can be edited"""
-        self.assertTrue(ResidentService.edit_resident(
-            self.test_user.id, 'test_edit@gmail.com', 'Joe', 'Smith', '1'))
+        ResidentService.edit_resident(
+            self.test_user.id, 'test_edit@gmail.com', 'Joe', 'Smith', '1')
 
         # further confirmation in test_edit_user
         self.assertEqual(self.test_user.email, 'test_edit@gmail.com')
@@ -76,39 +76,23 @@ class TestResidentService(OVSBaseTestCase):
 
     def test_edit_resident_bad_room(self):
         """ Tests that a bad room number will be rejected """
-        self.assertFalse(ResidentService.edit_resident(
-            self.test_user.id, 'test_edit@gmail.com', 'Joe', 'Smith', '2'))
-        self.assertEqual(self.test_resident.room_number, 'None')
+        with self.assertRaises(ValueError):
+            ResidentService.edit_resident(
+                self.test_user.id, 'test_edit@gmail.com', 'Joe', 'Smith', '2')
+        self.assertEqual(self.test_resident.room_number, '')
 
     # cases - invalid email/id, invalid room, success
     def test_edit_resident_bad_email(self):
         """ Tests that a duplicate email will cancel everything """
-        self.assertFalse(ResidentService.edit_resident(
-            self.test_user.id, 'test2@gmail.com', 'Joe', 'Smith', '1'))
+        with self.assertRaises(ValueError):
+            ResidentService.edit_resident(
+                self.test_user.id, 'test2@gmail.com', 'Joe', 'Smith', '1')
 
         # Check user is not updated
-        self.assertEqual(self.test_user.email, 'test@gmail.com')
+        self.assertEqual('test@gmail.com', self.test_user.email)
         # Check room number is not updated
-        self.assertEqual(self.test_resident.room_number, 'None')
 
-    def test_delete_resident(self):
-        """ Tests that profiles can be deleted """
-        expected = self.db.session.query(Resident).count() - 1
-
-        # check if deletion successful
-        self.assertTrue(ResidentService.delete_resident(self.test_user.id))
-
-        self.assertEqual(len(ResidentService.get_all_residents_users()), expected)
-
-    def test_delete_resident_null(self):
-        """ Tests that nothing breaks when deleting a nonexistant resident """
-        expected = self.db.session.query(Resident).count()
-
-        # This id is NOT the resident
-        self.assertFalse(
-            ResidentService.delete_resident(self.test_user.id + 1))
-
-        self.assertEqual(self.db.session.query(Resident).count(), expected)
+        self.assertEqual('', self.test_resident.room_number)
 
     def test_get_all_residents(self):
         """ Tests that get_all_residents returns the correct number of residents"""
