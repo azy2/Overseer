@@ -11,7 +11,6 @@ from ovs.forms.edit_resident_profile_form import EditResidentProfileForm
 from ovs.forms.upload_profile_picture_form import UploadProfilePictureForm
 from ovs.services.profile_service import ProfileService
 from ovs.services.resident_service import ResidentService
-from ovs.services.package_service import PackageService
 from ovs.services.meal_service import MealService
 from ovs.services.profile_picture_service import ProfilePictureService
 from ovs.middleware import permissions
@@ -29,7 +28,7 @@ def landing_page():
         resident_id = current_user.get_id()
         resident = ResidentService.get_resident_by_id(resident_id)
         profile = resident.profile
-        packages = PackageService.get_all_packages_by_recipient(resident_id)
+        packages = resident.packages
         mealplan = MealService.get_meal_plan_by_pin(resident.mealplan_pin)
         pict = base64.b64encode(ProfilePictureService.get_profile_picture(profile.picture_id)).decode()
         return render_template('resident/index.html', role=roles.RESIDENT, profile=profile, pict=pict,
