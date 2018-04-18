@@ -165,5 +165,4 @@ class UserService:
             The updated User model.
         """
         reset_user.update_password(new_password)
-        db.session().commit()
         return reset_user

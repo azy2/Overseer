@@ -34,7 +34,6 @@ class MailService:
         to_email = Email(to_email)
         content = Content(
             'text/html', text if not substitutions else Template(text).safe_substitute(**substitutions))
-        print(substitutions)
         mail = Mail(from_email=from_email,
                     subject=subject,
                     to_email=to_email,
