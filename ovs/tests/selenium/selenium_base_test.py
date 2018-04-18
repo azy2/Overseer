@@ -53,6 +53,7 @@ class SeleniumBaseTestCase(OVSBaseTestCase):
 
     def login_with_credentials(self, email, password):
         """ Logs in with the provided email and password, most selenium tests will call this """
+        self.browser.find_element_by_id('login').send_keys(Keys.ENTER)
         name_box = self.browser.find_element_by_name('email')
         name_box.send_keys(email)
         pass_box = self.browser.find_element_by_name('password')
