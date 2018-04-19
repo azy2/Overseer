@@ -9,26 +9,23 @@ class TestRegisterRoom(SeleniumBaseTestCase):
     """ Tests functionality related to registering rooms. """
 
     def test_register_room(self):
-        """ Tests whether all fields can be edited in the register room page. """
+        """ Tests whether a room can be registered with the default resident. """
         self.browser.get(self.base_url)
         self.assertIn('Overseer', self.browser.title)
         super().login_default_admin()
 
-        # Click on Register Manager
-        register_manager = self.browser.find_element_by_link_text('Rooms')
-        register_manager.click()
+        # Click on link to register rooms
+        register_rooms_link = self.browser.find_element_by_link_text('Rooms')
+        register_rooms_link.click()
 
         # Verify page changed
         self.assertIn('Rooms', self.browser.title)
 
-        # # Change all fields
+        # Register a room
         self.set_text_field_by_id('room_number', '429D')
         self.set_text_field_by_id('room_status', 'rented')
         self.set_text_field_by_id('room_type', 'single')
-        self.set_text_field_by_id('occupants', 'resident@gmail.com')
-
-        # Submit changes, need to "press enter" on button instead of clicking
-        # because Selenium is wonderful, stable software
+        self.set_text_field_by_id('occupants', self.default_resident_email)
         submit_button = self.browser.find_element_by_id('register_room')
         submit_button.send_keys(Keys.ENTER)
 
