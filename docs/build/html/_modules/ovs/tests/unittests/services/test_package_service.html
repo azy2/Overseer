@@ -1,0 +1,135 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>ovs.tests.unittests.services.test_package_service &#8212; Overseer 1.0.0 documentation</title>
+    <link rel="stylesheet" href="../../../../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="../../../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../../index.html">Overseer 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../../index.html" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../../../ovs.html" accesskey="U">ovs</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for ovs.tests.unittests.services.test_package_service</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; Tests for package services &quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
+
+<span class="kn">from</span> <span class="nn">ovs.tests.unittests.base_test</span> <span class="k">import</span> <span class="n">OVSBaseTestCase</span>
+<span class="kn">from</span> <span class="nn">ovs.services.user_service</span> <span class="k">import</span> <span class="n">UserService</span>
+<span class="kn">from</span> <span class="nn">ovs.services.package_service</span> <span class="k">import</span> <span class="n">PackageService</span>
+<span class="kn">from</span> <span class="nn">ovs.models.package_model</span> <span class="k">import</span> <span class="n">Package</span>
+<span class="kn">from</span> <span class="nn">ovs.datagen</span> <span class="k">import</span> <span class="n">DataGen</span>
+
+
+<div class="viewcode-block" id="TestPackageServce"><a class="viewcode-back" href="../../../../../ovs.tests.unittests.services.html#ovs.tests.unittests.services.test_package_service.TestPackageServce">[docs]</a><span class="k">class</span> <span class="nc">TestPackageServce</span><span class="p">(</span><span class="n">OVSBaseTestCase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Tests for package services&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="TestPackageServce.setUp"><a class="viewcode-back" href="../../../../../ovs.tests.unittests.services.html#ovs.tests.unittests.services.test_package_service.TestPackageServce.setUp">[docs]</a>    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Runs before every test and clears relevant tables &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setUp</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">create_test_users</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="TestPackageServce.create_test_users"><a class="viewcode-back" href="../../../../../ovs.tests.unittests.services.html#ovs.tests.unittests.services.test_package_service.TestPackageServce.create_test_users">[docs]</a>    <span class="k">def</span> <span class="nf">create_test_users</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Creates two RESIDENT accounts and one ADMIN account for use in testing &quot;&quot;&quot;</span>
+        <span class="n">DataGen</span><span class="o">.</span><span class="n">create_default_room</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_resident_1</span> <span class="o">=</span> <span class="n">UserService</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span><span class="s1">&#39;test@gmail.com&#39;</span><span class="p">,</span> <span class="s1">&#39;Bob&#39;</span><span class="p">,</span> <span class="s1">&#39;Ross&#39;</span><span class="p">,</span> <span class="s1">&#39;RESIDENT&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_resident_2</span> <span class="o">=</span> <span class="n">UserService</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span><span class="s1">&#39;test2@gmail.com&#39;</span><span class="p">,</span> <span class="s1">&#39;Joe&#39;</span><span class="p">,</span> <span class="s1">&#39;Smith&#39;</span><span class="p">,</span> <span class="s1">&#39;RESIDENT&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_admin</span> <span class="o">=</span> <span class="n">UserService</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span><span class="s1">&#39;test3@gmail.com&#39;</span><span class="p">,</span> <span class="s1">&#39;Jim&#39;</span><span class="p">,</span> <span class="s1">&#39;White&#39;</span><span class="p">,</span> <span class="s1">&#39;ADMIN&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestPackageServce.test_update_package"><a class="viewcode-back" href="../../../../../ovs.tests.unittests.services.html#ovs.tests.unittests.services.test_package_service.TestPackageServce.test_update_package">[docs]</a>    <span class="k">def</span> <span class="nf">test_update_package</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Tests that packages can be updated &quot;&quot;&quot;</span>
+        <span class="n">checked_at</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">second</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">microsecond</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">package_description</span> <span class="o">=</span> <span class="s2">&quot;Fragile&quot;</span>
+        <span class="n">test_package</span> <span class="o">=</span> <span class="n">PackageService</span><span class="o">.</span><span class="n">create_package</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_resident_1</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_admin</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                                                     <span class="n">checked_at</span><span class="p">,</span> <span class="n">package_description</span><span class="p">)</span>
+        <span class="n">new_package_description</span> <span class="o">=</span> <span class="s2">&quot;NOT Fragile&quot;</span>
+        <span class="n">PackageService</span><span class="o">.</span><span class="n">update_package</span><span class="p">(</span><span class="n">test_package</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_resident_2</span><span class="o">.</span><span class="n">email</span><span class="p">,</span> <span class="n">new_package_description</span><span class="p">)</span>
+        <span class="n">updated_test_package</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Package</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Package</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">test_package</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">updated_test_package</span><span class="o">.</span><span class="n">recipient_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_resident_2</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">updated_test_package</span><span class="o">.</span><span class="n">description</span><span class="p">,</span> <span class="n">new_package_description</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestPackageServce.test_get_all_packages_recipients_checkers"><a class="viewcode-back" href="../../../../../ovs.tests.unittests.services.html#ovs.tests.unittests.services.test_package_service.TestPackageServce.test_get_all_packages_recipients_checkers">[docs]</a>    <span class="k">def</span> <span class="nf">test_get_all_packages_recipients_checkers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Tests get_all_packages_recipients_checkers are expected checkers &quot;&quot;&quot;</span>
+        <span class="n">checked_at</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">second</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">microsecond</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">package_description</span> <span class="o">=</span> <span class="s1">&#39;Fragile&#39;</span>
+        <span class="n">PackageService</span><span class="o">.</span><span class="n">create_package</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_resident_1</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_admin</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">checked_at</span><span class="p">,</span> <span class="n">package_description</span><span class="p">)</span>
+        <span class="n">packages_recipients_checkers</span> <span class="o">=</span> <span class="n">PackageService</span><span class="o">.</span><span class="n">get_all_packages_recipients_checkers</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">packages_recipients_checkers</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">packages_recipients_checkers</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">description</span><span class="p">,</span> <span class="n">package_description</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">packages_recipients_checkers</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">checked_at</span><span class="p">,</span> <span class="n">checked_at</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">packages_recipients_checkers</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">email</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_resident_1</span><span class="o">.</span><span class="n">email</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">packages_recipients_checkers</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">role</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_resident_1</span><span class="o">.</span><span class="n">role</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">packages_recipients_checkers</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">email</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_admin</span><span class="o">.</span><span class="n">email</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">packages_recipients_checkers</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">role</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_admin</span><span class="o">.</span><span class="n">role</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../../index.html">Overseer 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../../index.html" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../../../ovs.html" >ovs</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Ben Lambeth.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.2.
+    </div>
+  </body>
+</html>

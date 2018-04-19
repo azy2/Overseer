@@ -11,12 +11,18 @@ import sys
 
 class OVSConfig:
     """
-    Used to load config from a file. Ex:
+    Used to load config from a file.
 
-    config = OVSConfig('config/config-local-dev.json')
-    print(config['database'])
+    Args:
+        config_path: A path to a json file with the app's configuration.
+                                     If none is provided 'config/config-local-dev.json' will be used.
 
-    The configuration should be edited by editing the JSON directly, and cannot be changed in code.
+    Examples:
+        config = OVSConfig('config/config-local-dev.json')
+        print(config['database'])
+
+    Returns:
+        A OVSConfig representing the fields in the JSON file given by config_path.
     """
 
     def __init__(self, config_path=None):
@@ -33,20 +39,45 @@ class OVSConfig:
                 sys.exit(1)
 
     def __getitem__(self, item):
+        """
+        Allows [] on OVSConfig.
+        Args:
+            item: The item to get
+
+        Returns:
+            The value of item from the JSON file passed in.
+        """
         return self._config[item]
 
     def __contains__(self, item):
+        """
+        Allows `in` on OVSConfig.
+        Args:
+            item: The item to test.
+
+        Returns:
+            bool: If the item was in the JSON file.
+        """
         return item in self._config
 
     def __setitem__(self, key, value):
-        raise Exception('OVSConfig is static, and cannot be edited.')
+        """
+        Disallows `OVSConfig[] = _`.
+        Args:
+            key: key
+            value: value
+
+        Raises:
+            Exception: Always. OVSConfig is not mutable.
+        """
+        raise Exception('OVSConfig is not mutable, and cannot be edited.')
 
     def get(self, key, default_value):
         """
         Fetch the value associate with the key in the dictionary.
 
         Args:
-            key: The key to acess the dictionary.
+            key: The key to access the dictionary.
             default_value: The default value if the key is not mapped.
 
         Returns:
@@ -62,6 +93,6 @@ class OVSConfig:
         Fetch all dictionary items.
 
         Returns:
-            A list of key, value tulpes.
+            A list of key, value tuples.
         """
         return self._config.items()

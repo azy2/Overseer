@@ -11,7 +11,18 @@ from ovs.config import OVSConfig
 db = SQLAlchemy(session_options={"autoflush": True})
 
 def create_app(config_path=None):
-    """ Creates a Flask app instance and returns it """
+    """
+    Creates a Flask app instance and returns it
+
+    Args:
+        config_path (str): A path to a JSON object with an app configuration.
+
+    Note:
+        Some default configurations can be found in `config`.
+
+    Returns:
+        Flask: a Flask app.
+    """
     app = Flask(__name__)
     config = OVSConfig(config_path)
     for key, value in config.items():

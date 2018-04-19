@@ -72,8 +72,8 @@ class MealService:
         if mealplan.update_meal_count():
             MealService.log_meal_history(resident.user_id, mealplan.pin, manager_id, log_types.MEAL_USED)
             return True
-        else:
-            return False
+
+        return False
 
     @staticmethod
     def edit_meal_plan(pin, credit=None, plan_meal_count=None, plan_type=None):
@@ -105,12 +105,9 @@ class MealService:
         Args:
             pin: Unique meal pin.
             number: The number of credits to add.
-
-        Returns:
-            If the credits were added successfully.
         """
         meal_plan = MealService.get_meal_plan_by_pin(pin)
-        return MealService.edit_meal_plan(pin, credit=meal_plan.credits+number)
+        MealService.edit_meal_plan(pin, credit=meal_plan.credits+number)
 
     @staticmethod
     def delete_meal_plan(pin):
@@ -119,9 +116,6 @@ class MealService:
 
         Args:
             pin: Unique meal pin.
-
-        Returns:
-            If the meal plan was deleted successfully
         """
         from ovs.services.resident_service import ResidentService
         meal_plan = MealService.get_meal_plan_by_pin(pin)
@@ -143,9 +137,6 @@ class MealService:
             manager_id: Unique user id that identifies the manager that authorized the undo.
             resident_id: Unique id that identifies the resident that the meal plan is associated with.
             pin: Unique meal pin.
-
-        Returns:
-            If the credit and loggs was added successfully.
         """
         MealService.add_meals(pin, 1)
         MealService.log_meal_history(resident_id, pin, manager_id, log_types.UNDO)
@@ -190,9 +181,6 @@ class MealService:
             pin: Unique meal pin.
             manager_id: Unique user id that identifies the manager that authorized the undo action.
             log_type: log_types.MEAL_USED or log_types.UNDO
-
-        Returns:
-            If the meal history was logged successfully.
         """
         new_mealplan_history_item = MealplanHistory(
             resident_id, pin, manager_id, log_type)

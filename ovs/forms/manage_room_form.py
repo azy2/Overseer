@@ -9,7 +9,7 @@ from ovs.services.room_service import RoomService
 
 
 class ManageRoomForm(FlaskForm):
-    """ Form with data required to edit a resident """
+    """ Form with data required to edit a room """
     room_id = HiddenField('Room id', validators=[DataRequired()])
     room_number = StringField('Room Number', validators=[Length(min=1, max=255), DataRequired()])
     status = StringField('Status', validators=[Length(min=1, max=255), DataRequired()])
@@ -19,14 +19,30 @@ class ManageRoomForm(FlaskForm):
 
     def validate_room_id(form, field):  # pylint: disable=no-self-argument, no-self-use
         """
-        Validates that the provided user_id exists.
+        Validates that the provided room_id exists.
         This is to thwart malicious input.
+
+        Args:
+            form: The ManageRoomForm that was submitted.
+            field: The room_id field.
+
+        Raises:
+            ValidationError: If the room_id already exists.
         """
         if db.session.query(Room).filter(Room.room_id == field.data).count() == 0:
             raise ValidationError('Room does not exist')
 
     def validate_room_number(form, field): # pylint: disable=no-self-argument
-        """ Checks whether email is unregistered. """
+        """
+        Checks whether room_number is unique.
+
+        Args:
+            form: The ManageRoomForm that was submitted.
+            field: The room_number field.
+
+        Raises:
+            ValidationError: If the room_number already exists.
+        """
         room = RoomService.get_room_by_id(form.room_id.data)
         if room:
             number = room.room_number

@@ -16,6 +16,11 @@ class SeleniumBaseTestCase(LiveServerTestCase):
     """
 
     def create_app(self):
+        """
+        Creates a flask app instance for each test.
+        Returns:
+            Flask: a flask app.
+        """
         app = create_app('config/config-selenium.json')
         return app
 
@@ -62,11 +67,11 @@ class SeleniumBaseTestCase(LiveServerTestCase):
         self.login_with_credentials(self.default_admin_email, self.default_admin_password)
 
     def login_with_credentials(self, email, password):
-        """ Logs in with the provided email and password, most selenium tests will call this
-
-            Args:
-                email (string): The email to use as a username.
-                password (string): The password for the account.
+        """
+        Logs in with the provided email and password.
+        Args:
+            email: Email to log in as.
+            password: Password to use.
         """
         self.browser.find_element_by_id('login').send_keys(Keys.ENTER)
         name_box = self.browser.find_element_by_name('email')
@@ -76,11 +81,11 @@ class SeleniumBaseTestCase(LiveServerTestCase):
         pass_box.send_keys(Keys.ENTER)
 
     def set_text_field_by_id(self, field_id, new_text):
-        """ Sets the text in the given text field to the new text.
-
-            Args:
-                field_id (string): The HTML ID of the text field.
-                new_text (string): The new text the text field should contain.
+        """
+        Sets the text in the given text form to the new text.
+        Args:
+            field_id: The html form id.
+            new_text: The text to type.
         """
         text_field = self.browser.find_element_by_id(field_id)
         text_field.clear()

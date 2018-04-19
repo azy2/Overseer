@@ -21,6 +21,13 @@ class EditMealForm(FlaskForm):
         """
         Validates that the provided pin exists
         This is to thwart malicious input.
+
+        Args:
+            form: The EditMealForm that was submitted.
+            field: The pin field.
+
+        Raises:
+            ValidationError: If Pin does not correspond to an existing mealplan.
         """
         if db.session.query(MealPlan).filter(MealPlan.pin == field.data).count() == 0:
             raise ValidationError("Pin doesn't exist.")

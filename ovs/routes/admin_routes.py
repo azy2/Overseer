@@ -1,4 +1,4 @@
-""" routes under /admin/ """
+"""Routes defined under '/admin'."""
 import logging
 import traceback
 
@@ -19,9 +19,16 @@ admin_bp = Blueprint('admin', __name__, )
 @permissions(roles.ADMIN)
 def manage_managers():
     """
-    /admin/manage_managers serves an html form with input fields for email,
-    first name, last name, and role and accepts that form (POST) and adds a user
-    to the user table with a default password.
+    Manager management page accessed by '/admin/manage_managers'.
+
+    Methods:
+        GET, POST.
+
+    Permissions:
+        Accessible to ADMIN or higher level users.
+
+    Returns:
+        A Flask template.
     """
     try:
         register_form = RegisterManagerForm()

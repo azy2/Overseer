@@ -43,9 +43,6 @@ class RoomService:
 
         Args:
             room_id: Unique room id.
-
-        Returns:
-            Whether the room was deleted succesfully
         """
         room = RoomService.get_room_by_id(room_id)
 
@@ -139,8 +136,8 @@ class RoomService:
             email: Resident's email address.
             room_number: The room number.
 
-        Returns:
-            If both resident and rooms were successfully updated.
+        Raises:
+            ValueError: if email or room_number is invalid
         """
         resident = ResidentService.get_resident_by_email(email)
         room = RoomService.get_room_by_number(room_number)
