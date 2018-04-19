@@ -1,4 +1,4 @@
-""" Test whether profiles can be edited """
+""" Tests functionality related to editing profiles. """
 import os
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
@@ -7,10 +7,10 @@ from selenium.webdriver.support import expected_conditions as EC
 from ovs.tests.selenium.selenium_base_test import SeleniumBaseTestCase
 
 class TestProfile(SeleniumBaseTestCase):
-    """ Test whether profiles can be edited """
+    """ Tests functionality related to editing profiles. """
 
     def go_to_resident_profile_page(self):
-        """ Runs the Selenium steps necessary to navigate to the edit resident profile page """
+        """ Runs the Selenium steps necessary to navigate to the edit resident profile page. """
         super().login_default_resident()
 
         # Click on account dropdown and go to Profile link
@@ -23,7 +23,7 @@ class TestProfile(SeleniumBaseTestCase):
         self.assertIn('Edit', self.browser.title)
 
     def test_edit_profile(self):
-        """ Tests whether all fields can be edited in a resident profile """
+        """ Tests whether all fields can be edited in a resident profile. """
         self.browser.get(self.base_url)
         self.assertIn('Overseer', self.browser.title)
         self.go_to_resident_profile_page()
@@ -63,7 +63,7 @@ class TestProfile(SeleniumBaseTestCase):
         self.assertEqual(race_text, 'Transformer')
 
     def test_invalid_profile_picture(self):
-        """ Tests that non-.png files cannot be uploaded as a profile picture """
+        """ Tests that non-.png files cannot be uploaded as a profile picture. """
         self.browser.get(self.base_url)
         self.assertIn('Overseer', self.browser.title)
         self.go_to_resident_profile_page()
@@ -86,7 +86,7 @@ class TestProfile(SeleniumBaseTestCase):
         self.assertEqual(error_message, 'Please select a valid png.')
 
     def test_valid_profile_picture(self):
-        """ Tests that .png files can be uploaded for a profile picture """
+        """ Tests that .png files can be uploaded for a profile picture. """
         self.browser.get(self.base_url)
         self.assertIn('Overseer', self.browser.title)
         self.go_to_resident_profile_page()

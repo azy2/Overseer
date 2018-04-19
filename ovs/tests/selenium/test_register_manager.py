@@ -1,4 +1,4 @@
-""" Test whether users can log in """
+""" Test whether users can log in. """
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -6,10 +6,10 @@ from selenium.webdriver.support import expected_conditions as EC
 from ovs.tests.selenium.selenium_base_test import SeleniumBaseTestCase
 
 class TestRegisterManager(SeleniumBaseTestCase):
-    """ Test whether managers can be registered"""
+    """ Test whether managers can be registered. """
 
     def test_register_manager(self):
-        """ Tests whether all fields can be edited in a register manager page """
+        """ Tests whether all fields can be edited in a register manager page. """
         self.browser.get(self.base_url)
         self.assertIn('Overseer', self.browser.title)
         super().login_default_admin()
