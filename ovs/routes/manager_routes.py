@@ -120,7 +120,16 @@ def manage_rooms():
 @permissions(roles.STAFF)
 def get_residents():
     """
-    /manager/get_residents returns lists of resident emails from db
+    Get all resident email request accessed by '/manager/get_residents'.
+
+    Methods:
+        POST.
+
+    Permissions:
+        Accessible to STAFF or higher level users.
+
+    Returns:
+        A json object.
     """
     try:
         residents_users = ResidentService.get_all_residents_users()

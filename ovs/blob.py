@@ -20,13 +20,6 @@ class Blob:
     PROFILE_PICTURE_CONTAINER = 'profile-picture'
 
     def __init__(self, app=None):
-        """
-        Initializes the Blob object. If app is not provided init_app must be called before use.
-
-        Args:
-            self: Blob object.
-            app: Application to run with.
-        """
         if app:
             self.init_app(app)
 
