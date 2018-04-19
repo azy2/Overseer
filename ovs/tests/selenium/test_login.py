@@ -41,5 +41,5 @@ class TestLogin(SeleniumBaseTestCase):
         self.assertIn('Overseer', self.browser.title)
         super().login_with_credentials('testtesttest@gmail.com', 'password_goes_here')
 
-        # Page should not have changed
-        self.assertEqual('Overseer', self.browser.title)
+        # Should still be at login page
+        self.assertEqual('Overseer - Login', self.browser.title)
