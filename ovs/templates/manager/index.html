@@ -65,7 +65,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Average Daily Meal Usage</h5>
-                        <div id="chart_div"></div>
+                        <div id="meal_usage_div"></div>
                     </div>
                 </div>
             </div>
@@ -80,37 +80,36 @@
         function drawColColors() {
             var data = new google.visualization.DataTable();
             data.addColumn('timeofday', 'Time of Day');
-            data.addColumn('number', 'Number of Meals Used');
+            data.addColumn('number', 'Meals Used');
 
             data.addRows([
-                [{v: [1, 0, 0], f: '1 am'}, 0],
-                [{v: [2, 0, 0], f: '2 am'}, 0],
-                [{v: [3, 0, 0], f: '3 am'}, 0],
-                [{v: [4, 0, 0], f: '4 am'}, 0],
-                [{v: [5, 0, 0], f: '5 am'}, 1],
-                [{v: [6, 0, 0], f: '6 am'}, 5],
-                [{v: [7, 0, 0], f: '7 am'}, 20],
-                [{v: [8, 0, 0], f: '8 am'}, 34],
-                [{v: [9, 0, 0], f: '9 am'}, 43],
-                [{v: [10, 0, 0], f:'10 am'}, 24],
-                [{v: [11, 0, 0], f: '11 am'}, 31],
-                [{v: [12, 0, 0], f: '12 pm'}, 46],
-                [{v: [13, 0, 0], f: '1 pm'}, 38],
-                [{v: [14, 0, 0], f: '2 pm'}, 15],
-                [{v: [15, 0, 0], f: '3 pm'}, 8],
-                [{v: [16, 0, 0], f: '4 pm'}, 20],
-                [{v: [17, 0, 0], f: '5 pm'}, 40],
-                [{v: [18, 0, 0], f: '6 pm'}, 45],
-                [{v: [19, 0, 0], f: '7 pm'}, 36],
-                [{v: [20, 0, 0], f: '8 pm'}, 13],
-                [{v: [21, 0, 0], f: '9 pm'}, 5],
-                [{v: [22, 0, 0], f: '10 pm'}, 2],
-                [{v: [23, 0, 0], f: '11 pm'}, 7],
-                [{v: [24, 0, 0], f: '12 am'}, 3],
+                [{v: [1, 0, 0], f:   '1 am'}, {{ aggregate_meal_usage[0] }}],
+                [{v: [2, 0, 0], f:   '2 am'}, {{ aggregate_meal_usage[1] }}],
+                [{v: [3, 0, 0], f:   '3 am'}, {{ aggregate_meal_usage[2] }}],
+                [{v: [4, 0, 0], f:   '4 am'}, {{ aggregate_meal_usage[3] }}],
+                [{v: [5, 0, 0], f:   '5 am'}, {{ aggregate_meal_usage[4] }}],
+                [{v: [6, 0, 0], f:   '6 am'}, {{ aggregate_meal_usage[5] }}],
+                [{v: [7, 0, 0], f:   '7 am'}, {{ aggregate_meal_usage[6] }}],
+                [{v: [8, 0, 0], f:   '8 am'}, {{ aggregate_meal_usage[7] }}],
+                [{v: [9, 0, 0], f:   '9 am'}, {{ aggregate_meal_usage[8] }}],
+                [{v: [10, 0, 0], f: '10 am'}, {{ aggregate_meal_usage[9] }}],
+                [{v: [11, 0, 0], f: '11 am'}, {{ aggregate_meal_usage[10] }}],
+                [{v: [12, 0, 0], f: '12 pm'}, {{ aggregate_meal_usage[11] }}],
+                [{v: [13, 0, 0], f:  '1 pm'}, {{ aggregate_meal_usage[12] }}],
+                [{v: [14, 0, 0], f:  '2 pm'}, {{ aggregate_meal_usage[13] }}],
+                [{v: [15, 0, 0], f:  '3 pm'}, {{ aggregate_meal_usage[14] }}],
+                [{v: [16, 0, 0], f:  '4 pm'}, {{ aggregate_meal_usage[15] }}],
+                [{v: [17, 0, 0], f:  '5 pm'}, {{ aggregate_meal_usage[16] }}],
+                [{v: [18, 0, 0], f:  '6 pm'}, {{ aggregate_meal_usage[17] }}],
+                [{v: [19, 0, 0], f:  '7 pm'}, {{ aggregate_meal_usage[18] }}],
+                [{v: [20, 0, 0], f:  '8 pm'}, {{ aggregate_meal_usage[19] }}],
+                [{v: [21, 0, 0], f:  '9 pm'}, {{ aggregate_meal_usage[20] }}],
+                [{v: [22, 0, 0], f: '10 pm'}, {{ aggregate_meal_usage[21] }}],
+                [{v: [23, 0, 0], f: '11 pm'}, {{ aggregate_meal_usage[22] }}],
+                [{v: [24, 0, 0], f: '12 am'}, {{ aggregate_meal_usage[23] }}],
             ]);
 
             var options = {
-                // title: 'Motivation and Energy Level Throughout the Day',
                 // colors: ['#33ac71'], // Light green
                 // colors: ['#9575cd'], // Light purple
                 colors: ['#3366CC'], // Default column color (blue)
@@ -120,8 +119,8 @@
                     format: 'h:mm a',
                     viewWindow: {
                         min: [0, 0, 0],
-                        max: [25, 0, 0
-]                    }
+                        max: [25, 0, 0]
+                    }
                 },
                 vAxis: {
                     title: 'Number of Meals Used'
@@ -129,7 +128,7 @@
                 legend: 'none'
             };
 
-            var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+            var chart = new google.visualization.ColumnChart(document.getElementById('meal_usage_div'));
             chart.draw(data, options);
         }
     </script>

@@ -36,6 +36,7 @@ def landing_page():
         empty_room_nums = ManagerService.get_empty_room_nums()
         num_residents = ManagerService.get_num_residents()
         today_num_packages, total_num_packages = ManagerService.get_package_info()
+        aggregate_meal_usage = ManagerService.get_aggregate_meal_usage()
         print("EMPTY ROOM NUMS:")
         print(empty_room_nums)
         print("NUM RESIDENTS:")
@@ -44,10 +45,12 @@ def landing_page():
         print(total_num_packages)
         print("TODAY NUM PACKAGES:")
         print(today_num_packages)
+        print("AGGREGATE MEAL USAGE:")
+        print(aggregate_meal_usage)
 
         return render_template('manager/index.html', role=role, user=user, empty_room_nums=empty_room_nums,
                                 num_residents=num_residents, total_num_packages=total_num_packages,
-                                today_num_packages=today_num_packages)
+                                today_num_packages=today_num_packages, aggregate_meal_usage=aggregate_meal_usage)
     except: # pylint: disable=bare-except
         db.session.rollback()
         flash('An error was encountered', 'danger')

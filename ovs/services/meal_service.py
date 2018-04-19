@@ -222,3 +222,19 @@ class MealService:
             A list of MealPlanHistory db model.
         """
         return db.session.query(MealplanHistory).order_by(MealplanHistory.id.desc()).all()
+
+    @staticmethod
+    def get_log_to_undo(undo_date, manager_id):
+        """
+        Get the meal log corresponding to the given undo for a specific manager.
+
+        Args:
+            undo_data: Datetime of undo
+            manager_id: User id of manager who logged the meal that is being undone.
+
+        Returns:
+            A MealPlanHistory db model.
+        """
+        return db.session.query(MealplanHistory).filter(MealplanHistory.created < undo_date)\
+                                                .filter_by(manager_id=manager_id)\
+                                                .order_by(MealplanHistory.id.desc()).first()
