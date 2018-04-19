@@ -1,4 +1,4 @@
-""" under /resident """
+"""Routes defined under '/resident'."""
 import base64
 import logging
 import traceback
@@ -22,7 +22,18 @@ residents_bp = Blueprint('resident', __name__)
 @login_required
 @permissions(roles.RESIDENT)
 def landing_page():
-    """ The landing page for residents """
+    """
+    Home page for residents accessed by '/resident'.
+
+    Methods:
+        GET.
+
+    Permissions:
+        Accessible to RESIDENT or higher level users.
+
+    Returns:
+        A Flask template.
+    """
     try:
         resident_id = current_user.get_id()
         resident = ResidentService.get_resident_by_id(resident_id)
@@ -39,7 +50,16 @@ def landing_page():
 @permissions(roles.RESIDENT)
 def edit_profile():
     """
-    Allows the user to edit their profile in a wtform
+    Profile edit page accessed by '/resident/profile'.
+
+    Methods:
+        GET, POST.
+
+    Permissions:
+        Accessible to RESIDENT or higher level users.
+
+    Returns:
+        A Flask template.
     """
     try:
         resident_id = current_user.get_id()

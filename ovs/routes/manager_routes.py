@@ -1,4 +1,4 @@
-""" Routes under /manager/ """
+"""Routes defined under '/manager'."""
 import datetime
 import base64
 import logging
@@ -28,7 +28,18 @@ manager_bp = Blueprint('manager', __name__, )
 @login_required
 @permissions(roles.STAFF)
 def landing_page():
-    """ The landing page for managers """
+    """
+    Home page for managers accessed by '/manager'.
+
+    Methods:
+        GET.
+
+    Permissions:
+        Accessible to STAFF or higher level users.
+
+    Returns:
+        A Flask template.
+    """
     try:
         user = UserService.get_user_by_id(current_user.get_id())
         role = user.role
@@ -45,10 +56,16 @@ def landing_page():
 @permissions(roles.STAFF)
 def manage_rooms():
     """
-    /manager/manage_rooms serves an HTML form with input fields for room #,
-    status, and type and accepts that form (POST) and adds a room to the
-    rooms table. The option for admins to add current residents to said
-    room is an available option.
+    Rooms management page accessed by '/manager/manage_rooms'.
+
+    Methods:
+        GET, POST.
+
+    Permissions:
+        Accessible to STAFF or higher level users.
+
+    Returns:
+        A Flask template.
     """
     try:
         register_form = RegisterRoomForm()
@@ -121,8 +138,16 @@ def get_residents():
 @permissions(roles.STAFF)
 def manage_residents():
     """
-    /manager/manage_residents serves a HTML with list of residents with their info.
-    It allows a manager to add/edit/delete residents with form inputs.
+    Residents management page accessed by '/manager/manage_residents'.
+
+    Methods:
+        GET, POST.
+
+    Permissions:
+        Accessible to STAFF or higher level users.
+
+    Returns:
+        A Flask template.
     """
     try:
         register_form = RegisterResidentForm(prefix='register_form')
@@ -180,9 +205,16 @@ def manage_residents():
 @permissions(roles.STAFF)
 def manage_packages():
     """
-    /manager/manage_packages serves an html form with input fields for email,
-    first name, and last name and accepts that form (POST) and adds a user
-    to the user table with a default password.
+    Package management page accessed by '/manager/manage_packages'.
+
+    Methods:
+        GET, POST.
+
+    Permissions:
+        Accessible to STAFF or higher level users.
+
+    Returns:
+        A Flask template.
     """
     try:
         add_form = AddPackageForm(prefix='add_form')
@@ -236,8 +268,16 @@ def manage_packages():
 @permissions(roles.STAFF)
 def meal_login():
     """
-    /manager/meal_login serves an html form with input field pin
-    and accepts that form (POST) and logs the use to a meal plan
+    Meal login page accessed by 'manager/meal_login'.
+
+    Methods:
+        GET, POST.
+
+    Permissions:
+        Accessible to STAFF or higher level users.
+
+    Returns:
+        A Flask template.
     """
     try:
         form = MealLoginForm()
@@ -293,8 +333,16 @@ def meal_login():
 @permissions(roles.STAFF)
 def meal_undo():
     """
-    /manager/meal_undo accepts that form (POST) and undo the use of a meal plan
-    Currently uses manager id to distinguish frontends. Should use session token.
+    Undo meal request accessed by '/manager/meal_undo'.
+
+    Methods:
+        POST.
+
+    Permissions:
+        Accessible to STAFF or higher level users.
+
+    Returns:
+        A Flask template.
     """
     try:
         user_id = current_user.get_id()
@@ -327,8 +375,16 @@ def meal_undo():
 @permissions(roles.STAFF)
 def manage_meal_plans():
     """
-    /manager/meal_login serves an html form with input field pin
-    and accepts that form (POST) and logs the use to a meal plan
+    Meal plan mangement page accessed by '/manager/manage_meal_plans'.
+
+    Methods:
+        GET, POST.
+
+    Permissions:
+        Accessible to STAFF or higher level users.
+
+    Returns:
+        A Flask template.
     """
     try:
         create_form = CreateMealPlanForm()

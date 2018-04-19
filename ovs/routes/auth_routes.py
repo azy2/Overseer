@@ -1,4 +1,4 @@
-""" routes under /auth/ """
+"""Routes defined under '/auth'."""
 import logging
 import traceback
 
@@ -18,7 +18,18 @@ auth_bp = Blueprint('auth', __name__, )
 
 @auth_bp.route('/login/', methods=['GET', 'POST'])
 def login():
-    """ Interface for users to login """
+    """
+    Login in page accessed by '/auth/login'.
+
+    Methods:
+        GET, POST.
+
+    Permissions:
+        Accessible to ALL.
+
+    Returns:
+        A Flask template.
+    """
     try:
         login_form = LoginForm()
         if login_form.validate_on_submit():
@@ -35,9 +46,7 @@ def login():
             db.session.commit()
             if user.role == UserRole.RESIDENT:
                 return redirect(url_for('resident.landing_page'))
-            else:
-                return redirect(url_for('manager.landing_page'))
-
+            return redirect(url_for('manager.landing_page'))
         return render_template('login.html', login_form=login_form)
     except:  # pylint: disable=bare-except
         db.session.rollback()
@@ -47,7 +56,18 @@ def login():
 
 @auth_bp.route('/reset/', methods=['GET', 'POST'])
 def request_user_reset():
-    """ Allows a user to send a password reset request."""
+    """
+    Password reset request page accessed by '/auth/reset'.
+
+    Methods:
+        GET, POST.
+
+    Permissions:
+        Accessible to ALL.
+
+    Returns:
+        A Flask template.
+    """
     try:
         form = ResetRequestForm()
         if form.validate_on_submit():
@@ -64,7 +84,21 @@ def request_user_reset():
 
 @auth_bp.route('/reset/<token>/', methods=['GET', 'POST'])
 def reset_user(token):
-    """Allows a user with a valid token to reset their password."""
+    """
+    Password reset page accessed by '/auth/reset/<token>'.
+
+    Methods:
+        GET, POST.
+
+    Permissions:
+        Accessible to ALL.
+
+    Args:
+        token: A password reset token.
+
+    Returns:
+        A Flask template.
+    """
     try:
         form = ResetPasswordForm()
         if form.validate_on_submit():
@@ -86,7 +120,18 @@ def reset_user(token):
 @auth_bp.route('/logout/')
 @login_required
 def logout():
-    """ Logs a user out """
+    """
+    Logout page accessed by '/auth/logout/'.
+
+    Methods:
+        GET.
+
+    Permissions:
+        Accessible to ALL.
+
+    Returns:
+        A Flask template.
+    """
     try:
         logout_user()
         return redirect(url_for('/.landing_page'))

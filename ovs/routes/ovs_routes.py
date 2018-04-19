@@ -1,4 +1,4 @@
-""" Routes under / """
+"""Routes defined under '/'."""
 import logging
 import traceback
 from flask import Blueprint, render_template, flash, redirect, url_for
@@ -14,7 +14,18 @@ ovs_bp = Blueprint('/', __name__, )
 
 @ovs_bp.route('/')
 def landing_page():
-    """ The homepage for OVS """
+    """
+    The home page accessed by '/'.
+
+    Methods:
+        GET.
+
+    Permissions:
+        Accessible to ALL.
+
+    Returns:
+         A Flask template.
+    """
     try:
         kwargs = {}
         if current_user.is_authenticated:
