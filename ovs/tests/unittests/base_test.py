@@ -1,7 +1,7 @@
 """
 The base test case that all other test cases should inherit from
 """
-from flask_testing import LiveServerTestCase
+from flask_testing import TestCase
 from mock import patch
 from ovs import create_app
 from ovs import db
@@ -52,7 +52,7 @@ class MockBcrypt(object):
 
 bcrypt_mock = MockBcrypt()
 
-class OVSBaseTestCase(LiveServerTestCase):
+class OVSBaseTestCase(TestCase):
     """
     The base test case that all other test cases should inherit from
     """
@@ -64,7 +64,6 @@ class OVSBaseTestCase(LiveServerTestCase):
             Flask: a unique flask app for this test.
         """
         app = create_app('config/config-testing.json')
-        app.config['LIVESERVER_PORT'] = 0
         return app
 
     def setUp(self):

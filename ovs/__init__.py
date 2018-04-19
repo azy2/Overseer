@@ -49,8 +49,12 @@ def create_app(config_path=None):
         app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
         db.init_app(app)
-        import ovs.models  # pylint: disable=unused-variable
-        db.create_all()
+        if app.config['SELENIUM']:
+            from ovs.datagen import DataGen # Avoid circular dependencies.
+            DataGen.clear_db()
+        else:
+            import ovs.models  # pylint: disable=unused-variable
+            db.create_all()
 
         from ovs.blob import blob
         blob.init_app(app)
@@ -79,7 +83,7 @@ def create_app(config_path=None):
 
         if (os.environ.get("WERKZEUG_RUN_MAIN") == "true" or os.environ.get("FLASK_DEBUG") != "True")\
            and not app.config['TESTING']:
-            from ovs.datagen import DataGen
+            from ovs.datagen import DataGen # Avoid circular dependencies.
             DataGen.create_defaults()
 
         db.session.commit()
