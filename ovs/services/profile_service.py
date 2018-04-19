@@ -1,11 +1,9 @@
 """
 DB access and other services for profiles
 """
-from flask import current_app
 
 from ovs import db
 from ovs.models.profile_model import Profile
-from ovs.services.profile_picture_service import ProfilePictureService
 from ovs.services.resident_service import ResidentService
 
 
