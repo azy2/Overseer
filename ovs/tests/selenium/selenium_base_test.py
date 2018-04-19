@@ -1,5 +1,5 @@
 """
-The base test case for selenium that all other selenium tests should inherit from
+The base test case for selenium that all other selenium tests should inherit from.
 """
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -15,6 +15,11 @@ class SeleniumBaseTestCase(OVSBaseTestCase):
     """
 
     def create_app(self):
+        """
+        Creates a flask app instance for each test.
+        Returns:
+            Flask: a flask app.
+        """
         app = create_app('config/config-selenium.json')
         app.config['LIVESERVER_PORT'] = 0
         return app
@@ -52,7 +57,12 @@ class SeleniumBaseTestCase(OVSBaseTestCase):
         self.login_with_credentials(self.default_admin_email, self.default_admin_password)
 
     def login_with_credentials(self, email, password):
-        """ Logs in with the provided email and password, most selenium tests will call this """
+        """
+        Logs in with the provided email and password.
+        Args:
+            email: Email to log in as.
+            password: Password to use.
+        """
         self.browser.find_element_by_id('login').send_keys(Keys.ENTER)
         name_box = self.browser.find_element_by_name('email')
         name_box.send_keys(email)
@@ -61,7 +71,12 @@ class SeleniumBaseTestCase(OVSBaseTestCase):
         pass_box.send_keys(Keys.ENTER)
 
     def set_text_field_by_id(self, field_id, new_text):
-        """ Sets the text in the given text field to the new text """
+        """
+        Sets the text in the given text form to the new text.
+        Args:
+            field_id: The html form id.
+            new_text: The text to type.
+        """
         text_field = self.browser.find_element_by_id(field_id)
         text_field.clear()
         text_field.send_keys(new_text)

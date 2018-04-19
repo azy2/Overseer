@@ -14,6 +14,13 @@ from ovs import db
 class MealPlan(db.Model):
     """
     Defines a MealPlan as represented in the database. Along with some utility functions.
+
+    Args:
+        meal_plan (int): The number of meals the plan is reset too after reset_date.
+        plan_type (enum): Either 'WEEKLY', 'SEMESTERLY' or 'LIFETIME'. Determines when the meals get reset.
+
+    Returns:
+        MealPlan: a new MealPlan Model object.
     """
     __tablename__ = 'mealplan'
 
@@ -93,10 +100,13 @@ class MealPlan(db.Model):
     @staticmethod
     def next_weekday(date, weekday):
         """
-        Gets the next weekday after date
-        :param date: DateTime to start
-        :param weekday: 0 for Monday ... 6 for Sunday
-        :return: DateTime with date as the next weekday and time identical to provided date.
+        Gets the next weekday after date.
+        Args:
+            date (DateTime): Date to get the next weekday for.
+            weekday (int): 0 for Monday, 1 for Tuesday, ... 6 for Sunday
+
+        Returns:
+            DateTime: A DateTime object set to the next weekday after `date` with identical time fields.
         """
         days_ahead = weekday - date.weekday()
         if days_ahead <= 0:  # Target day already happened this week
@@ -104,11 +114,20 @@ class MealPlan(db.Model):
         return date + timedelta(days=days_ahead)
 
     def __repr__(self):
+        """
+        Makes MealPlan printable.
+        Returns:
+            str: A string representation of this MealPlan.
+        """
         return 'MealPlan([id={id}, pin={pin}, credits={credits}, meal_plan={meal_plan}, plan_type={plan_type}, ' \
                'created={created}, updated={updated}])'.format(**self.__dict__)
 
     def json(self):
-        """ Returns a JSON representation of this Meal Plan """
+        """
+        Get a JSON representation of this Model.
+        Returns:
+            A JSON representation of this Meal Plan.
+        """
         return jsonify(
             id=self.id,
             number=self.pin,

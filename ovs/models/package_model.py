@@ -7,7 +7,7 @@ from ovs import db
 
 
 class Package(db.Model):
-    """ Defines a Package as represented in the database """
+    """ Defines a Package as represented in the database. """
     __tablename__ = 'packages'
 
     id = Column('id', Integer, primary_key=True)
@@ -18,11 +18,20 @@ class Package(db.Model):
     user = relationship('Resident', uselist=False, single_parent=True)
 
     def __repr__(self):
+        """
+        Allows Package to be printed.
+        Returns:
+            str: A string representation of this Package.
+        """
         return 'Package([id={id}, recipient_id={recipient_id}, checked_by={checked_by}, ' \
                'checked_at={checked_at}, description={description}])'.format(**self.__dict__)
 
     def json(self):
-        """ Returns a JSON representation of the Package """
+        """
+        Get JSON representation of this Package.
+        Returns:
+             A JSON representation of this Package.
+        """
         return jsonify(
             id=self.id,
             recipient_id=self.recipient_id,

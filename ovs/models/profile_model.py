@@ -13,6 +13,11 @@ from ovs.utils import genders
 class Profile(db.Model):
     """
     Defines a Profile as represented in the database.
+    Args:
+        user_id (int): Must be the same as corresponding `User.id`.
+
+    Returns:
+        A Profile Model object.
     """
     __tablename__ = 'profile'
 
@@ -32,12 +37,21 @@ class Profile(db.Model):
         super(Profile, self).__init__(user_id=user_id)
 
     def __repr__(self):
+        """
+        Allows Profile to be printed.
+        Returns:
+            str: A string representation of this Profile.
+        """
         return 'Profile([user_id={user_id}, preferred_name={preferred_name}, phone_number={phone_number}, ' \
                'preferred_email={preferred_email}, race={race}, gender={gender}, created={created}, ' \
                'updated={updated}])'.format(**self.__dict__)
 
     def json(self):
-        """ Returns a JSON representation of this Profile """
+        """
+        Get JSON representation of this Profile.
+        Returns:
+             A JSON representation of this Profile.
+        """
         return jsonify(
             user_id=self.user_id,
             preferred_name=self.preferred_name,

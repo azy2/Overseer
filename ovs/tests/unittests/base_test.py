@@ -11,19 +11,43 @@ from ovs.datagen import DataGen
 class MockBcrypt(object):
     """ Mock the Bcrypt object to avoid expensive security stuff during testing. """
     def __init__(self, app=None): # pylint: disable=unused-argument
-        """ mock __init__ """
+        """
+        Does nothing.
+        Args:
+            app: Unused.
+        """
         pass
 
     def init_app(self, app): # pylint: disable=unused-argument
-        """ mock init_app """
+        """
+        Does nothing.
+        Args:
+            app: Unused.
+        """
         pass
 
     def generate_password_hash(self, password, rounds=None): # pylint: disable=unused-argument, no-self-use
-        """ mock generate_password_hash """
+        """
+        Mock generate_password_hash to speed up tests.
+        Args:
+            password: The password to not hash.
+            rounds: The number of rounds Bcrypt would have applied a hash.
+
+        Returns:
+            password
+        """
         return password
 
     def check_password_hash(self, pw_hash, password): # pylint: disable=unused-argument, no-self-use
-        """ mock check_password_hash """
+        """
+        Since we aren't hashing passwords logging in is as simple as comparing plaintext.
+        Args:
+            pw_hash: The password the user typed in.
+            password: The password the account has.
+
+        Returns:
+            bool: True if they are the same.
+        """
         return pw_hash == password
 
 bcrypt_mock = MockBcrypt()
@@ -34,6 +58,11 @@ class OVSBaseTestCase(LiveServerTestCase):
     """
 
     def create_app(self):
+        """
+        Creates a Flask app for use during each test.
+        Returns:
+            Flask: a unique flask app for this test.
+        """
         app = create_app('config/config-testing.json')
         app.config['LIVESERVER_PORT'] = 0
         return app
