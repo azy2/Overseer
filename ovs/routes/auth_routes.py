@@ -38,10 +38,10 @@ def login():
             user = UserService.get_user_by_email(email)
             if user is None:
                 flash('Invalid email or password.', 'danger')
-                return redirect(url_for('/.landing_page'))
+                return redirect(url_for('auth.login'))
             elif not AuthService.verify_auth(user, password):
                 flash('Invalid email or password.', 'danger')
-                return redirect(url_for('/.landing_page'))
+                return redirect(url_for('auth.login'))
             login_user(user)
             db.session.commit()
             if user.role == UserRole.RESIDENT:
