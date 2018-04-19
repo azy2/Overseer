@@ -38,7 +38,7 @@ def landing_page():
         resident_id = current_user.get_id()
         resident = ResidentService.get_resident_by_id(resident_id)
         if not resident:
-            logging.error('Invalid resident_id %s for route /resident' % (resident_id))
+            logging.error('Invalid resident_id %s for route /resident', resident_id)
             return redirect(url_for('/.landing_page'))
 
         profile = resident.profile
@@ -69,7 +69,7 @@ def edit_profile():
         resident_id = current_user.get_id()
         resident = ResidentService.get_resident_by_id(resident_id)
         if not resident:
-            logging.error('Invalid resident_id %s for route /resident/profile' % (resident_id))
+            logging.error('Invalid resident_id %s for route /resident/profile', resident_id)
             return redirect(url_for('/.landing_page'))
 
         profile = resident.profile
