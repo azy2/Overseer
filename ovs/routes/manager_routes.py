@@ -17,6 +17,7 @@ from ovs.services.room_service import RoomService
 from ovs.services.user_service import UserService
 from ovs.services.resident_service import ResidentService
 from ovs.services.profile_picture_service import ProfilePictureService
+from ovs.services.manager_service import ManagerService
 from ovs.middleware import permissions
 from ovs.utils import roles
 from ovs.utils import log_types
@@ -32,7 +33,21 @@ def landing_page():
     try:
         user = UserService.get_user_by_id(current_user.get_id())
         role = user.role
-        return render_template('manager/index.html', role=role, user=user)
+        empty_room_nums = ManagerService.get_empty_room_nums()
+        num_residents = ManagerService.get_num_residents()
+        today_num_packages, total_num_packages = ManagerService.get_package_info()
+        print("EMPTY ROOM NUMS:")
+        print(empty_room_nums)
+        print("NUM RESIDENTS:")
+        print(num_residents)
+        print("TOTAL NUM PACKAGES:")
+        print(total_num_packages)
+        print("TODAY NUM PACKAGES:")
+        print(today_num_packages)
+
+        return render_template('manager/index.html', role=role, user=user, empty_room_nums=empty_room_nums,
+                                num_residents=num_residents, total_num_packages=total_num_packages,
+                                today_num_packages=today_num_packages)
     except: # pylint: disable=bare-except
         db.session.rollback()
         flash('An error was encountered', 'danger')
@@ -165,9 +180,9 @@ def manage_packages():
     """
     try:
         add_form = AddPackageForm(prefix='add_form')
-        packages = PackageService.get_all_packages_recipients()
+        packages_recipients = PackageService.get_all_packages_recipients()
         edit_forms = []
-        for (package, _) in packages:
+        for (package, _) in packages_recipients:
             edit_forms.append(EditPackageForm(prefix=str(package.id)))
 
         user = UserService.get_user_by_id(current_user.get_id())
@@ -195,14 +210,14 @@ def manage_packages():
 
             elif edit_form.update_button.data and edit_form.validate_on_submit():
                 PackageService.update_package(edit_form.package_id.data,
-                                              edit_form.recipient_email.data,
+                                              edit_form.recipient_id.data,
                                               edit_form.description.data)
                 db.session.commit()
                 flash('Package edited successfully!', 'success')
                 return redirect(url_for('manager.manage_packages'))
 
         return render_template('manager/manage_packages.html', role=role, user=user,
-                               add_form=add_form, form_data=zip(edit_forms, packages))
+                               add_form=add_form, form_data=zip(edit_forms, packages_recipients))
     except: # pylint: disable=bare-except
         db.session.rollback()
         flash('An error was encountered', 'danger')

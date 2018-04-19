@@ -2,7 +2,6 @@
 from ovs import db
 from ovs.models.package_model import Package
 from ovs.models.user_model import User
-from ovs.services.user_service import UserService
 
 
 class PackageService:
@@ -46,7 +45,7 @@ class PackageService:
         return Package.query.filter_by(id=package_id).first()
 
     @staticmethod
-    def update_package(package_id, recipient_email, description):
+    def update_package(package_id, recipient_id, description):
         """
         Updates the receiver and description of Package identified by package_id.
 
@@ -58,9 +57,6 @@ class PackageService:
         Returns:
             If the package was updated successfully.
         """
-        recipient_id = UserService.get_user_by_email(
-            recipient_email).id
-
         db.session.query(Package)\
                   .filter_by(id=package_id)\
                   .update({Package.recipient_id: recipient_id, Package.description: description})
@@ -120,3 +116,13 @@ class PackageService:
             if not PackageService.delete_package(package.id):
                 return False
         return True
+
+    @staticmethod
+    def get_all_packages():
+        """
+        Fetch all packages in db.
+
+        Returns:
+            A list of Packages.
+        """
+        return db.session.query(Package).all()

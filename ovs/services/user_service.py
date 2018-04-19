@@ -78,7 +78,7 @@ class UserService:
         Args:
             user_id: Unique user id.
 
-        Returns if the user was sucessfuly deleted.
+        Returns if the user was sucessfully deleted.
         """
         user = UserService.get_user_by_id(user_id)
         if user.role == 'ADMIN': # We don't want to delete the last admin

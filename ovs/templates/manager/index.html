@@ -2,7 +2,56 @@
 {% block title %}Overseer - {{ user.first_name }}{% endblock %}
 
 {% block content %}
-    <div class="px-3 py-3 pt-md-5 pb-md-5 mx-auto text-center" >
-        <h1 class="display-4" >Hello, {{ user.first_name }}</h1>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-0">
+            </div>
+            <div class="col-5">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Empty Rooms</h5>
+                        {% if empty_room_nums|length != 0 %}
+                            <ul class="list-group list-group-flush">
+                                {% for pair in empty_room_nums %}
+                                    <li class="list-group-item">
+                                        <div class="row">
+                                            <div class="col">
+                                                <label>Room Type</label>
+                                                <p class="card-text">{{ pair[0]|safe }}</p>
+                                            </div>
+                                            <div class="col">
+                                                <label>Number of Rooms Empty</label>
+                                                <p class="card-text">{{ pair[1]|safe }}
+                                            </div>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p class="card-text">There are no empty rooms.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Number of Residents</h5>
+                        <p class="card-text" align="right" style="margin-right: 12px;">{{ num_residents }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Packages</h5>
+                        <label>Number of packages checked today:</label>
+                        <p class="card-text">{{ today_num_packages }}</p>
+                        <label>Total number of packages awaiting pickup:</label>
+                        <p class="card-text">{{ total_num_packages }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}
