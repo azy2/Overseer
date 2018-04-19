@@ -37,6 +37,10 @@ def landing_page():
     try:
         resident_id = current_user.get_id()
         resident = ResidentService.get_resident_by_id(resident_id)
+        if not resident:
+            logging.error('Invalid resident_id %s for route /resident' % (resident_id))
+            return redirect(url_for('/.landing_page'))
+
         profile = resident.profile
         return render_template('resident/index.html', role=roles.RESIDENT, profile=profile)
     except: # pylint: disable=bare-except
@@ -63,7 +67,12 @@ def edit_profile():
     """
     try:
         resident_id = current_user.get_id()
-        profile = ResidentService.get_resident_by_id(resident_id).profile
+        resident = ResidentService.get_resident_by_id(resident_id)
+        if not resident:
+            logging.error('Invalid resident_id %s for route /resident/profile' % (resident_id))
+            return redirect(url_for('/.landing_page'))
+
+        profile = resident.profile
 
         profile_form = EditResidentProfileForm(obj=profile)
         picture_form = UploadProfilePictureForm()
