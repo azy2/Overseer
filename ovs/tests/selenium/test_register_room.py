@@ -1,4 +1,4 @@
-""" Test whether users can log in """
+""" Tests functionality related to registering rooms. """
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -6,10 +6,10 @@ from selenium.webdriver.support import expected_conditions as EC
 from ovs.tests.selenium.selenium_base_test import SeleniumBaseTestCase
 
 class TestRegisterRoom(SeleniumBaseTestCase):
-    """ Test whether managers can be registered"""
+    """ Tests functionality related to registering rooms. """
 
     def test_register_room(self):
-        """ Tests whether all fields can be edited in a register room page """
+        """ Tests whether all fields can be edited in the register room page. """
         self.browser.get(self.base_url)
         self.assertIn('Overseer', self.browser.title)
         super().login_default_admin()
