@@ -67,9 +67,6 @@ class TestMealPlan(SeleniumBaseTestCase):
         """ Tests that custom meal plans can be created. """
         self.create_test_meal_plan()
 
-        # Attempt to give the database time to figure its stuff out, still does not avoid the database error
-        self.browser.implicitly_wait(10000)
-
     def test_use_meal_plan(self):
         """ Tests that meal plans can be used and credits go down, and up for an undo. """
         created_plan_pin = self.create_test_meal_plan()

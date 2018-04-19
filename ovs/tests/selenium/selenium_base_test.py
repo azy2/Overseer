@@ -2,27 +2,25 @@
 The base test case for selenium that all other selenium tests should inherit from.
 """
 import os
+from flask_testing import LiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
 from flask import current_app
 from ovs import create_app, db
 from ovs.datagen import DataGen
-from ovs.tests.unittests.base_test import OVSBaseTestCase
 
-class SeleniumBaseTestCase(OVSBaseTestCase):
+class SeleniumBaseTestCase(LiveServerTestCase):
     """
     The base test case for selenium that all other selenium tests should inherit from.
     """
 
     def create_app(self):
         app = create_app('config/config-selenium.json')
-        app.config['LIVESERVER_PORT'] = 0
         return app
 
     def setUp(self):
         """ Creates a headless chrome instance for Selenium and clears the DB. """
-        super().setUp()
         DataGen.create_defaults()
         db.session.flush()
 
@@ -54,8 +52,6 @@ class SeleniumBaseTestCase(OVSBaseTestCase):
         if not os.path.exists(test_screenshot_dir):
             os.makedirs(test_screenshot_dir)
         self.browser.save_screenshot(test_screenshot_dir + '/%s-last-test-run.png' % self._testMethodName)
-
-        super().tearDown()
 
     def login_default_resident(self):
         """ Convenience method to login with the default resident information. """
