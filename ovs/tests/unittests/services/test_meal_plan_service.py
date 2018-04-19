@@ -22,7 +22,7 @@ class TestMealPlanService(OVSBaseTestCase):
         self.test_meal_plan_info = (10, 'WEEKLY', 'resident@gmail.com')
         self.test_meal_plan = MealService.create_meal_plan_for_resident_by_email(*self.test_meal_plan_info)
 
-    def database_contains_test_meal_plan(self):
+    def test_database_contains_meal_plan(self):
         """Tests database constains a specific meal plan."""
         meal_list = MealPlan.query.filter_by(pin=self.test_meal_plan.pin).all()
         self.assertEqual(len(meal_list), 1)
