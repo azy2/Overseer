@@ -5,21 +5,30 @@ from ovs.tests.selenium.selenium_base_test import SeleniumBaseTestCase
 class TestMealPlan(SeleniumBaseTestCase):
     """ Tests meal plan creation and usage. """
 
-    def test_create_meal_plan(self):
-        """ Tests that custom meal plans can be created.
+    def go_to_meal_plans(self):
+        """ Navigates to the 'Create a Meal Plan page. """
+        meal_dropdown = self.browser.find_element_by_id('mealDropdown')
+        meal_dropdown.click()
+        create_meal_plan_link = self.browser.find_element_by_link_text('Meal Plans')
+        create_meal_plan_link.click()
+
+    def go_to_meal_login(self):
+        """ Navigates to the page to use meal plans. """
+        meal_dropdown = self.browser.find_element_by_id('mealDropdown')
+        meal_dropdown.click()
+        use_meal_plan_link = self.browser.find_element_by_link_text('Meal login')
+        use_meal_plan_link.click()
+
+    def create_test_meal_plan(self):
+        """ Creates a test meal plan for the default resident.
 
             Returns:
                 string: the pin for the meal plan created
         """
         self.browser.get(self.base_url)
         self.assertIn('Overseer', self.browser.title)
-
-        # Go to Create a Meal Plan page
         super().login_default_admin()
-        meal_dropdown = self.browser.find_element_by_id('mealDropdown')
-        meal_dropdown.click()
-        create_meal_plan_link = self.browser.find_element_by_link_text('Meal Plans')
-        create_meal_plan_link.click()
+        self.go_to_meal_plans()
 
         # Make a Semesterly meal plan for the default resident
         email_text_field = self.browser.find_element_by_id('email')
@@ -53,3 +62,43 @@ class TestMealPlan(SeleniumBaseTestCase):
 
         # Return the user's pin for other meal plan tests to use
         return user_pin
+
+    def test_create_meal_plan(self):
+        """ Tests that custom meal plans can be created. """
+        self.create_test_meal_plan()
+
+        # Attempt to give the database time to figure its stuff out, still does not avoid the database error
+        self.browser.implicitly_wait(10000)
+
+    def test_use_meal_plan(self):
+        """ Tests that meal plans can be used and credits go down, and up for an undo. """
+        created_plan_pin = self.create_test_meal_plan()
+
+        # Navigate to 'Meal login'
+        self.go_to_meal_login()
+
+        # Use meal plan
+        pin_text_field = self.browser.find_element_by_id('pin')
+        pin_text_field.send_keys(created_plan_pin)
+        sign_in_button = self.browser.find_element_by_class_name('btn-primary')
+        sign_in_button.click()
+
+        # Verify credits went down
+        self.go_to_meal_plans()
+        meal_plan_table = self.browser.find_element_by_class_name('table-responsive')
+        last_table_row = meal_plan_table.find_elements_by_tag_name('tr')[-1]
+        row_entries = last_table_row.find_elements_by_tag_name('td')
+        num_credits = row_entries[2].find_element_by_class_name('form-control').get_attribute('value')
+        self.assertEqual(num_credits, '19')
+
+        # Use Undo button and verify credits restored
+        self.go_to_meal_login()
+        undo_button = self.browser.find_element_by_class_name('btn-secondary')
+        undo_button.click()
+
+        self.go_to_meal_plans()
+        meal_plan_table = self.browser.find_element_by_class_name('table-responsive')
+        last_table_row = meal_plan_table.find_elements_by_tag_name('tr')[-1]
+        row_entries = last_table_row.find_elements_by_tag_name('td')
+        num_credits = row_entries[2].find_element_by_class_name('form-control').get_attribute('value')
+        self.assertEqual(num_credits, '20')
