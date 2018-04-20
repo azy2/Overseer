@@ -42,8 +42,6 @@ class UserService:
         if role == 'RESIDENT':
             ResidentService.create_resident(new_user)
 
-        from ovs.services.profile_picture_service import ProfilePictureService
-
         new_resident_profile = Profile(new_user.id)
         new_resident_profile.preferred_name = new_user.first_name
         new_resident_profile.preferred_email = new_user.email

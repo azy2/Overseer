@@ -6,8 +6,7 @@ from flask import Blueprint, render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_required
 
 from ovs import db
-from ovs.services import ResidentService, UserService, ProfilePictureService, ProfileService
-from ovs.utils.roles import UserRole
+from ovs.services import ProfilePictureService, ProfileService
 from ovs.forms import EditResidentProfileForm, UploadProfilePictureForm
 from ovs.utils import roles
 

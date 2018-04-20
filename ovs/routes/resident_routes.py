@@ -2,15 +2,11 @@
 import logging
 import traceback
 
-from flask import Blueprint, redirect, render_template, request, url_for, flash
+from flask import Blueprint, redirect, render_template, url_for, flash
 from flask_login import current_user, login_required
 
 from ovs import db
-from ovs.forms.edit_resident_profile_form import EditResidentProfileForm
-from ovs.forms.upload_profile_picture_form import UploadProfilePictureForm
-from ovs.services.profile_service import ProfileService
 from ovs.services.resident_service import ResidentService
-from ovs.services.profile_picture_service import ProfilePictureService
 from ovs.middleware import permissions
 from ovs.utils import roles
 

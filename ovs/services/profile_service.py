@@ -4,6 +4,7 @@ DB access and other services for profiles
 
 from ovs import db
 from ovs.services import UserService
+from ovs.models import Profile
 
 
 class ProfileService:
@@ -21,7 +22,7 @@ class ProfileService:
         Updates a profile associated with resident identified by resident id.
 
         Args:
-            resident_id: Unique resident id.
+            user_id: Unique user_id
             preferred_email: Resident's preferred email.
             preferred_name: Resident's preferred name.
             phone_number: Resident's phone number.

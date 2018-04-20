@@ -2,7 +2,6 @@
 DB and utility functions for Residents
 """
 from ovs import db
-from ovs.models.profile_model import Profile
 from ovs.models.resident_model import Resident
 from ovs.models.user_model import User
 

@@ -41,12 +41,13 @@ def landing_page():
         A Flask template.
     """
     try:
-        return render_template('manager/index.html', role=current_user.role, user=current_user, profile=current_user.profile)
+        return render_template('manager/index.html', role=current_user.role,
+                               user=current_user, profile=current_user.profile)
     except: # pylint: disable=bare-except
         db.session.rollback()
         flash('An error was encountered', 'danger')
         logging.exception(traceback.format_exc())
-        return redirect(url_for('manager'), profile=current_user.profile)
+        return redirect(url_for('manager'))
 
 
 @manager_bp.route('/manage_rooms/', methods=['GET', 'POST'])
@@ -361,7 +362,6 @@ def meal_undo():
             return redirect(url_for('manager.meal_login'))
         MealService.undo_meal_use(user_id, meal_log.resident_id, meal_log.mealplan_pin)
 
-        resident = ResidentService.get_resident_by_id(meal_log.resident_id)
         mealplan = MealService.get_meal_plan_by_pin(meal_log.mealplan_pin)
         name = UserService.get_user_by_id(meal_log.resident_id).profile.preferred_name
         current_meals = mealplan.credits
