@@ -1,13 +1,15 @@
 """Routes defined under '/'."""
 import logging
+import base64
 import traceback
-from flask import Blueprint, render_template, flash, redirect, url_for
+from flask import Blueprint, render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_required
 
 from ovs import db
-from ovs.services.resident_service import ResidentService
-from ovs.services.user_service import UserService
+from ovs.services import ResidentService, UserService, ProfilePictureService, ProfileService
 from ovs.utils.roles import UserRole
+from ovs.forms import EditResidentProfileForm, UploadProfilePictureForm
+from ovs.utils import roles
 
 ovs_bp = Blueprint('/', __name__, )
 
@@ -39,7 +41,7 @@ def landing_page():
         logging.exception(traceback.format_exc())
         return redirect(url_for('/.landing_page'))
 
-@ovs_bp.route('/profile/', methods=['GET', 'POST'])
+@ovs_bp.route('profile/', methods=['GET', 'POST'])
 @login_required
 def edit_profile():
     """
@@ -78,7 +80,7 @@ def edit_profile():
             return redirect(url_for('/.edit_profile'))
 
         pict = base64.b64encode(ProfilePictureService.get_profile_picture(profile.user_id)).decode()
-        return render_template('./profile.html', role=roles.RESIDENT, profile=profile,
+        return render_template('profile.html', role=roles.RESIDENT, profile=profile,
                                pict=pict, profile_form=profile_form, picture_form=picture_form)
     except: # pylint: disable=bare-except
         db.session.rollback()

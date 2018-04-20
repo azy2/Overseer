@@ -1,5 +1,4 @@
 """Routes defined under '/resident'."""
-import base64
 import logging
 import traceback
 
