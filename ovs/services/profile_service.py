@@ -1,11 +1,9 @@
 """
 DB access and other services for profiles
 """
-from flask import current_app
 
 from ovs import db
 from ovs.models.profile_model import Profile
-from ovs.services.profile_picture_service import ProfilePictureService
 from ovs.services.resident_service import ResidentService
 
 
@@ -30,9 +28,6 @@ class ProfileService:
             phone_number: Resident's phone number.
             race: Resident's race.
             gender: Resident's gender.
-
-        Returns:
-            If the resident's profile was updated successfully.
         """
         resident = ResidentService.get_resident_by_id(resident_id)
         profile = resident.profile
@@ -54,20 +49,6 @@ class ProfileService:
         Fetches all profiles.
 
         Returns:
-            A list of Profile db models..
+            A list of Profile db models.
         """
         return db.session.query(Profile).all()
-
-    @staticmethod
-    def set_default_picture(picture_id):
-        """
-        Sets default picture for new residents.
-
-        Args:
-            picture_id: Profile db model picture id.
-        """
-        default_picture_path = current_app.config['BLOBSTORE']['DEFAULT_PATH']
-        with open(default_picture_path, 'rb') as default_image:
-            file_contents = default_image.read()
-            file_bytes = bytearray(file_contents)
-        ProfilePictureService.create_profile_picture(picture_id, file_bytes)

@@ -9,7 +9,7 @@ from ovs.utils import genders
 
 
 class ResidentService:
-    """ DB and utility functions for Residents """
+    """ DB and utility functions for Residents. """
 
     @staticmethod
     def create_resident(new_user, room_number=''):
@@ -23,7 +23,8 @@ class ResidentService:
         Returns:
             The Resident db model that was just created.
         """
-        from ovs.services.profile_service import ProfileService
+        from ovs.services.profile_picture_service import ProfilePictureService
+
 
         new_resident = Resident(new_user.id)
         new_resident.room_number = room_number
@@ -34,7 +35,7 @@ class ResidentService:
         new_resident_profile.preferred_name = new_user.first_name
         new_resident_profile.preferred_email = new_user.email
         new_resident_profile.gender = genders.UNSPECIFIED
-        ProfileService.set_default_picture(new_resident_profile.picture_id)
+        ProfilePictureService.set_default_picture(new_resident.user_id)
         db.session.add(new_resident_profile)
         db.session.flush()
 
@@ -51,9 +52,6 @@ class ResidentService:
             first_name: New first name.
             last_name: New last name.
             room_number: New room number.
-
-        Returns:
-            If the edit/update was successful.
         """
         from ovs.services.user_service import UserService
         from ovs.services.room_service import RoomService
@@ -81,7 +79,8 @@ class ResidentService:
         Args:
             user_id: Unique user id.
 
-        Returns Resident db model.
+        Returns:
+            A Resident db model.
         """
         return Resident.query.filter_by(user_id=user_id).first()
 
@@ -119,9 +118,6 @@ class ResidentService:
         Args:
             user_id: The resident's unique user id.
             new_pin: The new meal pin to be assigned to the resident.
-
-        Returns:
-            If the pin was set sucessfully.
         """
         Resident.query\
                 .filter_by(user_id=user_id)\

@@ -57,8 +57,8 @@ class UserService:
             first_name: The user's first_name.
             last_name: The user's last_name.
 
-        Returns:
-            If user was updated sucessfuly.
+        Raises:
+            ValueError: If email is already registered.
         """
         user = UserService.get_user_by_id(user_id)
         email_user = UserService.get_user_by_email(email)
@@ -78,23 +78,22 @@ class UserService:
         Args:
             user_id: Unique user id.
 
-        Returns if the user was sucessfully deleted.
+        Returns:
+            bool: True if the user was sucessfuly deleted.
+                  False if user_id refers to the last admin.
         """
         user = UserService.get_user_by_id(user_id)
         if user.role == 'ADMIN': # We don't want to delete the last admin
             if ManagerService.get_admin_count() <= 1:
                 return False
 
-        delete_picture = False
-        if user.role == 'RESIDENT':
-            picture_id = user.resident.profile.picture_id
-            delete_picture = True
+        delete_picture = user.role == 'RESIDENT'
 
         db.session.delete(user)
         db.session.flush()
 
         if delete_picture:
-            ProfilePictureService.delete_profile_picture(picture_id)
+            ProfilePictureService.delete_profile_picture(user_id)
 
         return True
 
@@ -142,7 +141,7 @@ class UserService:
         Fetch a user identified by email.
 
         Args:
-            user_id: The user's email address.
+            email: The user's email address.
 
         Returns:
             A User db model.

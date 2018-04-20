@@ -1,0 +1,376 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>ovs.routes.manager_routes &#8212; Overseer 1.0.0 documentation</title>
+    <link rel="stylesheet" href="../../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">Overseer 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../ovs.html" accesskey="U">ovs</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for ovs.routes.manager_routes</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; Routes under /manager/ &quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">base64</span>
+
+<span class="kn">from</span> <span class="nn">flask</span> <span class="k">import</span> <span class="n">Blueprint</span><span class="p">,</span> <span class="n">render_template</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">url_for</span><span class="p">,</span> <span class="n">flash</span>
+<span class="kn">from</span> <span class="nn">flask_login</span> <span class="k">import</span> <span class="n">current_user</span><span class="p">,</span> <span class="n">login_required</span>
+
+<span class="kn">from</span> <span class="nn">ovs.forms</span> <span class="k">import</span> <span class="n">RegisterRoomForm</span><span class="p">,</span> <span class="n">RegisterResidentForm</span><span class="p">,</span> <span class="n">ManageResidentsForm</span><span class="p">,</span> \
+    <span class="n">AddPackageForm</span><span class="p">,</span> <span class="n">EditPackageForm</span><span class="p">,</span> <span class="n">MealLoginForm</span><span class="p">,</span> <span class="n">CreateMealPlanForm</span><span class="p">,</span> <span class="n">AddMealForm</span>
+<span class="kn">from</span> <span class="nn">ovs.services.meal_service</span> <span class="k">import</span> <span class="n">MealService</span>
+<span class="kn">from</span> <span class="nn">ovs.services.package_service</span> <span class="k">import</span> <span class="n">PackageService</span>
+<span class="kn">from</span> <span class="nn">ovs.services.room_service</span> <span class="k">import</span> <span class="n">RoomService</span>
+<span class="kn">from</span> <span class="nn">ovs.services.user_service</span> <span class="k">import</span> <span class="n">UserService</span>
+<span class="kn">from</span> <span class="nn">ovs.services.resident_service</span> <span class="k">import</span> <span class="n">ResidentService</span>
+<span class="kn">from</span> <span class="nn">ovs.services.profile_picture_service</span> <span class="k">import</span> <span class="n">ProfilePictureService</span>
+<span class="kn">from</span> <span class="nn">ovs.middleware</span> <span class="k">import</span> <span class="n">permissions</span>
+<span class="kn">from</span> <span class="nn">ovs.utils</span> <span class="k">import</span> <span class="n">roles</span>
+<span class="kn">from</span> <span class="nn">ovs.utils</span> <span class="k">import</span> <span class="n">log_types</span>
+
+<span class="n">manager_bp</span> <span class="o">=</span> <span class="n">Blueprint</span><span class="p">(</span><span class="s1">&#39;manager&#39;</span><span class="p">,</span> <span class="vm">__name__</span><span class="p">,</span> <span class="p">)</span>
+
+
+<div class="viewcode-block" id="landing_page"><a class="viewcode-back" href="../../../ovs.routes.html#ovs.routes.manager_routes.landing_page">[docs]</a><span class="nd">@manager_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
+<span class="nd">@login_required</span>
+<span class="nd">@permissions</span><span class="p">(</span><span class="n">roles</span><span class="o">.</span><span class="n">STAFF</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">landing_page</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot; The landing page for managers &quot;&quot;&quot;</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">UserService</span><span class="o">.</span><span class="n">get_user_by_id</span><span class="p">(</span><span class="n">current_user</span><span class="o">.</span><span class="n">get_id</span><span class="p">())</span>
+    <span class="n">role</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">role</span>
+    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;manager/index.html&#39;</span><span class="p">,</span> <span class="n">role</span><span class="o">=</span><span class="n">role</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="register_room"><a class="viewcode-back" href="../../../ovs.routes.html#ovs.routes.manager_routes.register_room">[docs]</a><span class="nd">@manager_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/register_room/&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="nd">@login_required</span>
+<span class="nd">@permissions</span><span class="p">(</span><span class="n">roles</span><span class="o">.</span><span class="n">STAFF</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">register_room</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    /manager/register_room serves an HTML form with input fields for room #,</span>
+<span class="sd">    status, and type and accepts that form (POST) and adds a room to the</span>
+<span class="sd">    rooms table. The option for admins to add current residents to said</span>
+<span class="sd">    room is an available option.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">form</span> <span class="o">=</span> <span class="n">RegisterRoomForm</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">validate_on_submit</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">RoomService</span><span class="o">.</span><span class="n">create_room</span><span class="p">(</span>
+                <span class="n">form</span><span class="o">.</span><span class="n">room_number</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
+                <span class="n">form</span><span class="o">.</span><span class="n">room_status</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
+                <span class="n">form</span><span class="o">.</span><span class="n">room_type</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
+                <span class="n">form</span><span class="o">.</span><span class="n">occupants</span><span class="o">.</span><span class="n">data</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">flash</span><span class="p">(</span><span class="s1">&#39;Creating a room failed&#39;</span><span class="p">,</span> <span class="s1">&#39;danger&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">flash</span><span class="p">(</span><span class="s1">&#39;Successfully created room&#39;</span><span class="p">,</span> <span class="s1">&#39;success&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;manager.register_room&#39;</span><span class="p">))</span>
+
+    <span class="n">user</span> <span class="o">=</span> <span class="n">UserService</span><span class="o">.</span><span class="n">get_user_by_id</span><span class="p">(</span><span class="n">current_user</span><span class="o">.</span><span class="n">get_id</span><span class="p">())</span>
+    <span class="n">role</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">role</span>
+    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;manager/register_room.html&#39;</span><span class="p">,</span> <span class="n">role</span><span class="o">=</span><span class="n">role</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">form</span><span class="o">=</span><span class="n">form</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="manage_residents"><a class="viewcode-back" href="../../../ovs.routes.html#ovs.routes.manager_routes.manage_residents">[docs]</a><span class="nd">@manager_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/manage_residents/&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="nd">@login_required</span>
+<span class="nd">@permissions</span><span class="p">(</span><span class="n">roles</span><span class="o">.</span><span class="n">STAFF</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">manage_residents</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    /manager/manage_residents serves a HTML with list of residents with their info.</span>
+<span class="sd">    It allows a manager to add/edit/delete residents with form inputs.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">register_form</span> <span class="o">=</span> <span class="n">RegisterResidentForm</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;register_form&#39;</span><span class="p">)</span>
+    <span class="n">residents</span> <span class="o">=</span> <span class="n">ResidentService</span><span class="o">.</span><span class="n">get_all_residents_users</span><span class="p">()</span>
+    <span class="n">edit_forms</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span> <span class="ow">in</span> <span class="n">residents</span><span class="p">:</span>
+        <span class="n">edit_forms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ManageResidentsForm</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">)))</span>
+
+    <span class="n">user</span> <span class="o">=</span> <span class="n">UserService</span><span class="o">.</span><span class="n">get_user_by_id</span><span class="p">(</span><span class="n">current_user</span><span class="o">.</span><span class="n">get_id</span><span class="p">())</span>
+    <span class="n">role</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">role</span>
+
+    <span class="k">if</span> <span class="s1">&#39;register_btn&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">form</span> <span class="ow">and</span> <span class="n">register_form</span><span class="o">.</span><span class="n">validate_on_submit</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">UserService</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
+                <span class="n">register_form</span><span class="o">.</span><span class="n">email</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
+                <span class="n">register_form</span><span class="o">.</span><span class="n">first_name</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
+                <span class="n">register_form</span><span class="o">.</span><span class="n">last_name</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
+                <span class="s2">&quot;RESIDENT&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">flash</span><span class="p">(</span><span class="s1">&#39;Failed to register resident&#39;</span><span class="p">,</span> <span class="s1">&#39;danger&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">flash</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1"> registered.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">register_form</span><span class="o">.</span><span class="n">first_name</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">register_form</span><span class="o">.</span><span class="n">last_name</span><span class="o">.</span><span class="n">data</span><span class="p">),</span> <span class="s1">&#39;success&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;manager.manage_residents&#39;</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">edit_form</span> <span class="ow">in</span> <span class="n">edit_forms</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">edit_form</span><span class="o">.</span><span class="n">delete_button</span><span class="o">.</span><span class="n">data</span><span class="p">:</span> <span class="c1">#Don&#39;t validate. Just delete</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">ResidentService</span><span class="o">.</span><span class="n">resident_exists</span><span class="p">(</span><span class="n">edit_form</span><span class="o">.</span><span class="n">user_id</span><span class="o">.</span><span class="n">data</span><span class="p">)</span> <span class="ow">and</span>
+                    <span class="n">UserService</span><span class="o">.</span><span class="n">delete_user</span><span class="p">(</span><span class="n">edit_form</span><span class="o">.</span><span class="n">user_id</span><span class="o">.</span><span class="n">data</span><span class="p">)):</span>
+                <span class="n">flash</span><span class="p">(</span><span class="s1">&#39;Failed to delete resident.&#39;</span><span class="p">,</span> <span class="s1">&#39;danger&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">flash</span><span class="p">(</span><span class="s1">&#39;Resident deleted.&#39;</span><span class="p">,</span> <span class="s1">&#39;success&#39;</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;manager.manage_residents&#39;</span><span class="p">))</span>
+
+        <span class="k">elif</span> <span class="n">edit_form</span><span class="o">.</span><span class="n">update_button</span><span class="o">.</span><span class="n">data</span> <span class="ow">and</span> <span class="n">edit_form</span><span class="o">.</span><span class="n">validate_on_submit</span><span class="p">():</span>
+            <span class="n">room_number</span> <span class="o">=</span> <span class="s1">&#39;None&#39;</span> <span class="k">if</span> <span class="n">edit_form</span><span class="o">.</span><span class="n">room_number</span><span class="o">.</span><span class="n">data</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span> <span class="k">else</span> <span class="n">edit_form</span><span class="o">.</span><span class="n">room_number</span><span class="o">.</span><span class="n">data</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">ResidentService</span><span class="o">.</span><span class="n">edit_resident</span><span class="p">(</span>
+                    <span class="n">edit_form</span><span class="o">.</span><span class="n">user_id</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
+                    <span class="n">edit_form</span><span class="o">.</span><span class="n">email</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
+                    <span class="n">edit_form</span><span class="o">.</span><span class="n">first_name</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
+                    <span class="n">edit_form</span><span class="o">.</span><span class="n">last_name</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
+                    <span class="n">room_number</span><span class="p">):</span>
+                <span class="n">flash</span><span class="p">(</span><span class="s1">&#39;Failed to update resident&#39;</span><span class="p">,</span> <span class="s1">&#39;danger&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">flash</span><span class="p">(</span><span class="s1">&#39;Resident updated!&#39;</span><span class="p">,</span> <span class="s1">&#39;success&#39;</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;manager.manage_residents&#39;</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;manager/manage_residents.html&#39;</span><span class="p">,</span> <span class="n">role</span><span class="o">=</span><span class="n">role</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span>
+                           <span class="n">register_form</span><span class="o">=</span><span class="n">register_form</span><span class="p">,</span> <span class="n">form_data</span><span class="o">=</span><span class="nb">zip</span><span class="p">(</span><span class="n">edit_forms</span><span class="p">,</span> <span class="n">residents</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="manage_packages"><a class="viewcode-back" href="../../../ovs.routes.html#ovs.routes.manager_routes.manage_packages">[docs]</a><span class="nd">@manager_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/manage_packages/&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="nd">@login_required</span>
+<span class="nd">@permissions</span><span class="p">(</span><span class="n">roles</span><span class="o">.</span><span class="n">STAFF</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">manage_packages</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    /manager/register_resident serves an html form with input fields for email,</span>
+<span class="sd">    first name, and last name and accepts that form (POST) and adds a user</span>
+<span class="sd">    to the user table with a default password.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">add_form</span> <span class="o">=</span> <span class="n">AddPackageForm</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;add_form&#39;</span><span class="p">)</span>
+    <span class="n">packages</span> <span class="o">=</span> <span class="n">PackageService</span><span class="o">.</span><span class="n">get_all_packages_recipients_checkers</span><span class="p">()</span> <span class="c1">#(package, recip, checker)</span>
+    <span class="n">edit_forms</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="ow">in</span> <span class="n">packages</span><span class="p">:</span>
+        <span class="n">edit_forms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EditPackageForm</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">package</span><span class="o">.</span><span class="n">id</span><span class="p">)))</span>
+
+    <span class="n">user</span> <span class="o">=</span> <span class="n">UserService</span><span class="o">.</span><span class="n">get_user_by_id</span><span class="p">(</span><span class="n">current_user</span><span class="o">.</span><span class="n">get_id</span><span class="p">())</span>
+    <span class="n">role</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">role</span>
+
+    <span class="k">if</span> <span class="s1">&#39;add_btn&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">form</span> <span class="ow">and</span> <span class="n">add_form</span><span class="o">.</span><span class="n">validate_on_submit</span><span class="p">():</span>
+        <span class="n">recipient_email</span> <span class="o">=</span> <span class="n">add_form</span><span class="o">.</span><span class="n">recipient_email</span><span class="o">.</span><span class="n">data</span>
+        <span class="n">recipient_id</span> <span class="o">=</span> <span class="n">UserService</span><span class="o">.</span><span class="n">get_user_by_email</span><span class="p">(</span><span class="n">recipient_email</span><span class="p">)</span><span class="o">.</span><span class="n">id</span>
+        <span class="n">checked_by_id</span> <span class="o">=</span> <span class="n">current_user</span><span class="o">.</span><span class="n">get_id</span><span class="p">()</span>
+        <span class="n">checked_at</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">second</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">microsecond</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># Current date/time</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="n">add_form</span><span class="o">.</span><span class="n">description</span><span class="o">.</span><span class="n">data</span>
+
+        <span class="n">PackageService</span><span class="o">.</span><span class="n">create_package</span><span class="p">(</span><span class="n">recipient_id</span><span class="p">,</span> <span class="n">checked_by_id</span><span class="p">,</span> <span class="n">checked_at</span><span class="p">,</span> <span class="n">description</span><span class="p">)</span>
+        <span class="n">flash</span><span class="p">(</span><span class="s1">&#39;Package added successfully!&#39;</span><span class="p">,</span> <span class="s1">&#39;success&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;manager.manage_packages&#39;</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">edit_form</span> <span class="ow">in</span> <span class="n">edit_forms</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">edit_form</span><span class="o">.</span><span class="n">update_button</span><span class="o">.</span><span class="n">data</span> <span class="ow">and</span> <span class="n">edit_form</span><span class="o">.</span><span class="n">validate_on_submit</span><span class="p">():</span>
+            <span class="n">PackageService</span><span class="o">.</span><span class="n">update_package</span><span class="p">(</span><span class="n">edit_form</span><span class="o">.</span><span class="n">package_id</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
+                                          <span class="n">edit_form</span><span class="o">.</span><span class="n">recipient_email</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
+                                          <span class="n">edit_form</span><span class="o">.</span><span class="n">description</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+            <span class="n">flash</span><span class="p">(</span><span class="s1">&#39;Package edited successfully!&#39;</span><span class="p">,</span> <span class="s1">&#39;success&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;manager.manage_packages&#39;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">edit_form</span><span class="o">.</span><span class="n">check_button</span><span class="o">.</span><span class="n">data</span> <span class="ow">and</span> <span class="n">edit_form</span><span class="o">.</span><span class="n">validate_on_submit</span><span class="p">():</span>
+            <span class="n">flash</span><span class="p">(</span><span class="s1">&#39;Check package is unimplemented&#39;</span><span class="p">,</span> <span class="s1">&#39;danger&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;manager.manage_packages&#39;</span><span class="p">))</span>
+
+
+    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;manager/manage_packages.html&#39;</span><span class="p">,</span> <span class="n">role</span><span class="o">=</span><span class="n">role</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span>
+                           <span class="n">add_form</span><span class="o">=</span><span class="n">add_form</span><span class="p">,</span> <span class="n">form_data</span><span class="o">=</span><span class="nb">zip</span><span class="p">(</span><span class="n">edit_forms</span><span class="p">,</span> <span class="n">packages</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="meal_login"><a class="viewcode-back" href="../../../ovs.routes.html#ovs.routes.manager_routes.meal_login">[docs]</a><span class="nd">@manager_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/meal_login/&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="nd">@login_required</span>
+<span class="nd">@permissions</span><span class="p">(</span><span class="n">roles</span><span class="o">.</span><span class="n">STAFF</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">meal_login</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    /manager/meal_login serves an html form with input field pin</span>
+<span class="sd">    and accepts that form (POST) and logs the use to a meal plan</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">form</span> <span class="o">=</span> <span class="n">MealLoginForm</span><span class="p">()</span>
+    <span class="n">user_id</span> <span class="o">=</span> <span class="n">current_user</span><span class="o">.</span><span class="n">get_id</span><span class="p">()</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">UserService</span><span class="o">.</span><span class="n">get_user_by_id</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
+    <span class="n">role</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">role</span>
+
+
+    <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">validate_on_submit</span><span class="p">():</span>
+        <span class="n">mealplan</span> <span class="o">=</span> <span class="n">MealService</span><span class="o">.</span><span class="n">get_meal_plan_by_pin</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">pin</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">MealService</span><span class="o">.</span><span class="n">use_meal</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">pin</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>
+            <span class="n">flash</span><span class="p">(</span><span class="s1">&#39;Failed to sign in. Out of meals.&#39;</span><span class="p">,</span> <span class="s1">&#39;danger&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;manager.meal_login&#39;</span><span class="p">))</span>
+
+    <span class="n">skip</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">log</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">MealService</span><span class="o">.</span><span class="n">get_logs</span><span class="p">()):</span>
+        <span class="k">if</span> <span class="n">skip</span><span class="p">:</span>
+            <span class="n">skip</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">continue</span>
+
+        <span class="k">if</span> <span class="n">log</span><span class="o">.</span><span class="n">log_type</span> <span class="o">==</span> <span class="s1">&#39;UNDO&#39;</span><span class="p">:</span>
+            <span class="n">skip</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">continue</span>
+
+        <span class="n">resident</span> <span class="o">=</span> <span class="n">ResidentService</span><span class="o">.</span><span class="n">get_resident_by_id</span><span class="p">(</span><span class="n">log</span><span class="o">.</span><span class="n">resident_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">resident</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">profile</span> <span class="o">=</span> <span class="n">resident</span><span class="o">.</span><span class="n">profile</span>
+        <span class="n">pict</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">ProfilePictureService</span><span class="o">.</span><span class="n">get_profile_picture</span><span class="p">(</span><span class="n">profile</span><span class="o">.</span><span class="n">picture_id</span><span class="p">))</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="n">mealplan</span> <span class="o">=</span> <span class="n">MealService</span><span class="o">.</span><span class="n">get_meal_plan_by_pin</span><span class="p">(</span><span class="n">log</span><span class="o">.</span><span class="n">mealplan_pin</span><span class="p">)</span>
+        <span class="n">current_meals</span> <span class="o">=</span> <span class="n">mealplan</span><span class="o">.</span><span class="n">credits</span>
+        <span class="n">max_meals</span> <span class="o">=</span> <span class="n">mealplan</span><span class="o">.</span><span class="n">meal_plan</span>
+        <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;manager/meal_login.html&#39;</span><span class="p">,</span> <span class="n">role</span><span class="o">=</span><span class="n">role</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">form</span><span class="o">=</span><span class="n">form</span><span class="p">,</span>
+                               <span class="n">pict</span><span class="o">=</span><span class="n">pict</span><span class="p">,</span> <span class="n">show_undo</span><span class="o">=</span><span class="p">(</span><span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">),</span>
+                               <span class="n">name</span><span class="o">=</span><span class="n">profile</span><span class="o">.</span><span class="n">preferred_name</span><span class="p">,</span>
+                               <span class="n">current_meals</span><span class="o">=</span><span class="n">current_meals</span><span class="p">,</span>
+                               <span class="n">max_meals</span><span class="o">=</span><span class="n">max_meals</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;manager/meal_login.html&#39;</span><span class="p">,</span> <span class="n">role</span><span class="o">=</span><span class="n">role</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">form</span><span class="o">=</span><span class="n">form</span><span class="p">,</span> <span class="n">no_login</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="meal_undo"><a class="viewcode-back" href="../../../ovs.routes.html#ovs.routes.manager_routes.meal_undo">[docs]</a><span class="nd">@manager_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/meal_undo/&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="nd">@login_required</span>
+<span class="nd">@permissions</span><span class="p">(</span><span class="n">roles</span><span class="o">.</span><span class="n">STAFF</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">meal_undo</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    /manager/meal_undo accepts that form (POST) and undo the use of a meal plan</span>
+<span class="sd">    Currently uses manager id to distinguish frontends. Should use session token.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">user_id</span> <span class="o">=</span> <span class="n">current_user</span><span class="o">.</span><span class="n">get_id</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span><span class="p">:</span>
+        <span class="n">meal_log</span> <span class="o">=</span> <span class="n">MealService</span><span class="o">.</span><span class="n">get_last_log</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">meal_log</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">meal_log</span><span class="o">.</span><span class="n">log_type</span> <span class="o">==</span> <span class="n">log_types</span><span class="o">.</span><span class="n">UNDO</span><span class="p">:</span>
+            <span class="n">flash</span><span class="p">(</span><span class="s1">&#39;Undo invalid&#39;</span><span class="p">,</span> <span class="s1">&#39;danger&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;manager.meal_login&#39;</span><span class="p">))</span>
+        <span class="n">success</span> <span class="o">=</span> <span class="n">MealService</span><span class="o">.</span><span class="n">undo_meal_use</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">meal_log</span><span class="o">.</span><span class="n">resident_id</span><span class="p">,</span> <span class="n">meal_log</span><span class="o">.</span><span class="n">mealplan_pin</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">success</span><span class="p">:</span>
+            <span class="n">flash</span><span class="p">(</span><span class="s1">&#39;Undo failed&#39;</span><span class="p">,</span> <span class="s1">&#39;danger&#39;</span><span class="p">)</span>
+
+        <span class="n">resident</span> <span class="o">=</span> <span class="n">ResidentService</span><span class="o">.</span><span class="n">get_resident_by_id</span><span class="p">(</span><span class="n">meal_log</span><span class="o">.</span><span class="n">resident_id</span><span class="p">)</span>
+        <span class="n">mealplan</span> <span class="o">=</span> <span class="n">MealService</span><span class="o">.</span><span class="n">get_meal_plan_by_pin</span><span class="p">(</span><span class="n">meal_log</span><span class="o">.</span><span class="n">mealplan_pin</span><span class="p">)</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">resident</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">preferred_name</span>
+        <span class="n">current_meals</span> <span class="o">=</span> <span class="n">mealplan</span><span class="o">.</span><span class="n">credits</span>
+
+        <span class="n">flash</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> has </span><span class="si">{}</span><span class="s1"> meals left&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">current_meals</span><span class="p">),</span> <span class="s1">&#39;success&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;manager.meal_login&#39;</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="create_meal_plan"><a class="viewcode-back" href="../../../ovs.routes.html#ovs.routes.manager_routes.create_meal_plan">[docs]</a><span class="nd">@manager_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/create_meal_plan/&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="nd">@login_required</span>
+<span class="nd">@permissions</span><span class="p">(</span><span class="n">roles</span><span class="o">.</span><span class="n">STAFF</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">create_meal_plan</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    /manager/meal_login serves an html form with input field pin</span>
+<span class="sd">    and accepts that form (POST) and logs the use to a meal plan</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">form</span> <span class="o">=</span> <span class="n">CreateMealPlanForm</span><span class="p">()</span>
+    <span class="n">user_id</span> <span class="o">=</span> <span class="n">current_user</span><span class="o">.</span><span class="n">get_id</span><span class="p">()</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">UserService</span><span class="o">.</span><span class="n">get_user_by_id</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
+    <span class="n">role</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">role</span>
+    <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">validate_on_submit</span><span class="p">():</span>
+        <span class="n">meal_plan</span> <span class="o">=</span> <span class="n">MealService</span><span class="o">.</span><span class="n">create_meal_plan_for_resident_by_email</span><span class="p">(</span>
+            <span class="n">form</span><span class="o">.</span><span class="n">meal_plan</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
+            <span class="n">form</span><span class="o">.</span><span class="n">plan_type</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
+            <span class="n">form</span><span class="o">.</span><span class="n">email</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">meal_plan</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">flash</span><span class="p">(</span><span class="s1">&#39;Could not create meal plan.&#39;</span><span class="p">,</span> <span class="s1">&#39;danger&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">flash</span><span class="p">(</span><span class="s1">&#39;Meal plan created with pin </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">meal_plan</span><span class="o">.</span><span class="n">pin</span><span class="p">),</span> <span class="s1">&#39;success&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;manager.create_meal_plan&#39;</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;manager/create_meal_plan.html&#39;</span><span class="p">,</span> <span class="n">role</span><span class="o">=</span><span class="n">role</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">form</span><span class="o">=</span><span class="n">form</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="add_meals"><a class="viewcode-back" href="../../../ovs.routes.html#ovs.routes.manager_routes.add_meals">[docs]</a><span class="nd">@manager_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/add_meals/&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="nd">@login_required</span>
+<span class="nd">@permissions</span><span class="p">(</span><span class="n">roles</span><span class="o">.</span><span class="n">STAFF</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">add_meals</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    /manager/meal_login serves an html form with input field pin</span>
+<span class="sd">    and accepts that form (POST) and logs the use to a meal plan</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">form</span> <span class="o">=</span> <span class="n">AddMealForm</span><span class="p">()</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">UserService</span><span class="o">.</span><span class="n">get_user_by_id</span><span class="p">(</span><span class="n">current_user</span><span class="o">.</span><span class="n">get_id</span><span class="p">())</span>
+    <span class="n">role</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">role</span>
+    <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">validate_on_submit</span><span class="p">():</span>
+        <span class="n">valid</span> <span class="o">=</span> <span class="n">MealService</span><span class="o">.</span><span class="n">add_meals</span><span class="p">(</span>
+            <span class="n">form</span><span class="o">.</span><span class="n">pin</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
+            <span class="n">form</span><span class="o">.</span><span class="n">number</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">valid</span><span class="p">:</span>
+            <span class="n">user_meal_plan</span> <span class="o">=</span> <span class="n">MealService</span><span class="o">.</span><span class="n">get_meal_plan_by_pin</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">pin</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+            <span class="n">resident</span> <span class="o">=</span> <span class="n">ResidentService</span><span class="o">.</span><span class="n">get_resident_by_pin</span><span class="p">(</span><span class="n">user_meal_plan</span><span class="o">.</span><span class="n">pin</span><span class="p">)</span>
+            <span class="n">flash</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> has </span><span class="si">{}</span><span class="s1"> out of </span><span class="si">{}</span><span class="s1"> meals now.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resident</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">preferred_name</span><span class="p">,</span>
+                                                          <span class="n">user_meal_plan</span><span class="o">.</span><span class="n">credits</span><span class="p">,</span>
+                                                          <span class="n">user_meal_plan</span><span class="o">.</span><span class="n">meal_plan</span><span class="p">),</span> <span class="s1">&#39;success&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">flash</span><span class="p">(</span><span class="s1">&#39;Invalid pin&#39;</span><span class="p">,</span> <span class="s1">&#39;danger&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;manager.add_meals&#39;</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;manager/add_meals.html&#39;</span><span class="p">,</span> <span class="n">role</span><span class="o">=</span><span class="n">role</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">form</span><span class="o">=</span><span class="n">form</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">Overseer 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../ovs.html" >ovs</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Ben Lambeth.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.2.
+    </div>
+  </body>
+</html>

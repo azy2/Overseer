@@ -18,10 +18,20 @@ class CreateMealPlanForm(FlaskForm):
                                                   ('LIFETIME', 'Lifetime')])
 
     def validate_email(form, field):  # pylint: disable=no-self-argument, no-self-use
-        """ Validates that this email doesn't already have a mealplan. """
+        """
+        Validates that this email doesn't already have a mealplan.
+
+        Args:
+            form: The CreateMealPlanForm that was submitted.
+            field: The email field.
+
+        Raises:
+            ValidationError: If email does not correspond to an existing account
+                             or if the account does not have a meal plan.
+         """
         resident_user = db.session.query(Resident, User).join(User, Resident.user_id == User.id)\
                                            .filter(User.email == field.data).first()
         if resident_user is None:
             raise ValidationError('Resident does not exist. Please verify resident email.')
-        if resident_user[0].mealplan_pin is not None:
+        if resident_user[0].meal_plan is not None:
             raise ValidationError('Resident has a meal plan.')
