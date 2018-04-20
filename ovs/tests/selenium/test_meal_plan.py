@@ -5,8 +5,13 @@ from ovs.tests.selenium.selenium_base_test import SeleniumBaseTestCase
 class TestMealPlan(SeleniumBaseTestCase):
     """ Tests meal plan creation and usage. """
 
-    def create_test_meal_plan(self):
-        """ Creates a test meal plan for the default resident.
+    def create_test_meal_plan(self, email, credits, plan_type):
+        """ Creates a test meal plan with the provided parameters.
+
+            Args:
+                email (string): The email for which to make a meal plan.
+                credits (string): The number of credits for the plan.
+                plan_type (string): The type of meal plan, like 'Semesterly'
 
             Returns:
                 string: the pin for the meal plan created
@@ -16,13 +21,13 @@ class TestMealPlan(SeleniumBaseTestCase):
         super().login_default_admin()
         self.go_to_page_in_dropdown('Meal Plans', 'mealDropdown')
 
-        # Make a Semesterly meal plan for the default resident
+        # Make a meal plan based on the parameters
         email_text_field = self.browser.find_element_by_id('email')
-        email_text_field.send_keys(self.default_resident_email)
+        email_text_field.send_keys(email)
         credits_text_field = self.browser.find_element_by_id('meal_plan')
-        credits_text_field.send_keys('20')
+        credits_text_field.send_keys(credits)
         plan_type_selector = Select(self.browser.find_element_by_id('plan_type'))
-        plan_type_selector.select_by_visible_text('Semesterly')
+        plan_type_selector.select_by_visible_text(plan_type)
         register_button = self.browser.find_element_by_name('create_btn')
         register_button.click()
 
@@ -39,23 +44,23 @@ class TestMealPlan(SeleniumBaseTestCase):
         num_credits = row_entries[2].find_element_by_class_name('form-control').get_attribute('value')
         meal_plan_credits = row_entries[3].find_element_by_class_name('form-control').get_attribute('value')
         plan_type_selector = Select(row_entries[4].find_element_by_class_name('form-control'))
-        plan_type = plan_type_selector.first_selected_option.text
+        meal_plan_type = plan_type_selector.first_selected_option.text
 
-        self.assertEqual(user_email, self.default_resident_email)
-        self.assertEqual(num_credits, '20')
-        self.assertEqual(meal_plan_credits, '20')
-        self.assertEqual(plan_type, 'Semesterly')
+        self.assertEqual(user_email, email)
+        self.assertEqual(num_credits, credits)
+        self.assertEqual(meal_plan_credits, credits)
+        self.assertEqual(meal_plan_type, plan_type)
 
         # Return the user's pin for other meal plan tests to use
         return user_pin
 
     def test_create_meal_plan(self):
         """ Tests that custom meal plans can be created. """
-        self.create_test_meal_plan()
+        self.create_test_meal_plan(self.default_resident_email, '20', 'Semesterly')
 
     def test_use_meal_plan(self):
         """ Tests that meal plans can be used and credits go down, and up for an undo. """
-        created_plan_pin = self.create_test_meal_plan()
+        created_plan_pin = self.create_test_meal_plan(self.default_resident_email, '20', 'Semesterly')
 
         # Navigate to 'Meal login'
         self.go_to_page_in_dropdown('Meal login', 'mealDropdown')
