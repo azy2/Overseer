@@ -5,20 +5,6 @@ from ovs.tests.selenium.selenium_base_test import SeleniumBaseTestCase
 class TestMealPlan(SeleniumBaseTestCase):
     """ Tests meal plan creation and usage. """
 
-    def go_to_meal_plans(self):
-        """ Navigates to the 'Create a Meal Plan page. """
-        meal_dropdown = self.browser.find_element_by_id('mealDropdown')
-        meal_dropdown.click()
-        create_meal_plan_link = self.browser.find_element_by_link_text('Meal Plans')
-        create_meal_plan_link.click()
-
-    def go_to_meal_login(self):
-        """ Navigates to the page to use meal plans. """
-        meal_dropdown = self.browser.find_element_by_id('mealDropdown')
-        meal_dropdown.click()
-        use_meal_plan_link = self.browser.find_element_by_link_text('Meal login')
-        use_meal_plan_link.click()
-
     def create_test_meal_plan(self):
         """ Creates a test meal plan for the default resident.
 
@@ -28,7 +14,7 @@ class TestMealPlan(SeleniumBaseTestCase):
         self.browser.get(self.base_url)
         self.assertIn('Overseer', self.browser.title)
         super().login_default_admin()
-        self.go_to_meal_plans()
+        self.go_to_page_in_dropdown('Meal Plans', 'mealDropdown')
 
         # Make a Semesterly meal plan for the default resident
         email_text_field = self.browser.find_element_by_id('email')
@@ -72,7 +58,7 @@ class TestMealPlan(SeleniumBaseTestCase):
         created_plan_pin = self.create_test_meal_plan()
 
         # Navigate to 'Meal login'
-        self.go_to_meal_login()
+        self.go_to_page_in_dropdown('Meal login', 'mealDropdown')
 
         # Use meal plan
         pin_text_field = self.browser.find_element_by_id('pin')
@@ -81,7 +67,7 @@ class TestMealPlan(SeleniumBaseTestCase):
         sign_in_button.click()
 
         # Verify credits went down
-        self.go_to_meal_plans()
+        self.go_to_page_in_dropdown('Meal Plans', 'mealDropdown')
         meal_plan_table = self.browser.find_element_by_class_name('table-responsive')
         last_table_row = meal_plan_table.find_elements_by_tag_name('tr')[-1]
         row_entries = last_table_row.find_elements_by_tag_name('td')
@@ -89,11 +75,11 @@ class TestMealPlan(SeleniumBaseTestCase):
         self.assertEqual(num_credits, '19')
 
         # Use Undo button and verify credits restored
-        self.go_to_meal_login()
+        self.go_to_page_in_dropdown('Meal login', 'mealDropdown')
         undo_button = self.browser.find_element_by_class_name('btn-secondary')
         undo_button.click()
 
-        self.go_to_meal_plans()
+        self.go_to_page_in_dropdown('Meal Plans', 'mealDropdown')
         meal_plan_table = self.browser.find_element_by_class_name('table-responsive')
         last_table_row = meal_plan_table.find_elements_by_tag_name('tr')[-1]
         row_entries = last_table_row.find_elements_by_tag_name('td')

@@ -85,3 +85,16 @@ class SeleniumBaseTestCase(LiveServerTestCase):
         text_field = self.browser.find_element_by_id(field_id)
         text_field.clear()
         text_field.send_keys(new_text)
+
+    def go_to_page_in_dropdown(self, page_link_name, dropdown_id):
+        """ Clicks a dropdown and then selects the page to go to under that dropdown.
+            Navigating to other pages requires doing this quite a bit.
+
+            Args:
+                dropdown_id (string): The ID of the dropdown to click.
+                page_link_name (string): The name of the link that appears after clicking the dropdown.
+         """
+        dropdown = self.browser.find_element_by_id(dropdown_id)
+        dropdown.click()
+        link_in_dropdown = self.browser.find_element_by_link_text(page_link_name)
+        link_in_dropdown.click()
