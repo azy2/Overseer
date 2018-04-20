@@ -94,12 +94,9 @@ class ManagerService:
             List of length 24 with each element representing an hour and its value being the
             average number of meals used for that hour over all days in the meal history.
         """
-        
+
         # Initialize variables
         history = MealService.get_logs()
-        print("HISTORY:")
-        print(history)
-        print("**********")
         aggregate_meal_usage = [0 for i in range(24)]
         curr_meal_usage = [0 for i in range(24)]
         day_count = 1
@@ -118,7 +115,7 @@ class ManagerService:
                 # Current day not yet set (first log)
                 if curr_day == None:
                     curr_day = log_day
-                
+
                 # Current day has changed, update aggregate values
                 if curr_day != log_day:
                     for i in range(24):
@@ -133,14 +130,7 @@ class ManagerService:
             # Remove the previous meal from the usage stats
             elif log.log_type == "UNDO":
                 bad_log = MealService.get_log_to_undo(log.created, log.manager_id)
-                print("**********")
-                print(log)
-                print(bad_log)
-                print("**********")
                 curr_meal_usage[bad_log.created.hour-1] -= 1
-
-            else:
-                print()
 
         # Final update for last day
         for i in range(24):
