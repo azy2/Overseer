@@ -2,6 +2,7 @@
 from ovs import db
 from ovs.models.package_model import Package
 from ovs.models.user_model import User
+from datetime import datetime as dt
 
 
 class PackageService:
@@ -120,3 +121,20 @@ class PackageService:
             A list of Packages.
         """
         return db.session.query(Package).all()
+
+    @staticmethod
+    def get_package_info():
+        """
+        Gets the number of packages checked in today and total number of packages awaiting pickup.
+
+        Returns:
+            Number of packages checked in today and total number of packages.
+        """
+        all_packages = PackageService.get_all_packages()
+        total_num_packages = len(all_packages)
+        today = dt.today()
+        today_packages = [pkg for pkg in all_packages if pkg.checked_at.day == today.day
+                          and pkg.checked_at.month == today.month
+                          and pkg.checked_at.year == today.year]
+        today_num_packages = len(today_packages)
+        return today_num_packages, total_num_packages

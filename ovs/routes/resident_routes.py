@@ -44,7 +44,7 @@ def landing_page():
         profile = resident.profile
         packages = resident.packages
         meal_plan = resident.meal_plan
-        pict = base64.b64encode(ProfilePictureService.get_profile_picture(profile.picture_id)).decode()
+        pict = base64.b64encode(ProfilePictureService.get_profile_picture(profile.user_id)).decode()
         return render_template('resident/index.html', role=roles.RESIDENT, profile=profile, pict=pict,
                                packages=packages, mealplan=meal_plan)
     except: # pylint: disable=bare-except

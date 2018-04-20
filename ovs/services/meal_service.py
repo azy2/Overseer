@@ -226,3 +226,57 @@ class MealService:
         return db.session.query(MealplanHistory).filter(MealplanHistory.created < undo_date)\
                                                 .filter_by(manager_id=manager_id)\
                                                 .order_by(MealplanHistory.id.desc()).first()
+
+    @staticmethod
+    def get_aggregate_meal_usage():
+        """
+        Gets a list of the number of meals used for each hour.
+
+        Returns:
+            List of length 24 with each element representing an hour and its value being the
+            average number of meals used for that hour over all days in the meal history.
+        """
+
+        # Initialize variables
+        history = MealService.get_logs()
+
+        aggregate_meal_usage = [0 for i in range(24)]
+        curr_meal_usage = [0 for i in range(24)]
+        day_count = 1
+        curr_day = None
+        prev_hour = None
+
+        # Loop through every log in meal history
+        for log in history:
+            # Update meal usage for the given day and hour
+            if log.log_type == "MEAL_USED":
+                # Initialize log variables
+                hour = log.created.hour
+                prev_hour = hour
+                log_day = [log.created.month, log.created.day, log.created.year]
+
+                # Current day not yet set (first log)
+                if curr_day == None:
+                    curr_day = log_day
+
+                # Current day has changed, update aggregate values
+                if curr_day != log_day:
+                    for i in range(24):
+                        aggregate_meal_usage[i] = (aggregate_meal_usage[i] + curr_meal_usage[i]) / day_count
+                    curr_meal_usage = [0 for i in range(24)]
+                    curr_day = log_day
+                    day_count += 1
+
+                # Increment current day's meal usage for the log's hour
+                curr_meal_usage[hour-1] += 1
+
+            # Remove the previous meal from the usage stats
+            elif log.log_type == "UNDO":
+                bad_log = MealService.get_log_to_undo(log.created, log.manager_id)
+                curr_meal_usage[bad_log.created.hour-1] -= 1
+
+        # Final update for last day
+        for i in range(24):
+            aggregate_meal_usage[i] = (aggregate_meal_usage[i] + curr_meal_usage[i]) / day_count
+
+        return aggregate_meal_usage

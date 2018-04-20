@@ -12,18 +12,18 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Empty Rooms</h5>
-                        {% if empty_room_nums|length != 0 %}
+                        {% if empty_room_stats|length != 0 %}
                             <ul class="list-group list-group-flush">
-                                {% for pair in empty_room_nums %}
+                                {% for type, num in empty_room_stats.items() %}
                                     <li class="list-group-item">
                                         <div class="row">
                                             <div class="col">
                                                 <label>Room Type</label>
-                                                <p class="card-text">{{ pair[0]|safe }}</p>
+                                                <p class="card-text">{{ type|safe }}</p>
                                             </div>
                                             <div class="col">
                                                 <label>Number of Rooms Empty</label>
-                                                <p class="card-text">{{ pair[1]|safe }}
+                                                <p class="card-text">{{ num|safe }}
                                             </div>
                                         </div>
                                     </li>
@@ -39,7 +39,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Total Number of Residents</h5>
-                        <p class="card-text" align="right" style="margin-right: 12px;">{{ num_residents }}</p>
+                        <p class="card-text">{{ num_residents }}</p>
                     </div>
                 </div>
             </div>
@@ -132,5 +132,5 @@
             chart.draw(data, options);
         }
     </script>
-      
+
 {% endblock %}

@@ -44,11 +44,11 @@ def landing_page():
     try:
         user = UserService.get_user_by_id(current_user.get_id())
         role = user.role
-        empty_room_nums = ManagerService.get_empty_room_nums()
-        num_residents = ManagerService.get_num_residents()
-        today_num_packages, total_num_packages = ManagerService.get_package_info()
-        aggregate_meal_usage = ManagerService.get_aggregate_meal_usage()
-        return render_template('manager/index.html', role=role, user=user, empty_room_nums=empty_room_nums,
+        empty_room_stats = RoomService.get_empty_room_stats()
+        num_residents = len(ResidentService.get_all_residents_users())
+        today_num_packages, total_num_packages = PackageService.get_package_info()
+        aggregate_meal_usage = MealService.get_aggregate_meal_usage()
+        return render_template('manager/index.html', role=role, user=user, empty_room_stats=empty_room_stats,
                                num_residents=num_residents, total_num_packages=total_num_packages,
                                today_num_packages=today_num_packages, aggregate_meal_usage=aggregate_meal_usage)
     except: # pylint: disable=bare-except
