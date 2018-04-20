@@ -41,14 +41,12 @@ def landing_page():
         A Flask template.
     """
     try:
-        user = UserService.get_user_by_id(current_user.get_id())
-        role = user.role
-        return render_template('manager/index.html', role=role, user=user)
+        return render_template('manager/index.html', role=current_user.role, user=current_user, profile=current_user.profile)
     except: # pylint: disable=bare-except
         db.session.rollback()
         flash('An error was encountered', 'danger')
         logging.exception(traceback.format_exc())
-        return redirect(url_for('manager'))
+        return redirect(url_for('manager'), profile=current_user.profile)
 
 
 @manager_bp.route('/manage_rooms/', methods=['GET', 'POST'])
@@ -316,7 +314,7 @@ def meal_login():
             resident = ResidentService.get_resident_by_id(log.resident_id)
             if resident is None:
                 continue
-            profile = resident.profile
+            profile = UserService.get_user_by_id(log.resident_id).profile
             pict = base64.b64encode(ProfilePictureService.get_profile_picture(profile.user_id)).decode()
             mealplan = MealService.get_meal_plan_by_pin(log.mealplan_pin)
             if mealplan is None:
@@ -365,7 +363,7 @@ def meal_undo():
 
         resident = ResidentService.get_resident_by_id(meal_log.resident_id)
         mealplan = MealService.get_meal_plan_by_pin(meal_log.mealplan_pin)
-        name = resident.profile.preferred_name
+        name = UserService.get_user_by_id(meal_log.resident_id).profile.preferred_name
         current_meals = mealplan.credits
 
         db.session.commit()

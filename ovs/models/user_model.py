@@ -39,6 +39,8 @@ class User(db.Model):
     role = Column(Enum('RESIDENT', 'RESIDENT_ADVISOR', 'STAFF',
                        'OFFICE_MANAGER', 'BUILDING_MANAGER', 'ADMIN'),
                   nullable=False)
+    profile = relationship('Profile', uselist=False, back_populates='user',
+                           cascade='all, delete, delete-orphan')
     created = Column(DateTime, server_default=func.now())
     updated = Column(DateTime, server_default=func.now(), server_onupdate=func.now())
     resident = relationship('Resident', uselist=False, cascade='delete, delete-orphan')

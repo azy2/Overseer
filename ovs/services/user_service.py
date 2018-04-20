@@ -9,6 +9,8 @@ from ovs.services.resident_service import ResidentService
 from ovs.services.manager_service import ManagerService
 from ovs.services.profile_picture_service import ProfilePictureService
 from ovs.utils import crypto, serializer
+from ovs.models.profile_model import Profile
+from ovs.utils import genders
 
 
 class UserService:
@@ -39,6 +41,16 @@ class UserService:
 
         if role == 'RESIDENT':
             ResidentService.create_resident(new_user)
+
+        from ovs.services.profile_picture_service import ProfilePictureService
+
+        new_resident_profile = Profile(new_user.id)
+        new_resident_profile.preferred_name = new_user.first_name
+        new_resident_profile.preferred_email = new_user.email
+        new_resident_profile.gender = genders.UNSPECIFIED
+        ProfilePictureService.set_default_picture(new_user.id)
+        db.session.add(new_resident_profile)
+        db.session.flush()
 
         #Only time passwords are supplied are on default user creation which
         #for which reset password emails are not necessary

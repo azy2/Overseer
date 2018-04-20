@@ -5,7 +5,6 @@ from ovs import db
 from ovs.models.profile_model import Profile
 from ovs.models.resident_model import Resident
 from ovs.models.user_model import User
-from ovs.utils import genders
 
 
 class ResidentService:
@@ -23,20 +22,9 @@ class ResidentService:
         Returns:
             The Resident db model that was just created.
         """
-        from ovs.services.profile_picture_service import ProfilePictureService
-
-
         new_resident = Resident(new_user.id)
         new_resident.room_number = room_number
         db.session.add(new_resident)
-        db.session.flush()
-
-        new_resident_profile = Profile(new_user.id)
-        new_resident_profile.preferred_name = new_user.first_name
-        new_resident_profile.preferred_email = new_user.email
-        new_resident_profile.gender = genders.UNSPECIFIED
-        ProfilePictureService.set_default_picture(new_resident.user_id)
-        db.session.add(new_resident_profile)
         db.session.flush()
 
         return new_resident

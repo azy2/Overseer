@@ -61,7 +61,7 @@
                 </div>
                 <ul class="navbar-nav">
                     {{ dropdown('#', 'accountDropdown', profile.preferred_name, True, [
-                        ('/resident/profile/', 'Profile'),
+                        ('/profile/', 'Profile'),
                         ('/auth/logout/', 'Logout')]) }}
                 </ul>
             {% elif role == 'ADMIN' or role == 'BUILDING_MANAGER' or role == 'OFFICE_MANAGER' or role == 'STAFF' or role == 'RESIDENT_ADVISOR' %}
@@ -80,7 +80,8 @@
                     </ul>
                 </div>
                 <ul class="navbar-nav">
-                    {{ dropdown('#', 'accountDropdown', user.first_name, True, [
+                    {{ dropdown('#', 'accountDropdown', profile.preferred_name, True, [
+                        ('/profile/', 'Profile'),
                         ('/auth/logout/', 'Logout')]) }}
                 </ul>
             {% else %}
