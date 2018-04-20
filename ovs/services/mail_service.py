@@ -27,6 +27,11 @@ class MailService:
         Returns:
             A (mail, response) tuple.
         """
+        resident_id = UserService.get_user_by_email(to_email).get_id()
+        user = ResidentService.get_resident_by_id(resident_id)
+        if user and len(user.profile.preferred_email) != 0:
+            to_email = user.profile.preferred_email
+
         sg = SendGridAPIClient(apikey=current_app.config['SENDGRID']['API_KEY'])
 
         from_email = Email(
