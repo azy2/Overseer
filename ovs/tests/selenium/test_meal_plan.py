@@ -5,12 +5,12 @@ from ovs.tests.selenium.selenium_base_test import SeleniumBaseTestCase
 class TestMealPlan(SeleniumBaseTestCase):
     """ Tests meal plan creation and usage. """
 
-    def create_test_meal_plan(self, email, credits, plan_type):
+    def create_test_meal_plan(self, email, meal_credits, plan_type):
         """ Creates a test meal plan with the provided parameters.
 
             Args:
                 email (string): The email for which to make a meal plan.
-                credits (string): The number of credits for the plan.
+                meal_credits (string): The number of credits for the plan.
                 plan_type (string): The type of meal plan, like 'Semesterly'
 
             Returns:
@@ -25,11 +25,10 @@ class TestMealPlan(SeleniumBaseTestCase):
         email_text_field = self.browser.find_element_by_id('email')
         email_text_field.send_keys(email)
         credits_text_field = self.browser.find_element_by_id('meal_plan')
-        credits_text_field.send_keys(credits)
+        credits_text_field.send_keys(meal_credits)
         plan_type_selector = Select(self.browser.find_element_by_id('plan_type'))
         plan_type_selector.select_by_visible_text(plan_type)
-        register_button = self.browser.find_element_by_name('create_btn')
-        register_button.click()
+        self.browser.find_element_by_name('create_btn').click()
 
         # New meal plans get added to the bottom of the table, find last entry
         meal_plan_table = self.browser.find_element_by_class_name('table-responsive')
@@ -47,8 +46,8 @@ class TestMealPlan(SeleniumBaseTestCase):
         meal_plan_type = plan_type_selector.first_selected_option.text
 
         self.assertEqual(user_email, email)
-        self.assertEqual(num_credits, credits)
-        self.assertEqual(meal_plan_credits, credits)
+        self.assertEqual(num_credits, meal_credits)
+        self.assertEqual(meal_plan_credits, meal_credits)
         self.assertEqual(meal_plan_type, plan_type)
 
         # Return the user's pin for other meal plan tests to use

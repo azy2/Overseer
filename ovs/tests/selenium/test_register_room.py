@@ -52,7 +52,7 @@ class TestRegisterRoom(SeleniumBaseTestCase):
         self.browser.get(self.base_url)
         self.assertIn('Overseer', self.browser.title)
         super().login_default_admin()
-        
+
         # Attempt to add a resident that doesn't exist to a room
         register_rooms_link = self.browser.find_element_by_link_text('Rooms')
         register_rooms_link.click()

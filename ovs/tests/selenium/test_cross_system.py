@@ -48,7 +48,7 @@ class TestCrossSystem(SeleniumBaseTestCase):
         # Log in to new resident account and edit preferred name in profile
         self.go_to_page_in_dropdown('Logout', 'accountDropdown')
         super().login_default_resident()
-        self.go_to_page_in_dropdown('Profile', 'accountDropdown')      
+        self.go_to_page_in_dropdown('Profile', 'accountDropdown')
 
         # Change preferred name and submit changes
         self.set_text_field_by_id('preferred_name', 'Megatron')
@@ -70,7 +70,7 @@ class TestCrossSystem(SeleniumBaseTestCase):
         self.browser.get(self.base_url)
         self.assertIn('Overseer', self.browser.title)
         super().login_default_admin()
-        
+
         # Attempt to add a resident that doesn't exist to a room
         register_rooms_link = self.browser.find_element_by_link_text('Rooms')
         register_rooms_link.click()
@@ -95,7 +95,7 @@ class TestCrossSystem(SeleniumBaseTestCase):
         register_button = self.browser.find_element_by_name('register_btn')
         register_button.click()
 
-        # Now try to add the new resident and default resident to the room 
+        # Now try to add the new resident and default resident to the room
         register_room_link = self.browser.find_element_by_link_text('Rooms')
         register_room_link.click()
         self.set_text_field_by_id('room_number', '57')
