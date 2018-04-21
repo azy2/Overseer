@@ -12,6 +12,11 @@ from ovs import db
 class Resident(db.Model):
     """
     Defines a Resident as represented in the database. Along with some utility functions.
+    Args:
+        user_id (int): Must be the same as the corresponding `User.id`.
+
+    Returns:
+        A Resident Model object.
     """
     __tablename__ = 'residents'
 
@@ -32,11 +37,20 @@ class Resident(db.Model):
         super(Resident, self).__init__(user_id=user_id)
 
     def __repr__(self):
+        """
+        Allows Resident to be printed.
+        Returns:
+            str: A string representation of this Resident.
+        """
         return 'Resident([user_id={user_id}, room_number={room_number},' \
                'created={created}, updated={updated}])'.format(**self.__dict__)
 
     def json(self):
-        """ Returns a JSON representation of this Resident """
+        """
+        Get JSON representation of this Resident.
+        Returns:
+             A JSON representation of this Resident.
+        """
         return jsonify(
             user_id=self.user_id,
             room_number=self.room_number,

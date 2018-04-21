@@ -1,0 +1,559 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>ovs.models package &#8212; Overseer 1.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Overseer 1.0.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="ovs-models-package">
+<h1>ovs.models package<a class="headerlink" href="#ovs-models-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-ovs.models.meal_plan_model">
+<span id="ovs-models-meal-plan-model-module"></span><h2>ovs.models.meal_plan_model module<a class="headerlink" href="#module-ovs.models.meal_plan_model" title="Permalink to this headline">¶</a></h2>
+<p>Defines a MealPlan as represented in the database</p>
+<dl class="class">
+<dt id="ovs.models.meal_plan_model.MealPlan">
+<em class="property">class </em><code class="descclassname">ovs.models.meal_plan_model.</code><code class="descname">MealPlan</code><span class="sig-paren">(</span><em>meal_plan</em>, <em>plan_type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/meal_plan_model.html#MealPlan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.meal_plan_model.MealPlan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.api.Model</span></code></p>
+<p>Defines a MealPlan as represented in the database. Along with some utility functions.</p>
+<dl class="attribute">
+<dt id="ovs.models.meal_plan_model.MealPlan.created">
+<code class="descname">created</code><a class="headerlink" href="#ovs.models.meal_plan_model.MealPlan.created" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.models.meal_plan_model.MealPlan.credits">
+<code class="descname">credits</code><a class="headerlink" href="#ovs.models.meal_plan_model.MealPlan.credits" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ovs.models.meal_plan_model.MealPlan.get_next_reset_date">
+<code class="descname">get_next_reset_date</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/meal_plan_model.html#MealPlan.get_next_reset_date"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.meal_plan_model.MealPlan.get_next_reset_date" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the next reset day based off the plan type
+:return: DateTime value for reset_day</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.models.meal_plan_model.MealPlan.id">
+<code class="descname">id</code><a class="headerlink" href="#ovs.models.meal_plan_model.MealPlan.id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ovs.models.meal_plan_model.MealPlan.json">
+<code class="descname">json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/meal_plan_model.html#MealPlan.json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.meal_plan_model.MealPlan.json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a JSON representation of this Meal Plan</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.models.meal_plan_model.MealPlan.meal_plan">
+<code class="descname">meal_plan</code><a class="headerlink" href="#ovs.models.meal_plan_model.MealPlan.meal_plan" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="ovs.models.meal_plan_model.MealPlan.next_weekday">
+<em class="property">static </em><code class="descname">next_weekday</code><span class="sig-paren">(</span><em>weekday</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/meal_plan_model.html#MealPlan.next_weekday"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.meal_plan_model.MealPlan.next_weekday" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the next weekday after date
+:param date: DateTime to start
+:param weekday: 0 for Monday … 6 for Sunday
+:return: DateTime with date as the next weekday and time identical to provided date.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.models.meal_plan_model.MealPlan.pin">
+<code class="descname">pin</code><a class="headerlink" href="#ovs.models.meal_plan_model.MealPlan.pin" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.models.meal_plan_model.MealPlan.plan_type">
+<code class="descname">plan_type</code><a class="headerlink" href="#ovs.models.meal_plan_model.MealPlan.plan_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.models.meal_plan_model.MealPlan.reset_date">
+<code class="descname">reset_date</code><a class="headerlink" href="#ovs.models.meal_plan_model.MealPlan.reset_date" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ovs.models.meal_plan_model.MealPlan.update_meal_count">
+<code class="descname">update_meal_count</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/meal_plan_model.html#MealPlan.update_meal_count"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.meal_plan_model.MealPlan.update_meal_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses a meal credit, as outlined by the plan.
+:return: Boolean, whether a credit was available</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.models.meal_plan_model.MealPlan.updated">
+<code class="descname">updated</code><a class="headerlink" href="#ovs.models.meal_plan_model.MealPlan.updated" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ovs.models.mealplan_history_model">
+<span id="ovs-models-mealplan-history-model-module"></span><h2>ovs.models.mealplan_history_model module<a class="headerlink" href="#module-ovs.models.mealplan_history_model" title="Permalink to this headline">¶</a></h2>
+<p>Keeps track of mealplan history as represented in the database</p>
+<dl class="class">
+<dt id="ovs.models.mealplan_history_model.MealplanHistory">
+<em class="property">class </em><code class="descclassname">ovs.models.mealplan_history_model.</code><code class="descname">MealplanHistory</code><span class="sig-paren">(</span><em>resident_id</em>, <em>mealplan_pin</em>, <em>manager_id</em>, <em>log_type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/mealplan_history_model.html#MealplanHistory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.mealplan_history_model.MealplanHistory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.api.Model</span></code></p>
+<p>Defines a Mealplan History Item as represented in the database.</p>
+<dl class="attribute">
+<dt id="ovs.models.mealplan_history_model.MealplanHistory.created">
+<code class="descname">created</code><a class="headerlink" href="#ovs.models.mealplan_history_model.MealplanHistory.created" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.models.mealplan_history_model.MealplanHistory.id">
+<code class="descname">id</code><a class="headerlink" href="#ovs.models.mealplan_history_model.MealplanHistory.id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ovs.models.mealplan_history_model.MealplanHistory.json">
+<code class="descname">json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/mealplan_history_model.html#MealplanHistory.json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.mealplan_history_model.MealplanHistory.json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a JSON representation of this Mealplan History Item</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.models.mealplan_history_model.MealplanHistory.log_type">
+<code class="descname">log_type</code><a class="headerlink" href="#ovs.models.mealplan_history_model.MealplanHistory.log_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.models.mealplan_history_model.MealplanHistory.manager_id">
+<code class="descname">manager_id</code><a class="headerlink" href="#ovs.models.mealplan_history_model.MealplanHistory.manager_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.models.mealplan_history_model.MealplanHistory.mealplan_pin">
+<code class="descname">mealplan_pin</code><a class="headerlink" href="#ovs.models.mealplan_history_model.MealplanHistory.mealplan_pin" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.models.mealplan_history_model.MealplanHistory.resident_id">
+<code class="descname">resident_id</code><a class="headerlink" href="#ovs.models.mealplan_history_model.MealplanHistory.resident_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.models.mealplan_history_model.MealplanHistory.updated">
+<code class="descname">updated</code><a class="headerlink" href="#ovs.models.mealplan_history_model.MealplanHistory.updated" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ovs.models.package_model">
+<span id="ovs-models-package-model-module"></span><h2>ovs.models.package_model module<a class="headerlink" href="#module-ovs.models.package_model" title="Permalink to this headline">¶</a></h2>
+<p>Defines a Package as represented in the database</p>
+<dl class="class">
+<dt id="ovs.models.package_model.Package">
+<em class="property">class </em><code class="descclassname">ovs.models.package_model.</code><code class="descname">Package</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/package_model.html#Package"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.package_model.Package" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.api.Model</span></code></p>
+<p>Defines a Package as represented in the database</p>
+<dl class="attribute">
+<dt id="ovs.models.package_model.Package.checked_at">
+<code class="descname">checked_at</code><a class="headerlink" href="#ovs.models.package_model.Package.checked_at" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.models.package_model.Package.checked_by_id">
+<code class="descname">checked_by_id</code><a class="headerlink" href="#ovs.models.package_model.Package.checked_by_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.models.package_model.Package.description">
+<code class="descname">description</code><a class="headerlink" href="#ovs.models.package_model.Package.description" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.models.package_model.Package.id">
+<code class="descname">id</code><a class="headerlink" href="#ovs.models.package_model.Package.id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.models.package_model.Package.is_signed">
+<code class="descname">is_signed</code><a class="headerlink" href="#ovs.models.package_model.Package.is_signed" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ovs.models.package_model.Package.json">
+<code class="descname">json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/package_model.html#Package.json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.package_model.Package.json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a JSON representation of the Package</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.models.package_model.Package.recipient_id">
+<code class="descname">recipient_id</code><a class="headerlink" href="#ovs.models.package_model.Package.recipient_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.models.package_model.Package.signed_at">
+<code class="descname">signed_at</code><a class="headerlink" href="#ovs.models.package_model.Package.signed_at" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ovs.models.profile_model">
+<span id="ovs-models-profile-model-module"></span><h2>ovs.models.profile_model module<a class="headerlink" href="#module-ovs.models.profile_model" title="Permalink to this headline">¶</a></h2>
+<p>Defines a Profile as represented in the database</p>
+<dl class="class">
+<dt id="ovs.models.profile_model.Profile">
+<em class="property">class </em><code class="descclassname">ovs.models.profile_model.</code><code class="descname">Profile</code><span class="sig-paren">(</span><em>user_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/profile_model.html#Profile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.profile_model.Profile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.api.Model</span></code></p>
+<p>Defines a Profile as represented in the database.</p>
+<dl class="attribute">
+<dt id="ovs.models.profile_model.Profile.created">
+<code class="descname">created</code><a class="headerlink" href="#ovs.models.profile_model.Profile.created" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.models.profile_model.Profile.gender">
+<code class="descname">gender</code><a class="headerlink" href="#ovs.models.profile_model.Profile.gender" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ovs.models.profile_model.Profile.json">
+<code class="descname">json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/profile_model.html#Profile.json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.profile_model.Profile.json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a JSON representation of this Profile</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.models.profile_model.Profile.phone_number">
+<code class="descname">phone_number</code><a class="headerlink" href="#ovs.models.profile_model.Profile.phone_number" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.models.profile_model.Profile.picture_id">
+<code class="descname">picture_id</code><a class="headerlink" href="#ovs.models.profile_model.Profile.picture_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.models.profile_model.Profile.preferred_email">
+<code class="descname">preferred_email</code><a class="headerlink" href="#ovs.models.profile_model.Profile.preferred_email" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.models.profile_model.Profile.preferred_name">
+<code class="descname">preferred_name</code><a class="headerlink" href="#ovs.models.profile_model.Profile.preferred_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.models.profile_model.Profile.race">
+<code class="descname">race</code><a class="headerlink" href="#ovs.models.profile_model.Profile.race" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.models.profile_model.Profile.resident">
+<code class="descname">resident</code><a class="headerlink" href="#ovs.models.profile_model.Profile.resident" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.models.profile_model.Profile.updated">
+<code class="descname">updated</code><a class="headerlink" href="#ovs.models.profile_model.Profile.updated" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.models.profile_model.Profile.user_id">
+<code class="descname">user_id</code><a class="headerlink" href="#ovs.models.profile_model.Profile.user_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ovs.models.resident_model">
+<span id="ovs-models-resident-model-module"></span><h2>ovs.models.resident_model module<a class="headerlink" href="#module-ovs.models.resident_model" title="Permalink to this headline">¶</a></h2>
+<p>Defines a Resident as represented in the database</p>
+<dl class="class">
+<dt id="ovs.models.resident_model.Resident">
+<em class="property">class </em><code class="descclassname">ovs.models.resident_model.</code><code class="descname">Resident</code><span class="sig-paren">(</span><em>user_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/resident_model.html#Resident"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.resident_model.Resident" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.api.Model</span></code></p>
+<p>Defines a Resident as represented in the database. Along with some utility functions.</p>
+<dl class="attribute">
+<dt id="ovs.models.resident_model.Resident.created">
+<code class="descname">created</code><a class="headerlink" href="#ovs.models.resident_model.Resident.created" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ovs.models.resident_model.Resident.json">
+<code class="descname">json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/resident_model.html#Resident.json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.resident_model.Resident.json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a JSON representation of this Resident</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.models.resident_model.Resident.mealplan_pin">
+<code class="descname">mealplan_pin</code><a class="headerlink" href="#ovs.models.resident_model.Resident.mealplan_pin" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.models.resident_model.Resident.profile">
+<code class="descname">profile</code><a class="headerlink" href="#ovs.models.resident_model.Resident.profile" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.models.resident_model.Resident.room_number">
+<code class="descname">room_number</code><a class="headerlink" href="#ovs.models.resident_model.Resident.room_number" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.models.resident_model.Resident.rooms">
+<code class="descname">rooms</code><a class="headerlink" href="#ovs.models.resident_model.Resident.rooms" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.models.resident_model.Resident.updated">
+<code class="descname">updated</code><a class="headerlink" href="#ovs.models.resident_model.Resident.updated" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.models.resident_model.Resident.user_id">
+<code class="descname">user_id</code><a class="headerlink" href="#ovs.models.resident_model.Resident.user_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ovs.models.room_model">
+<span id="ovs-models-room-model-module"></span><h2>ovs.models.room_model module<a class="headerlink" href="#module-ovs.models.room_model" title="Permalink to this headline">¶</a></h2>
+<p>Defines a Room as represented in the database</p>
+<dl class="class">
+<dt id="ovs.models.room_model.Room">
+<em class="property">class </em><code class="descclassname">ovs.models.room_model.</code><code class="descname">Room</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/room_model.html#Room"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.room_model.Room" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.api.Model</span></code></p>
+<p>Defines a Room as represented in the database. Along with some utility functions.</p>
+<dl class="attribute">
+<dt id="ovs.models.room_model.Room.created">
+<code class="descname">created</code><a class="headerlink" href="#ovs.models.room_model.Room.created" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.models.room_model.Room.id">
+<code class="descname">id</code><a class="headerlink" href="#ovs.models.room_model.Room.id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ovs.models.room_model.Room.json">
+<code class="descname">json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/room_model.html#Room.json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.room_model.Room.json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a JSON representation of this Room</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.models.room_model.Room.number">
+<code class="descname">number</code><a class="headerlink" href="#ovs.models.room_model.Room.number" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.models.room_model.Room.occupants">
+<code class="descname">occupants</code><a class="headerlink" href="#ovs.models.room_model.Room.occupants" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.models.room_model.Room.status">
+<code class="descname">status</code><a class="headerlink" href="#ovs.models.room_model.Room.status" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.models.room_model.Room.type">
+<code class="descname">type</code><a class="headerlink" href="#ovs.models.room_model.Room.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.models.room_model.Room.updated">
+<code class="descname">updated</code><a class="headerlink" href="#ovs.models.room_model.Room.updated" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ovs.models.user_model">
+<span id="ovs-models-user-model-module"></span><h2>ovs.models.user_model module<a class="headerlink" href="#module-ovs.models.user_model" title="Permalink to this headline">¶</a></h2>
+<p>Defines a User as represented in the database</p>
+<dl class="class">
+<dt id="ovs.models.user_model.User">
+<em class="property">class </em><code class="descclassname">ovs.models.user_model.</code><code class="descname">User</code><span class="sig-paren">(</span><em>email</em>, <em>first_name</em>, <em>last_name</em>, <em>password</em>, <em>role</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/user_model.html#User"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.user_model.User" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.api.Model</span></code></p>
+<p>Defines a User as represented in the database. Along with some utility functions.</p>
+<dl class="attribute">
+<dt id="ovs.models.user_model.User.created">
+<code class="descname">created</code><a class="headerlink" href="#ovs.models.user_model.User.created" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.models.user_model.User.email">
+<code class="descname">email</code><a class="headerlink" href="#ovs.models.user_model.User.email" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.models.user_model.User.first_name">
+<code class="descname">first_name</code><a class="headerlink" href="#ovs.models.user_model.User.first_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ovs.models.user_model.User.get_id">
+<code class="descname">get_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/user_model.html#User.get_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.user_model.User.get_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>:returns the user’s unique id in the database</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.models.user_model.User.has_password">
+<code class="descname">has_password</code><span class="sig-paren">(</span><em>password</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/user_model.html#User.has_password"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.user_model.User.has_password" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if inputted password matches the one stored in DB</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.models.user_model.User.id">
+<code class="descname">id</code><a class="headerlink" href="#ovs.models.user_model.User.id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ovs.models.user_model.User.is_active">
+<code class="descname">is_active</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/user_model.html#User.is_active"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.user_model.User.is_active" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if this user account is active</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.models.user_model.User.is_anonymous">
+<code class="descname">is_anonymous</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/user_model.html#User.is_anonymous"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.user_model.User.is_anonymous" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if this user is anonymous</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.models.user_model.User.is_authenticated">
+<code class="descname">is_authenticated</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/user_model.html#User.is_authenticated"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.user_model.User.is_authenticated" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if a user is authenticated</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.models.user_model.User.json">
+<code class="descname">json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/user_model.html#User.json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.user_model.User.json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a JSON representation of this User</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.models.user_model.User.last_name">
+<code class="descname">last_name</code><a class="headerlink" href="#ovs.models.user_model.User.last_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.models.user_model.User.password">
+<code class="descname">password</code><a class="headerlink" href="#ovs.models.user_model.User.password" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.models.user_model.User.role">
+<code class="descname">role</code><a class="headerlink" href="#ovs.models.user_model.User.role" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ovs.models.user_model.User.update">
+<code class="descname">update</code><span class="sig-paren">(</span><em>email</em>, <em>first_name</em>, <em>last_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/user_model.html#User.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.user_model.User.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates user with new information</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.models.user_model.User.updated">
+<code class="descname">updated</code><a class="headerlink" href="#ovs.models.user_model.User.updated" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ovs.models">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ovs.models" title="Permalink to this headline">¶</a></h2>
+<p>Models</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">ovs.models package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-ovs.models.meal_plan_model">ovs.models.meal_plan_model module</a></li>
+<li><a class="reference internal" href="#module-ovs.models.mealplan_history_model">ovs.models.mealplan_history_model module</a></li>
+<li><a class="reference internal" href="#module-ovs.models.package_model">ovs.models.package_model module</a></li>
+<li><a class="reference internal" href="#module-ovs.models.profile_model">ovs.models.profile_model module</a></li>
+<li><a class="reference internal" href="#module-ovs.models.resident_model">ovs.models.resident_model module</a></li>
+<li><a class="reference internal" href="#module-ovs.models.room_model">ovs.models.room_model module</a></li>
+<li><a class="reference internal" href="#module-ovs.models.user_model">ovs.models.user_model module</a></li>
+<li><a class="reference internal" href="#module-ovs.models">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/ovs.models.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Overseer 1.0.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Ben Lambeth.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.2.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,198 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>ovs.tests.unittests.services.test_user_service &#8212; Overseer 1.0.0 documentation</title>
+    <link rel="stylesheet" href="../../../../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="../../../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../../index.html">Overseer 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../../index.html" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../../../ovs.html" accesskey="U">ovs</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for ovs.tests.unittests.services.test_user_service</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Tests for user services</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">ovs.tests.unittests.base_test</span> <span class="k">import</span> <span class="n">OVSBaseTestCase</span>
+<span class="kn">from</span> <span class="nn">ovs.services.user_service</span> <span class="k">import</span> <span class="n">UserService</span>
+<span class="kn">from</span> <span class="nn">ovs.models.user_model</span> <span class="k">import</span> <span class="n">User</span>
+<span class="kn">from</span> <span class="nn">ovs.models.resident_model</span> <span class="k">import</span> <span class="n">Resident</span>
+<span class="kn">from</span> <span class="nn">ovs.datagen</span> <span class="k">import</span> <span class="n">DataGen</span>
+
+
+<div class="viewcode-block" id="TestUserService"><a class="viewcode-back" href="../../../../../ovs.tests.unittests.services.html#ovs.tests.unittests.services.test_user_service.TestUserService">[docs]</a><span class="k">class</span> <span class="nc">TestUserService</span><span class="p">(</span><span class="n">OVSBaseTestCase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Tests for user services</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="TestUserService.setUp"><a class="viewcode-back" href="../../../../../ovs.tests.unittests.services.html#ovs.tests.unittests.services.test_user_service.TestUserService.setUp">[docs]</a>    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Runs before every test and clears relevant tables &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setUp</span><span class="p">()</span>
+        <span class="n">DataGen</span><span class="o">.</span><span class="n">create_default_room</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">create_test_user</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="TestUserService.create_test_user"><a class="viewcode-back" href="../../../../../ovs.tests.unittests.services.html#ovs.tests.unittests.services.test_user_service.TestUserService.create_test_user">[docs]</a>    <span class="k">def</span> <span class="nf">create_test_user</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Creates a test user &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_user_info</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;test@gmail.com&#39;</span><span class="p">,</span> <span class="s1">&#39;Bob&#39;</span><span class="p">,</span> <span class="s1">&#39;Ross&#39;</span><span class="p">,</span> <span class="s1">&#39;ADMIN&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_user</span> <span class="o">=</span> <span class="n">UserService</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">test_user_info</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestUserService.test_create_user"><a class="viewcode-back" href="../../../../../ovs.tests.unittests.services.html#ovs.tests.unittests.services.test_user_service.TestUserService.test_create_user">[docs]</a>    <span class="k">def</span> <span class="nf">test_create_user</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Tests that users can be created &quot;&quot;&quot;</span>
+        <span class="c1"># User was created in setup. We check if it exists</span>
+        <span class="n">user_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+            <span class="n">User</span><span class="o">.</span><span class="n">email</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_user_info</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">user_list</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">user</span> <span class="o">=</span> <span class="n">user_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">((</span><span class="n">user</span><span class="o">.</span><span class="n">email</span><span class="p">,</span> <span class="n">user</span><span class="o">.</span><span class="n">first_name</span><span class="p">,</span>
+                          <span class="n">user</span><span class="o">.</span><span class="n">last_name</span><span class="p">,</span> <span class="n">user</span><span class="o">.</span><span class="n">role</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_user_info</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNotNone</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">password</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestUserService.test_get_user_by_email"><a class="viewcode-back" href="../../../../../ovs.tests.unittests.services.html#ovs.tests.unittests.services.test_user_service.TestUserService.test_get_user_by_email">[docs]</a>    <span class="k">def</span> <span class="nf">test_get_user_by_email</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Tests get_user_by_email successfully finds a user &quot;&quot;&quot;</span>
+        <span class="n">test_user_info</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;test2@gmail.com&#39;</span><span class="p">,</span> <span class="s1">&#39;Bob&#39;</span><span class="p">,</span> <span class="s1">&#39;Ross&#39;</span><span class="p">,</span> <span class="s1">&#39;ADMIN&#39;</span><span class="p">)</span>
+        <span class="n">UserService</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span><span class="o">*</span><span class="n">test_user_info</span><span class="p">)</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">UserService</span><span class="o">.</span><span class="n">get_user_by_email</span><span class="p">(</span><span class="n">test_user_info</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">((</span><span class="n">user</span><span class="o">.</span><span class="n">email</span><span class="p">,</span> <span class="n">user</span><span class="o">.</span><span class="n">first_name</span><span class="p">,</span> <span class="n">user</span><span class="o">.</span><span class="n">last_name</span><span class="p">,</span> <span class="n">user</span><span class="o">.</span><span class="n">role</span><span class="p">),</span>
+                         <span class="n">test_user_info</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNotNone</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">password</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestUserService.test_invalid_get_user_by_email"><a class="viewcode-back" href="../../../../../ovs.tests.unittests.services.html#ovs.tests.unittests.services.test_user_service.TestUserService.test_invalid_get_user_by_email">[docs]</a>    <span class="k">def</span> <span class="nf">test_invalid_get_user_by_email</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Tests get_user_by_email does not find anyone with an invalid email &quot;&quot;&quot;</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">UserService</span><span class="o">.</span><span class="n">get_user_by_email</span><span class="p">(</span><span class="s2">&quot;dummy@gmail.com&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNone</span><span class="p">(</span><span class="n">user</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestUserService.test_edit_user"><a class="viewcode-back" href="../../../../../ovs.tests.unittests.services.html#ovs.tests.unittests.services.test_user_service.TestUserService.test_edit_user">[docs]</a>    <span class="k">def</span> <span class="nf">test_edit_user</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># cases : bad user, overwrite, same email, normal</span>
+        <span class="sd">&quot;&quot;&quot; Tests editing a user when everything works&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">UserService</span><span class="o">.</span><span class="n">edit_user</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">test_user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s1">&#39;test2@gmail.com&#39;</span><span class="p">,</span> <span class="s1">&#39;John&#39;</span><span class="p">,</span> <span class="s1">&#39;Smith&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_user</span><span class="o">.</span><span class="n">email</span><span class="p">,</span> <span class="s1">&#39;test2@gmail.com&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_user</span><span class="o">.</span><span class="n">first_name</span><span class="p">,</span> <span class="s1">&#39;John&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_user</span><span class="o">.</span><span class="n">last_name</span><span class="p">,</span> <span class="s1">&#39;Smith&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestUserService.test_user_same_email"><a class="viewcode-back" href="../../../../../ovs.tests.unittests.services.html#ovs.tests.unittests.services.test_user_service.TestUserService.test_user_same_email">[docs]</a>    <span class="k">def</span> <span class="nf">test_user_same_email</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Tests editing a user when everything works. Duplicate email is okay, since it is the one! &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">UserService</span><span class="o">.</span><span class="n">edit_user</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">test_user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s1">&#39;test@gmail.com&#39;</span><span class="p">,</span> <span class="s1">&#39;John&#39;</span><span class="p">,</span> <span class="s1">&#39;Smith&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_user</span><span class="o">.</span><span class="n">email</span><span class="p">,</span> <span class="s1">&#39;test@gmail.com&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_user</span><span class="o">.</span><span class="n">first_name</span><span class="p">,</span> <span class="s1">&#39;John&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_user</span><span class="o">.</span><span class="n">last_name</span><span class="p">,</span> <span class="s1">&#39;Smith&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestUserService.test_edit_user_bad_id"><a class="viewcode-back" href="../../../../../ovs.tests.unittests.services.html#ovs.tests.unittests.services.test_user_service.TestUserService.test_edit_user_bad_id">[docs]</a>    <span class="k">def</span> <span class="nf">test_edit_user_bad_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Tests editing a nonexistant user&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">UserService</span><span class="o">.</span><span class="n">edit_user</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">test_user</span><span class="o">.</span><span class="n">id</span><span class="o">+</span><span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;test_edit@gmail.com&#39;</span><span class="p">,</span> <span class="s1">&#39;John&#39;</span><span class="p">,</span> <span class="s1">&#39;Smith&#39;</span><span class="p">))</span>  <span class="c1"># random id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNone</span><span class="p">(</span><span class="n">UserService</span><span class="o">.</span><span class="n">get_user_by_email</span><span class="p">(</span><span class="s1">&#39;test_edit@gmail.com&#39;</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="TestUserService.test_edit_user_duplicate_email"><a class="viewcode-back" href="../../../../../ovs.tests.unittests.services.html#ovs.tests.unittests.services.test_user_service.TestUserService.test_edit_user_duplicate_email">[docs]</a>    <span class="k">def</span> <span class="nf">test_edit_user_duplicate_email</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Tests edit resident to an existing email &quot;&quot;&quot;</span>
+        <span class="n">UserService</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span><span class="s1">&#39;test2@gmail.com&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;ADMIN&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">UserService</span><span class="o">.</span><span class="n">edit_user</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">test_user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s1">&#39;test2@gmail.com&#39;</span><span class="p">,</span> <span class="s1">&#39;John&#39;</span><span class="p">,</span> <span class="s1">&#39;Smith&#39;</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_user</span><span class="o">.</span><span class="n">email</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_user_info</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_user</span><span class="o">.</span><span class="n">first_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_user_info</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_user</span><span class="o">.</span><span class="n">last_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_user_info</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="TestUserService.test_delete_user"><a class="viewcode-back" href="../../../../../ovs.tests.unittests.services.html#ovs.tests.unittests.services.test_user_service.TestUserService.test_delete_user">[docs]</a>    <span class="k">def</span> <span class="nf">test_delete_user</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Tests that a user can be deleted &quot;&quot;&quot;</span>
+        <span class="n">expected</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span>
+
+        <span class="c1"># check if deletion successful</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">UserService</span><span class="o">.</span><span class="n">delete_user</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_user</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span> <span class="n">expected</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestUserService.test_delete_user_null"><a class="viewcode-back" href="../../../../../ovs.tests.unittests.services.html#ovs.tests.unittests.services.test_user_service.TestUserService.test_delete_user_null">[docs]</a>    <span class="k">def</span> <span class="nf">test_delete_user_null</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Tests that nothing breaks when deleting a nonexistant resident &quot;&quot;&quot;</span>
+        <span class="n">expected</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+
+        <span class="c1"># This id is NOT the resident</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">UserService</span><span class="o">.</span><span class="n">delete_user</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_user</span><span class="o">.</span><span class="n">id</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span> <span class="n">expected</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestUserService.test_delete_user_resident"><a class="viewcode-back" href="../../../../../ovs.tests.unittests.services.html#ovs.tests.unittests.services.test_user_service.TestUserService.test_delete_user_resident">[docs]</a>    <span class="k">def</span> <span class="nf">test_delete_user_resident</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Tests that deleting a user deletes their resident info &quot;&quot;&quot;</span>
+        <span class="n">resident</span> <span class="o">=</span> <span class="n">UserService</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
+            <span class="s1">&#39;test2@gmail.com&#39;</span><span class="p">,</span> <span class="s1">&#39;John&#39;</span><span class="p">,</span> <span class="s1">&#39;Smith&#39;</span><span class="p">,</span> <span class="s1">&#39;RESIDENT&#39;</span><span class="p">)</span>
+        <span class="n">expected_user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">expected_resident</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Resident</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">UserService</span><span class="o">.</span><span class="n">delete_user</span><span class="p">(</span><span class="n">resident</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span> <span class="n">expected_user</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+            <span class="n">Resident</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span> <span class="n">expected_resident</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../../index.html">Overseer 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../../index.html" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../../../ovs.html" >ovs</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Ben Lambeth.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.2.
+    </div>
+  </body>
+</html>

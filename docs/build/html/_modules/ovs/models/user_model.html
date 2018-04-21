@@ -1,0 +1,174 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>ovs.models.user_model &#8212; Overseer 1.0.0 documentation</title>
+    <link rel="stylesheet" href="../../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">Overseer 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../ovs.html" accesskey="U">ovs</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for ovs.models.user_model</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Defines a User as represented in the database</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">flask</span> <span class="k">import</span> <span class="n">jsonify</span>
+<span class="kn">from</span> <span class="nn">flask_bcrypt</span> <span class="k">import</span> <span class="n">Bcrypt</span><span class="p">,</span> <span class="n">bcrypt</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="k">import</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">Column</span><span class="p">,</span> <span class="n">CHAR</span><span class="p">,</span> <span class="n">String</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">DateTime</span>
+
+<span class="kn">from</span> <span class="nn">ovs</span> <span class="k">import</span> <span class="n">db</span>
+
+<span class="n">SALT_ROUNDS</span> <span class="o">=</span> <span class="mi">12</span>
+
+<span class="n">bcrypt_app</span> <span class="o">=</span> <span class="n">Bcrypt</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="User"><a class="viewcode-back" href="../../../ovs.models.html#ovs.models.user_model.User">[docs]</a><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Defines a User as represented in the database. Along with some utility functions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;users&#39;</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">email</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">255</span><span class="p">),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">first_name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">255</span><span class="p">),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">last_name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">255</span><span class="p">),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">password</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">CHAR</span><span class="p">(</span><span class="mi">60</span><span class="p">),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">role</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Enum</span><span class="p">(</span><span class="s1">&#39;RESIDENT&#39;</span><span class="p">,</span> <span class="s1">&#39;RESIDENT_ADVISOR&#39;</span><span class="p">,</span> <span class="s1">&#39;STAFF&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;OFFICE_MANAGER&#39;</span><span class="p">,</span> <span class="s1">&#39;BUILDING_MANAGER&#39;</span><span class="p">,</span> <span class="s1">&#39;ADMIN&#39;</span><span class="p">),</span>
+                  <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">created</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span>
+        <span class="n">DateTime</span><span class="p">,</span> <span class="n">server_default</span><span class="o">=</span><span class="n">text</span><span class="p">(</span><span class="s1">&#39;CURRENT_TIMESTAMP&#39;</span><span class="p">))</span>
+    <span class="n">updated</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">DateTime</span><span class="p">,</span> <span class="n">server_default</span><span class="o">=</span><span class="n">text</span><span class="p">(</span>
+        <span class="s1">&#39;CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP&#39;</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">email</span><span class="p">,</span> <span class="n">first_name</span><span class="p">,</span> <span class="n">last_name</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">role</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">password</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">password</span> <span class="o">=</span> <span class="n">bcrypt</span><span class="o">.</span><span class="n">gensalt</span><span class="p">()</span>
+        <span class="n">password_hash</span> <span class="o">=</span> <span class="n">bcrypt_app</span><span class="o">.</span><span class="n">generate_password_hash</span><span class="p">(</span><span class="n">password</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">email</span><span class="o">=</span><span class="n">email</span><span class="p">,</span>
+            <span class="n">first_name</span><span class="o">=</span><span class="n">first_name</span><span class="p">,</span>
+            <span class="n">last_name</span><span class="o">=</span><span class="n">last_name</span><span class="p">,</span>
+            <span class="n">password</span><span class="o">=</span><span class="n">password_hash</span><span class="p">,</span>
+            <span class="n">role</span><span class="o">=</span><span class="n">role</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;User([id=</span><span class="si">{id}</span><span class="s1">, email=</span><span class="si">{email}</span><span class="s1">, first_name=</span><span class="si">{first_name}</span><span class="s1">, last_name=</span><span class="si">{last_name}</span><span class="s1">, role=</span><span class="si">{role}</span><span class="s1">, &#39;</span> \
+               <span class="s1">&#39;created=</span><span class="si">{created}</span><span class="s1">, updated=</span><span class="si">{updated}</span><span class="s1">])&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span>
+
+<div class="viewcode-block" id="User.has_password"><a class="viewcode-back" href="../../../ovs.models.html#ovs.models.user_model.User.has_password">[docs]</a>    <span class="k">def</span> <span class="nf">has_password</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Checks if inputted password matches the one stored in DB &quot;&quot;&quot;</span>
+        <span class="n">to_check</span> <span class="o">=</span> <span class="n">password</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+        <span class="n">actual</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">bcrypt_app</span><span class="o">.</span><span class="n">check_password_hash</span><span class="p">(</span><span class="n">actual</span><span class="p">,</span> <span class="n">to_check</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="User.json"><a class="viewcode-back" href="../../../ovs.models.html#ovs.models.user_model.User.json">[docs]</a>    <span class="k">def</span> <span class="nf">json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns a JSON representation of this User &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="n">email</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">email</span><span class="p">,</span>
+            <span class="n">first_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">first_name</span><span class="p">,</span>
+            <span class="n">last_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">last_name</span><span class="p">,</span>
+            <span class="n">role</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">role</span><span class="p">,</span>
+            <span class="n">created</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">created</span><span class="p">,</span>
+            <span class="n">updated</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">updated</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="User.update"><a class="viewcode-back" href="../../../ovs.models.html#ovs.models.user_model.User.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">email</span><span class="p">,</span> <span class="n">first_name</span><span class="p">,</span> <span class="n">last_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates user with new information</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="n">email</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">first_name</span> <span class="o">=</span> <span class="n">first_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_name</span> <span class="o">=</span> <span class="n">last_name</span></div>
+
+<div class="viewcode-block" id="User.is_authenticated"><a class="viewcode-back" href="../../../ovs.models.html#ovs.models.user_model.User.is_authenticated">[docs]</a>    <span class="k">def</span> <span class="nf">is_authenticated</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># pylint: disable=no-self-use</span>
+        <span class="sd">&quot;&quot;&quot; Checks if a user is authenticated &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="User.is_active"><a class="viewcode-back" href="../../../ovs.models.html#ovs.models.user_model.User.is_active">[docs]</a>    <span class="k">def</span> <span class="nf">is_active</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># pylint: disable=no-self-use</span>
+        <span class="sd">&quot;&quot;&quot; Checks if this user account is active &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="User.is_anonymous"><a class="viewcode-back" href="../../../ovs.models.html#ovs.models.user_model.User.is_anonymous">[docs]</a>    <span class="k">def</span> <span class="nf">is_anonymous</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># pylint: disable=no-self-use</span>
+        <span class="sd">&quot;&quot;&quot; Checks if this user is anonymous &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="User.get_id"><a class="viewcode-back" href="../../../ovs.models.html#ovs.models.user_model.User.get_id">[docs]</a>    <span class="k">def</span> <span class="nf">get_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; :returns the user&#39;s unique id in the database &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">Overseer 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../ovs.html" >ovs</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Ben Lambeth.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.2.
+    </div>
+  </body>
+</html>

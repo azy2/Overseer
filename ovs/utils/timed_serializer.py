@@ -2,7 +2,7 @@
 from itsdangerous import URLSafeTimedSerializer
 
 class Serializer():
-    """Class to allow secure de/serialization of attributes using a salt."""
+    """ Class to allow secure de/serialization of attributes using a salt. """
     ts = None
 
     @staticmethod
@@ -13,11 +13,7 @@ class Serializer():
         is not available until the application is created.
 
         Args:
-            attr: The attribute to serialize.
-            key: The salt to use with the TimedSerializer.
-
-        Returns:
-            The serialized string.
+            app: the Flask app containing a SECRET_KEY
         """
         Serializer.ts = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 

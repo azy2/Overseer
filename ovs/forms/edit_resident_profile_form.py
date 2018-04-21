@@ -4,6 +4,7 @@ from wtforms import StringField, RadioField, ValidationError
 from wtforms.validators import Length, Email, DataRequired, optional
 from wtforms.fields.html5 import TelField
 import phonenumbers
+from phonenumbers.phonenumberutil import NumberParseException
 
 from ovs.utils import genders
 
@@ -21,6 +22,13 @@ class EditResidentProfileForm(FlaskForm):
     def validate_phone_number(form, field): # pylint: disable=no-self-argument, no-self-use
         """
         Validates that the provided phone number is valid.
+
+        Args:
+            form: The EditResidentProfileForm that was submitted.
+            field: The phone_number field.
+
+        Raises:
+            ValidationError: If phone_number is not a valid phone number.
         """
         if len(field.data) > 16:
             raise ValidationError('Invalid phone number.')
@@ -28,11 +36,10 @@ class EditResidentProfileForm(FlaskForm):
             input_number = phonenumbers.parse(field.data)
             if not phonenumbers.is_valid_number(input_number):
                 raise ValidationError('Invalid phone number.')
-            #phonenumbers.phonenumberutil.NumberParseException could happen
-        except: #pylint: disable=bare-except
-            try: #Try to add the US area code to it
+        except NumberParseException:
+            try:  # Try to add the US area code to it
                 input_number = phonenumbers.parse("+1"+field.data)
                 if not phonenumbers.is_valid_number(input_number):
                     raise ValidationError('Invalid phone number.')
-            except: #pylint: disable=bare-except
+            except NumberParseException:  # pylint: disable=bare-except
                 raise ValidationError('Invalid phone number.')

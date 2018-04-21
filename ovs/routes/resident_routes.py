@@ -1,4 +1,4 @@
-""" under /resident """
+"""Routes defined under '/resident'."""
 import base64
 import logging
 import traceback
@@ -22,10 +22,25 @@ residents_bp = Blueprint('resident', __name__)
 @login_required
 @permissions(roles.RESIDENT)
 def landing_page():
-    """ The landing page for residents """
+    """
+    Home page for residents accessed by '/resident'.
+
+    Methods:
+        GET.
+
+    Permissions:
+        Accessible to RESIDENT or higher level users.
+
+    Returns:
+        A Flask template.
+    """
     try:
         resident_id = current_user.get_id()
         resident = ResidentService.get_resident_by_id(resident_id)
+        if not resident:
+            logging.error('Invalid resident_id %s for route /resident', resident_id)
+            return redirect(url_for('/.landing_page'))
+
         profile = resident.profile
         return render_template('resident/index.html', role=roles.RESIDENT, profile=profile)
     except: # pylint: disable=bare-except
@@ -39,11 +54,25 @@ def landing_page():
 @permissions(roles.RESIDENT)
 def edit_profile():
     """
-    Allows the user to edit their profile in a wtform
+    Profile edit page accessed by '/resident/profile'.
+
+    Methods:
+        GET, POST.
+
+    Permissions:
+        Accessible to RESIDENT or higher level users.
+
+    Returns:
+        A Flask template.
     """
     try:
         resident_id = current_user.get_id()
-        profile = ResidentService.get_resident_by_id(resident_id).profile
+        resident = ResidentService.get_resident_by_id(resident_id)
+        if not resident:
+            logging.error('Invalid resident_id %s for route /resident/profile', resident_id)
+            return redirect(url_for('/.landing_page'))
+
+        profile = resident.profile
 
         profile_form = EditResidentProfileForm(obj=profile)
         picture_form = UploadProfilePictureForm()

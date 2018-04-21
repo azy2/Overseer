@@ -1,0 +1,199 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>ovs.tests.unittests.services.test_resident_service &#8212; Overseer 1.0.0 documentation</title>
+    <link rel="stylesheet" href="../../../../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="../../../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../../index.html">Overseer 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../../index.html" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../../../ovs.html" accesskey="U">ovs</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for ovs.tests.unittests.services.test_resident_service</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Tests for resident services</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">ovs.tests.unittests.base_test</span> <span class="k">import</span> <span class="n">OVSBaseTestCase</span>
+<span class="kn">from</span> <span class="nn">ovs.services.user_service</span> <span class="k">import</span> <span class="n">UserService</span>
+<span class="kn">from</span> <span class="nn">ovs.services.resident_service</span> <span class="k">import</span> <span class="n">ResidentService</span>
+<span class="kn">from</span> <span class="nn">ovs.services.room_service</span> <span class="k">import</span> <span class="n">RoomService</span>
+<span class="kn">from</span> <span class="nn">ovs.models.resident_model</span> <span class="k">import</span> <span class="n">Resident</span>
+<span class="kn">from</span> <span class="nn">ovs.datagen</span> <span class="k">import</span> <span class="n">DataGen</span>
+
+
+<div class="viewcode-block" id="TestResidentService"><a class="viewcode-back" href="../../../../../ovs.tests.unittests.services.html#ovs.tests.unittests.services.test_resident_service.TestResidentService">[docs]</a><span class="k">class</span> <span class="nc">TestResidentService</span><span class="p">(</span><span class="n">OVSBaseTestCase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Tests for resident services</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="TestResidentService.setUp"><a class="viewcode-back" href="../../../../../ovs.tests.unittests.services.html#ovs.tests.unittests.services.test_resident_service.TestResidentService.setUp">[docs]</a>    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Runs before every test and clears relevant tables &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setUp</span><span class="p">()</span>
+        <span class="n">DataGen</span><span class="o">.</span><span class="n">create_default_room</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">create_test_resident</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="TestResidentService.create_test_resident"><a class="viewcode-back" href="../../../../../ovs.tests.unittests.services.html#ovs.tests.unittests.services.test_resident_service.TestResidentService.create_test_resident">[docs]</a>    <span class="k">def</span> <span class="nf">create_test_resident</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Creates a test resident for use in testing &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_resident_info</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;test@gmail.com&#39;</span><span class="p">,</span> <span class="s1">&#39;Bob&#39;</span><span class="p">,</span> <span class="s1">&#39;Ross&#39;</span><span class="p">,</span> <span class="s1">&#39;RESIDENT&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_admin_info</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;test2@gmail.com&#39;</span><span class="p">,</span> <span class="s1">&#39;Bob&#39;</span><span class="p">,</span> <span class="s1">&#39;Ross&#39;</span><span class="p">,</span> <span class="s1">&#39;ADMIN&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_user</span> <span class="o">=</span> <span class="n">UserService</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">test_resident_info</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_admin</span> <span class="o">=</span> <span class="n">UserService</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">test_admin_info</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_resident</span> <span class="o">=</span> <span class="n">ResidentService</span><span class="o">.</span><span class="n">get_resident_by_id</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_room</span> <span class="o">=</span> <span class="n">RoomService</span><span class="o">.</span><span class="n">create_room</span><span class="p">(</span><span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;Good&#39;</span><span class="p">,</span> <span class="s1">&#39;Single&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestResidentService.test_create_resident"><a class="viewcode-back" href="../../../../../ovs.tests.unittests.services.html#ovs.tests.unittests.services.test_resident_service.TestResidentService.test_create_resident">[docs]</a>    <span class="k">def</span> <span class="nf">test_create_resident</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Tests that residents can be created &quot;&quot;&quot;</span>
+        <span class="n">resident</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Resident</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+            <span class="n">Resident</span><span class="o">.</span><span class="n">user_id</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNotNone</span><span class="p">(</span><span class="n">resident</span><span class="p">)</span>
+
+        <span class="n">old_room</span> <span class="o">=</span> <span class="n">RoomService</span><span class="o">.</span><span class="n">get_room_by_number</span><span class="p">(</span><span class="s1">&#39;None&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">resident</span> <span class="ow">in</span> <span class="n">old_room</span><span class="o">.</span><span class="n">occupants</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestResidentService.test_create_resident_null"><a class="viewcode-back" href="../../../../../ovs.tests.unittests.services.html#ovs.tests.unittests.services.test_resident_service.TestResidentService.test_create_resident_null">[docs]</a>    <span class="k">def</span> <span class="nf">test_create_resident_null</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Tests that non-resident user accounts cannot be found in Resident database &quot;&quot;&quot;</span>
+        <span class="n">resident</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Resident</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+            <span class="n">Resident</span><span class="o">.</span><span class="n">user_id</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_admin</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNone</span><span class="p">(</span><span class="n">resident</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestResidentService.test_get_resident_by_id"><a class="viewcode-back" href="../../../../../ovs.tests.unittests.services.html#ovs.tests.unittests.services.test_resident_service.TestResidentService.test_get_resident_by_id">[docs]</a>    <span class="k">def</span> <span class="nf">test_get_resident_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Tests that get_resident_by_id successfully finds a resident &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNotNone</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_resident</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_resident</span><span class="o">.</span><span class="n">user_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestResidentService.test_invalid_get_resident_by_id"><a class="viewcode-back" href="../../../../../ovs.tests.unittests.services.html#ovs.tests.unittests.services.test_resident_service.TestResidentService.test_invalid_get_resident_by_id">[docs]</a>    <span class="k">def</span> <span class="nf">test_invalid_get_resident_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Tests that get_resident_by_id does not find a resident with a non-existent id &quot;&quot;&quot;</span>
+        <span class="n">resident</span> <span class="o">=</span> <span class="n">ResidentService</span><span class="o">.</span><span class="n">get_resident_by_id</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNone</span><span class="p">(</span><span class="n">resident</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestResidentService.test_get_resident_by_email"><a class="viewcode-back" href="../../../../../ovs.tests.unittests.services.html#ovs.tests.unittests.services.test_resident_service.TestResidentService.test_get_resident_by_email">[docs]</a>    <span class="k">def</span> <span class="nf">test_get_resident_by_email</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Tests that get_resident_by_email successfully finds a resident &quot;&quot;&quot;</span>
+        <span class="n">resident</span> <span class="o">=</span> <span class="n">ResidentService</span><span class="o">.</span><span class="n">get_resident_by_email</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_resident_info</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNotNone</span><span class="p">(</span><span class="n">resident</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestResidentService.test_get_resident_by_email_invalid"><a class="viewcode-back" href="../../../../../ovs.tests.unittests.services.html#ovs.tests.unittests.services.test_resident_service.TestResidentService.test_get_resident_by_email_invalid">[docs]</a>    <span class="k">def</span> <span class="nf">test_get_resident_by_email_invalid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Tests that get_resident_by_email returns none if an invalid email is provided &quot;&quot;&quot;</span>
+        <span class="n">resident</span> <span class="o">=</span> <span class="n">ResidentService</span><span class="o">.</span><span class="n">get_resident_by_email</span><span class="p">(</span><span class="s1">&#39;invalid@invalid.com&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNone</span><span class="p">(</span><span class="n">resident</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestResidentService.test_edit_resident"><a class="viewcode-back" href="../../../../../ovs.tests.unittests.services.html#ovs.tests.unittests.services.test_resident_service.TestResidentService.test_edit_resident">[docs]</a>    <span class="k">def</span> <span class="nf">test_edit_resident</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># cases - invalid email/id, invalid room, success</span>
+        <span class="sd">&quot;&quot;&quot; Tests that a resident can be edited&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">ResidentService</span><span class="o">.</span><span class="n">edit_resident</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">test_user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s1">&#39;test_edit@gmail.com&#39;</span><span class="p">,</span> <span class="s1">&#39;Joe&#39;</span><span class="p">,</span> <span class="s1">&#39;Smith&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">))</span>
+
+        <span class="c1"># further confirmation in test_edit_user</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_user</span><span class="o">.</span><span class="n">email</span><span class="p">,</span> <span class="s1">&#39;test_edit@gmail.com&#39;</span><span class="p">)</span>
+        <span class="c1"># check that update_resident_room_number got called</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_resident</span><span class="o">.</span><span class="n">room_number</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestResidentService.test_edit_resident_bad_room"><a class="viewcode-back" href="../../../../../ovs.tests.unittests.services.html#ovs.tests.unittests.services.test_resident_service.TestResidentService.test_edit_resident_bad_room">[docs]</a>    <span class="k">def</span> <span class="nf">test_edit_resident_bad_room</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Tests that a bad room number will be rejected &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">ResidentService</span><span class="o">.</span><span class="n">edit_resident</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">test_user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s1">&#39;test_edit@gmail.com&#39;</span><span class="p">,</span> <span class="s1">&#39;Joe&#39;</span><span class="p">,</span> <span class="s1">&#39;Smith&#39;</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_resident</span><span class="o">.</span><span class="n">room_number</span><span class="p">,</span> <span class="s1">&#39;None&#39;</span><span class="p">)</span></div>
+
+    <span class="c1"># cases - invalid email/id, invalid room, success</span>
+<div class="viewcode-block" id="TestResidentService.test_edit_resident_bad_email"><a class="viewcode-back" href="../../../../../ovs.tests.unittests.services.html#ovs.tests.unittests.services.test_resident_service.TestResidentService.test_edit_resident_bad_email">[docs]</a>    <span class="k">def</span> <span class="nf">test_edit_resident_bad_email</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Tests that a duplicate email will cancel everything &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">ResidentService</span><span class="o">.</span><span class="n">edit_resident</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">test_user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s1">&#39;test2@gmail.com&#39;</span><span class="p">,</span> <span class="s1">&#39;Joe&#39;</span><span class="p">,</span> <span class="s1">&#39;Smith&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">))</span>
+
+        <span class="c1"># Check user is not updated</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_user</span><span class="o">.</span><span class="n">email</span><span class="p">,</span> <span class="s1">&#39;test@gmail.com&#39;</span><span class="p">)</span>
+        <span class="c1"># Check room number is not updated</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_resident</span><span class="o">.</span><span class="n">room_number</span><span class="p">,</span> <span class="s1">&#39;None&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestResidentService.test_delete_resident"><a class="viewcode-back" href="../../../../../ovs.tests.unittests.services.html#ovs.tests.unittests.services.test_resident_service.TestResidentService.test_delete_resident">[docs]</a>    <span class="k">def</span> <span class="nf">test_delete_resident</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Tests that profiles can be deleted &quot;&quot;&quot;</span>
+        <span class="n">expected</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Resident</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span>
+
+        <span class="c1"># check if deletion successful</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">ResidentService</span><span class="o">.</span><span class="n">delete_resident</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_user</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ResidentService</span><span class="o">.</span><span class="n">get_all_residents_users</span><span class="p">()),</span> <span class="n">expected</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestResidentService.test_delete_resident_null"><a class="viewcode-back" href="../../../../../ovs.tests.unittests.services.html#ovs.tests.unittests.services.test_resident_service.TestResidentService.test_delete_resident_null">[docs]</a>    <span class="k">def</span> <span class="nf">test_delete_resident_null</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Tests that nothing breaks when deleting a nonexistant resident &quot;&quot;&quot;</span>
+        <span class="n">expected</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Resident</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+
+        <span class="c1"># This id is NOT the resident</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span>
+            <span class="n">ResidentService</span><span class="o">.</span><span class="n">delete_resident</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_user</span><span class="o">.</span><span class="n">id</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Resident</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span> <span class="n">expected</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestResidentService.test_get_all_residents"><a class="viewcode-back" href="../../../../../ovs.tests.unittests.services.html#ovs.tests.unittests.services.test_resident_service.TestResidentService.test_get_all_residents">[docs]</a>    <span class="k">def</span> <span class="nf">test_get_all_residents</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Tests that get_all_residents returns the correct number of residents&quot;&quot;&quot;</span>
+        <span class="n">residents</span> <span class="o">=</span> <span class="n">ResidentService</span><span class="o">.</span><span class="n">get_all_residents_users</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">residents</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../../index.html">Overseer 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../../index.html" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../../../ovs.html" >ovs</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Ben Lambeth.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.2.
+    </div>
+  </body>
+</html>

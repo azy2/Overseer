@@ -1,0 +1,219 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>ovs.utils package &#8212; Overseer 1.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Overseer 1.0.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="ovs-utils-package">
+<h1>ovs.utils package<a class="headerlink" href="#ovs-utils-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-ovs.utils.crypto">
+<span id="ovs-utils-crypto-module"></span><h2>ovs.utils.crypto module<a class="headerlink" href="#module-ovs.utils.crypto" title="Permalink to this headline">¶</a></h2>
+<p>Utility classes for doing secure cryptography</p>
+<dl class="class">
+<dt id="ovs.utils.crypto.Crypto">
+<em class="property">class </em><code class="descclassname">ovs.utils.crypto.</code><code class="descname">Crypto</code><a class="reference internal" href="_modules/ovs/utils/crypto.html#Crypto"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.utils.crypto.Crypto" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Utility methods for doing secure cryptography</p>
+<dl class="staticmethod">
+<dt id="ovs.utils.crypto.Crypto.generate_password">
+<em class="property">static </em><code class="descname">generate_password</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/utils/crypto.html#Crypto.generate_password"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.utils.crypto.Crypto.generate_password" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a random password</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ovs.utils.genders">
+<span id="ovs-utils-genders-module"></span><h2>ovs.utils.genders module<a class="headerlink" href="#module-ovs.utils.genders" title="Permalink to this headline">¶</a></h2>
+<p>Enums for distinguishing resident genders</p>
+<dl class="class">
+<dt id="ovs.utils.genders.Gender">
+<em class="property">class </em><code class="descclassname">ovs.utils.genders.</code><code class="descname">Gender</code><a class="reference internal" href="_modules/ovs/utils/genders.html#Gender"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.utils.genders.Gender" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Possible user genders in the database.</p>
+<dl class="attribute">
+<dt id="ovs.utils.genders.Gender.FEMALE">
+<code class="descname">FEMALE</code><em class="property"> = 'Female'</em><a class="headerlink" href="#ovs.utils.genders.Gender.FEMALE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.utils.genders.Gender.MALE">
+<code class="descname">MALE</code><em class="property"> = 'Male'</em><a class="headerlink" href="#ovs.utils.genders.Gender.MALE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.utils.genders.Gender.UNSPECIFIED">
+<code class="descname">UNSPECIFIED</code><em class="property"> = 'Unspecified'</em><a class="headerlink" href="#ovs.utils.genders.Gender.UNSPECIFIED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ovs.utils.log_types">
+<span id="ovs-utils-log-types-module"></span><h2>ovs.utils.log_types module<a class="headerlink" href="#module-ovs.utils.log_types" title="Permalink to this headline">¶</a></h2>
+<p>Enum for mealplan history log types.</p>
+<dl class="class">
+<dt id="ovs.utils.log_types.LogType">
+<em class="property">class </em><code class="descclassname">ovs.utils.log_types.</code><code class="descname">LogType</code><a class="reference internal" href="_modules/ovs/utils/log_types.html#LogType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.utils.log_types.LogType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Log type indicates history of mealplan usage.</p>
+<dl class="attribute">
+<dt id="ovs.utils.log_types.LogType.MEAL_USED">
+<code class="descname">MEAL_USED</code><em class="property"> = 'MEAL_USED'</em><a class="headerlink" href="#ovs.utils.log_types.LogType.MEAL_USED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.utils.log_types.LogType.UNDO">
+<code class="descname">UNDO</code><em class="property"> = 'UNDO'</em><a class="headerlink" href="#ovs.utils.log_types.LogType.UNDO" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ovs.utils.roles">
+<span id="ovs-utils-roles-module"></span><h2>ovs.utils.roles module<a class="headerlink" href="#module-ovs.utils.roles" title="Permalink to this headline">¶</a></h2>
+<p>Enums for distinguishing object roles.</p>
+<dl class="class">
+<dt id="ovs.utils.roles.UserRole">
+<em class="property">class </em><code class="descclassname">ovs.utils.roles.</code><code class="descname">UserRole</code><a class="reference internal" href="_modules/ovs/utils/roles.html#UserRole"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.utils.roles.UserRole" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>User roles determine what permissions an account has.</p>
+<dl class="attribute">
+<dt id="ovs.utils.roles.UserRole.ADMIN">
+<code class="descname">ADMIN</code><em class="property"> = 'ADMIN'</em><a class="headerlink" href="#ovs.utils.roles.UserRole.ADMIN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.utils.roles.UserRole.BUILDING_MANAGER">
+<code class="descname">BUILDING_MANAGER</code><em class="property"> = 'BUILDING_MANAGER'</em><a class="headerlink" href="#ovs.utils.roles.UserRole.BUILDING_MANAGER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.utils.roles.UserRole.OFFICE_MANAGER">
+<code class="descname">OFFICE_MANAGER</code><em class="property"> = 'OFFICE_MANAGER'</em><a class="headerlink" href="#ovs.utils.roles.UserRole.OFFICE_MANAGER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.utils.roles.UserRole.RESIDENT">
+<code class="descname">RESIDENT</code><em class="property"> = 'RESIDENT'</em><a class="headerlink" href="#ovs.utils.roles.UserRole.RESIDENT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.utils.roles.UserRole.RESIDENT_ADVISOR">
+<code class="descname">RESIDENT_ADVISOR</code><em class="property"> = 'RESIDENT_ADVISOR'</em><a class="headerlink" href="#ovs.utils.roles.UserRole.RESIDENT_ADVISOR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.utils.roles.UserRole.STAFF">
+<code class="descname">STAFF</code><em class="property"> = 'STAFF'</em><a class="headerlink" href="#ovs.utils.roles.UserRole.STAFF" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="ovs.utils.roles.UserRole.has_permission">
+<em class="property">static </em><code class="descname">has_permission</code><span class="sig-paren">(</span><em>min_access_role</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/utils/roles.html#UserRole.has_permission"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.utils.roles.UserRole.has_permission" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks user perms a given user_role and minimum access role</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ovs.utils">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ovs.utils" title="Permalink to this headline">¶</a></h2>
+<p>Small utility classes to make development easier</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">ovs.utils package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-ovs.utils.crypto">ovs.utils.crypto module</a></li>
+<li><a class="reference internal" href="#module-ovs.utils.genders">ovs.utils.genders module</a></li>
+<li><a class="reference internal" href="#module-ovs.utils.log_types">ovs.utils.log_types module</a></li>
+<li><a class="reference internal" href="#module-ovs.utils.roles">ovs.utils.roles module</a></li>
+<li><a class="reference internal" href="#module-ovs.utils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/ovs.utils.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Overseer 1.0.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Ben Lambeth.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.2.
+    </div>
+  </body>
+</html>

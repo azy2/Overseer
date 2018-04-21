@@ -54,9 +54,6 @@ class PackageService:
             package_id: Unique package id.
             recipient_email: Recipient's email address.
             description: A short description of the package.
-
-        Returns:
-            If the package was updated successfully.
         """
         recipient_id = UserService.get_user_by_email(
             recipient_email).id
@@ -73,9 +70,6 @@ class PackageService:
 
         Args:
             package_id: Unique package id.
-
-        Returns:
-            If the package was deleted successfully.
         """
         package = PackageService.get_package_by_id(package_id)
         db.session.delete(package)

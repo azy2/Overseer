@@ -19,7 +19,12 @@ class TestSendMail(OVSBaseTestCase):
 
     @patch('python_http_client.Client._make_request')
     def test_send_mail(self, mock_client):
-        """Test that mail contains correct information."""
+        """
+        Test that mail contains correct information.
+        Args:
+            mock_client: The mock_client for the patched function. This allows us to check
+                         if an email would get sent without actually sending one.
+        """
         mail, _ = MailService.send_email(
             to_email='testEmail@test.com',
             subject='TestSubject',
@@ -33,7 +38,12 @@ class TestSendMail(OVSBaseTestCase):
     #pylint: disable=no-self-use
     @patch('ovs.services.mail_service.MailService.send_email')
     def test_create_user_sends_email(self, mock_mail):
-        """ Tests that creating a user sends an email."""
+        """
+        Tests that creating a user sends an email.
+        Args:
+            mock_mail: The mock_client for the patched function. This allows us to check
+                if an email would get sent without actually sending one.
+        """
         expected_substitutions = {
             'first_name': 'Bob',
             'last_name': 'Ross',
@@ -49,6 +59,12 @@ class TestSendMail(OVSBaseTestCase):
 
     @patch('ovs.services.mail_service.MailService.send_email')
     def test_create_user_doesnt_send_email(self, mock_mail):
-        """ Tests that creating a user without a default password doesn't send an email."""
+        """
+        Tests that creating a user without a default password doesn't send an email.
+
+        Args:
+            mock_mail: The mock_client for the patched function. This allows us to check
+                if an email would get sent without actually sending one.
+        """
         UserService.create_user('test@gmail.com', 'Bob', 'Ross', 'ADMIN', password='testPassword')
         mock_mail.assert_not_called()
