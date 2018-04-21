@@ -50,7 +50,7 @@ def edit_profile():
         GET, POST.
 
     Permissions:
-        Accessible to all users
+        Accessible to all users.
 
     Returns:
         A Flask template.
