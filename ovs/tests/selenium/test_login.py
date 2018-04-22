@@ -17,11 +17,8 @@ class TestLogin(SeleniumBaseTestCase):
         """ Tests whether residents can log out. """
         self.test_resident_login()
 
-        # Open dropdown with logout link option
-        account_dropdown = self.browser.find_element_by_id('accountDropdown')
-        account_dropdown.click()
-        logout_link = self.browser.find_element_by_link_text('Logout')
-        logout_link.click()
+        # Use dropdown with logout link option
+        self.go_to_page_in_dropdown('Logout', 'accountDropdown')
 
         # Should be back at Overseer home page
         self.assertIn('Overseer', self.browser.title)

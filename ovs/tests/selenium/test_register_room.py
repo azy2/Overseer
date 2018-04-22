@@ -1,43 +1,53 @@
 """ Tests functionality related to registering rooms. """
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from ovs.tests.selenium.selenium_base_test import SeleniumBaseTestCase
+from ovs.tests.selenium.table_test import TableTest, InputTextElement
 
-class TestRegisterRoom(SeleniumBaseTestCase):
+class TestRegisterRoom(TableTest):
     """ Tests functionality related to registering rooms. """
 
+    def setUp(self):
+        super().setUp()
+        # Current form format is [Room Number][Status][Type][Occupant Emails]
+        self.form_text_field_types.append(InputTextElement())
+        self.form_text_field_types.append(InputTextElement())
+        self.form_text_field_types.append(InputTextElement())
+        self.form_text_field_types.append(InputTextElement())
+
+        # Current table format is [Room Number][Status][Type][Num Occupants]
+        self.table_text_field_types.append(InputTextElement())
+        self.table_text_field_types.append(InputTextElement())
+        self.table_text_field_types.append(InputTextElement())
+        self.table_text_field_types.append(None)
+
+    def navigate_to_table_page(self):
+        self.browser.find_element_by_link_text('Rooms').click()
+
     def test_register_room(self):
-        """ Tests whether all fields can be edited in the register room page. """
+        """ Tests whether a room can be registered with the default resident. """
+        self.add_table_test('429D', 'rented', 'single', self.default_resident_email)
+
+        # Need to also verify that the number of occupants is 1
+        last_table_row = self.get_last_table_row()
+        num_occupants = last_table_row[3].text.strip()
+        self.assertEqual(num_occupants, '1')
+
+    def test_update_delete_room(self):
+        """ Tests that registered rooms can be updated and deleted. """
+        self.test_register_room()
+        self.update_delete_table_test('420D', 'Status goes here', 'Type goes here', None)
+
+    def test_register_room_invalid(self):
+        """ Tests that rooms cannot be registered for residents that do not exist. """
         self.browser.get(self.base_url)
         self.assertIn('Overseer', self.browser.title)
         super().login_default_admin()
 
-        # Click on Register Manager
-        register_manager = self.browser.find_element_by_link_text('Rooms')
-        register_manager.click()
+        # Attempt to add a resident that doesn't exist to a room
+        self.navigate_to_table_page()
+        self.add_to_table('123', 'Legitimate Status', 'Yes', 'real_email@gmail.com')
 
-        # Verify page changed
-        self.assertIn('Rooms', self.browser.title)
-
-        # # Change all fields
-        self.set_text_field_by_id('room_number', '429D')
-        self.set_text_field_by_id('room_status', 'rented')
-        self.set_text_field_by_id('room_type', 'single')
-        self.set_text_field_by_id('occupants', 'resident@gmail.com')
-
-        # Submit changes, need to "press enter" on button instead of clicking
-        # because Selenium is wonderful, stable software
-        submit_button = self.browser.find_element_by_id('register_room')
-        submit_button.send_keys(Keys.ENTER)
-
-        # Wait for successful notification popup to appear
+        # Wait for failure notification
         wait = WebDriverWait(self.browser, 5)
-        wait.until(EC.visibility_of_element_located((By.ID, 'notification-message')))
-
-        # Verify fields are empty and ready for new account registration
-        self.assertEqual(self.browser.find_element_by_id('room_number').get_attribute('value'), '')
-        self.assertEqual(self.browser.find_element_by_id('room_status').get_attribute('value'), '')
-        self.assertEqual(self.browser.find_element_by_id('room_type').get_attribute('value'), '')
-        self.assertEqual(self.browser.find_element_by_id('occupants').get_attribute('value'), '')
+        wait.until(EC.visibility_of_element_located((By.CLASS_NAME, 'invalid-feedback')))

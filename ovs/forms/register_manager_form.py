@@ -12,7 +12,7 @@ class RegisterManagerForm(FlaskForm):
     first_name = StringField('First Name', validators=[Length(min=1, max=255), DataRequired()])
     last_name = StringField('Last Name', validators=[Length(min=1, max=255), DataRequired()])
     role = SelectField('Role', choices=[('ADMIN', 'Admin'),
-                                        ('BUILDING_MANAGER', 'Bulding Manager'),
+                                        ('BUILDING_MANAGER', 'Building Manager'),
                                         ('OFFICE_MANAGER', 'Office Manager'),
                                         ('STAFF', 'Staff'),
                                         ('RESIDENT_ADVISOR', 'Resident Advisor')])

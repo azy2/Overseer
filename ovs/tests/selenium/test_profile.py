@@ -14,10 +14,7 @@ class TestProfile(SeleniumBaseTestCase):
         super().login_default_resident()
 
         # Click on account dropdown and go to Profile link
-        account_dropdown = self.browser.find_element_by_id('accountDropdown')
-        account_dropdown.click()
-        profile_link = self.browser.find_element_by_link_text('Profile')
-        profile_link.click()
+        self.go_to_page_in_dropdown('Profile', 'accountDropdown')
 
         # Verify page changed
         self.assertIn('Edit', self.browser.title)

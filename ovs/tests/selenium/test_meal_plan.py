@@ -1,78 +1,66 @@
 """ Test meal plan creation and usage. """
-from selenium.webdriver.support.ui import Select
-from ovs.tests.selenium.selenium_base_test import SeleniumBaseTestCase
+from ovs.tests.selenium.table_test import TableTest, PlainTextElement, InputTextElement, SelectTextElement
 
-class TestMealPlan(SeleniumBaseTestCase):
+class TestMealPlan(TableTest):
     """ Tests meal plan creation and usage. """
 
-    def go_to_meal_plans(self):
-        """ Navigates to the 'Create a Meal Plan page. """
-        meal_dropdown = self.browser.find_element_by_id('mealDropdown')
-        meal_dropdown.click()
-        create_meal_plan_link = self.browser.find_element_by_link_text('Meal Plans')
-        create_meal_plan_link.click()
+    def setUp(self):
+        super().setUp()
+        # Current form has [User Email][Credits][Plan Type Selector]
+        self.form_text_field_types.append(InputTextElement())
+        self.form_text_field_types.append(InputTextElement())
+        self.form_text_field_types.append(SelectTextElement())
 
-    def go_to_meal_login(self):
-        """ Navigates to the page to use meal plans. """
-        meal_dropdown = self.browser.find_element_by_id('mealDropdown')
-        meal_dropdown.click()
-        use_meal_plan_link = self.browser.find_element_by_link_text('Meal login')
-        use_meal_plan_link.click()
+        # Current table has [User Pin][Email][Current Credits][Credits][Plan Type]
+        self.table_text_field_types.append(PlainTextElement())
+        self.table_text_field_types.append(PlainTextElement())
+        self.table_text_field_types.append(InputTextElement())
+        self.table_text_field_types.append(InputTextElement())
+        self.table_text_field_types.append(SelectTextElement())
 
-    def create_test_meal_plan(self):
-        """ Creates a test meal plan for the default resident.
+    def navigate_to_table_page(self):
+        self.go_to_page_in_dropdown('Meal Plans', 'mealDropdown')
+
+    def test_add_meal_plan(self):
+        """ Tests that meal plans can be added for a default resident.
 
             Returns:
                 string: the pin for the meal plan created
         """
-        self.browser.get(self.base_url)
-        self.assertIn('Overseer', self.browser.title)
-        super().login_default_admin()
-        self.go_to_meal_plans()
+        # Meal plan page has a non-standard table without a one-to-one form correspondence
+        # Need to modify the table field types so the test knows where to look for added data
+        default_test_table_fields = self.table_text_field_types
+        self.table_text_field_types = [None, PlainTextElement(), None, \
+                                       InputTextElement(), SelectTextElement()]
+        self.add_table_test(self.default_resident_email, '20', 'Semesterly')
+        self.table_text_field_types = default_test_table_fields
 
-        # Make a Semesterly meal plan for the default resident
-        email_text_field = self.browser.find_element_by_id('email')
-        email_text_field.send_keys(self.default_resident_email)
-        credits_text_field = self.browser.find_element_by_id('meal_plan')
-        credits_text_field.send_keys('20')
-        plan_type_selector = Select(self.browser.find_element_by_id('plan_type'))
-        plan_type_selector.select_by_visible_text('Semesterly')
-        register_button = self.browser.find_element_by_name('create_btn')
-        register_button.click()
+        # Need to verify second credits table field and return the pin
+        # So other tests can use the created plan
+        last_row = self.get_last_table_row()
 
-        # New meal plans get added to the bottom of the table, find last entry
-        meal_plan_table = self.browser.find_element_by_class_name('table-responsive')
-        last_table_row = meal_plan_table.find_elements_by_tag_name('tr')[-1]
-        row_entries = last_table_row.find_elements_by_tag_name('td')
-
-        # Verify information in table matches information entered
-        # Format is [PIN][Email][Current Credits][Meal Plan Credits][Plan Type]
-        # All <input> tag fields have class named 'form-control'
-        user_pin = row_entries[0].text.strip()
-        user_email = row_entries[1].text.strip()
-        num_credits = row_entries[2].find_element_by_class_name('form-control').get_attribute('value')
-        meal_plan_credits = row_entries[3].find_element_by_class_name('form-control').get_attribute('value')
-        plan_type_selector = Select(row_entries[4].find_element_by_class_name('form-control'))
-        plan_type = plan_type_selector.first_selected_option.text
-
-        self.assertEqual(user_email, self.default_resident_email)
-        self.assertEqual(num_credits, '20')
-        self.assertEqual(meal_plan_credits, '20')
-        self.assertEqual(plan_type, 'Semesterly')
-
-        # Return the user's pin for other meal plan tests to use
+        current_credits = self.table_text_field_types[2].get_text(last_row[2])
+        self.assertEqual(current_credits, '20')
+        user_pin = self.table_text_field_types[0].get_text(last_row[0])
         return user_pin
 
-    def test_create_meal_plan(self):
-        """ Tests that custom meal plans can be created. """
-        self.create_test_meal_plan()
+    def test_update_delete_meal_plan(self):
+        """ Tests that added meal plans can be updated and deleted. """
+        self.test_add_meal_plan()
+
+        # Only care about the fields that can be edited for this test
+        default_test_table_fields = self.table_text_field_types
+        self.table_text_field_types = [None, None, InputTextElement(), \
+                                       InputTextElement(), SelectTextElement()]
+        self.update_delete_table_test('15', '25', 'Lifetime')
+        self.table_text_field_types = default_test_table_fields
 
     def test_use_meal_plan(self):
         """ Tests that meal plans can be used and credits go down, and up for an undo. """
-        created_plan_pin = self.create_test_meal_plan()
+        created_plan_pin = self.test_add_meal_plan()
 
         # Navigate to 'Meal login'
-        self.go_to_meal_login()
+        self.go_to_page_in_dropdown('Meal login', 'mealDropdown')
 
         # Use meal plan
         pin_text_field = self.browser.find_element_by_id('pin')
@@ -81,21 +69,17 @@ class TestMealPlan(SeleniumBaseTestCase):
         sign_in_button.click()
 
         # Verify credits went down
-        self.go_to_meal_plans()
-        meal_plan_table = self.browser.find_element_by_class_name('table-responsive')
-        last_table_row = meal_plan_table.find_elements_by_tag_name('tr')[-1]
-        row_entries = last_table_row.find_elements_by_tag_name('td')
-        num_credits = row_entries[2].find_element_by_class_name('form-control').get_attribute('value')
+        self.navigate_to_table_page()
+        last_row = self.get_last_table_row()
+        num_credits = self.table_text_field_types[2].get_text(last_row[2])
         self.assertEqual(num_credits, '19')
 
         # Use Undo button and verify credits restored
-        self.go_to_meal_login()
+        self.go_to_page_in_dropdown('Meal login', 'mealDropdown')
         undo_button = self.browser.find_element_by_class_name('btn-secondary')
         undo_button.click()
 
-        self.go_to_meal_plans()
-        meal_plan_table = self.browser.find_element_by_class_name('table-responsive')
-        last_table_row = meal_plan_table.find_elements_by_tag_name('tr')[-1]
-        row_entries = last_table_row.find_elements_by_tag_name('td')
-        num_credits = row_entries[2].find_element_by_class_name('form-control').get_attribute('value')
+        self.navigate_to_table_page()
+        last_row = self.get_last_table_row()
+        num_credits = self.table_text_field_types[2].get_text(last_row[2])
         self.assertEqual(num_credits, '20')
