@@ -41,12 +41,12 @@ def landing_page():
         role = user.role
         empty_room_stats = RoomService.get_empty_room_stats()
         num_residents = len(ResidentService.get_all_residents_users())
-        today_num_packages, total_num_packages = PackageService.get_package_info()
+        total_num_packages = PackageService.get_package_info()
         aggregate_meal_usage = MealService.get_aggregate_meal_usage()
         return render_template('manager/index.html', role=role, user=user, profile=user.profile,
                                empty_room_stats=empty_room_stats,
                                num_residents=num_residents, total_num_packages=total_num_packages,
-                               today_num_packages=today_num_packages, aggregate_meal_usage=aggregate_meal_usage)
+                               aggregate_meal_usage=aggregate_meal_usage)
     except: # pylint: disable=bare-except
         db.session.rollback()
         flash('An error was encountered', 'danger')

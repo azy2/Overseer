@@ -1,5 +1,4 @@
 """ DB and utility functions for Packages """
-from datetime import datetime as dt
 
 from ovs import db
 from ovs.models.package_model import Package
@@ -100,23 +99,6 @@ class PackageService:
         return Package.query.filter_by(recipient_id=user_id).all()
 
     @staticmethod
-    def delete_packages_for_user(user_id):
-        """
-        Deletes all packages for recipient user_id
-
-        Args:
-            user_id: Unique resident id.
-
-        Returns:
-            If the packages were deleted successfully.
-        """
-        packages = PackageService.get_all_packages_by_recipient(user_id)
-        for package in packages:
-            if not PackageService.delete_package(package.id):
-                return False
-        return True
-
-    @staticmethod
     def get_all_packages():
         """
         Fetch all packages in db.
@@ -129,16 +111,9 @@ class PackageService:
     @staticmethod
     def get_package_info():
         """
-        Gets the number of packages checked in today and total number of packages awaiting pickup.
+        Gets the number of packages awaiting pickup.
 
         Returns:
-            Number of packages checked in today and total number of packages.
+            Total number of packages.
         """
-        all_packages = PackageService.get_all_packages()
-        total_num_packages = len(all_packages)
-        today = dt.today()
-        today_packages = [pkg for pkg in all_packages if pkg.checked_at.day == today.day
-                          and pkg.checked_at.month == today.month
-                          and pkg.checked_at.year == today.year]
-        today_num_packages = len(today_packages)
-        return today_num_packages, total_num_packages
+        return len(PackageService.get_all_packages())
