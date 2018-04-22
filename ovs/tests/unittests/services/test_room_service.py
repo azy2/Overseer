@@ -109,7 +109,7 @@ class TestRoomService(OVSBaseTestCase):
         """ Tests that rooms can be edited"""
         self.assertTrue(RoomService.edit_room(
             self.test_room.id, '6', 'Bad', 'Double'))
-        self.assertEqual(self.test_room.room_number, '6')
+        self.assertEqual(self.test_room.number, '6')
         self.assertEqual(self.test_room.status, 'Bad')
         self.assertEqual(self.test_room.type, 'Double')
 

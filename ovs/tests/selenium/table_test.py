@@ -33,8 +33,8 @@ class TableTest(SeleniumBaseTestCase):
             Args:
                 args: The text to enter in the form fields.
         """
-        for i in range(len(args)):
-            self.set_text_field_by_id(self.form_text_field_ids[i], args[i])
+        for i, new_text in enumerate(args):
+            self.set_text_field_by_id(self.form_text_field_ids[i], new_text)
 
         add_button = self.browser.find_element_by_class_name('btn-primary')
         add_button.click()
@@ -57,6 +57,8 @@ class TableTest(SeleniumBaseTestCase):
 
             if args[args_index] != None:
                 actual_text = self.table_text_field_types[i].get_text(last_row_elements[i])
+                #print("Actual: " + actual_text)
+                #print("Expected: " + args[args_index])
                 if actual_text != args[args_index]:
                     return False
 
