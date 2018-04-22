@@ -61,7 +61,7 @@
                 </div>
                 <ul class="navbar-nav">
                     {{ dropdown('#', 'accountDropdown', profile.preferred_name, True, [
-                        ('/resident/profile/', 'Profile'),
+                        ('/profile/', 'Profile'),
                         ('/auth/logout/', 'Logout')]) }}
                 </ul>
             {% elif role == 'ADMIN' or role == 'BUILDING_MANAGER' or role == 'OFFICE_MANAGER' or role == 'STAFF' or role == 'RESIDENT_ADVISOR' %}
@@ -73,14 +73,15 @@
                         {% endif %}
                         {{ navbar_item('/manager/manage_rooms/', 'Rooms') }}
                         {{ navbar_item('/manager/manage_residents/', 'Residents') }}
-                        {{ navbar_item('/manager/manage_packages', 'Packages') }}
+                        {{ navbar_item('/manager/manage_packages/', 'Packages') }}
                         {{ dropdown('#', 'mealDropdown', 'Meals', False, [
                             ('/manager/meal_login/', 'Meal login'),
-                            ('/manager/manage_meal_plans', 'Meal Plans')]) }}
+                            ('/manager/manage_meal_plans/', 'Meal Plans')]) }}
                     </ul>
                 </div>
                 <ul class="navbar-nav">
-                    {{ dropdown('#', 'accountDropdown', user.first_name, True, [
+                    {{ dropdown('#', 'accountDropdown', profile.preferred_name, True, [
+                        ('/profile/', 'Profile'),
                         ('/auth/logout/', 'Logout')]) }}
                 </ul>
             {% else %}

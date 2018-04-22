@@ -10,12 +10,9 @@ from ovs.models.user_model import User
 
 
 
-
-
 class EditPackageForm(FlaskForm):
     """ Form with data required to edit a package """
     package_id = HiddenField('Package ID', validators=[DataRequired()])
-    recipient_id = HiddenField('Recipient ID', validators=[DataRequired()])
     recipient_email = StringField('Package Recipient', validators=[DataRequired()])
     description = StringField('Package Description', validators=[Length(min=0, max=2047), DataRequired()])
     update_button = SubmitField('Update')

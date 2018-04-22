@@ -1,8 +1,10 @@
 """ DB and utility functions for Packages """
+
 from ovs import db
 from ovs.models.package_model import Package
 from ovs.models.user_model import User
-from ovs.services.user_service import UserService
+from ovs.services.resident_service import ResidentService
+
 
 
 class PackageService:
@@ -52,12 +54,10 @@ class PackageService:
 
         Args:
             package_id: Unique package id.
-            recipient_email: Recipient's email address.
+            recipient_email: Recipient's unique email.
             description: A short description of the package.
         """
-        recipient_id = UserService.get_user_by_email(
-            recipient_email).id
-
+        recipient_id = ResidentService.get_resident_by_email(recipient_email).user_id
         db.session.query(Package)\
                   .filter_by(id=package_id)\
                   .update({Package.recipient_id: recipient_id, Package.description: description})
@@ -96,21 +96,24 @@ class PackageService:
         Returns:
             A list of Packages
         """
-        return Package.query.filter_by(recipient_id=user_id)
+        return Package.query.filter_by(recipient_id=user_id).all()
 
     @staticmethod
-    def delete_packages_for_user(user_id):
+    def get_all_packages():
         """
-        Deletes all packages for recipient user_id
-
-        Args:
-            user_id: Unique resident id.
+        Fetch all packages in db.
 
         Returns:
-            If the packages were deleted successfully.
+            A list of Packages.
         """
-        packages = PackageService.get_all_packages_by_recipient(user_id)
-        for package in packages:
-            if not PackageService.delete_package(package.id):
-                return False
-        return True
+        return db.session.query(Package).all()
+
+    @staticmethod
+    def get_package_info():
+        """
+        Gets the number of packages awaiting pickup.
+
+        Returns:
+            Total number of packages.
+        """
+        return len(PackageService.get_all_packages())

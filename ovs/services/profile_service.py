@@ -3,8 +3,8 @@ DB access and other services for profiles
 """
 
 from ovs import db
-from ovs.models.profile_model import Profile
-from ovs.services.resident_service import ResidentService
+from ovs.services import UserService
+from ovs.models import Profile
 
 
 class ProfileService:
@@ -16,21 +16,21 @@ class ProfileService:
         pass
 
     @staticmethod
-    def update_profile(resident_id, preferred_email=None, preferred_name=None,
+    def update_profile(user_id, preferred_email=None, preferred_name=None,
                        phone_number=None, race=None, gender=None):
         """
         Updates a profile associated with resident identified by resident id.
 
         Args:
-            resident_id: Unique resident id.
+            user_id: Unique user_id
             preferred_email: Resident's preferred email.
             preferred_name: Resident's preferred name.
             phone_number: Resident's phone number.
             race: Resident's race.
             gender: Resident's gender.
         """
-        resident = ResidentService.get_resident_by_id(resident_id)
-        profile = resident.profile
+        user = UserService.get_user_by_id(user_id)
+        profile = user.profile
         if preferred_email:
             profile.preferred_email = preferred_email
         if preferred_name:

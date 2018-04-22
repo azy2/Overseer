@@ -128,6 +128,23 @@ class RoomService:
         return Room.query.filter(Room.number != '').all()
 
     @staticmethod
+    def get_empty_room_stats():
+        """
+        Gets empty room statistics.
+
+        Returns:
+           dictionary between room type and number of empty rooms of that type.
+        """
+
+        empty_rooms = Room.query.filter(Room.number != '').filter(~Room.occupants.any())
+        stats = {}
+        for room in empty_rooms:
+            stats.setdefault(room.type, 0)
+            stats[room.type] += 1
+
+        return stats
+
+    @staticmethod
     def add_resident_to_room(email, room_number):
         """
         Associates a resident with a room. Updates resident's room number and occupants of room.

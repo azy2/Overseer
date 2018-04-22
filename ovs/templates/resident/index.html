@@ -2,7 +2,75 @@
 {% block title %}Overseer - {{ profile.preferred_name }}{% endblock %}
 
 {% block content %}
-    <div class="px-3 py-3 pt-md-5 pb-md-5 mx-auto text-center" >
-        <h1 class="display-4" >Hello, {{ profile.preferred_name }}</h1>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Meal plan</h5>
+                        {% if mealplan %}
+                            <label>PIN</label>
+                            <p class="card-text">{{ mealplan.pin }}</p>
+                            <label>Meals</label>
+                            <p class="card-text">{{ mealplan.credits|safe }} out of {{ mealplan.meal_plan|safe }} meals remaining.</p>
+                            <label>Resets</label>
+                            <p class="card-text">{{ mealplan.reset_date.strftime("%A, %B %-d") }}.</p>
+                        {% else %}
+                            <p class="card-text">You do not have a mealplan.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Packages</h5>
+                        <ul class="list-group list-group-flush">
+                            {% for package in packages %}
+                                <li class="list-group-item">
+                                    <p class="card-text">You recieved a package on {{ package.checked_at.strftime("%A, %B %-d at %I:%M %P") }}.</p>
+                                    <div class="row">
+                                        <div class="col">
+                                            <label>Description</label>
+                                            <p class="card-text">{{ package.description|safe }}</p>
+                                        </div>
+                                        <div class="col">
+                                            <label>Checked by</label>
+                                            <p class="card-text">{{ package.checked_by|safe }}
+                                        </div>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="card" style="width: 200px">
+                    <img id="profile_image" src="data:image/png;base64,{{ pict }}" class="card-img-top" height="200" width="200">
+                    <div class="card-body">
+                        <label>Preferred name</label>
+                        <p class="card-text">{{ profile.preferred_name }}</p>
+                        <label>Phone number</label>
+                        {% if profile.phone_number %}
+                            <p class="card-text">{{ profile.phone_number }}</p>
+                        {% else %}
+                            <p class="card-text">None</p>
+                        {% endif %}
+                        <label>Contact Email</label>
+                        <p class="card-text">{{ profile.preferred_email }}</p>
+                        <label>Race</label>
+                        {% if profile.race %}
+                            <p class="card-text">{{ profile.race }}</p>
+                        {% else %}
+                            <p class="card-text">None</p>
+                        {% endif %}
+                        <label>Gender</label>
+                        <p class="card-text">{{ profile.gender }}</p>
+                        <a href="/profile" class="btn btn-primary float-right">Edit</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}
