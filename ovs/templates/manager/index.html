@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 {% block title %}Overseer - {{ profile.preferred_name }}{% endblock %}
-
+{% block head %}
+ <style>
+ svg > g:last-child > g:last-child { pointer-events: none }
+ div.google-visualization-tooltip { pointer-events: none }
+ </style>
+{% endblock %}
 {% block content %}
     <div class="container mt-5">
         <div class="row">
@@ -47,8 +52,6 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Packages</h5>
-                        <label>Number of packages checked today:</label>
-                        <p class="card-text">{{ today_num_packages }}</p>
                         <label>Total number of packages awaiting pickup:</label>
                         <p class="card-text">{{ total_num_packages }}</p>
                     </div>

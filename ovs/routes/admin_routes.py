@@ -60,7 +60,8 @@ def manage_managers():
                     edit_form.user_id.data,
                     edit_form.email.data,
                     edit_form.first_name.data,
-                    edit_form.last_name.data)
+                    edit_form.last_name.data,
+                    edit_form.role.data)
                 db.session.commit()
                 flash('User updated!', 'success')
 
