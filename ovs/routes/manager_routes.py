@@ -1,19 +1,18 @@
-""" Routes under /manager/ """
+"""Routes defined under '/manager'."""
 import datetime
 import base64
+import logging
+import traceback
 
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
 from flask_login import current_user, login_required
 
+from ovs import db
 from ovs.forms import RegisterRoomForm, RegisterResidentForm, ManageResidentsForm, \
-    AddPackageForm, EditPackageForm, MealLoginForm, CreateMealPlanForm, AddMealForm
-from ovs.services.manager_service import ManagerService
-from ovs.services.meal_service import MealService
-from ovs.services.package_service import PackageService
-from ovs.services.room_service import RoomService
-from ovs.services.user_service import UserService
-from ovs.services.resident_service import ResidentService
-from ovs.services.profile_picture_service import ProfilePictureService
+    AddPackageForm, EditPackageForm, MealLoginForm, CreateMealPlanForm, EditMealForm, \
+    ManageRoomForm
+from ovs.services import MealService, PackageService, RoomService, UserService, \
+    ResidentService, ProfilePictureService
 from ovs.middleware import permissions
 from ovs.utils import roles
 from ovs.utils import log_types
@@ -25,149 +24,258 @@ manager_bp = Blueprint('manager', __name__, )
 @login_required
 @permissions(roles.STAFF)
 def landing_page():
-    """ The landing page for managers """
-    user = UserService.get_user_by_id(current_user.get_id()).first()
-    role = user.role
-    return render_template('manager/index.html', role=role, user=user)
-
-
-@manager_bp.route('/register_room/', methods=['GET', 'POST'])
-@login_required
-@permissions(roles.OFFICE_MANAGER)
-def register_room():
     """
-    /manager/register_room serves an HTML form with input fields for room #,
-    status, and type and accepts that form (POST) and adds a room to the
-    rooms table. The option for admins to add current residents to said
-    room is an available option.
+    Home page for managers accessed by '/manager'.
+
+    Methods:
+        GET.
+
+    Permissions:
+        Accessible to STAFF or higher level users.
+
+    Returns:
+        A Flask template.
     """
-    form = RegisterRoomForm()
-    if request.method == 'POST':
-        if form.validate():
-            room = RoomService.create_room(
-                form.room_number.data,
-                form.room_status.data,
-                form.room_type.data,
-                form.occupants.data)
-            if room is None:
-                flash('Room number already exists! Creation Failed!', 'error')
-                return redirect((url_for('manager.register_room')))
-            flash('Residents added to rooms successfully!', 'message')
-            return redirect(url_for('manager.register_room'))
-        else:
-            flash('Input invalid', 'error')
-            return redirect(url_for('manager.register_room'))
-    else:
-        user = UserService.get_user_by_id(current_user.get_id()).first()
+    try:
+        user = UserService.get_user_by_id(current_user.get_id())
         role = user.role
-        return render_template('manager/register_room.html', role=role, user=user, form=form)
+        empty_room_stats = RoomService.get_empty_room_stats()
+        num_residents = len(ResidentService.get_all_residents_users())
+        total_num_packages = PackageService.get_package_info()
+        aggregate_meal_usage = MealService.get_aggregate_meal_usage()
+        return render_template('manager/index.html', role=role, user=user, profile=user.profile,
+                               empty_room_stats=empty_room_stats,
+                               num_residents=num_residents, total_num_packages=total_num_packages,
+                               aggregate_meal_usage=aggregate_meal_usage)
+    except: # pylint: disable=bare-except
+        db.session.rollback()
+        flash('An error was encountered', 'danger')
+        logging.exception(traceback.format_exc())
+        return redirect(url_for('manager'))
 
+
+@manager_bp.route('/manage_rooms/', methods=['GET', 'POST'])
+@login_required
+@permissions(roles.STAFF)
+def manage_rooms():
+    """
+    Rooms management page accessed by '/manager/manage_rooms'.
+
+    Methods:
+        GET, POST.
+
+    Permissions:
+        Accessible to STAFF or higher level users.
+
+    Returns:
+        A Flask template.
+    """
+    try:
+        register_form = RegisterRoomForm()
+        rooms = RoomService.get_all_rooms()
+        edit_forms = []
+        for room in rooms:
+            edit_forms.append(ManageRoomForm(prefix=str(room.id)))
+
+        if 'register_btn' in request.form and register_form.validate_on_submit():
+            RoomService.create_room(
+                register_form.room_number.data,
+                register_form.room_status.data,
+                register_form.room_type.data,
+                register_form.occupants.data)
+            db.session.commit()
+            flash('Successfully created room', 'success')
+
+            return redirect(url_for('manager.manage_rooms'))
+
+        for edit_form in edit_forms:
+            if edit_form.delete_button.data:
+                RoomService.delete_room(edit_form.room_id.data)
+                db.session.commit()
+                flash('Room deleted.', 'success')
+                return redirect(url_for('manager.manage_rooms'))
+
+            elif edit_form.update_button.data and edit_form.validate_on_submit():
+                if RoomService.edit_room(
+                        edit_form.room_id.data,
+                        edit_form.room_number.data,
+                        edit_form.status.data,
+                        edit_form.room_type.data):
+                    db.session.commit()
+                    flash('Room updated!', 'success')
+                else:
+                    flash('Duplicate room number detected!', 'danger')
+                return redirect(url_for('manager.manage_rooms'))
+
+        user = UserService.get_user_by_id(current_user.get_id())
+        role = user.role
+        return render_template('manager/manage_rooms.html', role=role, user=user,
+                               register_form=register_form, form_data=zip(edit_forms, rooms),
+                               profile=user.profile)
+    except: # pylint: disable=bare-except
+        db.session.rollback()
+        flash('An error was encountered', 'danger')
+        logging.exception(traceback.format_exc())
+        return redirect(url_for('manager.manage_rooms'))
+
+
+@manager_bp.route('/get_residents/', methods=['POST'])
+@login_required
+@permissions(roles.STAFF)
+def get_residents():
+    """
+    Get all resident email request accessed by '/manager/get_residents'.
+
+    Methods:
+        POST.
+
+    Permissions:
+        Accessible to STAFF or higher level users.
+
+    Returns:
+        A json object.
+    """
+    try:
+        residents_users = ResidentService.get_all_residents_users()
+        emails = []
+        for _, user in residents_users:
+            emails.append(user.email)
+        return jsonify(emails)
+    except: # pylint: disable=bare-except
+        flash('An error was encountered', 'danger')
+        logging.exception(traceback.format_exc())
+        return jsonify([])
 
 @manager_bp.route('/manage_residents/', methods=['GET', 'POST'])
 @login_required
-@permissions(roles.RESIDENT_ADVISOR)
+@permissions(roles.STAFF)
 def manage_residents():
     """
-    /manager/manage_residents serves a HTML with list of residents with their info.
-    It allows a manager to add/edit/delete residents with form inputs.
+    Residents management page accessed by '/manager/manage_residents'.
+
+    Methods:
+        GET, POST.
+
+    Permissions:
+        Accessible to STAFF or higher level users.
+
+    Returns:
+        A Flask template.
     """
-    register_form = RegisterResidentForm(prefix='register_form')
-    edit_form = ManageResidentsForm(prefix='edit_form')
+    try:
+        register_form = RegisterResidentForm(prefix='register_form')
+        residents = ResidentService.get_all_residents_users()
+        edit_forms = []
+        for (_, user) in residents:
+            edit_forms.append(ManageResidentsForm(prefix=str(user.id)))
 
-    user = UserService.get_user_by_id(current_user.get_id()).first()
-    role = user.role
+        user = UserService.get_user_by_id(current_user.get_id())
+        role = user.role
 
-    if request.method == 'POST':
-        if 'delete_btn' in request.form:
-            success = UserService.delete_user(edit_form.user_id.data)
-            if success:
-                flash('Resident successfully deleted')
-            else:
-                flash('Something went wrong. Could not find resident to delete')
-        elif edit_form.validate_on_submit() and 'edit_btn' in request.form:
-            success = ResidentService.edit_resident(
-                edit_form.user_id.data,
-                edit_form.email.data,
-                edit_form.first_name.data,
-                edit_form.last_name.data,
-                edit_form.room_number.data)
-            if success:
-                flash('Resident updated successfully!', 'message')
-            else:
-                flash('Room does not exist or duplicate email detected!', 'error')
-        elif register_form.validate_on_submit():
-            new_user = UserService.create_user(
+        if 'register_btn' in request.form and register_form.validate_on_submit():
+            UserService.create_user(
                 register_form.email.data,
                 register_form.first_name.data,
                 register_form.last_name.data,
                 "RESIDENT")
-            if new_user:
-                flash('Residents successfully registered!', 'message')
-            else:
-                flash('Residents not successfully registered! Email already exists!', 'error')
-        else:
-            flash('Input invalid', 'error')
 
-        return redirect(url_for('manager.manage_residents'))
-    else:
+            db.session.commit()
+            flash('{} {} registered.'.format(register_form.first_name.data, register_form.last_name.data), 'success')
+
+            return redirect(url_for('manager.manage_residents'))
+
+        for edit_form in edit_forms:
+            if edit_form.delete_button.data:  # Don't validate. Just delete
+                UserService.delete_user(edit_form.user_id.data)
+                db.session.commit()
+                flash('Resident deleted.', 'success')
+
+                return redirect(url_for('manager.manage_residents'))
+
+            elif edit_form.update_button.data and edit_form.validate_on_submit():
+                ResidentService.edit_resident(
+                    edit_form.user_id.data,
+                    edit_form.email.data,
+                    edit_form.first_name.data,
+                    edit_form.last_name.data,
+                    edit_form.room_number.data)
+                db.session.commit()
+                flash('Resident updated!', 'success')
+
+                return redirect(url_for('manager.manage_residents'))
+
         return render_template('manager/manage_residents.html', role=role, user=user,
-                               residents=ManagerService.get_all_residents(),
-                               register_form=register_form, edit_form=edit_form)
+                               register_form=register_form, form_data=zip(edit_forms, residents),
+                               profile=user.profile)
+    except: # pylint: disable=bare-except
+        db.session.rollback()
+        flash('An error was encountered', 'danger')
+        logging.exception(traceback.format_exc())
+        return redirect(url_for('manager.manage_residents'))
 
 
 @manager_bp.route('/manage_packages/', methods=['GET', 'POST'])
 @login_required
-@permissions(roles.RESIDENT_ADVISOR)
+@permissions(roles.STAFF)
 def manage_packages():
     """
-    /manager/register_resident serves an html form with input fields for email,
-    first name, and last name and accepts that form (POST) and adds a user
-    to the user table with a default password.
+    Package management page accessed by '/manager/manage_packages'.
+
+    Methods:
+        GET, POST.
+
+    Permissions:
+        Accessible to STAFF or higher level users.
+
+    Returns:
+        A Flask template.
     """
-    add_form = AddPackageForm(prefix='add_form')
-    edit_form = EditPackageForm(prefix='edit_form')
-    user = UserService.get_user_by_id(current_user.get_id()).first()
-    role = user.role
-    packages_recipients_checkers = ManagerService.get_all_packages_recipients_checkers()
-    if request.method == 'POST':
-        # Add package
-        if add_form.validate_on_submit():
+    try:
+        add_form = AddPackageForm(prefix='add_form')
+        packages_recipients = PackageService.get_all_packages_recipients()
+        edit_forms = []
+        for (package, _) in packages_recipients:
+            edit_forms.append(EditPackageForm(prefix=str(package.id)))
+
+        user = UserService.get_user_by_id(current_user.get_id())
+        role = user.role
+
+        if 'check_btn' in request.form and add_form.validate_on_submit():
             recipient_email = add_form.recipient_email.data
-            recipient_id = UserService.get_user_by_email(recipient_email).first().id
-            checked_by_id = current_user.get_id()
-            checked_at = datetime.datetime.now().replace(second=0, microsecond=0)  # Current date/time
+            recipient_id = UserService.get_user_by_email(recipient_email).id
+            checked_by = '{} {}'.format(user.first_name, user.last_name)
+            checked_at = datetime.datetime.now() # Current date/time
             description = add_form.description.data
 
-            PackageService.create_package(recipient_id, checked_by_id, checked_at, description)
-            flash('Package added successfully!', 'message')
+            PackageService.create_package(recipient_id, checked_by, checked_at, description)
+
+            db.session.commit()
+            flash('Package added successfully!', 'success')
             return redirect(url_for('manager.manage_packages'))
 
-        # Edit package
-        elif edit_form.validate_on_submit():
-            PackageService.update_package(edit_form.package_id.data,
-                                          edit_form.recipient_email.data,
-                                          edit_form.description.data)
-            flash('Package edited successfully!', 'message')
-            return redirect(url_for('manager.manage_packages'))
-
-        else:
-            if 'add_btn' in request.form:
-                return render_template('manager/manage_packages.html', role=role, user=user,
-                                       packages_recipients_checkers=packages_recipients_checkers,
-                                       add_form=add_form, edit_form=edit_form)
-            elif 'edit_btn' in request.form:
-                flash(str(edit_form.errors['recipient_email'][0]), 'error')
+        for edit_form in edit_forms:
+            if edit_form.deliver_button.data:
+                PackageService.delete_package(edit_form.package_id.data)
+                db.session.commit()
+                flash('Package delivery completed.', 'success')
                 return redirect(url_for('manager.manage_packages'))
 
-            # Should not reach here
-            else:
-                flash(str(add_form.errors) + "\n-----\n" + str(edit_form.errors), 'error')
+            elif edit_form.update_button.data and edit_form.validate_on_submit():
+                PackageService.update_package(edit_form.package_id.data,
+                                              edit_form.recipient_email.data,
+                                              edit_form.description.data)
+                db.session.commit()
+                flash('Package edited successfully!', 'success')
                 return redirect(url_for('manager.manage_packages'))
 
-    else:
         return render_template('manager/manage_packages.html', role=role, user=user,
-                               packages_recipients_checkers=packages_recipients_checkers,
-                               add_form=add_form, edit_form=edit_form)
+                               add_form=add_form, form_data=zip(edit_forms, packages_recipients),
+                               profile=user.profile)
+    except: # pylint: disable=bare-except
+        db.session.rollback()
+        flash('An error was encountered', 'danger')
+        logging.exception(traceback.format_exc())
+        return redirect(url_for('manager.manage_packages'))
 
 
 @manager_bp.route('/meal_login/', methods=['GET', 'POST'])
@@ -175,34 +283,66 @@ def manage_packages():
 @permissions(roles.STAFF)
 def meal_login():
     """
-    /manager/meal_login serves an html form with input field pin
-    and accepts that form (POST) and logs the use to a meal plan
+    Meal login page accessed by 'manager/meal_login'.
+
+    Methods:
+        GET, POST.
+
+    Permissions:
+        Accessible to STAFF or higher level users.
+
+    Returns:
+        A Flask template.
     """
-    form = MealLoginForm()
-    user_id = current_user.get_id()
-    user = UserService.get_user_by_id(user_id).first()
-    role = user.role
+    try:
+        form = MealLoginForm()
+        user_id = current_user.get_id()
+        user = UserService.get_user_by_id(user_id)
+        role = user.role
 
-    if request.method == 'POST':
-        # Valid Form
-        if form.validate():
+        if form.validate_on_submit():
             mealplan = MealService.get_meal_plan_by_pin(form.pin.data)
-            success = MealService.use_meal(form.pin.data, user_id)
+            used = MealService.use_meal(form.pin.data, user_id)
+            db.session.commit()
+            if not used:
+                flash('Failed to sign in. Out of meals.', 'danger')
 
-            resident = ResidentService.get_resident_by_pin(mealplan.pin)
-            profile = resident.profile
-            pict = base64.b64encode(ProfilePictureService.get_profile_picture(profile.picture_id)).decode()
+            return redirect(url_for('manager.meal_login'))
+
+        skip = False
+        for i, log in enumerate(MealService.get_logs()):
+            if skip:
+                skip = False
+                continue
+
+            if log.log_type == 'UNDO':
+                skip = True
+                continue
+
+            resident = ResidentService.get_resident_by_id(log.resident_id)
+            if resident is None:
+                continue
+            profile = UserService.get_user_by_id(log.resident_id).profile
+            pict = base64.b64encode(ProfilePictureService.get_profile_picture(profile.user_id)).decode()
+            mealplan = MealService.get_meal_plan_by_pin(log.mealplan_pin)
+            if mealplan is None:
+                continue
             current_meals = mealplan.credits
             max_meals = mealplan.meal_plan
             return render_template('manager/meal_login.html', role=role, user=user, form=form,
-                                   pict=pict, submitted=True, current_meals=current_meals, max_meals=max_meals
-                                   , success=success)
+                                   pict=pict, show_undo=(i == 0),
+                                   name=profile.preferred_name,
+                                   current_meals=current_meals,
+                                   max_meals=max_meals,
+                                   profile=user.profile)
 
-        # Invalid form
-        else:
-            return render_template('manager/meal_login.html', role=role, user=user, form=form, submitted=False)
-    else:
-        return render_template('manager/meal_login.html', role=role, user=user, form=form, submitted=False)
+        return render_template('manager/meal_login.html', role=role, user=user,
+                               form=form, no_login=True, profile=user.profile)
+    except: # pylint: disable=bare-except
+        db.session.rollback()
+        flash('An error was encountered', 'danger')
+        logging.exception(traceback.format_exc())
+        return redirect(url_for('manager.meal_login'))
 
 
 @manager_bp.route('/meal_undo/', methods=['POST'])
@@ -210,88 +350,102 @@ def meal_login():
 @permissions(roles.STAFF)
 def meal_undo():
     """
-    /manager/meal_undo accepts that form (POST) and undo the use of a meal plan
-    Currently uses manager id to distinguish frontends. Should use session token.
-    """
-    user_id = current_user.get_id()
+    Undo meal request accessed by '/manager/meal_undo'.
 
-    if request.method == 'POST':
+    Methods:
+        POST.
+
+    Permissions:
+        Accessible to STAFF or higher level users.
+
+    Returns:
+        A Flask template.
+    """
+    try:
+        user_id = current_user.get_id()
+
         meal_log = MealService.get_last_log(user_id)
 
         if meal_log is None or meal_log.log_type == log_types.UNDO:
-            flash('Undo invalid', 'error')
+            flash('Undo invalid', 'danger')
             return redirect(url_for('manager.meal_login'))
-        success = MealService.undo_meal_use(user_id, meal_log.resident_id, meal_log.mealplan_pin)
-        if not success:
-            flash('Undo failed', 'error')
+        MealService.undo_meal_use(user_id, meal_log.resident_id, meal_log.mealplan_pin)
 
-        resident = ResidentService.get_resident_by_id(meal_log.resident_id).first()
         mealplan = MealService.get_meal_plan_by_pin(meal_log.mealplan_pin)
-        name = resident.profile.preferred_name
+        name = UserService.get_user_by_id(meal_log.resident_id).profile.preferred_name
         current_meals = mealplan.credits
 
-        flash('{} has {} meals left'.format(name, current_meals), 'message')
+        db.session.commit()
+        flash('{} has {} meals left'.format(name, current_meals), 'success')
+
         return redirect(url_for('manager.meal_login'))
-    else:
-        return redirect(url_for('manager.meal_login'))
+    except: # pylint: disable=bare-except
+        db.session.rollback()
+        flash('Failed to undo', 'danger')
+        logging.exception(traceback.format_exc())
+        return redirect(url_for('manager.meal_undo'))
 
 
-@manager_bp.route('/create_meal_plan/', methods=['GET', 'POST'])
+@manager_bp.route('/manage_meal_plans/', methods=['GET', 'POST'])
 @login_required
-@permissions(roles.OFFICE_MANAGER)
-def create_meal_plan():
+@permissions(roles.STAFF)
+def manage_meal_plans():
     """
-    /manager/meal_login serves an html form with input field pin
-    and accepts that form (POST) and logs the use to a meal plan
-    """
-    form = CreateMealPlanForm()
-    user_id = current_user.get_id()
-    user = UserService.get_user_by_id(user_id).first()
-    role = user.role
-    if request.method == 'POST':
-        if form.validate():
-            meal_plan = ResidentService.create_meal_plan_for_resident_by_email(
-                form.meal_plan.data,
-                form.plan_type.data,
-                form.email.data)
-            if meal_plan is not None:
-                flash('Meal plan created successfully with pin: %d' % (meal_plan.pin), 'message')
-            else:
-                flash('Meal plan not created', 'error')
-            return redirect(url_for('manager.create_meal_plan'))
-        else:
-            return render_template('manager/create_meal_plan.html', role=role, user=user, form=form)
-    else:
-        return render_template('manager/create_meal_plan.html', role=role, user=user, form=form)
+    Meal plan mangement page accessed by '/manager/manage_meal_plans'.
 
+    Methods:
+        GET, POST.
 
-@manager_bp.route('/add_meals/', methods=['GET', 'POST'])
-@login_required
-@permissions(roles.OFFICE_MANAGER)
-def add_meals():
+    Permissions:
+        Accessible to STAFF or higher level users.
+
+    Returns:
+        A Flask template.
     """
-    /manager/meal_login serves an html form with input field pin
-    and accepts that form (POST) and logs the use to a meal plan
-    """
-    form = AddMealForm()
-    user = UserService.get_user_by_id(current_user.get_id()).first()
-    role = user.role
-    if request.method == 'POST':
-        if form.validate():
-            valid = MealService.add_meals(
-                form.pin.data,
-                form.number.data)
-            if valid:
-                user_meal_plan = MealService.get_meal_plan_by_pin(form.pin.data)
-                resident = ResidentService.get_resident_by_pin(user_meal_plan.pin)
-                message = ('%s has %d out of %d meals now.' % (resident.profile.preferred_name,
-                                                               user_meal_plan.credits,
-                                                               user_meal_plan.meal_plan))
-                flash('Meals added successfully! ' + message, 'message')
-            else:
-                flash('Invalid pin', 'error')
-            return redirect(url_for('manager.add_meals'))
-        else:
-            return render_template('manager/add_meals.html', role=role, user=user, form=form)
-    else:
-        return render_template('manager/add_meals.html', role=role, user=user, form=form)
+    try:
+        create_form = CreateMealPlanForm()
+        edit_forms = []
+        meal_plans = MealService.get_all_meal_plans()
+        emails = []
+        for meal_plan in meal_plans:
+            edit_forms.append(EditMealForm(plan_type=meal_plan.plan_type,
+                                           prefix=str(meal_plan.pin)))
+            resident = ResidentService.get_resident_by_pin(meal_plan.pin)
+            emails.append(resident.user.email)
+
+        if 'create_btn' in request.form and create_form.validate_on_submit():
+            meal_plan = MealService.create_meal_plan_for_resident_by_email(
+                create_form.meal_plan.data,
+                create_form.plan_type.data,
+                create_form.email.data)
+            db.session.commit()
+            flash('Meal plan created with pin {}'.format(meal_plan.pin), 'success')
+
+            return redirect(url_for('manager.manage_meal_plans'))
+
+        for edit_form in edit_forms:
+            if edit_form.delete_button.data:
+                MealService.delete_meal_plan(edit_form.pin.data)
+                db.session.commit()
+                flash('Meal plan deleted.', 'success')
+                return redirect(url_for('manager.manage_meal_plans'))
+            elif edit_form.update_button.data and edit_form.validate_on_submit():
+                MealService.edit_meal_plan(
+                    edit_form.pin.data,
+                    edit_form.credit.data,
+                    edit_form.meal_plan.data,
+                    edit_form.plan_type.data)
+                db.session.commit()
+                flash('Meal plan updated!', 'success')
+                return redirect(url_for('manager.manage_meal_plans'))
+
+        user = UserService.get_user_by_id(current_user.get_id())
+        role = user.role
+        return render_template('manager/manage_meal_plans.html', role=role, user=user,
+                               create_form=create_form, form_data=zip(edit_forms, meal_plans, emails),
+                               profile=user.profile)
+    except: # pylint: disable=bare-except
+        db.session.rollback()
+        flash('An error was encountered', 'danger')
+        logging.exception(traceback.format_exc())
+        return redirect(url_for('manager.manage_meal_plans'))

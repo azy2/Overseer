@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Edit profile - {{ profile.preferred_name }}{% endblock %}
+{% block content %}
+    {% from "_formhelper.html" import field_inline %}
+    <div class="container card mt-5" >
+        <div class="row card-body" >
+            <div class="col-md-3 col-sm-12 card-img-left" >
+                <img id="profile_image" src="data:image/png;base64,{{ pict }}" class="rounded" height="200" width="200">
+                <form method="post" value="Upload picture" enctype="multipart/form-data" class="needs-validation" novalidate>
+                    {{ picture_form.csrf_token }}
+                    <div class="custom-file mt-2">
+                        <input type="file" class="custom-file-input {% if picture_form.profile_picture.errors %}is-invalid{% endif %}" accept="image/png" id="profile_picture" name="profile_picture" required>
+                        <label class="custom-file-label" for="profile_picture" id="profile_picture_label">Choose image</label>
+                        <div class="invalid-feedback">
+                            Please select a valid png.
+                        </div>
+                    </div>
+                    <input type="submit" id="upload_picture" value="Upload Picture" name="picture_btn" class="btn btn-primary mt-3 float-right">
+                </form>
+            </div>
+            <div class="col-md-9 col-sm-12" >
+                <form method="post" class="needs-validation" novalidate>
+                    {{ profile_form.csrf_token }}
+                    {{ field_inline(profile_form.preferred_name) }}
+                    {{ field_inline(profile_form.phone_number) }}
+                    {{ field_inline(profile_form.preferred_email) }}
+                    {{ field_inline(profile_form.race) }}
+                    {{ field_inline(profile_form.gender) }}
+                    <input type="submit" id="submit_changes" value="Submit Changes" name="profile_btn" class="btn btn-primary float-right">
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block scripts %}
+    <script>
+     $(document).on('change', ':file', function() {
+         var input = $(this),
+             label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+         input.trigger('fileselect', label);
+     });
+
+     $(document).ready( function() {
+         $(':file').on('fileselect', function(event, label) {
+             $('#profile_picture_label').html(label);
+         });
+     });
+    </script>
+{% endblock %}

@@ -1,6 +1,8 @@
 """ Models """
-from .meal_plan_model import MealPlan as MealPlanModel
-from .package_model import Package as PackageModel
-from .resident_model import Resident as ResidentModel
-from .room_model import Room as RoomModel
-from .user_model import User as UserModel
+from .meal_plan_model import MealPlan
+from .mealplan_history_model import MealplanHistory
+from .package_model import Package
+from .profile_model import Profile
+from .resident_model import Resident
+from .room_model import Room
+from .user_model import User

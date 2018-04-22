@@ -1,32 +1,58 @@
 """
-Blob interface code
+Blob interface code.
 """
 import os
 from azure.storage.blob import BlockBlobService
 
-class Blob():
+
+class Blob:
     """
-    Blob is the implementation for azure blob storage
+    Blob is the implementation for azure blob storage.
+
+    Args:
+        app: The current Flask app. If not provided init_app must be called before using this object.
+
+    Returns:
+        A `Blob` object.
     """
-    #The container name can only contain letters, chars or '-'
+
+    # The container name can only contain letters, chars or '-'
     PROFILE_PICTURE_CONTAINER = 'profile-picture'
-    def __init__(self, app):
-        self._is_production = app.config['PRODUCTION']
+
+    def __init__(self, app=None):
+        if app:
+            self.init_app(app)
+
+    def init_app(self, app):
+        """
+        Initializes the Blob object.
+
+        Args:
+            app: The currently running Flask app.
+        """
+        self.app = app
+        self._is_production = self.app.config['PRODUCTION']
         if self._is_production:
-            blob_config = app.config['BLOB']
-            self._service = BlockBlobService(account_name=blob_config['account'],
-                                             account_key=blob_config['key'])
+            blob_config = self.app.config['BLOBSTORE']
+            self._service = BlockBlobService(account_name=blob_config['ACCOUNT'],
+                                             account_key=blob_config['ACCOUNT_KEY'])
             if not self._service.exists(self.PROFILE_PICTURE_CONTAINER):
                 self._service.create_container(self.PROFILE_PICTURE_CONTAINER)
 
     def create_blob_from_bytes(self, container, name, byte_array):
         """
-        Wraps create blob from bytes service
+        Wraps create blob from bytes service if in production. Otherwise saves the data to disk.
+
+        Args:
+            container: The azure blob service container.
+            name: The name of the blob.
+            byte_array: The data to be put in the blob.
         """
+        name = str(name)
         if self._is_production:
             self._service.create_blob_from_bytes(container, name, bytes(byte_array))
         else:
-            #this just saves the file locally, used for dev and testing
+            # this just saves the file locally, used for dev and testing
             file_name = make_file_name(container, name)
             if not os.path.exists(os.path.dirname(file_name)):
                 os.makedirs(os.path.dirname(file_name))
@@ -35,28 +61,53 @@ class Blob():
 
     def delete_blob(self, container, name):
         """
-        Wraps delete blob service
+        Wraps delete blob service if in production. Otherwise deletes the data from disk.
+
+        Args:
+            container: The container which contains the blob.
+            name: The name of the blob in the container.
         """
+        name = str(name)
         if self._is_production:
             self._service.delete_blob(container, name)
         else:
             file_name = make_file_name(container, name)
-            os.remove(file_name)
+            try:
+                os.remove(file_name)
+            except OSError:
+                pass
+
 
     def exists(self, container, name):
         """
-        Wraps exists blob service
+        Wraps exists blob service if in production. Otherwise check if the file is on disk.
+
+        Args:
+            container: The container where the blob resides.
+            name: The name of the blob.
+
+        Returns:
+            bool: Whether the blob exits.
         """
+        name = str(name)
         if self._is_production:
             return self._service.exists(container, name)
-        else:
-            file_name = make_file_name(container, name)
-            return os.path.isfile(file_name)
+
+        file_name = make_file_name(container, name)
+        return os.path.isfile(file_name)
 
     def get_blob_to_bytes(self, container, name):
         """
-        Wraps get blob to bytes service
+        Wraps get blob to bytes service.
+
+        Args:
+            container: The container where the blob resides.
+            name: The name of the blob.
+
+        Returns:
+            bytearray: The data contained in the blob.
         """
+        name = str(name)
         if self._is_production:
             return bytearray(self._service.get_blob_to_bytes(container, name).content)
         else:
@@ -71,6 +122,17 @@ class Blob():
 
 def make_file_name(container, name):
     """
-    Builds filename for testing from container and id
+    Builds filename for testing and dev from container and id.
+
+    Args:
+        container: The container.
+        name: The blob name.
+
+    Returns:
+        A file path representing the blob.
     """
+    name = str(name)
     return 'ovs/data/test/' + container + '/' + name
+
+
+blob = Blob()

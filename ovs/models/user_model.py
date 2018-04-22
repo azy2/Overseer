@@ -2,18 +2,32 @@
 Defines a User as represented in the database
 """
 
-from flask import jsonify, current_app
-from flask_bcrypt import bcrypt
-from sqlalchemy import Integer, Enum, Column, CHAR, String, text, DateTime
+from flask import jsonify
+from flask_bcrypt import Bcrypt, bcrypt
+from sqlalchemy import Integer, Enum, Column, CHAR, String, DateTime
+from sqlalchemy.sql import func
+from sqlalchemy.orm import relationship
 
-from ovs import BaseModel
+from ovs import db
 
 SALT_ROUNDS = 12
 
+bcrypt_app = Bcrypt()
 
-class User(BaseModel):
+
+class User(db.Model):
     """
-    Defines a User as represented in the database. Along with some utility functions.
+    Defines a User as represented in the database.
+    Args:
+        email (str): The user's email.
+        first_name (str): The user's first name.
+        last_name (str): The user's last name.
+        password (str): The user's initial password.
+        role (Enum): The user's role. Must be one of 'RESIDENT', 'RESIDENT_ADVISOR',
+                     'STAFF', 'OFFICE_MANAGER', 'BUILDING_MANAGER', or 'ADMIN'
+
+    Returns:
+        User: A User Model object.
     """
     __tablename__ = 'users'
 
@@ -25,15 +39,16 @@ class User(BaseModel):
     role = Column(Enum('RESIDENT', 'RESIDENT_ADVISOR', 'STAFF',
                        'OFFICE_MANAGER', 'BUILDING_MANAGER', 'ADMIN'),
                   nullable=False)
-    created = Column(
-        DateTime, server_default=text('CURRENT_TIMESTAMP'))
-    updated = Column(DateTime, server_default=text(
-        'CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))
+    profile = relationship('Profile', uselist=False, back_populates='user',
+                           cascade='all, delete, delete-orphan')
+    created = Column(DateTime, server_default=func.now())
+    updated = Column(DateTime, server_default=func.now(), server_onupdate=func.now())
+    resident = relationship('Resident', uselist=False, cascade='delete, delete-orphan')
 
     def __init__(self, email, first_name, last_name, password, role):
         if password is None:
             password = bcrypt.gensalt()
-        password_hash = current_app.extensions['bcrypt'].generate_password_hash(password)
+        password_hash = bcrypt_app.generate_password_hash(password)
         super(User, self).__init__(
             email=email,
             first_name=first_name,
@@ -42,18 +57,31 @@ class User(BaseModel):
             role=role)
 
     def __repr__(self):
+        """
+        Allows User to be printed.
+        Returns:
+            str: A string representation of this User.
+        """
         return 'User([id={id}, email={email}, first_name={first_name}, last_name={last_name}, role={role}, ' \
                'created={created}, updated={updated}])'.format(**self.__dict__)
 
     def has_password(self, password):
-        """ Checks if inputted password matches the one stored in DB """
-        to_check = password.encode('utf-8')
-        actual = self.password.encode('utf-8')
+        """
+        Checks if inputted password matches the one stored in DB
+        Args:
+            password: The typed in password
 
-        return current_app.extensions['bcrypt'].check_password_hash(actual, to_check)
+        Returns:
+            bool: True if `password` matches the one in the database, False otherwise.
+        """
+        return bcrypt_app.check_password_hash(self.password, password)
 
     def json(self):
-        """ Returns a JSON representation of this User """
+        """
+        Returns a JSON representation of this User
+        Returns:
+            A JSON representation of this User.
+        """
         return jsonify(
             id=self.id,
             email=self.email,
@@ -67,23 +95,56 @@ class User(BaseModel):
     def update(self, email, first_name, last_name):
         """
         Updates user with new information
+        Args:
+            email: The new email address.
+            first_name: The new first_name.
+            last_name: The new last_name.
         """
         self.email = email
         self.first_name = first_name
         self.last_name = last_name
 
     def is_authenticated(self):  # pylint: disable=no-self-use
-        """ Checks if a user is authenticated """
+        """
+        Checks if a user is authenticated. Always returns True as required by Flask.
+        Returns:
+            True
+        """
         return True
 
     def is_active(self):  # pylint: disable=no-self-use
-        """ Checks if this user account is active """
+        """
+        Checks if this user account is active. Always returns True as required by Flask.
+        Returns:
+            True
+        """
         return True
 
     def is_anonymous(self):  # pylint: disable=no-self-use
-        """ Checks if this user is anonymous """
+        """
+        Checks if this user is anonymous. Always returns False as required by Flask.
+        Returns:
+            False
+        """
         return False
 
     def get_id(self):
-        """ :returns the user's unique id in the database """
+        """
+        Retrieve this users id in the database as a string.
+        Returns:
+            str: The user's id.
+        """
         return str(self.id)
+
+    def update_password(self, new_password):
+        """
+        Updates the password of the user.
+
+        Args:
+            new_password: The newpassword to hash and set as the user pass.
+
+        Returns:
+            The updated model.
+        """
+        self.password = bcrypt_app.generate_password_hash(new_password)
+        return self

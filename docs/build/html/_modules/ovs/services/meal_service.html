@@ -1,0 +1,363 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>ovs.services.meal_service &#8212; Overseer 1.0.0 documentation</title>
+    <link rel="stylesheet" href="../../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">Overseer 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../ovs.html" accesskey="U">ovs</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for ovs.services.meal_service</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">DB and utility functions for Meals</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">ovs</span> <span class="k">import</span> <span class="n">db</span>
+<span class="kn">from</span> <span class="nn">ovs.models.meal_plan_model</span> <span class="k">import</span> <span class="n">MealPlan</span>
+<span class="kn">from</span> <span class="nn">ovs.models.mealplan_history_model</span> <span class="k">import</span> <span class="n">MealplanHistory</span>
+<span class="kn">from</span> <span class="nn">ovs.utils</span> <span class="k">import</span> <span class="n">log_types</span>
+
+
+<div class="viewcode-block" id="MealService"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.meal_service.MealService">[docs]</a><span class="k">class</span> <span class="nc">MealService</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; DB and utility functions for Meals &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="MealService.create_meal_plan"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.meal_service.MealService.create_meal_plan">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">create_meal_plan</span><span class="p">(</span><span class="n">meal_plan</span><span class="p">,</span> <span class="n">plan_type</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Adds a MealPlan db entry.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            meal_plan: The plan&#39;s maximum credit.</span>
+<span class="sd">            plan_type: The plan&#39;s reset period.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A MealPlan db model.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">new_plan</span> <span class="o">=</span> <span class="n">MealPlan</span><span class="p">(</span><span class="n">meal_plan</span><span class="p">,</span> <span class="n">plan_type</span><span class="p">)</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">new_plan</span><span class="p">)</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">new_plan</span></div>
+
+<div class="viewcode-block" id="MealService.create_meal_plan_for_resident_by_email"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.meal_service.MealService.create_meal_plan_for_resident_by_email">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">create_meal_plan_for_resident_by_email</span><span class="p">(</span><span class="n">meal_plan</span><span class="p">,</span> <span class="n">plan_type</span><span class="p">,</span> <span class="n">email</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a new meal plan db entry</span>
+<span class="sd">          and assign a meal plan pin to an existing resident identified by email.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            meal_plan: The plan&#39;s maximum credit.</span>
+<span class="sd">            plan_type: The plan&#39;s reset period.</span>
+<span class="sd">            email: An email address.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A MealPlan db model.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">ovs.services.resident_service</span> <span class="k">import</span> <span class="n">ResidentService</span>
+
+        <span class="n">resident</span> <span class="o">=</span> <span class="n">ResidentService</span><span class="o">.</span><span class="n">get_resident_by_email</span><span class="p">(</span><span class="n">email</span><span class="p">)</span>
+        <span class="n">meal_plan</span> <span class="o">=</span> <span class="n">MealService</span><span class="o">.</span><span class="n">create_meal_plan</span><span class="p">(</span><span class="n">meal_plan</span><span class="p">,</span> <span class="n">plan_type</span><span class="p">)</span>
+
+        <span class="n">ResidentService</span><span class="o">.</span><span class="n">set_resident_pin</span><span class="p">(</span><span class="n">resident</span><span class="o">.</span><span class="n">user_id</span><span class="p">,</span> <span class="n">meal_plan</span><span class="o">.</span><span class="n">pin</span><span class="p">)</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">refresh</span><span class="p">(</span><span class="n">resident</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">meal_plan</span></div>
+
+<div class="viewcode-block" id="MealService.use_meal"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.meal_service.MealService.use_meal">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">use_meal</span><span class="p">(</span><span class="n">pin</span><span class="p">,</span> <span class="n">manager_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Decrement credit for meal plan identified by meal pin</span>
+<span class="sd">          and log a MealService db entry.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            pin: Unique meal pin.</span>
+<span class="sd">            manager_id: Unique user id.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            If the meal credit was deducted and logged succesfully.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">ovs.services.resident_service</span> <span class="k">import</span> <span class="n">ResidentService</span>
+
+        <span class="n">mealplan</span> <span class="o">=</span> <span class="n">MealService</span><span class="o">.</span><span class="n">get_meal_plan_by_pin</span><span class="p">(</span><span class="n">pin</span><span class="p">)</span>
+        <span class="n">resident</span> <span class="o">=</span> <span class="n">ResidentService</span><span class="o">.</span><span class="n">get_resident_by_pin</span><span class="p">(</span><span class="n">pin</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">mealplan</span><span class="o">.</span><span class="n">update_meal_count</span><span class="p">():</span>
+            <span class="n">MealService</span><span class="o">.</span><span class="n">log_meal_history</span><span class="p">(</span><span class="n">resident</span><span class="o">.</span><span class="n">user_id</span><span class="p">,</span> <span class="n">mealplan</span><span class="o">.</span><span class="n">pin</span><span class="p">,</span> <span class="n">manager_id</span><span class="p">,</span> <span class="n">log_types</span><span class="o">.</span><span class="n">MEAL_USED</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="MealService.edit_meal_plan"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.meal_service.MealService.edit_meal_plan">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">edit_meal_plan</span><span class="p">(</span><span class="n">pin</span><span class="p">,</span> <span class="n">credit</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">plan_meal_count</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">plan_type</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates a meal plan with any provided info.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            pin: Unique meal pin.</span>
+<span class="sd">            credit: Number of credits until the next reset_date.</span>
+<span class="sd">            plan_meal_count: Number of meals given at each reset_date.</span>
+<span class="sd">            plan_type: The plans reset period.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">meal_plan</span> <span class="o">=</span> <span class="n">MealService</span><span class="o">.</span><span class="n">get_meal_plan_by_pin</span><span class="p">(</span><span class="n">pin</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">credit</span><span class="p">:</span>
+            <span class="n">meal_plan</span><span class="o">.</span><span class="n">credits</span> <span class="o">=</span> <span class="n">credit</span>
+        <span class="k">if</span> <span class="n">plan_meal_count</span><span class="p">:</span>
+            <span class="n">meal_plan</span><span class="o">.</span><span class="n">meal_plan</span> <span class="o">=</span> <span class="n">plan_meal_count</span>
+        <span class="k">if</span> <span class="n">plan_type</span><span class="p">:</span>
+            <span class="n">meal_plan</span><span class="o">.</span><span class="n">plan_type</span> <span class="o">=</span> <span class="n">plan_type</span>
+        <span class="n">meal_plan</span><span class="o">.</span><span class="n">reset_date</span> <span class="o">=</span> <span class="n">meal_plan</span><span class="o">.</span><span class="n">get_next_reset_date</span><span class="p">()</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="MealService.add_meals"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.meal_service.MealService.add_meals">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">add_meals</span><span class="p">(</span><span class="n">pin</span><span class="p">,</span> <span class="n">number</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add credits to meal plan identified by meal pin.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            pin: Unique meal pin.</span>
+<span class="sd">            number: The number of credits to add.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">meal_plan</span> <span class="o">=</span> <span class="n">MealService</span><span class="o">.</span><span class="n">get_meal_plan_by_pin</span><span class="p">(</span><span class="n">pin</span><span class="p">)</span>
+        <span class="n">MealService</span><span class="o">.</span><span class="n">edit_meal_plan</span><span class="p">(</span><span class="n">pin</span><span class="p">,</span> <span class="n">credit</span><span class="o">=</span><span class="n">meal_plan</span><span class="o">.</span><span class="n">credits</span><span class="o">+</span><span class="n">number</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MealService.delete_meal_plan"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.meal_service.MealService.delete_meal_plan">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">delete_meal_plan</span><span class="p">(</span><span class="n">pin</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Deletes a meal plan from the database.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            pin: Unique meal pin.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">ovs.services.resident_service</span> <span class="k">import</span> <span class="n">ResidentService</span>
+        <span class="n">meal_plan</span> <span class="o">=</span> <span class="n">MealService</span><span class="o">.</span><span class="n">get_meal_plan_by_pin</span><span class="p">(</span><span class="n">pin</span><span class="p">)</span>
+
+        <span class="n">resident</span> <span class="o">=</span> <span class="n">ResidentService</span><span class="o">.</span><span class="n">get_resident_by_pin</span><span class="p">(</span><span class="n">meal_plan</span><span class="o">.</span><span class="n">pin</span><span class="p">)</span>
+        <span class="n">ResidentService</span><span class="o">.</span><span class="n">set_resident_pin</span><span class="p">(</span><span class="n">resident</span><span class="o">.</span><span class="n">user_id</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">meal_plan</span><span class="p">)</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="MealService.undo_meal_use"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.meal_service.MealService.undo_meal_use">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">undo_meal_use</span><span class="p">(</span><span class="n">manager_id</span><span class="p">,</span> <span class="n">resident_id</span><span class="p">,</span> <span class="n">pin</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Adds a single credit back to meal plan identified by meal pin</span>
+<span class="sd">          and adds a MealService db entry.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            manager_id: Unique user id that identifies the manager that authorized the undo.</span>
+<span class="sd">            resident_id: Unique id that identifies the resident that the meal plan is associated with.</span>
+<span class="sd">            pin: Unique meal pin.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">MealService</span><span class="o">.</span><span class="n">add_meals</span><span class="p">(</span><span class="n">pin</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">MealService</span><span class="o">.</span><span class="n">log_meal_history</span><span class="p">(</span><span class="n">resident_id</span><span class="p">,</span> <span class="n">pin</span><span class="p">,</span> <span class="n">manager_id</span><span class="p">,</span> <span class="n">log_types</span><span class="o">.</span><span class="n">UNDO</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MealService.get_meal_plan_by_pin"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.meal_service.MealService.get_meal_plan_by_pin">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_meal_plan_by_pin</span><span class="p">(</span><span class="n">pin</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fetch the mean plan that is associated with the meal pin.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            pin: Unique meal pin.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A MealPlan db model.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">meal_plan</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">MealPlan</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">pin</span><span class="o">=</span><span class="n">pin</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">meal_plan</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">meal_plan</span><span class="o">.</span><span class="n">check_reset_date</span><span class="p">()</span> <span class="c1">#update this lazy evaluation</span>
+        <span class="k">return</span> <span class="n">meal_plan</span></div>
+
+<div class="viewcode-block" id="MealService.get_all_meal_plans"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.meal_service.MealService.get_all_meal_plans">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_all_meal_plans</span><span class="p">():</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fetch all meal plans in the database</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A list of MealPlan db models.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">meal_plans</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">MealPlan</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">meal_plan</span> <span class="ow">in</span> <span class="n">meal_plans</span><span class="p">:</span>
+            <span class="n">meal_plan</span><span class="o">.</span><span class="n">check_reset_date</span><span class="p">()</span> <span class="c1">#update this lazy evaluation</span>
+        <span class="k">return</span> <span class="n">meal_plans</span></div>
+
+<div class="viewcode-block" id="MealService.log_meal_history"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.meal_service.MealService.log_meal_history">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">log_meal_history</span><span class="p">(</span><span class="n">resident_id</span><span class="p">,</span> <span class="n">pin</span><span class="p">,</span> <span class="n">manager_id</span><span class="p">,</span> <span class="n">log_type</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Adds a MealPlanHistory to db that logs the login/undo action.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            resident_id: Unique resident id that identifies the user that the meal plan is associated with.</span>
+<span class="sd">            pin: Unique meal pin.</span>
+<span class="sd">            manager_id: Unique user id that identifies the manager that authorized the undo action.</span>
+<span class="sd">            log_type: log_types.MEAL_USED or log_types.UNDO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">new_mealplan_history_item</span> <span class="o">=</span> <span class="n">MealplanHistory</span><span class="p">(</span>
+            <span class="n">resident_id</span><span class="p">,</span> <span class="n">pin</span><span class="p">,</span> <span class="n">manager_id</span><span class="p">,</span> <span class="n">log_type</span><span class="p">)</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">new_mealplan_history_item</span><span class="p">)</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="MealService.get_last_log"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.meal_service.MealService.get_last_log">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_last_log</span><span class="p">(</span><span class="n">manager_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fetch the most recent meal log associated manager identified by manager id.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            manager_id: Unique user id.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A MealPlanHistory db model.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">MealplanHistory</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">manager_id</span><span class="o">=</span><span class="n">manager_id</span><span class="p">)</span>\
+                                                <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="n">MealplanHistory</span><span class="o">.</span><span class="n">id</span><span class="o">.</span><span class="n">desc</span><span class="p">())</span><span class="o">.</span><span class="n">first</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="MealService.get_logs"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.meal_service.MealService.get_logs">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_logs</span><span class="p">():</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a list of all meal logs.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A list of MealPlanHistory db model.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">MealplanHistory</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="n">MealplanHistory</span><span class="o">.</span><span class="n">id</span><span class="o">.</span><span class="n">desc</span><span class="p">())</span><span class="o">.</span><span class="n">all</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="MealService.get_log_to_undo"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.meal_service.MealService.get_log_to_undo">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_log_to_undo</span><span class="p">(</span><span class="n">undo_date</span><span class="p">,</span> <span class="n">manager_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the meal log corresponding to the given undo for a specific manager.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            undo_date: Datetime of undo.</span>
+<span class="sd">            manager_id: User id of manager who logged the meal that is being undone.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A MealPlanHistory db model.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">MealplanHistory</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">MealplanHistory</span><span class="o">.</span><span class="n">created</span> <span class="o">&lt;</span> <span class="n">undo_date</span><span class="p">)</span>\
+                                                <span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">manager_id</span><span class="o">=</span><span class="n">manager_id</span><span class="p">)</span>\
+                                                <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="n">MealplanHistory</span><span class="o">.</span><span class="n">id</span><span class="o">.</span><span class="n">desc</span><span class="p">())</span><span class="o">.</span><span class="n">first</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="MealService.get_aggregate_meal_usage"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.meal_service.MealService.get_aggregate_meal_usage">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_aggregate_meal_usage</span><span class="p">():</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets a list of the number of meals used for each hour.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List of length 24 with each element representing an hour and its value being the</span>
+<span class="sd">            average number of meals used for that hour over all days in the meal history.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Initialize variables</span>
+        <span class="n">history</span> <span class="o">=</span> <span class="n">MealService</span><span class="o">.</span><span class="n">get_logs</span><span class="p">()</span>
+
+        <span class="n">aggregate_meal_usage</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">24</span><span class="p">)]</span>
+        <span class="n">curr_meal_usage</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">24</span><span class="p">)]</span>
+        <span class="n">day_count</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">curr_day</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># Loop through every log in meal history</span>
+        <span class="k">for</span> <span class="n">log</span> <span class="ow">in</span> <span class="n">history</span><span class="p">:</span>
+            <span class="c1"># Update meal usage for the given day and hour</span>
+            <span class="k">if</span> <span class="n">log</span><span class="o">.</span><span class="n">log_type</span> <span class="o">==</span> <span class="s2">&quot;MEAL_USED&quot;</span><span class="p">:</span>
+                <span class="c1"># Initialize log variables</span>
+                <span class="n">hour</span> <span class="o">=</span> <span class="n">log</span><span class="o">.</span><span class="n">created</span><span class="o">.</span><span class="n">hour</span>
+                <span class="n">log_day</span> <span class="o">=</span> <span class="p">[</span><span class="n">log</span><span class="o">.</span><span class="n">created</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">log</span><span class="o">.</span><span class="n">created</span><span class="o">.</span><span class="n">day</span><span class="p">,</span> <span class="n">log</span><span class="o">.</span><span class="n">created</span><span class="o">.</span><span class="n">year</span><span class="p">]</span>
+
+                <span class="c1"># Current day not yet set (first log)</span>
+                <span class="k">if</span> <span class="n">curr_day</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">curr_day</span> <span class="o">=</span> <span class="n">log_day</span>
+
+                <span class="c1"># Current day has changed, update aggregate values</span>
+                <span class="k">if</span> <span class="n">curr_day</span> <span class="o">!=</span> <span class="n">log_day</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">24</span><span class="p">):</span>
+                        <span class="n">aggregate_meal_usage</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">aggregate_meal_usage</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">curr_meal_usage</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">/</span> <span class="n">day_count</span>
+                    <span class="n">curr_meal_usage</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">24</span><span class="p">)]</span>
+                    <span class="n">curr_day</span> <span class="o">=</span> <span class="n">log_day</span>
+                    <span class="n">day_count</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                <span class="c1"># Increment current day&#39;s meal usage for the log&#39;s hour</span>
+                <span class="n">curr_meal_usage</span><span class="p">[</span><span class="n">hour</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="c1"># Remove the previous meal from the usage stats</span>
+            <span class="k">elif</span> <span class="n">log</span><span class="o">.</span><span class="n">log_type</span> <span class="o">==</span> <span class="s2">&quot;UNDO&quot;</span><span class="p">:</span>
+                <span class="n">bad_log</span> <span class="o">=</span> <span class="n">MealService</span><span class="o">.</span><span class="n">get_log_to_undo</span><span class="p">(</span><span class="n">log</span><span class="o">.</span><span class="n">created</span><span class="p">,</span> <span class="n">log</span><span class="o">.</span><span class="n">manager_id</span><span class="p">)</span>
+                <span class="n">curr_meal_usage</span><span class="p">[</span><span class="n">bad_log</span><span class="o">.</span><span class="n">created</span><span class="o">.</span><span class="n">hour</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">1</span>
+
+        <span class="c1"># Final update for last day</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">24</span><span class="p">):</span>
+            <span class="n">aggregate_meal_usage</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">aggregate_meal_usage</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">curr_meal_usage</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">/</span> <span class="n">day_count</span>
+
+        <span class="k">return</span> <span class="n">aggregate_meal_usage</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">Overseer 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../ovs.html" >ovs</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Ben Lambeth.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.2.
+    </div>
+  </body>
+</html>
