@@ -15,7 +15,7 @@ class Package(db.Model):
     checked_by = Column('checked_by', String(511), nullable=False)
     checked_at = Column('checked_at', DateTime, nullable=False)
     description = Column('description', VARCHAR(2047), server_default="")
-    user = relationship('Resident', uselist=False, single_parent=True)
+    recipient = relationship('Resident', uselist=False, single_parent=True)
 
     def __repr__(self):
         """

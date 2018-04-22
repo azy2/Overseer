@@ -49,7 +49,6 @@ class Permissions(object):
             """
             if not roles.has_permission(current_user.role, self.role):
                 flash('Unauthorized Access!', 'danger')
-                print(request.referrer)
                 return redirect(request.referrer or '/')
             return func(*args, **kwargs)
         return authorize_and_call

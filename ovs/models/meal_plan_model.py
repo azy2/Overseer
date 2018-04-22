@@ -32,7 +32,7 @@ class MealPlan(db.Model):
     plan_type = Column(Enum('WEEKLY', 'SEMESTERLY', 'LIFETIME'), nullable=False)
     created = Column(DateTime, server_default=func.now())
     updated = Column(DateTime, server_default=func.now(), server_onupdate=func.now())
-    user = relationship('Resident', uselist=False, single_parent=True)
+    resident = relationship('Resident', uselist=False, single_parent=True)
 
     def __init__(self, meal_plan, plan_type):
         super(MealPlan, self).__init__(

@@ -27,12 +27,10 @@ class MailService:
         Returns:
             A (mail, response) tuple.
         """
-        from ovs.services import UserService, ResidentService # to deal with circular dependencies
+        from ovs.services import UserService # to deal with circular dependencies
         user = UserService.get_user_by_email(to_email)
-        if user:
-            resident = ResidentService.get_resident_by_id(user.get_id())
-            if resident and resident.profile.preferred_email:
-                to_email = resident.profile.preferred_email
+        if user and user.profile.preferred_email:
+            to_email = user.profile.preferred_email
 
         sg = SendGridAPIClient(apikey=current_app.config['SENDGRID']['API_KEY'])
 
