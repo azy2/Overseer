@@ -1,0 +1,799 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>ovs.tests.selenium package &#8212; Overseer 1.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Overseer 1.0.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="ovs-tests-selenium-package">
+<h1>ovs.tests.selenium package<a class="headerlink" href="#ovs-tests-selenium-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-ovs.tests.selenium.selenium_base_test">
+<span id="ovs-tests-selenium-selenium-base-test-module"></span><h2>ovs.tests.selenium.selenium_base_test module<a class="headerlink" href="#module-ovs.tests.selenium.selenium_base_test" title="Permalink to this headline">¶</a></h2>
+<p>The base test case for selenium that all other selenium tests should inherit from.</p>
+<dl class="class">
+<dt id="ovs.tests.selenium.selenium_base_test.SeleniumBaseTestCase">
+<em class="property">class </em><code class="descclassname">ovs.tests.selenium.selenium_base_test.</code><code class="descname">SeleniumBaseTestCase</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/selenium_base_test.html#SeleniumBaseTestCase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.selenium_base_test.SeleniumBaseTestCase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask_testing.utils.LiveServerTestCase</span></code></p>
+<p>The base test case for selenium that all other selenium tests should inherit from.</p>
+<dl class="method">
+<dt id="ovs.tests.selenium.selenium_base_test.SeleniumBaseTestCase.create_app">
+<code class="descname">create_app</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/selenium_base_test.html#SeleniumBaseTestCase.create_app"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.selenium_base_test.SeleniumBaseTestCase.create_app" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a flask app instance for each test.
+:returns: a flask app.
+:rtype: Flask</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.selenium.selenium_base_test.SeleniumBaseTestCase.go_to_page_in_dropdown">
+<code class="descname">go_to_page_in_dropdown</code><span class="sig-paren">(</span><em>page_link_name</em>, <em>dropdown_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/selenium_base_test.html#SeleniumBaseTestCase.go_to_page_in_dropdown"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.selenium_base_test.SeleniumBaseTestCase.go_to_page_in_dropdown" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clicks a dropdown and then selects the page to go to under that dropdown.
+Navigating to other pages requires doing this quite a bit.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>dropdown_id</strong> (<em>string</em>) – The ID of the dropdown to click.</li>
+<li><strong>page_link_name</strong> (<em>string</em>) – The name of the link that appears after clicking the dropdown.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.selenium.selenium_base_test.SeleniumBaseTestCase.login_default_admin">
+<code class="descname">login_default_admin</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/selenium_base_test.html#SeleniumBaseTestCase.login_default_admin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.selenium_base_test.SeleniumBaseTestCase.login_default_admin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience method to login with the default admin information.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.selenium.selenium_base_test.SeleniumBaseTestCase.login_default_resident">
+<code class="descname">login_default_resident</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/selenium_base_test.html#SeleniumBaseTestCase.login_default_resident"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.selenium_base_test.SeleniumBaseTestCase.login_default_resident" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience method to login with the default resident information.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.selenium.selenium_base_test.SeleniumBaseTestCase.login_with_credentials">
+<code class="descname">login_with_credentials</code><span class="sig-paren">(</span><em>email</em>, <em>password</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/selenium_base_test.html#SeleniumBaseTestCase.login_with_credentials"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.selenium_base_test.SeleniumBaseTestCase.login_with_credentials" title="Permalink to this definition">¶</a></dt>
+<dd><p>Logs in with the provided email and password.
+:param email: Email to log in as.
+:param password: Password to use.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.selenium.selenium_base_test.SeleniumBaseTestCase.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/selenium_base_test.html#SeleniumBaseTestCase.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.selenium_base_test.SeleniumBaseTestCase.setUp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a headless chrome instance for Selenium and clears the DB.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.selenium.selenium_base_test.SeleniumBaseTestCase.set_text_field_by_id">
+<code class="descname">set_text_field_by_id</code><span class="sig-paren">(</span><em>field_id</em>, <em>new_text</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/selenium_base_test.html#SeleniumBaseTestCase.set_text_field_by_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.selenium_base_test.SeleniumBaseTestCase.set_text_field_by_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the text in the given text form to the new text.
+:param field_id: The html form id.
+:param new_text: The text to type.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.selenium.selenium_base_test.SeleniumBaseTestCase.tearDown">
+<code class="descname">tearDown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/selenium_base_test.html#SeleniumBaseTestCase.tearDown"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.selenium_base_test.SeleniumBaseTestCase.tearDown" title="Permalink to this definition">¶</a></dt>
+<dd><p>Closes selenium driver and OVSBaseTestCase clears the DB.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ovs.tests.selenium.table_test">
+<span id="ovs-tests-selenium-table-test-module"></span><h2>ovs.tests.selenium.table_test module<a class="headerlink" href="#module-ovs.tests.selenium.table_test" title="Permalink to this headline">¶</a></h2>
+<p>Base test class for tests related to responsive tables.</p>
+<dl class="class">
+<dt id="ovs.tests.selenium.table_test.InputTextElement">
+<em class="property">class </em><code class="descclassname">ovs.tests.selenium.table_test.</code><code class="descname">InputTextElement</code><a class="reference internal" href="_modules/ovs/tests/selenium/table_test.html#InputTextElement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.table_test.InputTextElement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ovs.tests.selenium.table_test.RowTextElement" title="ovs.tests.selenium.table_test.RowTextElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">ovs.tests.selenium.table_test.RowTextElement</span></code></a></p>
+<p>Text fields that can be modified.</p>
+<dl class="method">
+<dt id="ovs.tests.selenium.table_test.InputTextElement.get_text">
+<code class="descname">get_text</code><span class="sig-paren">(</span><em>table_element</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/table_test.html#InputTextElement.get_text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.table_test.InputTextElement.get_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as parent base class.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>table_element</strong> (<em>WebElement</em>) – The element of this type to get the text from.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the text on the element.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.selenium.table_test.InputTextElement.set_text">
+<code class="descname">set_text</code><span class="sig-paren">(</span><em>table_element</em>, <em>new_text</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/table_test.html#InputTextElement.set_text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.table_test.InputTextElement.set_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as parent base class.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>table_element</strong> (<em>WebElement</em>) – The element of this type to set the text for.</li>
+<li><strong>new_text</strong> (<em>string</em>) – What to set the text to.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ovs.tests.selenium.table_test.PlainTextElement">
+<em class="property">class </em><code class="descclassname">ovs.tests.selenium.table_test.</code><code class="descname">PlainTextElement</code><a class="reference internal" href="_modules/ovs/tests/selenium/table_test.html#PlainTextElement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.table_test.PlainTextElement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ovs.tests.selenium.table_test.RowTextElement" title="ovs.tests.selenium.table_test.RowTextElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">ovs.tests.selenium.table_test.RowTextElement</span></code></a></p>
+<p>Plain text elements that cannot be modified.</p>
+<dl class="method">
+<dt id="ovs.tests.selenium.table_test.PlainTextElement.get_text">
+<code class="descname">get_text</code><span class="sig-paren">(</span><em>table_element</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/table_test.html#PlainTextElement.get_text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.table_test.PlainTextElement.get_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as parent base class.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>table_element</strong> (<em>WebElement</em>) – The element of this type to get the text from.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the text on the element.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ovs.tests.selenium.table_test.RowTextElement">
+<em class="property">class </em><code class="descclassname">ovs.tests.selenium.table_test.</code><code class="descname">RowTextElement</code><a class="reference internal" href="_modules/ovs/tests/selenium/table_test.html#RowTextElement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.table_test.RowTextElement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Represents a WebElement that contains a text element in a row of the table.</p>
+<dl class="method">
+<dt id="ovs.tests.selenium.table_test.RowTextElement.get_text">
+<code class="descname">get_text</code><span class="sig-paren">(</span><em>table_element</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/table_test.html#RowTextElement.get_text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.table_test.RowTextElement.get_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the text from the passed in WebElement of the corresponding type.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>table_element</strong> (<em>WebElement</em>) – The element of this type to get the text from.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.selenium.table_test.RowTextElement.set_text">
+<code class="descname">set_text</code><span class="sig-paren">(</span><em>table_element</em>, <em>new_text</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/table_test.html#RowTextElement.set_text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.table_test.RowTextElement.set_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the text on the passed in WebElement.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>table_element</strong> (<em>WebElement</em>) – The element of this type to set the text for.</li>
+<li><strong>new_text</strong> (<em>string</em>) – What to set the text to.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ovs.tests.selenium.table_test.SelectTextElement">
+<em class="property">class </em><code class="descclassname">ovs.tests.selenium.table_test.</code><code class="descname">SelectTextElement</code><a class="reference internal" href="_modules/ovs/tests/selenium/table_test.html#SelectTextElement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.table_test.SelectTextElement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ovs.tests.selenium.table_test.RowTextElement" title="ovs.tests.selenium.table_test.RowTextElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">ovs.tests.selenium.table_test.RowTextElement</span></code></a></p>
+<p>Text fields that are a dropdown selector for a few text options.</p>
+<dl class="method">
+<dt id="ovs.tests.selenium.table_test.SelectTextElement.get_text">
+<code class="descname">get_text</code><span class="sig-paren">(</span><em>table_element</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/table_test.html#SelectTextElement.get_text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.table_test.SelectTextElement.get_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as parent base class.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>table_element</strong> (<em>WebElement</em>) – The element of this type to get the text from.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the text on the element.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.selenium.table_test.SelectTextElement.set_text">
+<code class="descname">set_text</code><span class="sig-paren">(</span><em>table_element</em>, <em>new_text</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/table_test.html#SelectTextElement.set_text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.table_test.SelectTextElement.set_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as parent base class.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>table_element</strong> (<em>WebElement</em>) – The element of this type to set the text for.</li>
+<li><strong>new_text</strong> (<em>string</em>) – What to set the text to.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ovs.tests.selenium.table_test.TableTest">
+<em class="property">class </em><code class="descclassname">ovs.tests.selenium.table_test.</code><code class="descname">TableTest</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/table_test.html#TableTest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.table_test.TableTest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ovs.tests.selenium.selenium_base_test.SeleniumBaseTestCase" title="ovs.tests.selenium.selenium_base_test.SeleniumBaseTestCase"><code class="xref py py-class docutils literal notranslate"><span class="pre">ovs.tests.selenium.selenium_base_test.SeleniumBaseTestCase</span></code></a></p>
+<p>Base test class for tests related to responsive tables.</p>
+<dl class="method">
+<dt id="ovs.tests.selenium.table_test.TableTest.add_table_test">
+<code class="descname">add_table_test</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/table_test.html#TableTest.add_table_test"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.table_test.TableTest.add_table_test" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests that <a href="#id1"><span class="problematic" id="id2">*</span></a>args can be added to the table through the form correctly.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>args</strong> – The text to put in the form from top to bottom.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.selenium.table_test.TableTest.add_to_table">
+<code class="descname">add_to_table</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/table_test.html#TableTest.add_to_table"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.table_test.TableTest.add_to_table" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Sets the text in the form based on <a href="#id3"><span class="problematic" id="id4">*</span></a>args and the order of self.form_text_field_types</dt>
+<dd>then adds the entry to the table.</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>args</strong> – The text to enter in the form fields.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.selenium.table_test.TableTest.click_delete_last_row">
+<code class="descname">click_delete_last_row</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/table_test.html#TableTest.click_delete_last_row"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.table_test.TableTest.click_delete_last_row" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clicks the delete button for the last row on the table.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.selenium.table_test.TableTest.click_last_row_button_at_index">
+<code class="descname">click_last_row_button_at_index</code><span class="sig-paren">(</span><em>index</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/table_test.html#TableTest.click_last_row_button_at_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.table_test.TableTest.click_last_row_button_at_index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clicks the button in the last row of the table at the passed in index.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>index</strong> (<em>int</em>) – The row index for the button to click.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.selenium.table_test.TableTest.click_update_last_row">
+<code class="descname">click_update_last_row</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/table_test.html#TableTest.click_update_last_row"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.table_test.TableTest.click_update_last_row" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clicks the update button for the last row on the table.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.selenium.table_test.TableTest.get_last_table_row">
+<code class="descname">get_last_table_row</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/table_test.html#TableTest.get_last_table_row"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.table_test.TableTest.get_last_table_row" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a list of WebElements corresponding to the data for the last row in the table.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The last row in the table.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">List of WebElement</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.selenium.table_test.TableTest.navigate_to_table_page">
+<code class="descname">navigate_to_table_page</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/table_test.html#TableTest.navigate_to_table_page"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.table_test.TableTest.navigate_to_table_page" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subclasses need to override this to get to the page with the corresponding table.
+Assumes that the page is currently reachable using the menu bar at the top.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.selenium.table_test.TableTest.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/table_test.html#TableTest.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.table_test.TableTest.setUp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a headless chrome instance for Selenium and clears the DB.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.selenium.table_test.TableTest.set_last_row_fields">
+<code class="descname">set_last_row_fields</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/table_test.html#TableTest.set_last_row_fields"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.table_test.TableTest.set_last_row_fields" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the fields in the last row of the table to <a href="#id5"><span class="problematic" id="id6">*</span></a>args from left to right.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>args</strong> – The text to set the fields to from left to right.
+None will skip setting that field to anything new.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.selenium.table_test.TableTest.update_delete_table_test">
+<code class="descname">update_delete_table_test</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/table_test.html#TableTest.update_delete_table_test"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.table_test.TableTest.update_delete_table_test" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests that the table can be updated with <a href="#id7"><span class="problematic" id="id8">*</span></a>args from left to right.
+Also tests that rows can be deleted from the table.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>args</strong> – The text to update in the table from left to right.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.selenium.table_test.TableTest.verify_last_row_fields_match">
+<code class="descname">verify_last_row_fields_match</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/table_test.html#TableTest.verify_last_row_fields_match"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.table_test.TableTest.verify_last_row_fields_match" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verifies that the fields in the last row of the table match <a href="#id9"><span class="problematic" id="id10">*</span></a>args left to right.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>args</strong> – The text to verify left to right. None will skip over that field.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if all fields match expected values, False otherwise</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">boolean</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ovs.tests.selenium.test_cross_system">
+<span id="ovs-tests-selenium-test-cross-system-module"></span><h2>ovs.tests.selenium.test_cross_system module<a class="headerlink" href="#module-ovs.tests.selenium.test_cross_system" title="Permalink to this headline">¶</a></h2>
+<p>Tests functionality across routes.</p>
+<dl class="class">
+<dt id="ovs.tests.selenium.test_cross_system.TestCrossSystem">
+<em class="property">class </em><code class="descclassname">ovs.tests.selenium.test_cross_system.</code><code class="descname">TestCrossSystem</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/test_cross_system.html#TestCrossSystem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.test_cross_system.TestCrossSystem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ovs.tests.selenium.selenium_base_test.SeleniumBaseTestCase" title="ovs.tests.selenium.selenium_base_test.SeleniumBaseTestCase"><code class="xref py py-class docutils literal notranslate"><span class="pre">ovs.tests.selenium.selenium_base_test.SeleniumBaseTestCase</span></code></a></p>
+<p>Tests functionality across routes.</p>
+<dl class="method">
+<dt id="ovs.tests.selenium.test_cross_system.TestCrossSystem.test_new_resident_add_room">
+<code class="descname">test_new_resident_add_room</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/test_cross_system.html#TestCrossSystem.test_new_resident_add_room"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.test_cross_system.TestCrossSystem.test_new_resident_add_room" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests that newly created residents can be added to rooms.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.selenium.test_cross_system.TestCrossSystem.test_preferred_name_meal_plan">
+<code class="descname">test_preferred_name_meal_plan</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/test_cross_system.html#TestCrossSystem.test_preferred_name_meal_plan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.test_cross_system.TestCrossSystem.test_preferred_name_meal_plan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests that updating a resident’s preferred name updates it for meal plans.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ovs.tests.selenium.test_login">
+<span id="ovs-tests-selenium-test-login-module"></span><h2>ovs.tests.selenium.test_login module<a class="headerlink" href="#module-ovs.tests.selenium.test_login" title="Permalink to this headline">¶</a></h2>
+<p>Test functionality related to logging in and out.</p>
+<dl class="class">
+<dt id="ovs.tests.selenium.test_login.TestLogin">
+<em class="property">class </em><code class="descclassname">ovs.tests.selenium.test_login.</code><code class="descname">TestLogin</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/test_login.html#TestLogin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.test_login.TestLogin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ovs.tests.selenium.selenium_base_test.SeleniumBaseTestCase" title="ovs.tests.selenium.selenium_base_test.SeleniumBaseTestCase"><code class="xref py py-class docutils literal notranslate"><span class="pre">ovs.tests.selenium.selenium_base_test.SeleniumBaseTestCase</span></code></a></p>
+<p>Tests functionality related to logging in and out.</p>
+<dl class="method">
+<dt id="ovs.tests.selenium.test_login.TestLogin.test_bad_login">
+<code class="descname">test_bad_login</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/test_login.html#TestLogin.test_bad_login"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.test_login.TestLogin.test_bad_login" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests whether a random email can log in.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.selenium.test_login.TestLogin.test_manager_login">
+<code class="descname">test_manager_login</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/test_login.html#TestLogin.test_manager_login"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.test_login.TestLogin.test_manager_login" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests whether managers can log in.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.selenium.test_login.TestLogin.test_resident_login">
+<code class="descname">test_resident_login</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/test_login.html#TestLogin.test_resident_login"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.test_login.TestLogin.test_resident_login" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests whether residents can log in.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.selenium.test_login.TestLogin.test_resident_logout">
+<code class="descname">test_resident_logout</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/test_login.html#TestLogin.test_resident_logout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.test_login.TestLogin.test_resident_logout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests whether residents can log out.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ovs.tests.selenium.test_meal_plan">
+<span id="ovs-tests-selenium-test-meal-plan-module"></span><h2>ovs.tests.selenium.test_meal_plan module<a class="headerlink" href="#module-ovs.tests.selenium.test_meal_plan" title="Permalink to this headline">¶</a></h2>
+<p>Test meal plan creation and usage.</p>
+<dl class="class">
+<dt id="ovs.tests.selenium.test_meal_plan.TestMealPlan">
+<em class="property">class </em><code class="descclassname">ovs.tests.selenium.test_meal_plan.</code><code class="descname">TestMealPlan</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/test_meal_plan.html#TestMealPlan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.test_meal_plan.TestMealPlan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ovs.tests.selenium.table_test.TableTest" title="ovs.tests.selenium.table_test.TableTest"><code class="xref py py-class docutils literal notranslate"><span class="pre">ovs.tests.selenium.table_test.TableTest</span></code></a></p>
+<p>Tests meal plan creation and usage.</p>
+<dl class="method">
+<dt id="ovs.tests.selenium.test_meal_plan.TestMealPlan.navigate_to_table_page">
+<code class="descname">navigate_to_table_page</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/test_meal_plan.html#TestMealPlan.navigate_to_table_page"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.test_meal_plan.TestMealPlan.navigate_to_table_page" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subclasses need to override this to get to the page with the corresponding table.
+Assumes that the page is currently reachable using the menu bar at the top.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.selenium.test_meal_plan.TestMealPlan.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/test_meal_plan.html#TestMealPlan.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.test_meal_plan.TestMealPlan.setUp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a headless chrome instance for Selenium and clears the DB.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.selenium.test_meal_plan.TestMealPlan.test_add_meal_plan">
+<code class="descname">test_add_meal_plan</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/test_meal_plan.html#TestMealPlan.test_add_meal_plan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.test_meal_plan.TestMealPlan.test_add_meal_plan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests that meal plans can be added for a default resident.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the pin for the meal plan created</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.selenium.test_meal_plan.TestMealPlan.test_update_delete_meal_plan">
+<code class="descname">test_update_delete_meal_plan</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/test_meal_plan.html#TestMealPlan.test_update_delete_meal_plan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.test_meal_plan.TestMealPlan.test_update_delete_meal_plan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests that added meal plans can be updated and deleted.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.selenium.test_meal_plan.TestMealPlan.test_use_meal_plan">
+<code class="descname">test_use_meal_plan</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/test_meal_plan.html#TestMealPlan.test_use_meal_plan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.test_meal_plan.TestMealPlan.test_use_meal_plan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests that meal plans can be used and credits go down, and up for an undo.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ovs.tests.selenium.test_misc">
+<span id="ovs-tests-selenium-test-misc-module"></span><h2>ovs.tests.selenium.test_misc module<a class="headerlink" href="#module-ovs.tests.selenium.test_misc" title="Permalink to this headline">¶</a></h2>
+<p>Tests miscellaneous functionality.</p>
+<dl class="class">
+<dt id="ovs.tests.selenium.test_misc.TestMisc">
+<em class="property">class </em><code class="descclassname">ovs.tests.selenium.test_misc.</code><code class="descname">TestMisc</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/test_misc.html#TestMisc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.test_misc.TestMisc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ovs.tests.selenium.selenium_base_test.SeleniumBaseTestCase" title="ovs.tests.selenium.selenium_base_test.SeleniumBaseTestCase"><code class="xref py py-class docutils literal notranslate"><span class="pre">ovs.tests.selenium.selenium_base_test.SeleniumBaseTestCase</span></code></a></p>
+<p>Tests miscellaneous functionality.</p>
+<dl class="method">
+<dt id="ovs.tests.selenium.test_misc.TestMisc.test_autocomplete">
+<code class="descname">test_autocomplete</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/test_misc.html#TestMisc.test_autocomplete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.test_misc.TestMisc.test_autocomplete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests whether autocomplete is working.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ovs.tests.selenium.test_package">
+<span id="ovs-tests-selenium-test-package-module"></span><h2>ovs.tests.selenium.test_package module<a class="headerlink" href="#module-ovs.tests.selenium.test_package" title="Permalink to this headline">¶</a></h2>
+<p>Tests functionality related to packages.</p>
+<dl class="class">
+<dt id="ovs.tests.selenium.test_package.TestPackage">
+<em class="property">class </em><code class="descclassname">ovs.tests.selenium.test_package.</code><code class="descname">TestPackage</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/test_package.html#TestPackage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.test_package.TestPackage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ovs.tests.selenium.table_test.TableTest" title="ovs.tests.selenium.table_test.TableTest"><code class="xref py py-class docutils literal notranslate"><span class="pre">ovs.tests.selenium.table_test.TableTest</span></code></a></p>
+<p>Tests functionality related to packages.</p>
+<dl class="method">
+<dt id="ovs.tests.selenium.test_package.TestPackage.navigate_to_table_page">
+<code class="descname">navigate_to_table_page</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/test_package.html#TestPackage.navigate_to_table_page"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.test_package.TestPackage.navigate_to_table_page" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subclasses need to override this to get to the page with the corresponding table.
+Assumes that the page is currently reachable using the menu bar at the top.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.selenium.test_package.TestPackage.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/test_package.html#TestPackage.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.test_package.TestPackage.setUp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a headless chrome instance for Selenium and clears the DB.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.selenium.test_package.TestPackage.test_add_package">
+<code class="descname">test_add_package</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/test_package.html#TestPackage.test_add_package"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.test_package.TestPackage.test_add_package" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests that packages can be added for a default resident.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.selenium.test_package.TestPackage.test_update_delete_package">
+<code class="descname">test_update_delete_package</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/test_package.html#TestPackage.test_update_delete_package"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.test_package.TestPackage.test_update_delete_package" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests that added packages can be updated and deleted.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ovs.tests.selenium.test_profile">
+<span id="ovs-tests-selenium-test-profile-module"></span><h2>ovs.tests.selenium.test_profile module<a class="headerlink" href="#module-ovs.tests.selenium.test_profile" title="Permalink to this headline">¶</a></h2>
+<p>Tests functionality related to editing profiles.</p>
+<dl class="class">
+<dt id="ovs.tests.selenium.test_profile.TestProfile">
+<em class="property">class </em><code class="descclassname">ovs.tests.selenium.test_profile.</code><code class="descname">TestProfile</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/test_profile.html#TestProfile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.test_profile.TestProfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ovs.tests.selenium.selenium_base_test.SeleniumBaseTestCase" title="ovs.tests.selenium.selenium_base_test.SeleniumBaseTestCase"><code class="xref py py-class docutils literal notranslate"><span class="pre">ovs.tests.selenium.selenium_base_test.SeleniumBaseTestCase</span></code></a></p>
+<p>Tests functionality related to editing profiles.</p>
+<dl class="method">
+<dt id="ovs.tests.selenium.test_profile.TestProfile.go_to_resident_profile_page">
+<code class="descname">go_to_resident_profile_page</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/test_profile.html#TestProfile.go_to_resident_profile_page"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.test_profile.TestProfile.go_to_resident_profile_page" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs the Selenium steps necessary to navigate to the edit resident profile page.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.selenium.test_profile.TestProfile.test_edit_profile">
+<code class="descname">test_edit_profile</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/test_profile.html#TestProfile.test_edit_profile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.test_profile.TestProfile.test_edit_profile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests whether all fields can be edited in a resident profile.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.selenium.test_profile.TestProfile.test_invalid_profile_picture">
+<code class="descname">test_invalid_profile_picture</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/test_profile.html#TestProfile.test_invalid_profile_picture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.test_profile.TestProfile.test_invalid_profile_picture" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests that non-.png files cannot be uploaded as a profile picture.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.selenium.test_profile.TestProfile.test_valid_profile_picture">
+<code class="descname">test_valid_profile_picture</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/test_profile.html#TestProfile.test_valid_profile_picture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.test_profile.TestProfile.test_valid_profile_picture" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests that .png files can be uploaded for a profile picture.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ovs.tests.selenium.test_register_manager">
+<span id="ovs-tests-selenium-test-register-manager-module"></span><h2>ovs.tests.selenium.test_register_manager module<a class="headerlink" href="#module-ovs.tests.selenium.test_register_manager" title="Permalink to this headline">¶</a></h2>
+<p>Test functionality related to registering managers.</p>
+<dl class="class">
+<dt id="ovs.tests.selenium.test_register_manager.TestRegisterManager">
+<em class="property">class </em><code class="descclassname">ovs.tests.selenium.test_register_manager.</code><code class="descname">TestRegisterManager</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/test_register_manager.html#TestRegisterManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.test_register_manager.TestRegisterManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ovs.tests.selenium.table_test.TableTest" title="ovs.tests.selenium.table_test.TableTest"><code class="xref py py-class docutils literal notranslate"><span class="pre">ovs.tests.selenium.table_test.TableTest</span></code></a></p>
+<p>Test functionality related to registering managers.</p>
+<dl class="method">
+<dt id="ovs.tests.selenium.test_register_manager.TestRegisterManager.navigate_to_table_page">
+<code class="descname">navigate_to_table_page</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/test_register_manager.html#TestRegisterManager.navigate_to_table_page"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.test_register_manager.TestRegisterManager.navigate_to_table_page" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subclasses need to override this to get to the page with the corresponding table.
+Assumes that the page is currently reachable using the menu bar at the top.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.selenium.test_register_manager.TestRegisterManager.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/test_register_manager.html#TestRegisterManager.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.test_register_manager.TestRegisterManager.setUp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a headless chrome instance for Selenium and clears the DB.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.selenium.test_register_manager.TestRegisterManager.test_register_manager">
+<code class="descname">test_register_manager</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/test_register_manager.html#TestRegisterManager.test_register_manager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.test_register_manager.TestRegisterManager.test_register_manager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests whether a manager can be registered.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.selenium.test_register_manager.TestRegisterManager.test_update_delete_manager">
+<code class="descname">test_update_delete_manager</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/test_register_manager.html#TestRegisterManager.test_update_delete_manager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.test_register_manager.TestRegisterManager.test_update_delete_manager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests that newly added managers can be updated and deleted.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ovs.tests.selenium.test_register_resident">
+<span id="ovs-tests-selenium-test-register-resident-module"></span><h2>ovs.tests.selenium.test_register_resident module<a class="headerlink" href="#module-ovs.tests.selenium.test_register_resident" title="Permalink to this headline">¶</a></h2>
+<p>Tests functionality related to registering residents.</p>
+<dl class="class">
+<dt id="ovs.tests.selenium.test_register_resident.TestRegisterResident">
+<em class="property">class </em><code class="descclassname">ovs.tests.selenium.test_register_resident.</code><code class="descname">TestRegisterResident</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/test_register_resident.html#TestRegisterResident"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.test_register_resident.TestRegisterResident" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ovs.tests.selenium.table_test.TableTest" title="ovs.tests.selenium.table_test.TableTest"><code class="xref py py-class docutils literal notranslate"><span class="pre">ovs.tests.selenium.table_test.TableTest</span></code></a></p>
+<p>Tests functionality related to registering residents.</p>
+<dl class="method">
+<dt id="ovs.tests.selenium.test_register_resident.TestRegisterResident.navigate_to_table_page">
+<code class="descname">navigate_to_table_page</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/test_register_resident.html#TestRegisterResident.navigate_to_table_page"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.test_register_resident.TestRegisterResident.navigate_to_table_page" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subclasses need to override this to get to the page with the corresponding table.
+Assumes that the page is currently reachable using the menu bar at the top.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.selenium.test_register_resident.TestRegisterResident.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/test_register_resident.html#TestRegisterResident.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.test_register_resident.TestRegisterResident.setUp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a headless chrome instance for Selenium and clears the DB.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.selenium.test_register_resident.TestRegisterResident.test_register_resident">
+<code class="descname">test_register_resident</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/test_register_resident.html#TestRegisterResident.test_register_resident"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.test_register_resident.TestRegisterResident.test_register_resident" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests whether residents can be registered.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.selenium.test_register_resident.TestRegisterResident.test_update_delete_resident">
+<code class="descname">test_update_delete_resident</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/test_register_resident.html#TestRegisterResident.test_update_delete_resident"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.test_register_resident.TestRegisterResident.test_update_delete_resident" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests that registered residents can be updated and deleted.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ovs.tests.selenium.test_register_room">
+<span id="ovs-tests-selenium-test-register-room-module"></span><h2>ovs.tests.selenium.test_register_room module<a class="headerlink" href="#module-ovs.tests.selenium.test_register_room" title="Permalink to this headline">¶</a></h2>
+<p>Tests functionality related to registering rooms.</p>
+<dl class="class">
+<dt id="ovs.tests.selenium.test_register_room.TestRegisterRoom">
+<em class="property">class </em><code class="descclassname">ovs.tests.selenium.test_register_room.</code><code class="descname">TestRegisterRoom</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/test_register_room.html#TestRegisterRoom"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.test_register_room.TestRegisterRoom" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ovs.tests.selenium.table_test.TableTest" title="ovs.tests.selenium.table_test.TableTest"><code class="xref py py-class docutils literal notranslate"><span class="pre">ovs.tests.selenium.table_test.TableTest</span></code></a></p>
+<p>Tests functionality related to registering rooms.</p>
+<dl class="method">
+<dt id="ovs.tests.selenium.test_register_room.TestRegisterRoom.navigate_to_table_page">
+<code class="descname">navigate_to_table_page</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/test_register_room.html#TestRegisterRoom.navigate_to_table_page"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.test_register_room.TestRegisterRoom.navigate_to_table_page" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subclasses need to override this to get to the page with the corresponding table.
+Assumes that the page is currently reachable using the menu bar at the top.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.selenium.test_register_room.TestRegisterRoom.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/test_register_room.html#TestRegisterRoom.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.test_register_room.TestRegisterRoom.setUp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a headless chrome instance for Selenium and clears the DB.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.selenium.test_register_room.TestRegisterRoom.test_register_room">
+<code class="descname">test_register_room</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/test_register_room.html#TestRegisterRoom.test_register_room"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.test_register_room.TestRegisterRoom.test_register_room" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests whether a room can be registered with the default resident.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.selenium.test_register_room.TestRegisterRoom.test_register_room_invalid">
+<code class="descname">test_register_room_invalid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/test_register_room.html#TestRegisterRoom.test_register_room_invalid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.test_register_room.TestRegisterRoom.test_register_room_invalid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests that rooms cannot be registered for residents that do not exist.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.selenium.test_register_room.TestRegisterRoom.test_update_delete_room">
+<code class="descname">test_update_delete_room</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/selenium/test_register_room.html#TestRegisterRoom.test_update_delete_room"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.selenium.test_register_room.TestRegisterRoom.test_update_delete_room" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests that registered rooms can be updated and deleted.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ovs.tests.selenium">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ovs.tests.selenium" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">ovs.tests.selenium package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-ovs.tests.selenium.selenium_base_test">ovs.tests.selenium.selenium_base_test module</a></li>
+<li><a class="reference internal" href="#module-ovs.tests.selenium.table_test">ovs.tests.selenium.table_test module</a></li>
+<li><a class="reference internal" href="#module-ovs.tests.selenium.test_cross_system">ovs.tests.selenium.test_cross_system module</a></li>
+<li><a class="reference internal" href="#module-ovs.tests.selenium.test_login">ovs.tests.selenium.test_login module</a></li>
+<li><a class="reference internal" href="#module-ovs.tests.selenium.test_meal_plan">ovs.tests.selenium.test_meal_plan module</a></li>
+<li><a class="reference internal" href="#module-ovs.tests.selenium.test_misc">ovs.tests.selenium.test_misc module</a></li>
+<li><a class="reference internal" href="#module-ovs.tests.selenium.test_package">ovs.tests.selenium.test_package module</a></li>
+<li><a class="reference internal" href="#module-ovs.tests.selenium.test_profile">ovs.tests.selenium.test_profile module</a></li>
+<li><a class="reference internal" href="#module-ovs.tests.selenium.test_register_manager">ovs.tests.selenium.test_register_manager module</a></li>
+<li><a class="reference internal" href="#module-ovs.tests.selenium.test_register_resident">ovs.tests.selenium.test_register_resident module</a></li>
+<li><a class="reference internal" href="#module-ovs.tests.selenium.test_register_room">ovs.tests.selenium.test_register_room module</a></li>
+<li><a class="reference internal" href="#module-ovs.tests.selenium">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/ovs.tests.selenium.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Overseer 1.0.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Ben Lambeth.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.2.
+    </div>
+  </body>
+</html>

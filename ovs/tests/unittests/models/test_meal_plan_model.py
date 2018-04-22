@@ -26,7 +26,7 @@ class TestMealPlanModel(OVSBaseTestCase):
         """ Tests that meal plans can be updated """
         starting_credits = self.test_meal_plan.credits
 
-        self.assertTrue(self.test_meal_plan.update_meal_count())
+        self.test_meal_plan.update_meal_count()
         self.assertEqual(starting_credits - 1, self.test_meal_plan.credits)
         # Add 1 minute to the reset time to avoid any flaky tests right around the reset period
         self.assertTrue(datetime.utcnow() < self.test_meal_plan.reset_date.replace(minute=1))
@@ -35,7 +35,7 @@ class TestMealPlanModel(OVSBaseTestCase):
         """ Tests use_meal fails when no credits are available """
         # Test flaky if reset_date is between the first call and last call to use_meal
         for _ in range(self.test_meal_plan.meal_plan):
-            self.assertTrue(self.test_meal_plan.update_meal_count())
+            self.test_meal_plan.update_meal_count()
 
         # Account should have no credits and future use_meal calls should fail
         self.assertEqual(0, self.test_meal_plan.credits)

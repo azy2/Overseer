@@ -1,45 +1,26 @@
-""" Services related to managers """
-from sqlalchemy.orm import aliased
-
-from flask import current_app
-from ovs.models.package_model import Package
-from ovs.models.resident_model import Resident
+""" DB and utility functions for Managers """
 from ovs.models.user_model import User
-
-db = current_app.extensions['database'].instance()
-
+from ovs.utils import roles
 
 class ManagerService:
-    """ Services related to managers """
-
-    def __init__(self):
-        pass
+    """ DB and utility functions for Managers """
 
     @staticmethod
-    def get_all_residents():
+    def get_all_managers():
         """
-        Join based on user_id
-        :return: Lists of residents, users tuples
-        :rtype: [(Resident(...), User(...)), ...]
+        Fetch all users that are not residents from the db.
+
+        Returns:
+            A list of User model tuples.
         """
-        return db.query(Resident, User).join(User, Resident.user_id == User.id).all()
+        return User.query.filter(User.role != roles.RESIDENT).all()
 
     @staticmethod
-    def get_resident_by_id(user_id):
+    def get_admin_count():
         """
-        Returns the Resident identified by user_id
-        """
-        return db.query(Resident).filter(Resident.user_id == user_id).first()
+        Gets the number of system admins.
 
-    @staticmethod
-    def get_all_packages_recipients_checkers():
+        Returns:
+            Number of admin users.
         """
-        Join based on user_id
-        :return: Lists of residents, users tuples
-        :rtype: [(Resident(...), User(...)), ...]
-        """
-        user_1 = aliased(User)
-        user_2 = aliased(User)
-        return db.query(Package, user_1, user_2) \
-            .join(user_1, Package.recipient_id == user_1.id) \
-            .join(user_2, Package.checked_by_id == user_2.id).all()
+        return User.query.filter_by(role=roles.ADMIN).count()

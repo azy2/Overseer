@@ -1,14 +1,9 @@
 """
 DB access and other services for Rooms
 """
-from sqlalchemy import exc
-
-from flask import current_app
+from ovs import db
 from ovs.models.room_model import Room
 from ovs.services.resident_service import ResidentService
-from ovs.services.user_service import UserService
-
-db = current_app.extensions['database'].instance()
 
 
 class RoomService:
@@ -16,43 +11,138 @@ class RoomService:
     DB Access and utility methods for Rooms
     """
 
-    def __init__(self):
-        pass
-
     @staticmethod
-    def create_room(number, status, room_type, occupants=''):
-        """ Adds a room to the database """
-        new_room = Room(number=number, status=status, type=room_type)
-        try:
-            db.add(new_room)
-            db.commit()
-        except exc.IntegrityError:
-            db.rollback()
-            return None
+    def create_room(number, status, room_type, occupant_emails=''):
+        """
+        Create a room db entry.
 
-        emails = occupants.split(';')
-        for email in emails:
-            RoomService.add_resident_to_room(email, number)
+        Args:
+            number: The room number.
+            status: Current room status.
+            room_type: Room type.
+            occupant_emails: Resident's email address seperated by ';'.
+
+        Returns:
+            A Room db model.
+        """
+        new_room = Room(number=number, status=status, type=room_type)
+        db.session.add(new_room)
+        db.session.flush()
+
+        if occupant_emails != '':
+            emails = ''.join(occupant_emails.split()).split(',')
+            for email in emails:
+                RoomService.add_resident_to_room(email, number)
 
         return new_room
 
     @staticmethod
+    def delete_room(room_id):
+        """
+        Deletes a room from the database.
+
+        Args:
+            room_id: Unique room id.
+        """
+        room = RoomService.get_room_by_id(room_id)
+
+        for occupant in room.occupants:
+            RoomService.add_resident_to_room(occupant.user.email, '')
+        db.session.delete(room)
+
+
+    @staticmethod
+    def edit_room(room_id, room_number, status, room_type):
+        """
+        Edits a room in the database.
+
+        Args:
+            room_id: Unique room id.
+            room_number: New room number
+            status: New room status string
+            room_type: New room type string
+
+        Returns:
+            Whether the room was updated succesfully
+        """
+        room = RoomService.get_room_by_id(room_id)
+
+        other_room = RoomService.get_room_by_number(room_number)
+        if other_room is not None and other_room != room:
+            return False
+        room.number = room_number
+        room.status = status
+        room.type = room_type
+
+        db.session.flush()
+        db.session.refresh(room)
+        return True
+
+    @staticmethod
     def get_room_by_id(room_id):
         """
-        Get a Room from it's id
-        :param room_id: The Room's id
-        :return: The Room
+        Fetch a room identified by room id.
+
+        Args:
+            room_id: Unique room id.
+
+        Returns:
+            A Room db model.
         """
-        return db.query(Room).filter(Room.id == room_id)
+        return Room.query.filter_by(id=room_id).first()
 
     @staticmethod
     def get_room_by_number(number):
         """
-        Get a room from it's number
-        :param number: The room number
-        :return: The Room
+        Fetch a Room model by room number.
+
+        Args:
+            number: The room nmber.
+
+        Returns:
+            A Room db model.
         """
-        return db.query(Room).filter(Room.number == number)
+        return Room.query.filter_by(number=str(number)).first()
+
+    @staticmethod
+    def room_exists(number):
+        """
+        Checks if a room identified by room number exits.
+
+        Args:
+            number: The room number.
+
+        Returns:
+            If a matching room exists.
+        """
+        return RoomService.get_room_by_number(number) is not None
+
+    @staticmethod
+    def get_all_rooms():
+        """
+        Fetch all rooms except the default in the db.
+
+        Returns:
+           A list of Room db models.
+        """
+        return Room.query.filter(Room.number != '').all()
+
+    @staticmethod
+    def get_empty_room_stats():
+        """
+        Gets empty room statistics.
+
+        Returns:
+           dictionary between room type and number of empty rooms of that type.
+        """
+
+        empty_rooms = Room.query.filter(Room.number != '').filter(~Room.occupants.any())
+        stats = {}
+        for room in empty_rooms:
+            stats.setdefault(room.type, 0)
+            stats[room.type] += 1
+
+        return stats
 
     @staticmethod
     def get_all_rooms():
@@ -64,15 +154,25 @@ class RoomService:
     @staticmethod
     def add_resident_to_room(email, room_number):
         """
-        Associates a Resident to a room. This involves adding the room
-        to the Residents table and adding the resident to the Rooms table.
+        Associates a resident with a room. Updates resident's room number and occupants of room.
+
+        Args:
+            email: Resident's email address.
+            room_number: The room number.
+
+        Raises:
+            ValueError: if email or room_number is invalid
         """
-        user = UserService.get_user_by_email(email).first()
-        if user is None:
-            return {'message': 'Email provided is not valid', 'status': False}
-        if user.role == "RESIDENT":
-            resident = ResidentService.get_resident_by_id(user.id).first()
-            resident.room_number = room_number
-            db.commit()
-            return {'message': 'Success', 'status': True}
-        return {'message': 'User role is not resident', 'status': False}
+        resident = ResidentService.get_resident_by_email(email)
+        room = RoomService.get_room_by_number(room_number)
+
+        if resident is None or room is None:
+            raise ValueError('Failed to associate resident and room.')
+
+        old_room = RoomService.get_room_by_number(resident.room_number)
+        resident.room_number = room_number
+        db.session.flush()
+        # room.occupants should be automatically updated by SQL but we have to refresh the object in the session
+        # in order to see it before a commit.
+        db.session.refresh(room)
+        db.session.refresh(old_room)

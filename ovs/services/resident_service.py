@@ -1,80 +1,63 @@
 """
 DB and utility functions for Residents
 """
-from sqlalchemy import exc
-
-from flask import current_app
-
-from ovs.models.user_model import User
-from ovs.models.profile_model import Profile
+from ovs import db
 from ovs.models.resident_model import Resident
-from ovs.services.profile_picture_service import ProfilePictureService
-from ovs.services.meal_service import MealService
-from ovs.utils import genders
-
+from ovs.models.user_model import User
 
 db = current_app.extensions['database'].instance()
 
 class ResidentService:
-    """ DB and utility functions for Residents """
-
-    def __init__(self):
-        pass
+    """ DB and utility functions for Residents. """
 
     @staticmethod
-    def create_resident(new_user, room_number='None'):
+    def create_resident(new_user, room_number=''):
         """
-        Adds a User to the Resident table
-        """
-        new_resident = Resident(new_user.id, room_number)
-        new_resident_profile = Profile(new_user.id)
-        new_resident_profile.preferred_name = new_user.first_name
-        new_resident_profile.preferred_email = new_user.email
-        new_resident_profile.gender = genders.UNSPECIFIED
-        ResidentService.set_default_picture(new_resident_profile.picture_id)
+        Adds a resident to the Resident table.
 
-        db.add(new_resident)
-        db.add(new_resident_profile)
-        db.commit()
+        Args:
+            new_user: A User db model.
+            room_number: Room number.
+
+        Returns:
+            The Resident db model that was just created.
+        """
+        new_resident = Resident(new_user.id)
+        new_resident.room_number = room_number
+        db.session.add(new_resident)
+        db.session.flush()
 
         return new_resident
 
     @staticmethod
     def edit_resident(user_id, email, first_name, last_name, room_number):
         """
-        Edits an existing resident
+        Edits an existing resident identified by user_id.
+
+        Args:
+            user_id: Unique user id.
+            email: New email.
+            first_name: New first name.
+            last_name: New last name.
+            room_number: New room number.
         """
         from ovs.services.user_service import UserService
-        success = UserService.edit_user(user_id, email, first_name, last_name)
-        if success:
-            success = ResidentService.update_resident_room_number(user_id, room_number) is not None
-        return success
+        from ovs.services.room_service import RoomService
+        UserService.edit_user(user_id, email, first_name, last_name)
+        RoomService.add_resident_to_room(email, room_number)
 
     @staticmethod
-    def delete_resident(user_id):
+    def get_resident_by_email(email):
         """
-        Deletes an existing resident
-        """
-        from ovs.services.profile_service import ProfileService
-        resident = ResidentService.get_resident_by_id(user_id).first()
-        if resident is None:
-            return False
-        success = ProfileService.delete_profile(user_id)
-        if success:
-            db.delete(resident)
-        return success
+        Fetch resident identified by email.
 
+        Args:
+            email: A email address.
 
-    @staticmethod
-    def set_default_picture(picture_id):
+        Returns:
+            A Resident db model.
         """
-        Sets default picture for new residents
-        """
-        default_picture_path = current_app.config['BLOB']['default_picture_path']
-        with open(default_picture_path, 'rb') as default_image:
-            file_contents = default_image.read()
-            file_bytes = bytearray(file_contents)
-        ProfilePictureService.create_profile_picture(picture_id, file_bytes)
+        return Resident.query.join(User, User.id == Resident.user_id).filter(User.email == email).first()
 
     @staticmethod
     def get_resident_by_email(email):
@@ -91,69 +74,63 @@ class ResidentService:
     @staticmethod
     def get_resident_by_id(user_id):
         """
-        Returns the resident given by user_id
+        Fetch resident identified by user id.
+
+        Args:
+            user_id: Unique user id.
+
+        Returns:
+            A Resident db model.
         """
-        return db.query(Resident).filter(Resident.user_id == user_id)
+        return Resident.query.filter_by(user_id=user_id).first()
 
     @staticmethod
-    def update_resident_room_number(user_id, room_number):
-        """ Changes the room_number of Resident identified by user_id """
-        from ovs.services.room_service import RoomService
-        room = RoomService.get_room_by_number(room_number).first()
-        if room is None:
-            return None
-        # Todo: Catch specific exceptions for join and update
-        try:
-            db.query(Resident).filter(Resident.user_id == user_id).update({Resident.room_number: room_number})
-            db.commit()
-        except exc.SQLAlchemyError:
-            db.rollback()
-            return None
+    def resident_exists(user_id):
+        """
+        Check if resident identified user id exists.
 
-        return ResidentService.get_resident_by_id(user_id).first()
+        Args:
+            user_id: Unique user id.
+
+        Returns:
+            If the residents exists.
+        """
+        return ResidentService.get_resident_by_id(user_id) is not None
 
     @staticmethod
     def get_resident_by_pin(pin):
         """
-        Returns the resident given pin
+        Fetch resident identified by pin.
+
+        Args:
+            pin: Unique meal plan pin.
+
+        Returns:
+            A Resident db model.
         """
-        return db.query(Resident).filter(Resident.mealplan_pin == pin).first()
+        return Resident.query.filter_by(mealplan_pin=pin).first()
 
     @staticmethod
     def set_resident_pin(user_id, new_pin):
         """
-        Returns the resident given by user_id
+        Set a meal pin for a resident identified by user id.
+
+        Args:
+            user_id: The resident's unique user id.
+            new_pin: The new meal pin to be assigned to the resident.
         """
-        try:
-            db.query(Resident).filter(Resident.user_id == user_id).update({Resident.mealplan_pin: new_pin})
-            db.commit()
-        except exc.SQLAlchemyError:
-            db.rollback()
-            return False
-        return True
+        Resident.query\
+                .filter_by(user_id=user_id)\
+                .update({Resident.mealplan_pin: new_pin})
+        db.session.flush()
 
     @staticmethod
-    def create_meal_plan_for_resident_by_email(meal_plan, plan_type, email):  # pylint: disable=unused-argument
+    def get_all_residents_users():
         """
-        Adds a new meal plan to the DB
-        :param email: User to link to, TODO:implement
-        :param pin: The plan's pin
-        :param meal_plan: The plan's maximum credit count
-        :param plan_type: The plan's reset period
-        :return: True for success, False for failure
+        Fetch all related residents and users in db.
+
+        Returns:
+            A list of (Resident, User) db model tuples.
         """
-        # Verify resident exists
-        resident = ResidentService.get_resident_by_email(email)
-        if resident is None:
-            return None
-
-        # Create mealplan
-        meal_plan = MealService.create_meal_plan(meal_plan, plan_type)
-        try:
-            resident.mealplan_pin = meal_plan.pin
-            db.commit()
-        except exc.SQLAlchemyError:
-            db.rollback()
-            return None
-
-        return meal_plan
+        return db.session.query(Resident, User).join(User, Resident.user_id == User.id).all()
+        

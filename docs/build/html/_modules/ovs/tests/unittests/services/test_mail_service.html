@@ -1,0 +1,153 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>ovs.tests.unittests.services.test_mail_service &#8212; Overseer 1.0.0 documentation</title>
+    <link rel="stylesheet" href="../../../../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="../../../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../../index.html">Overseer 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../../index.html" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../../../ovs.html" accesskey="U">ovs</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for ovs.tests.unittests.services.test_mail_service</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Test for sending mail.&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
+<span class="kn">from</span> <span class="nn">flask</span> <span class="k">import</span> <span class="n">current_app</span>
+<span class="kn">from</span> <span class="nn">mock</span> <span class="k">import</span> <span class="n">patch</span><span class="p">,</span> <span class="n">ANY</span>
+
+<span class="kn">from</span> <span class="nn">ovs.mail</span> <span class="k">import</span> <span class="n">templates</span>
+<span class="kn">from</span> <span class="nn">ovs.services.mail_service</span> <span class="k">import</span> <span class="n">MailService</span>
+<span class="kn">from</span> <span class="nn">ovs.services.user_service</span> <span class="k">import</span> <span class="n">UserService</span>
+<span class="kn">from</span> <span class="nn">ovs.tests.unittests.base_test</span> <span class="k">import</span> <span class="n">OVSBaseTestCase</span>
+
+
+<div class="viewcode-block" id="TestSendMail"><a class="viewcode-back" href="../../../../../ovs.tests.unittests.services.html#ovs.tests.unittests.services.test_mail_service.TestSendMail">[docs]</a><span class="k">class</span> <span class="nc">TestSendMail</span><span class="p">(</span><span class="n">OVSBaseTestCase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Tests for sending mail.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="TestSendMail.setUp"><a class="viewcode-back" href="../../../../../ovs.tests.unittests.services.html#ovs.tests.unittests.services.test_mail_service.TestSendMail.setUp">[docs]</a>    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setUp</span><span class="p">()</span>
+        <span class="n">current_app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;TEST_MAIL&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="TestSendMail.test_send_mail"><a class="viewcode-back" href="../../../../../ovs.tests.unittests.services.html#ovs.tests.unittests.services.test_mail_service.TestSendMail.test_send_mail">[docs]</a>    <span class="nd">@patch</span><span class="p">(</span><span class="s1">&#39;python_http_client.Client._make_request&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">test_send_mail</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mock_client</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Test that mail contains correct information.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            mock_client: The mock_client for the patched function. This allows us to check</span>
+<span class="sd">                         if an email would get sent without actually sending one.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mail</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">MailService</span><span class="o">.</span><span class="n">send_email</span><span class="p">(</span>
+            <span class="n">to_email</span><span class="o">=</span><span class="s1">&#39;testEmail@test.com&#39;</span><span class="p">,</span>
+            <span class="n">subject</span><span class="o">=</span><span class="s1">&#39;TestSubject&#39;</span><span class="p">,</span>
+            <span class="n">text</span><span class="o">=</span><span class="s1">&#39;testText&#39;</span><span class="p">)</span>
+        <span class="n">mock_client</span><span class="o">.</span><span class="n">assert_called</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">mail</span><span class="o">.</span><span class="n">get</span><span class="p">(),</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+                         <span class="s1">&#39;{&quot;content&quot;: [{&quot;type&quot;: &quot;text/html&quot;, &quot;value&quot;: &quot;testText&quot;}], &quot;from&quot;: {&quot;email&quot;: &#39;</span>
+                         <span class="s1">&#39;&quot;no-reply@ovs.centralus.cloudapp.azure.com&quot;}, &quot;personalizations&quot;: [{&quot;to&quot;: [{&quot;email&quot;: &#39;</span>
+                         <span class="s1">&#39;&quot;testEmail@test.com&quot;}]}], &quot;subject&quot;: &quot;TestSubject&quot;}&#39;</span><span class="p">)</span></div>
+
+    <span class="c1">#pylint: disable=no-self-use</span>
+<div class="viewcode-block" id="TestSendMail.test_create_user_sends_email"><a class="viewcode-back" href="../../../../../ovs.tests.unittests.services.html#ovs.tests.unittests.services.test_mail_service.TestSendMail.test_create_user_sends_email">[docs]</a>    <span class="nd">@patch</span><span class="p">(</span><span class="s1">&#39;ovs.services.mail_service.MailService.send_email&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">test_create_user_sends_email</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mock_mail</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Tests that creating a user sends an email.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            mock_mail: The mock_client for the patched function. This allows us to check</span>
+<span class="sd">                if an email would get sent without actually sending one.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">expected_substitutions</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;first_name&#39;</span><span class="p">:</span> <span class="s1">&#39;Bob&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;last_name&#39;</span><span class="p">:</span> <span class="s1">&#39;Ross&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;role&#39;</span><span class="p">:</span> <span class="s1">&#39;admin&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;confirm_url&#39;</span><span class="p">:</span> <span class="n">ANY</span>
+        <span class="p">}</span>
+
+        <span class="n">UserService</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span><span class="s1">&#39;test@gmail.com&#39;</span><span class="p">,</span> <span class="s1">&#39;Bob&#39;</span><span class="p">,</span> <span class="s1">&#39;Ross&#39;</span><span class="p">,</span> <span class="s1">&#39;ADMIN&#39;</span><span class="p">)</span>
+        <span class="n">mock_mail</span><span class="o">.</span><span class="n">assert_called_once_with</span><span class="p">(</span><span class="s1">&#39;test@gmail.com&#39;</span><span class="p">,</span>
+                                          <span class="s1">&#39;User Account Creation&#39;</span><span class="p">,</span>
+                                          <span class="n">templates</span><span class="p">[</span><span class="s1">&#39;user_creation_email&#39;</span><span class="p">],</span>
+                                          <span class="n">substitutions</span><span class="o">=</span><span class="n">expected_substitutions</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestSendMail.test_create_user_doesnt_send_email"><a class="viewcode-back" href="../../../../../ovs.tests.unittests.services.html#ovs.tests.unittests.services.test_mail_service.TestSendMail.test_create_user_doesnt_send_email">[docs]</a>    <span class="nd">@patch</span><span class="p">(</span><span class="s1">&#39;ovs.services.mail_service.MailService.send_email&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">test_create_user_doesnt_send_email</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mock_mail</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Tests that creating a user without a default password doesn&#39;t send an email.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            mock_mail: The mock_client for the patched function. This allows us to check</span>
+<span class="sd">                if an email would get sent without actually sending one.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">UserService</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span><span class="s1">&#39;test@gmail.com&#39;</span><span class="p">,</span> <span class="s1">&#39;Bob&#39;</span><span class="p">,</span> <span class="s1">&#39;Ross&#39;</span><span class="p">,</span> <span class="s1">&#39;ADMIN&#39;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s1">&#39;testPassword&#39;</span><span class="p">)</span>
+        <span class="n">mock_mail</span><span class="o">.</span><span class="n">assert_not_called</span><span class="p">()</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../../index.html">Overseer 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../../index.html" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../../../ovs.html" >ovs</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Ben Lambeth.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.2.
+    </div>
+  </body>
+</html>

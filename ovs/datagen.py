@@ -1,39 +1,37 @@
 """ Data generation class """
 from flask import current_app
 
-from ovs.services import UserService
-from ovs.services import RoomService
-from ovs.models.user_model import User
-from ovs.models.resident_model import Resident
-from ovs.models.room_model import Room
-from ovs.models.profile_model import Profile
-from ovs.models.meal_plan_model import MealPlan
+from ovs import db
+from ovs.services import RoomService, UserService
 from ovs.utils import roles
 
-db = current_app.extensions['database'].instance()
+
 class DataGen:
     """ Data generation class """
     @staticmethod
     def create_user(user_role):
-        """ Creates a default user if it doesn't exist """
-        user = UserService.get_user_by_email(
-            current_app.config[user_role]['email']).one_or_none()
-        if not user:
-            user = UserService.create_user(current_app.config[user_role]['email'],
-                                           current_app.config[user_role]['first_name'],
-                                           current_app.config[user_role]['last_name'],
-                                           user_role,
-                                           current_app.config[user_role]['password'])
+        """
+        Creates a default user if it doesn't exist.
 
-        if user is not None:
-            current_app.config['DEFAULT_IDS'].add(user.id)
+        Args:
+            user_role: The role of the default user to create.
+                       current_app.config['USERS'][user_role] must exist.
+        """
+        default_user = current_app.config['USERS'][user_role]
+        user = UserService.get_user_by_email(default_user['email'])
+        if not user:
+            UserService.create_user(default_user['email'],
+                                    default_user['first_name'],
+                                    default_user['last_name'],
+                                    user_role,
+                                    default_user['password'])
 
     @staticmethod
     def create_default_room():
         """ Creates default room if it doesn't exist """
-        room = RoomService.get_room_by_number('None').first()
+        room = RoomService.get_room_by_number('')
         if room is None:
-            RoomService.create_room('None', '', '')
+            RoomService.create_room('', '', '')
 
     @staticmethod
     def create_defaults():
@@ -45,25 +43,12 @@ class DataGen:
             for user_role in [roles.RESIDENT, roles.RESIDENT_ADVISOR, roles.STAFF,
                               roles.OFFICE_MANAGER, roles.BUILDING_MANAGER]:
                 DataGen.create_user(user_role)
-        db.commit()
-
+        db.session.commit()
 
     @staticmethod
     def clear_db():
         """ Empty the DB for tests """
-        profile = db.query(Profile)
-        if profile:
-            profile.delete()
-        user = db.query(User)
-        if user:
-            user.delete()
-        resident = db.query(Resident)
-        if resident:
-            resident.delete()
-        room = db.query(Room)
-        if room:
-            room.delete()
-        mealplan = db.query(MealPlan)
-        if mealplan:
-            mealplan.delete()
-        db.commit()
+        import ovs.models  # pylint: disable=unused-variable
+        db.drop_all()
+        db.create_all()
+        db.session.commit()

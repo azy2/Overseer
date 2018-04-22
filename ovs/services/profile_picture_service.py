@@ -1,41 +1,70 @@
 """ Services related to profile pictures """
 from flask import current_app
-CONTAINER = current_app.extensions['blob'].PROFILE_PICTURE_CONTAINER
+from ovs.blob import blob
 
+CONTAINER = blob.PROFILE_PICTURE_CONTAINER
 
 class ProfilePictureService:
     """ Services related to profile pictures """
 
     @staticmethod
-    def create_profile_picture(picture_id, picture):
+    def create_profile_picture(user_id, picture):
         """
-        Creates a blob object in the profile picture container with the associated id
-        :param picture_id: UID of picture - needs to be unique
-        :param picture: array of bytes
+        Creates a blob object in the profile picture container with the associated id.
+
+        Args:
+            user_id: UUID of user.
+            picture: Array of bytes.
         """
-        current_app.extensions['blob'].create_blob_from_bytes(CONTAINER, picture_id, picture)
+        blob.create_blob_from_bytes(CONTAINER, user_id, picture)
 
     @staticmethod
-    def update_profile_picture(picture_id, picture):
+    def update_profile_picture(user_id, picture):
         """
-        Updates a blob object in the profile picture container with the associated id
-        :param picture_id: UID of picture - needs to be unique
-        :param picture: array of bytes
+        Updates a blob object in the profile picture container with the associated id.
+
+        Args:
+            user_id: UUID of user.
+            picture: Array of bytes.
         """
-        current_app.extensions['blob'].delete_blob(CONTAINER, picture_id)
-        current_app.extensions['blob'].create_blob_from_bytes(CONTAINER, picture_id, picture)
+        blob.delete_blob(CONTAINER, user_id)
+        blob.create_blob_from_bytes(CONTAINER, user_id, picture)
 
     @staticmethod
-    def delete_profile_picture(picture_id):
-        """ Deletes a blob object in the profile picture container with the associated id """
-        current_app.extensions['blob'].delete_blob(CONTAINER, picture_id)
+    def delete_profile_picture(user_id):
+        """
+        Deletes a blob object in the profile picture container with the associated id.
+
+        Args:
+            user_id: UUID of user.
+        """
+        blob.delete_blob(CONTAINER, user_id)
 
     @staticmethod
-    def get_profile_picture(picture_id):
+    def get_profile_picture(user_id):
         """
-        Gets a blob object in the profile picture container with the associated id
-        Returns none if the picture_id does not exist
+        Gets a blob object in the profile picture container with the associated id.
+
+        Args:
+            user_id: UUID of user.
+
+        Returns:
+            Array of bytes.
         """
-        if not current_app.extensions['blob'].exists(CONTAINER, picture_id):
+        if not blob.exists(CONTAINER, user_id):
             return None
-        return current_app.extensions['blob'].get_blob_to_bytes(CONTAINER, picture_id)
+        return blob.get_blob_to_bytes(CONTAINER, user_id)
+
+    @staticmethod
+    def set_default_picture(user_id):
+        """
+        Sets default picture for new residents.
+
+        Args:
+            user_id: Profile db model user id.
+        """
+        default_picture_path = current_app.config['BLOBSTORE']['DEFAULT_PATH']
+        with open(default_picture_path, 'rb') as default_image:
+            file_contents = default_image.read()
+            file_bytes = bytearray(file_contents)
+        ProfilePictureService.create_profile_picture(user_id, file_bytes)

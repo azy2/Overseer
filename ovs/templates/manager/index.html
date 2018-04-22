@@ -1,8 +1,139 @@
 {% extends "base.html" %}
-{% block title %}Overseer - {{ user.first_name }}{% endblock %}
-
+{% block title %}Overseer - {{ profile.preferred_name }}{% endblock %}
+{% block head %}
+ <style>
+ svg > g:last-child > g:last-child { pointer-events: none }
+ div.google-visualization-tooltip { pointer-events: none }
+ </style>
+{% endblock %}
 {% block content %}
-    <div class="px-3 py-3 pt-md-5 pb-md-5 mx-auto text-center" >
-        <h1 class="display-4" >Hello, {{ user.first_name }}</h1>
+    <div class="container mt-5">
+        <div class="row">
+            <!-- FOR INDENTATION -->
+            <div class="col-0">
+            </div>
+
+            <div class="col-5">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Empty Rooms</h5>
+                        {% if empty_room_stats|length != 0 %}
+                            <ul class="list-group list-group-flush">
+                                {% for type, num in empty_room_stats.items() %}
+                                    <li class="list-group-item">
+                                        <div class="row">
+                                            <div class="col">
+                                                <label>Room Type</label>
+                                                <p class="card-text">{{ type|safe }}</p>
+                                            </div>
+                                            <div class="col">
+                                                <label>Number of Rooms Empty</label>
+                                                <p class="card-text">{{ num|safe }}
+                                            </div>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p class="card-text">There are no empty rooms.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Number of Residents</h5>
+                        <p class="card-text">{{ num_residents }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Packages</h5>
+                        <label>Total number of packages awaiting pickup:</label>
+                        <p class="card-text">{{ total_num_packages }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <!-- FOR INDENTATION -->
+            <div class="col-0">
+            </div>
+
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Average Daily Meal Usage</h5>
+                        <div id="meal_usage_div"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', {packages: ['corechart', 'bar']});
+        google.charts.setOnLoadCallback(drawColColors);
+
+        function drawColColors() {
+            var data = new google.visualization.DataTable();
+            data.addColumn('timeofday', 'Time of Day');
+            data.addColumn('number', 'Meals Used');
+
+            data.addRows([
+                [{v: [1, 0, 0], f:   '1 am'}, {{ aggregate_meal_usage[0] }}],
+                [{v: [2, 0, 0], f:   '2 am'}, {{ aggregate_meal_usage[1] }}],
+                [{v: [3, 0, 0], f:   '3 am'}, {{ aggregate_meal_usage[2] }}],
+                [{v: [4, 0, 0], f:   '4 am'}, {{ aggregate_meal_usage[3] }}],
+                [{v: [5, 0, 0], f:   '5 am'}, {{ aggregate_meal_usage[4] }}],
+                [{v: [6, 0, 0], f:   '6 am'}, {{ aggregate_meal_usage[5] }}],
+                [{v: [7, 0, 0], f:   '7 am'}, {{ aggregate_meal_usage[6] }}],
+                [{v: [8, 0, 0], f:   '8 am'}, {{ aggregate_meal_usage[7] }}],
+                [{v: [9, 0, 0], f:   '9 am'}, {{ aggregate_meal_usage[8] }}],
+                [{v: [10, 0, 0], f: '10 am'}, {{ aggregate_meal_usage[9] }}],
+                [{v: [11, 0, 0], f: '11 am'}, {{ aggregate_meal_usage[10] }}],
+                [{v: [12, 0, 0], f: '12 pm'}, {{ aggregate_meal_usage[11] }}],
+                [{v: [13, 0, 0], f:  '1 pm'}, {{ aggregate_meal_usage[12] }}],
+                [{v: [14, 0, 0], f:  '2 pm'}, {{ aggregate_meal_usage[13] }}],
+                [{v: [15, 0, 0], f:  '3 pm'}, {{ aggregate_meal_usage[14] }}],
+                [{v: [16, 0, 0], f:  '4 pm'}, {{ aggregate_meal_usage[15] }}],
+                [{v: [17, 0, 0], f:  '5 pm'}, {{ aggregate_meal_usage[16] }}],
+                [{v: [18, 0, 0], f:  '6 pm'}, {{ aggregate_meal_usage[17] }}],
+                [{v: [19, 0, 0], f:  '7 pm'}, {{ aggregate_meal_usage[18] }}],
+                [{v: [20, 0, 0], f:  '8 pm'}, {{ aggregate_meal_usage[19] }}],
+                [{v: [21, 0, 0], f:  '9 pm'}, {{ aggregate_meal_usage[20] }}],
+                [{v: [22, 0, 0], f: '10 pm'}, {{ aggregate_meal_usage[21] }}],
+                [{v: [23, 0, 0], f: '11 pm'}, {{ aggregate_meal_usage[22] }}],
+                [{v: [24, 0, 0], f: '12 am'}, {{ aggregate_meal_usage[23] }}],
+            ]);
+
+            var options = {
+                // colors: ['#33ac71'], // Light green
+                // colors: ['#9575cd'], // Light purple
+                colors: ['#3366CC'], // Default column color (blue)
+                // colors: ['#2196F3'], // Overseer blue
+                hAxis: {
+                    title: 'Time of Day',
+                    format: 'h:mm a',
+                    viewWindow: {
+                        min: [0, 0, 0],
+                        max: [25, 0, 0]
+                    }
+                },
+                vAxis: {
+                    title: 'Number of Meals Used'
+                },
+                legend: 'none'
+            };
+
+            var chart = new google.visualization.ColumnChart(document.getElementById('meal_usage_div'));
+            chart.draw(data, options);
+        }
+    </script>
+
 {% endblock %}

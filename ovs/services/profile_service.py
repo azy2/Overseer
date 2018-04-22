@@ -1,12 +1,10 @@
 """
 DB access and other services for profiles
 """
-from flask import current_app
-from ovs.models.profile_model import Profile
-from ovs.services.resident_service import ResidentService
-from ovs.services.profile_picture_service import ProfilePictureService
 
-db = current_app.extensions['database'].instance()
+from ovs import db
+from ovs.services import UserService
+from ovs.models import Profile
 
 
 class ProfileService:
@@ -18,43 +16,39 @@ class ProfileService:
         pass
 
     @staticmethod
-    def update_profile(resident_id, preferred_email=None, preferred_name=None,
+    def update_profile(user_id, preferred_email=None, preferred_name=None,
                        phone_number=None, race=None, gender=None):
         """
-        Updates a user's profile information
+        Updates a profile associated with resident identified by resident id.
+
+        Args:
+            user_id: Unique user_id
+            preferred_email: Resident's preferred email.
+            preferred_name: Resident's preferred name.
+            phone_number: Resident's phone number.
+            race: Resident's race.
+            gender: Resident's gender.
         """
-        resident = ResidentService.get_resident_by_id(resident_id).one_or_none()
-        if resident is None:
-            return False
-        profile = resident.profile
+        user = UserService.get_user_by_id(user_id)
+        profile = user.profile
         if preferred_email:
             profile.preferred_email = preferred_email
         if preferred_name:
             profile.preferred_name = preferred_name
-        if phone_number:
-            profile.phone_number = phone_number
-        if race:
-            profile.race = race
+        profile.phone_number = phone_number # I want to be able to set this to None
+        profile.race = race # I want to be able to set this to None
         if gender:
             profile.gender = gender
-        db.commit()
-        return True
 
-    @staticmethod
-    def delete_profile(resident_id):
-        """
-        Deletes a user's profile information
-        """
-        resident = ResidentService.get_resident_by_id(resident_id).one_or_none()
-        if resident is None:
-            return False
-        profile = resident.profile
-        picture_id = profile.picture_id
-        ProfilePictureService.delete_profile_picture(picture_id)
-        db.delete(profile)
-        return True
+        db.session.flush()
+        db.session.refresh(profile)
 
     @staticmethod
     def get_all_profiles():
-        """ Returns all profiles. Used only for testing """
-        return db.query(Profile).all()
+        """
+        Fetches all profiles.
+
+        Returns:
+            A list of Profile db models.
+        """
+        return db.session.query(Profile).all()

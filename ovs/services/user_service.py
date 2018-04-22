@@ -1,108 +1,190 @@
 """ DB and utility functions for Users """
-from sqlalchemy import exc
+from flask import url_for
 
-from flask import current_app
+from ovs import db
+from ovs.mail import templates
 from ovs.models.user_model import User
 from ovs.services.mail_service import MailService
 from ovs.services.resident_service import ResidentService
-from ovs.utils import crypto
-from ovs.mail import templates
-
-db = current_app.extensions['database'].instance()
+from ovs.services.manager_service import ManagerService
+from ovs.services.profile_picture_service import ProfilePictureService
+from ovs.utils import crypto, serializer
+from ovs.models.profile_model import Profile
+from ovs.utils import genders
 
 
 class UserService:
     """ DB and utility functions for Users """
 
-    def __init__(self):
-        pass
-
     @staticmethod
     def create_user(email, first_name, last_name, role, password=None):
         """
-        Adds a new user to the DB and generates a random password
-        for them if none is provided
-        :param email: The User's email
-        :param first_name: The User's first name
-        :param last_name: The User's last name
-        :param role: The User's role. See `ovs.utils.roles`
-        :param password: The User's password. If none is provided a
-        random one will be generated
-        :return: The newly created User
+        Add a user entry to db.
+
+        Args:
+            email: The user's email address.
+            first_name: The user's first name.
+            last_name: The user's last name.
+            role: The user's role.
+            password: The user's password. If None a random one is generated.
+
+        Returns:
+            A User db model.
         """
+        send_email = False
         if password is None:
             password = crypto.generate_password()
+            send_email = True
         new_user = User(email, first_name, last_name, password, role)
-        try:
-            db.add(new_user)
-            db.commit()
-        except exc.IntegrityError:
-            db.rollback()
-            return None
+        db.session.add(new_user)
+        db.session.flush()
+
         if role == 'RESIDENT':
             ResidentService.create_resident(new_user)
 
-        UserService.send_setup_email(email, first_name, last_name, role, password)
+        new_resident_profile = Profile(new_user.id)
+        new_resident_profile.preferred_name = new_user.first_name
+        new_resident_profile.preferred_email = new_user.email
+        new_resident_profile.gender = genders.UNSPECIFIED
+        ProfilePictureService.set_default_picture(new_user.id)
+        db.session.add(new_resident_profile)
+        db.session.flush()
 
+        #Only time passwords are supplied are on default user creation which
+        #for which reset password emails are not necessary
+        if send_email:
+            UserService.send_setup_email(email, first_name, last_name, role)
         return new_user
 
     @staticmethod
-    def edit_user(user_id, email, first_name, last_name):
+    def edit_user(user_id, email, first_name, last_name, role=None):
         """
-        Edits user with user_id with new information
-        """
-        user = UserService.get_user_by_id(user_id).first()
-        if user is None: #Error : bad user_id
-            return False
+        Edits user identified by user id.
 
-        email_user = UserService.get_user_by_email(email).first()
-        if email_user is None or email_user == user: #We don't want to overwrite somebody else
+        Args:
+            user_id: Unique user id.
+            email: The user's email.
+            first_name: The user's first_name.
+            last_name: The user's last_name.
+            role: The user's role, or None if it should not change.
+
+        Raises:
+            ValueError: If email is already registered.
+        """
+        user = UserService.get_user_by_id(user_id)
+        email_user = UserService.get_user_by_email(email)
+        # Make user email is not associated with other existing users.
+        if email_user is None or email_user == user:
             user.update(email, first_name, last_name)
-            db.commit()
-            return True
-        return False
+            db.session.flush()
+            db.session.refresh(user)
+        else:
+            raise ValueError("Email already exists")
+        if role:
+            user.role = role
 
     @staticmethod
     def delete_user(user_id):
         """
-        Deletes existing user
+        Deletes an existing user identified by user id.
+
+        Args:
+            user_id: Unique user id.
+
+        Returns:
+            bool: True if the user was sucessfuly deleted.
+                  False if user_id refers to the last admin.
         """
-        user = UserService.get_user_by_id(user_id).first()
-        if user is None:
-            return False
-        if user.role == 'RESIDENT':
-            ResidentService.delete_resident(user_id)
-        db.delete(user)
-        db.commit()
+        user = UserService.get_user_by_id(user_id)
+        if user.role == 'ADMIN': # We don't want to delete the last admin
+            if ManagerService.get_admin_count() <= 1:
+                return False
+
+        delete_picture = user.role == 'RESIDENT'
+
+        db.session.delete(user)
+        db.session.flush()
+
+        if delete_picture:
+            ProfilePictureService.delete_profile_picture(user_id)
+
         return True
 
     @staticmethod
-    def send_setup_email(email, first_name, last_name, role, password):
+    def send_setup_email(email, first_name, last_name, role):
         """
-        Sends setup email to a provided user
+        Sends a setup email to the email address associated with a user.
+
+        Args:
+            email: The user's email address.
+            first_name: The user's first name.
+            last_name: The user's last name.
+            role: The user's role.
         """
+        token = serializer.serialize_attr(email, 'ovs-reset-email')
         user_info_substitution = {
             "first_name": first_name,
             "last_name": last_name,
-            "role": role,
-            "password": password
+            "role": role.lower(),
+            "confirm_url": url_for('auth.reset_user', token=token, _external=True)
         }
         MailService.send_email(email, 'User Account Creation',
                                templates['user_creation_email'],
                                substitutions=user_info_substitution)
 
     @staticmethod
+    def send_reset_email(email):
+        """
+        Sends a password reset email to the email address associated with a user.
+
+        Args:
+            email: The user's email address.
+        """
+        token = serializer.serialize_attr(email, 'ovs-reset-email')
+        user_info_substitution = {
+            "reset_url": url_for('auth.reset_user', token=token, _external=True)
+        }
+        MailService.send_email(email, 'Reset Your Overseer Password',
+                               templates['user_reset_email'],
+                               substitutions=user_info_substitution)
+
+    @staticmethod
     def get_user_by_email(email):
         """
-        Gets a user by their email
-        :param email: The email of the user
-        :return: The db entry of that user
+        Fetch a user identified by email.
+
+        Args:
+            email: The user's email address.
+
+        Returns:
+            A User db model.
         """
-        return db.query(User).filter(User.email == email)
+        return User.query.filter_by(email=email).first()
 
     @staticmethod
     def get_user_by_id(user_id):
         """
-        Gets a user by their id
+        Fetch a user identified by user id.
+
+        Args:
+            user_id: Unique user id.
+
+        Returns:
+            A User db model.
         """
-        return db.query(User).filter(User.id == user_id)
+        return User.query.filter_by(id=user_id).first()
+
+    @staticmethod
+    def reset_user(reset_user, new_password):
+        """
+        Reset a given user's password.
+
+        Args:
+            reset_user: User model to reset password of.
+            new_password: The new password to set for the given user.
+
+        Returns:
+            The updated User model.
+        """
+        reset_user.update_password(new_password)
+        return reset_user
