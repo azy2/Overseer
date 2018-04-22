@@ -57,7 +57,7 @@ class UserService:
         return new_user
 
     @staticmethod
-    def edit_user(user_id, email, first_name, last_name):
+    def edit_user(user_id, email, first_name, last_name, role=None):
         """
         Edits user identified by user id.
 
@@ -66,6 +66,7 @@ class UserService:
             email: The user's email.
             first_name: The user's first_name.
             last_name: The user's last_name.
+            role: The user's role, or None if it should not change.
 
         Raises:
             ValueError: If email is already registered.
@@ -79,6 +80,8 @@ class UserService:
             db.session.refresh(user)
         else:
             raise ValueError("Email already exists")
+        if role:
+            user.role = role
 
     @staticmethod
     def delete_user(user_id):
