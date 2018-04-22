@@ -169,9 +169,6 @@ class RowTextElement:
 
             Args:
                 table_element (WebElement): The element of this type to get the text from.
-
-            Returns:
-                string: The text on the element.
         """
         pass
 
@@ -188,16 +185,39 @@ class PlainTextElement(RowTextElement):
     """ Plain text elements that cannot be modified. """
 
     def get_text(self, table_element):
+        """ Same as parent base class.
+
+            Args:
+                table_element (WebElement): The element of this type to get the text from.
+
+            Returns:
+                string: the text on the element.
+        """
+
         return table_element.text
 
 class InputTextElement(RowTextElement):
     """ Text fields that can be modified. """
 
     def get_text(self, table_element):
+        """ Same as parent base class.
+
+            Args:
+                table_element (WebElement): The element of this type to get the text from.
+
+            Returns:
+                string: the text on the element.
+        """
         # All non-plain-text text fields in table currently have 'form-control' class name
         return table_element.find_element_by_class_name('form-control').get_attribute('value')
 
     def set_text(self, table_element, new_text):
+        """ Same as parent base class.
+
+            Args:
+                table_element (WebElement): The element of this type to set the text for.
+                new_text (string): What to set the text to.
+        """
         text_field = table_element.find_element_by_class_name('form-control')
         text_field.clear()
         text_field.send_keys(new_text)
@@ -206,9 +226,23 @@ class SelectTextElement(RowTextElement):
     """ Text fields that are a dropdown selector for a few text options. """
 
     def get_text(self, table_element):
+        """ Same as parent base class.
+
+            Args:
+                table_element (WebElement): The element of this type to get the text from.
+
+            Returns:
+                string: the text on the element.
+        """
         text_selector = Select(table_element.find_element_by_class_name('form-control'))
         return text_selector.first_selected_option.text
 
     def set_text(self, table_element, new_text):
+        """ Same as parent base class.
+
+            Args:
+                table_element (WebElement): The element of this type to set the text for.
+                new_text (string): What to set the text to.
+        """
         text_selector = Select(table_element.find_element_by_class_name('form-control'))
         text_selector.select_by_visible_text(new_text)
