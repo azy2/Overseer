@@ -8,7 +8,6 @@ from flask_login import current_user, login_required
 from ovs import db
 from ovs.services import ProfilePictureService, ProfileService
 from ovs.forms import EditResidentProfileForm, UploadProfilePictureForm
-from ovs.utils import roles
 
 ovs_bp = Blueprint('/', __name__, )
 
@@ -79,7 +78,7 @@ def edit_profile():
             return redirect(url_for('/.edit_profile'))
 
         pict = base64.b64encode(ProfilePictureService.get_profile_picture(profile.user_id)).decode()
-        return render_template('profile.html', role=roles.RESIDENT, profile=profile,
+        return render_template('profile.html', role=current_user.role, profile=profile,
                                pict=pict, profile_form=profile_form, picture_form=picture_form)
     except: # pylint: disable=bare-except
         db.session.rollback()

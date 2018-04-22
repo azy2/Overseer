@@ -29,7 +29,7 @@ class ManageRoomForm(FlaskForm):
         Raises:
             ValidationError: If the room_id already exists.
         """
-        if db.session.query(Room).filter(Room.room_id == field.data).count() == 0:
+        if Room.query.filter_by(id = field.data).count() == 0:
             raise ValidationError('Room does not exist')
 
     def validate_room_number(form, field): # pylint: disable=no-self-argument
@@ -45,7 +45,7 @@ class ManageRoomForm(FlaskForm):
         """
         room = RoomService.get_room_by_id(form.room_id.data)
         if room:
-            number = room.room_number
+            number = room.number
             if (field.data != number) and RoomService.get_room_by_number(field.data) is not None:
                 raise ValidationError('A room with that number already exists')
         else:
