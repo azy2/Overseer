@@ -1,8 +1,8 @@
 {% extends "base.html" %}
-{% block title %}Overseer - {{ user.first_name }}{% endblock %}
+{% block title %}Overseer - {{ profile.preferred_name }}{% endblock %}
 
 {% block content %}
     <div class="px-3 py-3 pt-md-5 pb-md-5 mx-auto text-center" >
-        <h1 class="display-4" >Hello, {{ user.first_name }}</h1>
+        <h1 class="display-4" >Hello, {{ profile.preferred_name }}</h1>
     </div>
 {% endblock %}

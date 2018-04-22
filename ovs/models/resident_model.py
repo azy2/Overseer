@@ -25,8 +25,6 @@ class Resident(db.Model):
     mealplan_pin = Column(Integer, ForeignKey('mealplan.pin'))
     created = Column(DateTime, server_default=func.now())
     updated = Column(DateTime, server_default=func.now(), server_onupdate=func.now())
-    profile = relationship('Profile', uselist=False, back_populates='resident',
-                           cascade='all, delete, delete-orphan')
     user = relationship('User', uselist=False, single_parent=True,
                         cascade='delete, delete-orphan')
     packages = relationship('Package', cascade='delete, delete-orphan')

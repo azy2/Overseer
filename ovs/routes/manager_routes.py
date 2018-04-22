@@ -41,9 +41,8 @@ def landing_page():
         A Flask template.
     """
     try:
-        user = UserService.get_user_by_id(current_user.get_id())
-        role = user.role
-        return render_template('manager/index.html', role=role, user=user)
+        return render_template('manager/index.html', role=current_user.role,
+                               user=current_user, profile=current_user.profile)
     except: # pylint: disable=bare-except
         db.session.rollback()
         flash('An error was encountered', 'danger')
@@ -107,7 +106,8 @@ def manage_rooms():
         user = UserService.get_user_by_id(current_user.get_id())
         role = user.role
         return render_template('manager/manage_rooms.html', role=role, user=user,
-                               register_form=register_form, form_data=zip(edit_forms, rooms))
+                               register_form=register_form, form_data=zip(edit_forms, rooms),
+                               profile=user.profile)
     except: # pylint: disable=bare-except
         db.session.rollback()
         flash('An error was encountered', 'danger')
@@ -201,7 +201,8 @@ def manage_residents():
                 return redirect(url_for('manager.manage_residents'))
 
         return render_template('manager/manage_residents.html', role=role, user=user,
-                               register_form=register_form, form_data=zip(edit_forms, residents))
+                               register_form=register_form, form_data=zip(edit_forms, residents),
+                               profile=user.profile)
     except: # pylint: disable=bare-except
         db.session.rollback()
         flash('An error was encountered', 'danger')
@@ -264,7 +265,8 @@ def manage_packages():
                 return redirect(url_for('manager.manage_packages'))
 
         return render_template('manager/manage_packages.html', role=role, user=user,
-                               add_form=add_form, form_data=zip(edit_forms, packages))
+                               add_form=add_form, form_data=zip(edit_forms, packages),
+                               profile=user.profile)
     except: # pylint: disable=bare-except
         db.session.rollback()
         flash('An error was encountered', 'danger')
@@ -316,7 +318,7 @@ def meal_login():
             resident = ResidentService.get_resident_by_id(log.resident_id)
             if resident is None:
                 continue
-            profile = resident.profile
+            profile = UserService.get_user_by_id(log.resident_id).profile
             pict = base64.b64encode(ProfilePictureService.get_profile_picture(profile.user_id)).decode()
             mealplan = MealService.get_meal_plan_by_pin(log.mealplan_pin)
             if mealplan is None:
@@ -327,9 +329,11 @@ def meal_login():
                                    pict=pict, show_undo=(i == 0),
                                    name=profile.preferred_name,
                                    current_meals=current_meals,
-                                   max_meals=max_meals)
+                                   max_meals=max_meals,
+                                   profile=user.profile)
 
-        return render_template('manager/meal_login.html', role=role, user=user, form=form, no_login=True)
+        return render_template('manager/meal_login.html', role=role, user=user,
+                               form=form, no_login=True, profile=user.profile)
     except: # pylint: disable=bare-except
         db.session.rollback()
         flash('An error was encountered', 'danger')
@@ -363,9 +367,8 @@ def meal_undo():
             return redirect(url_for('manager.meal_login'))
         MealService.undo_meal_use(user_id, meal_log.resident_id, meal_log.mealplan_pin)
 
-        resident = ResidentService.get_resident_by_id(meal_log.resident_id)
         mealplan = MealService.get_meal_plan_by_pin(meal_log.mealplan_pin)
-        name = resident.profile.preferred_name
+        name = UserService.get_user_by_id(meal_log.resident_id).profile.preferred_name
         current_meals = mealplan.credits
 
         db.session.commit()
@@ -435,9 +438,10 @@ def manage_meal_plans():
         user = UserService.get_user_by_id(current_user.get_id())
         role = user.role
         return render_template('manager/manage_meal_plans.html', role=role, user=user,
-                               create_form=create_form, form_data=zip(edit_forms, meal_plans, emails))
+                               create_form=create_form, form_data=zip(edit_forms, meal_plans, emails),
+                               profile=user.profile)
     except: # pylint: disable=bare-except
         db.session.rollback()
         flash('An error was encountered', 'danger')
         logging.exception(traceback.format_exc())
-        return redirect(url_for('manager.create_meal_plan'))
+        return redirect(url_for('manager.manage_meal_plans'))

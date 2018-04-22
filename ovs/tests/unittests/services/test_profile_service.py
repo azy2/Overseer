@@ -3,7 +3,6 @@ Tests for profile services
 """
 from ovs.tests.unittests.base_test import OVSBaseTestCase
 from ovs.services.user_service import UserService
-from ovs.services.resident_service import ResidentService
 from ovs.services.profile_service import ProfileService
 from ovs.models.profile_model import Profile
 from ovs.utils.genders import Gender
@@ -20,11 +19,10 @@ class TestProfileService(OVSBaseTestCase):
         test_user_info = ('test@gmail.com', 'Bob', 'Smith', 'RESIDENT')
         UserService.create_user(*test_user_info)
         self.test_user = UserService.get_user_by_email('test@gmail.com')
-        self.test_resident = ResidentService.get_resident_by_id(self.test_user.id)
 
     def test_update_profile(self):
         """ Tests that profiles can be updated """
-        profile = self.test_resident.profile
+        profile = self.test_user.profile
         self.assertEqual(profile.preferred_name, "Bob")
         self.assertEqual(profile.phone_number, None)
         self.assertEqual(profile.preferred_email, 'test@gmail.com')
