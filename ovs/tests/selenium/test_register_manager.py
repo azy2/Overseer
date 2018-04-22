@@ -1,38 +1,31 @@
 """ Test functionality related to registering managers. """
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from ovs.tests.selenium.selenium_base_test import SeleniumBaseTestCase
+from ovs.tests.selenium.table_test import TableTest, InputTextElement, SelectTextElement
 
-class TestRegisterManager(SeleniumBaseTestCase):
+class TestRegisterManager(TableTest):
     """ Test functionality related to registering managers. """
+
+    def setUp(self):
+        super().setUp()
+        # Current form format: [Email][First Name][Last Name][Role Selector]
+        self.form_text_field_types.append(InputTextElement())
+        self.form_text_field_types.append(InputTextElement())
+        self.form_text_field_types.append(InputTextElement())
+        self.form_text_field_types.append(SelectTextElement())
+
+        # Current table format: [Email][First Name][Last Name][Role Selector]
+        self.table_text_field_types.append(InputTextElement())
+        self.table_text_field_types.append(InputTextElement())
+        self.table_text_field_types.append(InputTextElement())
+        self.table_text_field_types.append(SelectTextElement())
+
+    def navigate_to_table_page(self):
+        self.browser.find_element_by_link_text('Managers').click()
 
     def test_register_manager(self):
         """ Tests whether a manager can be registered. """
-        self.browser.get(self.base_url)
-        self.assertIn('Overseer', self.browser.title)
-        super().login_default_admin()
+        self.add_table_test('email@website.net', 'John', 'Smith', 'Office Manager')
 
-        # Click on Register Manager link
-        register_manager_link = self.browser.find_element_by_link_text('Managers')
-        register_manager_link.click()
-
-        # Verify page changed
-        self.assertIn('Managers', self.browser.title)
-
-        # Register a manager
-        self.set_text_field_by_id('email', 'email@website.net')
-        self.set_text_field_by_id('first_name', 'John')
-        self.set_text_field_by_id('last_name', 'Smith')
-        submit_button = self.browser.find_element_by_id('register_manager')
-        submit_button.send_keys(Keys.ENTER)
-
-        # Wait for successful notification popup to appear
-        wait = WebDriverWait(self.browser, 5)
-        wait.until(EC.visibility_of_element_located((By.ID, 'notification-message')))
-
-        # Verify fields are empty and ready for new account registration
-        self.assertEqual(self.browser.find_element_by_id('email').get_attribute('value'), '')
-        self.assertEqual(self.browser.find_element_by_id('first_name').get_attribute('value'), '')
-        self.assertEqual(self.browser.find_element_by_id('last_name').get_attribute('value'), '')
+    def test_update_delete_manager(self):
+        """ Tests that newly added managers can be updated and deleted. """
+        self.test_register_manager()
+        self.update_delete_table_test('mail@websight.net', 'Jack', 'Smithers', 'Staff')

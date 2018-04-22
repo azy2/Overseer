@@ -62,8 +62,6 @@ class TableTest(SeleniumBaseTestCase):
 
             if args[args_index] != None:
                 actual_text = self.table_text_field_types[i].get_text(last_row_elements[i])
-                #print("Actual: " + actual_text)
-                #print("Expected: " + args[args_index])
                 if actual_text != args[args_index]:
                     return False
 
@@ -147,7 +145,6 @@ class TableTest(SeleniumBaseTestCase):
         # Verify that changing fields without pressing 'Update' does not change anything
         self.set_last_row_fields(*args)
         self.navigate_to_table_page()
-        #self.assertFalse(self.verify_last_row_fields_match(*args)) # Not quite right, fix later
 
         # Update the text and verify that it changes
         self.set_last_row_fields(*args)
