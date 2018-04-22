@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 {% block title %}Overseer - {{ profile.preferred_name }}{% endblock %}
-
+{% block head %}
+ <style>
+ svg > g:last-child > g:last-child { pointer-events: none }
+ div.google-visualization-tooltip { pointer-events: none }
+ </style>
+{% endblock %}
 {% block content %}
     <div class="container mt-5">
         <div class="row">
