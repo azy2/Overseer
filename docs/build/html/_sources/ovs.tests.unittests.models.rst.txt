@@ -1,11 +1,11 @@
-ovs\.tests\.unittests\.models package
-=====================================
+ovs.tests.unittests.models package
+==================================
 
 Submodules
 ----------
 
-ovs\.tests\.unittests\.models\.test\_meal\_plan\_model module
--------------------------------------------------------------
+ovs.tests.unittests.models.test\_meal\_plan\_model module
+---------------------------------------------------------
 
 .. automodule:: ovs.tests.unittests.models.test_meal_plan_model
     :members:

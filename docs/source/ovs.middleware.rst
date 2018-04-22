@@ -1,11 +1,11 @@
-ovs\.middleware package
-=======================
+ovs.middleware package
+======================
 
 Submodules
 ----------
 
-ovs\.middleware\.permissions module
------------------------------------
+ovs.middleware.permissions module
+---------------------------------
 
 .. automodule:: ovs.middleware.permissions
     :members:

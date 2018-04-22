@@ -39,23 +39,22 @@
             
   <h1>Source code for ovs.services.user_service</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot; DB and utility functions for Users &quot;&quot;&quot;</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-
-<span class="kn">from</span> <span class="nn">sqlalchemy.exc</span> <span class="k">import</span> <span class="n">SQLAlchemyError</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="k">import</span> <span class="n">url_for</span>
 
 <span class="kn">from</span> <span class="nn">ovs</span> <span class="k">import</span> <span class="n">db</span>
 <span class="kn">from</span> <span class="nn">ovs.mail</span> <span class="k">import</span> <span class="n">templates</span>
 <span class="kn">from</span> <span class="nn">ovs.models.user_model</span> <span class="k">import</span> <span class="n">User</span>
 <span class="kn">from</span> <span class="nn">ovs.services.mail_service</span> <span class="k">import</span> <span class="n">MailService</span>
 <span class="kn">from</span> <span class="nn">ovs.services.resident_service</span> <span class="k">import</span> <span class="n">ResidentService</span>
-<span class="kn">from</span> <span class="nn">ovs.utils</span> <span class="k">import</span> <span class="n">crypto</span>
+<span class="kn">from</span> <span class="nn">ovs.services.manager_service</span> <span class="k">import</span> <span class="n">ManagerService</span>
+<span class="kn">from</span> <span class="nn">ovs.services.profile_picture_service</span> <span class="k">import</span> <span class="n">ProfilePictureService</span>
+<span class="kn">from</span> <span class="nn">ovs.utils</span> <span class="k">import</span> <span class="n">crypto</span><span class="p">,</span> <span class="n">serializer</span>
+<span class="kn">from</span> <span class="nn">ovs.models.profile_model</span> <span class="k">import</span> <span class="n">Profile</span>
+<span class="kn">from</span> <span class="nn">ovs.utils</span> <span class="k">import</span> <span class="n">genders</span>
 
 
 <div class="viewcode-block" id="UserService"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.user_service.UserService">[docs]</a><span class="k">class</span> <span class="nc">UserService</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot; DB and utility functions for Users &quot;&quot;&quot;</span>
-
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">pass</span>
 
 <div class="viewcode-block" id="UserService.create_user"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.user_service.UserService.create_user">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">create_user</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">first_name</span><span class="p">,</span> <span class="n">last_name</span><span class="p">,</span> <span class="n">role</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -72,26 +71,33 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            A User db model.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">send_email</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="n">password</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">password</span> <span class="o">=</span> <span class="n">crypto</span><span class="o">.</span><span class="n">generate_password</span><span class="p">()</span>
+            <span class="n">send_email</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="n">new_user</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">first_name</span><span class="p">,</span> <span class="n">last_name</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">role</span><span class="p">)</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">new_user</span><span class="p">)</span>
-            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
-        <span class="k">except</span> <span class="n">SQLAlchemyError</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;Failed to create user.&#39;</span><span class="p">)</span>
-            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">rollback</span><span class="p">()</span>
-            <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">new_user</span><span class="p">)</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">role</span> <span class="o">==</span> <span class="s1">&#39;RESIDENT&#39;</span><span class="p">:</span>
             <span class="n">ResidentService</span><span class="o">.</span><span class="n">create_resident</span><span class="p">(</span><span class="n">new_user</span><span class="p">)</span>
 
-        <span class="n">UserService</span><span class="o">.</span><span class="n">send_setup_email</span><span class="p">(</span>
-            <span class="n">email</span><span class="p">,</span> <span class="n">first_name</span><span class="p">,</span> <span class="n">last_name</span><span class="p">,</span> <span class="n">role</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
+        <span class="n">new_resident_profile</span> <span class="o">=</span> <span class="n">Profile</span><span class="p">(</span><span class="n">new_user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="n">new_resident_profile</span><span class="o">.</span><span class="n">preferred_name</span> <span class="o">=</span> <span class="n">new_user</span><span class="o">.</span><span class="n">first_name</span>
+        <span class="n">new_resident_profile</span><span class="o">.</span><span class="n">preferred_email</span> <span class="o">=</span> <span class="n">new_user</span><span class="o">.</span><span class="n">email</span>
+        <span class="n">new_resident_profile</span><span class="o">.</span><span class="n">gender</span> <span class="o">=</span> <span class="n">genders</span><span class="o">.</span><span class="n">UNSPECIFIED</span>
+        <span class="n">ProfilePictureService</span><span class="o">.</span><span class="n">set_default_picture</span><span class="p">(</span><span class="n">new_user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">new_resident_profile</span><span class="p">)</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+
+        <span class="c1">#Only time passwords are supplied are on default user creation which</span>
+        <span class="c1">#for which reset password emails are not necessary</span>
+        <span class="k">if</span> <span class="n">send_email</span><span class="p">:</span>
+            <span class="n">UserService</span><span class="o">.</span><span class="n">send_setup_email</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">first_name</span><span class="p">,</span> <span class="n">last_name</span><span class="p">,</span> <span class="n">role</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">new_user</span></div>
 
 <div class="viewcode-block" id="UserService.edit_user"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.user_service.UserService.edit_user">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">edit_user</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">email</span><span class="p">,</span> <span class="n">first_name</span><span class="p">,</span> <span class="n">last_name</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">edit_user</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">email</span><span class="p">,</span> <span class="n">first_name</span><span class="p">,</span> <span class="n">last_name</span><span class="p">,</span> <span class="n">role</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Edits user identified by user id.</span>
 
@@ -100,26 +106,22 @@
 <span class="sd">            email: The user&#39;s email.</span>
 <span class="sd">            first_name: The user&#39;s first_name.</span>
 <span class="sd">            last_name: The user&#39;s last_name.</span>
+<span class="sd">            role: The user&#39;s role, or None if it should not change.</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">            If user was updated sucessfuly.</span>
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If email is already registered.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">user</span> <span class="o">=</span> <span class="n">UserService</span><span class="o">.</span><span class="n">get_user_by_id</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">user</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">False</span>
-
         <span class="n">email_user</span> <span class="o">=</span> <span class="n">UserService</span><span class="o">.</span><span class="n">get_user_by_email</span><span class="p">(</span><span class="n">email</span><span class="p">)</span>
         <span class="c1"># Make user email is not associated with other existing users.</span>
         <span class="k">if</span> <span class="n">email_user</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">email_user</span> <span class="o">==</span> <span class="n">user</span><span class="p">:</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">user</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">first_name</span><span class="p">,</span> <span class="n">last_name</span><span class="p">)</span>
-                <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
-                <span class="k">return</span> <span class="kc">True</span>
-            <span class="k">except</span> <span class="n">SQLAlchemyError</span><span class="p">:</span>
-                <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;Failed to edit user.&#39;</span><span class="p">)</span>
-                <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">rollback</span><span class="p">()</span>
-                <span class="k">return</span> <span class="kc">False</span>
-        <span class="k">return</span> <span class="kc">False</span></div>
+            <span class="n">user</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">first_name</span><span class="p">,</span> <span class="n">last_name</span><span class="p">)</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">refresh</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Email already exists&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">role</span><span class="p">:</span>
+            <span class="n">user</span><span class="o">.</span><span class="n">role</span> <span class="o">=</span> <span class="n">role</span></div>
 
 <div class="viewcode-block" id="UserService.delete_user"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.user_service.UserService.delete_user">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">delete_user</span><span class="p">(</span><span class="n">user_id</span><span class="p">):</span>
@@ -129,24 +131,27 @@
 <span class="sd">        Args:</span>
 <span class="sd">            user_id: Unique user id.</span>
 
-<span class="sd">        Returns if the user was sucessfuly deleted.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if the user was sucessfuly deleted.</span>
+<span class="sd">                  False if user_id refers to the last admin.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">user</span> <span class="o">=</span> <span class="n">UserService</span><span class="o">.</span><span class="n">get_user_by_id</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">user</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">False</span>
-        <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">role</span> <span class="o">==</span> <span class="s1">&#39;RESIDENT&#39;</span><span class="p">:</span>
-            <span class="n">ResidentService</span><span class="o">.</span><span class="n">delete_resident</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
-            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
-            <span class="k">return</span> <span class="kc">True</span>
-        <span class="k">except</span> <span class="n">SQLAlchemyError</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;Failed to delete user.&#39;</span><span class="p">)</span>
-            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">rollback</span><span class="p">()</span>
-            <span class="k">return</span> <span class="kc">False</span></div>
+        <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">role</span> <span class="o">==</span> <span class="s1">&#39;ADMIN&#39;</span><span class="p">:</span> <span class="c1"># We don&#39;t want to delete the last admin</span>
+            <span class="k">if</span> <span class="n">ManagerService</span><span class="o">.</span><span class="n">get_admin_count</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="n">delete_picture</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">role</span> <span class="o">==</span> <span class="s1">&#39;RESIDENT&#39;</span>
+
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">delete_picture</span><span class="p">:</span>
+            <span class="n">ProfilePictureService</span><span class="o">.</span><span class="n">delete_profile_picture</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="UserService.send_setup_email"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.user_service.UserService.send_setup_email">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">send_setup_email</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">first_name</span><span class="p">,</span> <span class="n">last_name</span><span class="p">,</span> <span class="n">role</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">send_setup_email</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">first_name</span><span class="p">,</span> <span class="n">last_name</span><span class="p">,</span> <span class="n">role</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Sends a setup email to the email address associated with a user.</span>
 
@@ -155,16 +160,32 @@
 <span class="sd">            first_name: The user&#39;s first name.</span>
 <span class="sd">            last_name: The user&#39;s last name.</span>
 <span class="sd">            role: The user&#39;s role.</span>
-<span class="sd">            password: The user&#39;s password.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">token</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">serialize_attr</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="s1">&#39;ovs-reset-email&#39;</span><span class="p">)</span>
         <span class="n">user_info_substitution</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;first_name&quot;</span><span class="p">:</span> <span class="n">first_name</span><span class="p">,</span>
             <span class="s2">&quot;last_name&quot;</span><span class="p">:</span> <span class="n">last_name</span><span class="p">,</span>
-            <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="n">role</span><span class="p">,</span>
-            <span class="s2">&quot;password&quot;</span><span class="p">:</span> <span class="n">password</span>
+            <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="n">role</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+            <span class="s2">&quot;confirm_url&quot;</span><span class="p">:</span> <span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;auth.reset_user&#39;</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="n">token</span><span class="p">,</span> <span class="n">_external</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="p">}</span>
         <span class="n">MailService</span><span class="o">.</span><span class="n">send_email</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="s1">&#39;User Account Creation&#39;</span><span class="p">,</span>
                                <span class="n">templates</span><span class="p">[</span><span class="s1">&#39;user_creation_email&#39;</span><span class="p">],</span>
+                               <span class="n">substitutions</span><span class="o">=</span><span class="n">user_info_substitution</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="UserService.send_reset_email"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.user_service.UserService.send_reset_email">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">send_reset_email</span><span class="p">(</span><span class="n">email</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sends a password reset email to the email address associated with a user.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            email: The user&#39;s email address.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">token</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">serialize_attr</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="s1">&#39;ovs-reset-email&#39;</span><span class="p">)</span>
+        <span class="n">user_info_substitution</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;reset_url&quot;</span><span class="p">:</span> <span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;auth.reset_user&#39;</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="n">token</span><span class="p">,</span> <span class="n">_external</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="n">MailService</span><span class="o">.</span><span class="n">send_email</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="s1">&#39;Reset Your Overseer Password&#39;</span><span class="p">,</span>
+                               <span class="n">templates</span><span class="p">[</span><span class="s1">&#39;user_reset_email&#39;</span><span class="p">],</span>
                                <span class="n">substitutions</span><span class="o">=</span><span class="n">user_info_substitution</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="UserService.get_user_by_email"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.user_service.UserService.get_user_by_email">[docs]</a>    <span class="nd">@staticmethod</span>
@@ -173,15 +194,12 @@
 <span class="sd">        Fetch a user identified by email.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            user_id: The user&#39;s email address.</span>
+<span class="sd">            email: The user&#39;s email address.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            A User db model.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="n">email</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
-        <span class="k">except</span> <span class="n">SQLAlchemyError</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;Failed to get user by email.&#39;</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">User</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="n">email</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="UserService.get_user_by_id"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.user_service.UserService.get_user_by_id">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_user_by_id</span><span class="p">(</span><span class="n">user_id</span><span class="p">):</span>
@@ -194,10 +212,22 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            A User db model.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
-        <span class="k">except</span> <span class="n">SQLAlchemyError</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;Failed to get user by id.&#39;</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="n">User</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="UserService.reset_user"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.user_service.UserService.reset_user">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">reset_user</span><span class="p">(</span><span class="n">reset_user</span><span class="p">,</span> <span class="n">new_password</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reset a given user&#39;s password.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            reset_user: User model to reset password of.</span>
+<span class="sd">            new_password: The new password to set for the given user.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The updated User model.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">reset_user</span><span class="o">.</span><span class="n">update_password</span><span class="p">(</span><span class="n">new_password</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">reset_user</span></div></div>
 </pre></div>
 
           </div>

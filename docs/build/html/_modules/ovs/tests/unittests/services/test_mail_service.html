@@ -42,7 +42,7 @@
 <span class="kn">import</span> <span class="nn">json</span>
 
 <span class="kn">from</span> <span class="nn">flask</span> <span class="k">import</span> <span class="n">current_app</span>
-<span class="kn">from</span> <span class="nn">mock</span> <span class="k">import</span> <span class="n">patch</span>
+<span class="kn">from</span> <span class="nn">mock</span> <span class="k">import</span> <span class="n">patch</span><span class="p">,</span> <span class="n">ANY</span>
 
 <span class="kn">from</span> <span class="nn">ovs.mail</span> <span class="k">import</span> <span class="n">templates</span>
 <span class="kn">from</span> <span class="nn">ovs.services.mail_service</span> <span class="k">import</span> <span class="n">MailService</span>
@@ -59,35 +59,55 @@
 
 <div class="viewcode-block" id="TestSendMail.test_send_mail"><a class="viewcode-back" href="../../../../../ovs.tests.unittests.services.html#ovs.tests.unittests.services.test_mail_service.TestSendMail.test_send_mail">[docs]</a>    <span class="nd">@patch</span><span class="p">(</span><span class="s1">&#39;python_http_client.Client._make_request&#39;</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">test_send_mail</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mock_client</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Test that mail contains correct information.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Test that mail contains correct information.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            mock_client: The mock_client for the patched function. This allows us to check</span>
+<span class="sd">                         if an email would get sent without actually sending one.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">mail</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">MailService</span><span class="o">.</span><span class="n">send_email</span><span class="p">(</span>
             <span class="n">to_email</span><span class="o">=</span><span class="s1">&#39;testEmail@test.com&#39;</span><span class="p">,</span>
             <span class="n">subject</span><span class="o">=</span><span class="s1">&#39;TestSubject&#39;</span><span class="p">,</span>
             <span class="n">text</span><span class="o">=</span><span class="s1">&#39;testText&#39;</span><span class="p">)</span>
         <span class="n">mock_client</span><span class="o">.</span><span class="n">assert_called</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">mail</span><span class="o">.</span><span class="n">get</span><span class="p">(),</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
-                         <span class="s1">&#39;{&quot;content&quot;: [{&quot;type&quot;: &quot;text/plain&quot;, &quot;value&quot;: &quot;testText&quot;}], &quot;from&quot;: {&quot;email&quot;: &#39;</span>
+                         <span class="s1">&#39;{&quot;content&quot;: [{&quot;type&quot;: &quot;text/html&quot;, &quot;value&quot;: &quot;testText&quot;}], &quot;from&quot;: {&quot;email&quot;: &#39;</span>
                          <span class="s1">&#39;&quot;no-reply@ovs.centralus.cloudapp.azure.com&quot;}, &quot;personalizations&quot;: [{&quot;to&quot;: [{&quot;email&quot;: &#39;</span>
                          <span class="s1">&#39;&quot;testEmail@test.com&quot;}]}], &quot;subject&quot;: &quot;TestSubject&quot;}&#39;</span><span class="p">)</span></div>
 
     <span class="c1">#pylint: disable=no-self-use</span>
 <div class="viewcode-block" id="TestSendMail.test_create_user_sends_email"><a class="viewcode-back" href="../../../../../ovs.tests.unittests.services.html#ovs.tests.unittests.services.test_mail_service.TestSendMail.test_create_user_sends_email">[docs]</a>    <span class="nd">@patch</span><span class="p">(</span><span class="s1">&#39;ovs.services.mail_service.MailService.send_email&#39;</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">test_create_user_sends_email</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mock_mail</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Tests that creating a user sends an email &quot;&quot;&quot;</span>
-
-        <span class="n">test_user_info</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;test@gmail.com&#39;</span><span class="p">,</span> <span class="s1">&#39;Bob&#39;</span><span class="p">,</span> <span class="s1">&#39;Ross&#39;</span><span class="p">,</span> <span class="s1">&#39;ADMIN&#39;</span><span class="p">,</span> <span class="s1">&#39;testPassword&#39;</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Tests that creating a user sends an email.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            mock_mail: The mock_client for the patched function. This allows us to check</span>
+<span class="sd">                if an email would get sent without actually sending one.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">expected_substitutions</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s1">&#39;first_name&#39;</span><span class="p">:</span> <span class="s1">&#39;Bob&#39;</span><span class="p">,</span>
             <span class="s1">&#39;last_name&#39;</span><span class="p">:</span> <span class="s1">&#39;Ross&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;role&#39;</span><span class="p">:</span> <span class="s1">&#39;ADMIN&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="s1">&#39;testPassword&#39;</span>
+            <span class="s1">&#39;role&#39;</span><span class="p">:</span> <span class="s1">&#39;admin&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;confirm_url&#39;</span><span class="p">:</span> <span class="n">ANY</span>
         <span class="p">}</span>
 
-        <span class="n">UserService</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span><span class="o">*</span><span class="n">test_user_info</span><span class="p">)</span>
+        <span class="n">UserService</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span><span class="s1">&#39;test@gmail.com&#39;</span><span class="p">,</span> <span class="s1">&#39;Bob&#39;</span><span class="p">,</span> <span class="s1">&#39;Ross&#39;</span><span class="p">,</span> <span class="s1">&#39;ADMIN&#39;</span><span class="p">)</span>
         <span class="n">mock_mail</span><span class="o">.</span><span class="n">assert_called_once_with</span><span class="p">(</span><span class="s1">&#39;test@gmail.com&#39;</span><span class="p">,</span>
                                           <span class="s1">&#39;User Account Creation&#39;</span><span class="p">,</span>
                                           <span class="n">templates</span><span class="p">[</span><span class="s1">&#39;user_creation_email&#39;</span><span class="p">],</span>
-                                          <span class="n">substitutions</span><span class="o">=</span><span class="n">expected_substitutions</span><span class="p">)</span></div></div>
+                                          <span class="n">substitutions</span><span class="o">=</span><span class="n">expected_substitutions</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestSendMail.test_create_user_doesnt_send_email"><a class="viewcode-back" href="../../../../../ovs.tests.unittests.services.html#ovs.tests.unittests.services.test_mail_service.TestSendMail.test_create_user_doesnt_send_email">[docs]</a>    <span class="nd">@patch</span><span class="p">(</span><span class="s1">&#39;ovs.services.mail_service.MailService.send_email&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">test_create_user_doesnt_send_email</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mock_mail</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Tests that creating a user without a default password doesn&#39;t send an email.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            mock_mail: The mock_client for the patched function. This allows us to check</span>
+<span class="sd">                if an email would get sent without actually sending one.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">UserService</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span><span class="s1">&#39;test@gmail.com&#39;</span><span class="p">,</span> <span class="s1">&#39;Bob&#39;</span><span class="p">,</span> <span class="s1">&#39;Ross&#39;</span><span class="p">,</span> <span class="s1">&#39;ADMIN&#39;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s1">&#39;testPassword&#39;</span><span class="p">)</span>
+        <span class="n">mock_mail</span><span class="o">.</span><span class="n">assert_not_called</span><span class="p">()</span></div></div>
 </pre></div>
 
           </div>

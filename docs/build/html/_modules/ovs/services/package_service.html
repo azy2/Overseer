@@ -39,15 +39,12 @@
             
   <h1>Source code for ovs.services.package_service</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot; DB and utility functions for Packages &quot;&quot;&quot;</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-
-<span class="kn">from</span> <span class="nn">sqlalchemy.exc</span> <span class="k">import</span> <span class="n">SQLAlchemyError</span>
-<span class="kn">from</span> <span class="nn">sqlalchemy.orm</span> <span class="k">import</span> <span class="n">aliased</span>
 
 <span class="kn">from</span> <span class="nn">ovs</span> <span class="k">import</span> <span class="n">db</span>
 <span class="kn">from</span> <span class="nn">ovs.models.package_model</span> <span class="k">import</span> <span class="n">Package</span>
 <span class="kn">from</span> <span class="nn">ovs.models.user_model</span> <span class="k">import</span> <span class="n">User</span>
-<span class="kn">from</span> <span class="nn">ovs.services.user_service</span> <span class="k">import</span> <span class="n">UserService</span>
+<span class="kn">from</span> <span class="nn">ovs.services.resident_service</span> <span class="k">import</span> <span class="n">ResidentService</span>
+
 
 
 <div class="viewcode-block" id="PackageService"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.package_service.PackageService">[docs]</a><span class="k">class</span> <span class="nc">PackageService</span><span class="p">:</span>
@@ -57,29 +54,24 @@
         <span class="k">pass</span>
 
 <div class="viewcode-block" id="PackageService.create_package"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.package_service.PackageService.create_package">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">create_package</span><span class="p">(</span><span class="n">recipient_id</span><span class="p">,</span> <span class="n">checked_by_id</span><span class="p">,</span> <span class="n">checked_at</span><span class="p">,</span> <span class="n">description</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">create_package</span><span class="p">(</span><span class="n">recipient_id</span><span class="p">,</span> <span class="n">checked_by</span><span class="p">,</span> <span class="n">checked_at</span><span class="p">,</span> <span class="n">description</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates a package db entry.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            recipient_id: Unique user id of recipient.</span>
-<span class="sd">            checked_by_id: Unique user id of checker.</span>
+<span class="sd">            checked_by: Name of checker.</span>
 <span class="sd">            checked_at: Time when the package was recieved by checker.</span>
 <span class="sd">            description: A short description of the package.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            A Package db model.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">new_package</span> <span class="o">=</span> <span class="n">Package</span><span class="p">(</span><span class="n">recipient_id</span><span class="o">=</span><span class="n">recipient_id</span><span class="p">,</span> <span class="n">checked_by_id</span><span class="o">=</span><span class="n">checked_by_id</span><span class="p">,</span>
+        <span class="n">new_package</span> <span class="o">=</span> <span class="n">Package</span><span class="p">(</span><span class="n">recipient_id</span><span class="o">=</span><span class="n">recipient_id</span><span class="p">,</span> <span class="n">checked_by</span><span class="o">=</span><span class="n">checked_by</span><span class="p">,</span>
                               <span class="n">checked_at</span><span class="o">=</span><span class="n">checked_at</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">)</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">new_package</span><span class="p">)</span>
-            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
-            <span class="k">return</span> <span class="n">new_package</span>
-        <span class="k">except</span> <span class="n">SQLAlchemyError</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;Failed to create package.&#39;</span><span class="p">)</span>
-            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">rollback</span><span class="p">()</span>
-            <span class="k">return</span> <span class="kc">None</span></div>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">new_package</span><span class="p">)</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">new_package</span></div>
 
 <div class="viewcode-block" id="PackageService.get_package_by_id"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.package_service.PackageService.get_package_by_id">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_package_by_id</span><span class="p">(</span><span class="n">package_id</span><span class="p">):</span>
@@ -92,11 +84,8 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            A Package db model.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Package</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Package</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">package_id</span><span class="p">)</span>
-        <span class="k">except</span> <span class="n">SQLAlchemyError</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;Failed to get pacakge by id.&#39;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="kc">None</span></div>
+
+        <span class="k">return</span> <span class="n">Package</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">package_id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="PackageService.update_package"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.package_service.PackageService.update_package">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">update_package</span><span class="p">(</span><span class="n">package_id</span><span class="p">,</span> <span class="n">recipient_email</span><span class="p">,</span> <span class="n">description</span><span class="p">):</span>
@@ -105,39 +94,69 @@
 
 <span class="sd">        Args:</span>
 <span class="sd">            package_id: Unique package id.</span>
-<span class="sd">            recipient_email: Recipient&#39;s email address.</span>
+<span class="sd">            recipient_email: Recipient&#39;s unique email.</span>
 <span class="sd">            description: A short description of the package.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            If the package was updated successfully.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">recipient_id</span> <span class="o">=</span> <span class="n">UserService</span><span class="o">.</span><span class="n">get_user_by_email</span><span class="p">(</span>
-            <span class="n">recipient_email</span><span class="p">)</span><span class="o">.</span><span class="n">id</span>
+        <span class="n">recipient_id</span> <span class="o">=</span> <span class="n">ResidentService</span><span class="o">.</span><span class="n">get_resident_by_email</span><span class="p">(</span><span class="n">recipient_email</span><span class="p">)</span><span class="o">.</span><span class="n">user_id</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Package</span><span class="p">)</span>\
+                  <span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">package_id</span><span class="p">)</span>\
+                  <span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">Package</span><span class="o">.</span><span class="n">recipient_id</span><span class="p">:</span> <span class="n">recipient_id</span><span class="p">,</span> <span class="n">Package</span><span class="o">.</span><span class="n">description</span><span class="p">:</span> <span class="n">description</span><span class="p">})</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span></div>
 
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Package</span><span class="p">)</span>\
-                <span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">package_id</span><span class="p">)</span>\
-                <span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">Package</span><span class="o">.</span><span class="n">recipient_id</span><span class="p">:</span> <span class="n">recipient_id</span><span class="p">,</span> <span class="n">Package</span><span class="o">.</span><span class="n">description</span><span class="p">:</span> <span class="n">description</span><span class="p">})</span>
-            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
-            <span class="k">return</span> <span class="kc">True</span>
-        <span class="k">except</span> <span class="n">SQLAlchemyError</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;Failed to update package.&#39;</span><span class="p">)</span>
-            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">rollback</span><span class="p">()</span>
-            <span class="k">return</span> <span class="kc">False</span></div>
-
-<div class="viewcode-block" id="PackageService.get_all_packages_recipients_checkers"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.package_service.PackageService.get_all_packages_recipients_checkers">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_all_packages_recipients_checkers</span><span class="p">():</span>
+<div class="viewcode-block" id="PackageService.delete_package"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.package_service.PackageService.delete_package">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">delete_package</span><span class="p">(</span><span class="n">package_id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Fetch all related packages, recipients, and checkers in db.</span>
+<span class="sd">        Deletes Package identified by package_id.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            package_id: Unique package id.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">package</span> <span class="o">=</span> <span class="n">PackageService</span><span class="o">.</span><span class="n">get_package_by_id</span><span class="p">(</span><span class="n">package_id</span><span class="p">)</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">package</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PackageService.get_all_packages_recipients"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.package_service.PackageService.get_all_packages_recipients">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_all_packages_recipients</span><span class="p">():</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fetch all related packages and recipients in db.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            A list of (Package, User, User) db model tuples.</span>
+<span class="sd">            A list of (Package, User) db model tuples.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">recipient</span> <span class="o">=</span> <span class="n">aliased</span><span class="p">(</span><span class="n">User</span><span class="p">)</span>
-        <span class="n">checker</span> <span class="o">=</span> <span class="n">aliased</span><span class="p">(</span><span class="n">User</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Package</span><span class="p">,</span> <span class="n">recipient</span><span class="p">,</span> <span class="n">checker</span><span class="p">)</span> \
-            <span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">recipient</span><span class="p">,</span> <span class="n">Package</span><span class="o">.</span><span class="n">recipient_id</span> <span class="o">==</span> <span class="n">recipient</span><span class="o">.</span><span class="n">id</span><span class="p">)</span> \
-            <span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">checker</span><span class="p">,</span> <span class="n">Package</span><span class="o">.</span><span class="n">checked_by_id</span> <span class="o">==</span> <span class="n">checker</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span></div></div>
+        <span class="k">return</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Package</span><span class="p">,</span> <span class="n">User</span><span class="p">)</span> \
+            <span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="n">Package</span><span class="o">.</span><span class="n">recipient_id</span> <span class="o">==</span> <span class="n">User</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="PackageService.get_all_packages_by_recipient"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.package_service.PackageService.get_all_packages_by_recipient">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_all_packages_by_recipient</span><span class="p">(</span><span class="n">user_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fetch all packages for a resident in db.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            user_id: Unique resident id</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A list of Packages</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Package</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">recipient_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="PackageService.get_all_packages"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.package_service.PackageService.get_all_packages">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_all_packages</span><span class="p">():</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fetch all packages in db.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A list of Packages.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Package</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="PackageService.get_package_info"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.package_service.PackageService.get_package_info">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_package_info</span><span class="p">():</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the number of packages awaiting pickup.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Total number of packages.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">PackageService</span><span class="o">.</span><span class="n">get_all_packages</span><span class="p">())</span></div></div>
 </pre></div>
 
           </div>

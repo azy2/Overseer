@@ -39,62 +39,75 @@
             
   <h1>Source code for ovs.services.profile_picture_service</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot; Services related to profile pictures &quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="k">import</span> <span class="n">current_app</span>
 <span class="kn">from</span> <span class="nn">ovs.blob</span> <span class="k">import</span> <span class="n">blob</span>
 
 <span class="n">CONTAINER</span> <span class="o">=</span> <span class="n">blob</span><span class="o">.</span><span class="n">PROFILE_PICTURE_CONTAINER</span>
-
 
 <div class="viewcode-block" id="ProfilePictureService"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.profile_picture_service.ProfilePictureService">[docs]</a><span class="k">class</span> <span class="nc">ProfilePictureService</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot; Services related to profile pictures &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="ProfilePictureService.create_profile_picture"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.profile_picture_service.ProfilePictureService.create_profile_picture">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">create_profile_picture</span><span class="p">(</span><span class="n">picture_id</span><span class="p">,</span> <span class="n">picture</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">create_profile_picture</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">picture</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates a blob object in the profile picture container with the associated id.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            TODO: Picture ids needs to be a GUID.</span>
-<span class="sd">            picture_id: ID of picture.</span>
+<span class="sd">            user_id: UUID of user.</span>
 <span class="sd">            picture: Array of bytes.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">blob</span><span class="o">.</span><span class="n">create_blob_from_bytes</span><span class="p">(</span><span class="n">CONTAINER</span><span class="p">,</span> <span class="n">picture_id</span><span class="p">,</span> <span class="n">picture</span><span class="p">)</span></div>
+        <span class="n">blob</span><span class="o">.</span><span class="n">create_blob_from_bytes</span><span class="p">(</span><span class="n">CONTAINER</span><span class="p">,</span> <span class="n">user_id</span><span class="p">,</span> <span class="n">picture</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ProfilePictureService.update_profile_picture"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.profile_picture_service.ProfilePictureService.update_profile_picture">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">update_profile_picture</span><span class="p">(</span><span class="n">picture_id</span><span class="p">,</span> <span class="n">picture</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">update_profile_picture</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">picture</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates a blob object in the profile picture container with the associated id.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            picture_id: ID of picture.</span>
+<span class="sd">            user_id: UUID of user.</span>
 <span class="sd">            picture: Array of bytes.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">blob</span><span class="o">.</span><span class="n">delete_blob</span><span class="p">(</span><span class="n">CONTAINER</span><span class="p">,</span> <span class="n">picture_id</span><span class="p">)</span>
-        <span class="n">blob</span><span class="o">.</span><span class="n">create_blob_from_bytes</span><span class="p">(</span><span class="n">CONTAINER</span><span class="p">,</span> <span class="n">picture_id</span><span class="p">,</span> <span class="n">picture</span><span class="p">)</span></div>
+        <span class="n">blob</span><span class="o">.</span><span class="n">delete_blob</span><span class="p">(</span><span class="n">CONTAINER</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
+        <span class="n">blob</span><span class="o">.</span><span class="n">create_blob_from_bytes</span><span class="p">(</span><span class="n">CONTAINER</span><span class="p">,</span> <span class="n">user_id</span><span class="p">,</span> <span class="n">picture</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ProfilePictureService.delete_profile_picture"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.profile_picture_service.ProfilePictureService.delete_profile_picture">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">delete_profile_picture</span><span class="p">(</span><span class="n">picture_id</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">delete_profile_picture</span><span class="p">(</span><span class="n">user_id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Deletes a blob object in the profile picture container with the associated id.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            picture_id: ID of picture.</span>
+<span class="sd">            user_id: UUID of user.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">blob</span><span class="o">.</span><span class="n">delete_blob</span><span class="p">(</span><span class="n">CONTAINER</span><span class="p">,</span> <span class="n">picture_id</span><span class="p">)</span></div>
+        <span class="n">blob</span><span class="o">.</span><span class="n">delete_blob</span><span class="p">(</span><span class="n">CONTAINER</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ProfilePictureService.get_profile_picture"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.profile_picture_service.ProfilePictureService.get_profile_picture">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_profile_picture</span><span class="p">(</span><span class="n">picture_id</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_profile_picture</span><span class="p">(</span><span class="n">user_id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets a blob object in the profile picture container with the associated id.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            picture_id: ID of picture.</span>
+<span class="sd">            user_id: UUID of user.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Array of bytes.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">blob</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">CONTAINER</span><span class="p">,</span> <span class="n">picture_id</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">blob</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">CONTAINER</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>
             <span class="k">return</span> <span class="kc">None</span>
-        <span class="k">return</span> <span class="n">blob</span><span class="o">.</span><span class="n">get_blob_to_bytes</span><span class="p">(</span><span class="n">CONTAINER</span><span class="p">,</span> <span class="n">picture_id</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="n">blob</span><span class="o">.</span><span class="n">get_blob_to_bytes</span><span class="p">(</span><span class="n">CONTAINER</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ProfilePictureService.set_default_picture"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.profile_picture_service.ProfilePictureService.set_default_picture">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">set_default_picture</span><span class="p">(</span><span class="n">user_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets default picture for new residents.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            user_id: Profile db model user id.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">default_picture_path</span> <span class="o">=</span> <span class="n">current_app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;BLOBSTORE&#39;</span><span class="p">][</span><span class="s1">&#39;DEFAULT_PATH&#39;</span><span class="p">]</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">default_picture_path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">default_image</span><span class="p">:</span>
+            <span class="n">file_contents</span> <span class="o">=</span> <span class="n">default_image</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="n">file_bytes</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="n">file_contents</span><span class="p">)</span>
+        <span class="n">ProfilePictureService</span><span class="o">.</span><span class="n">create_profile_picture</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">file_bytes</span><span class="p">)</span></div></div>
 </pre></div>
 
           </div>

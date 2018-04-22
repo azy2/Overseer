@@ -50,41 +50,58 @@
 
 
 
-
-
 <div class="viewcode-block" id="EditPackageForm"><a class="viewcode-back" href="../../../ovs.forms.html#ovs.forms.edit_package_form.EditPackageForm">[docs]</a><span class="k">class</span> <span class="nc">EditPackageForm</span><span class="p">(</span><span class="n">FlaskForm</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Form with data required to edit a package &quot;&quot;&quot;</span>
     <span class="n">package_id</span> <span class="o">=</span> <span class="n">HiddenField</span><span class="p">(</span><span class="s1">&#39;Package ID&#39;</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">DataRequired</span><span class="p">()])</span>
-    <span class="n">recipient_id</span> <span class="o">=</span> <span class="n">HiddenField</span><span class="p">(</span><span class="s1">&#39;Recipient ID&#39;</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">DataRequired</span><span class="p">()])</span>
     <span class="n">recipient_email</span> <span class="o">=</span> <span class="n">StringField</span><span class="p">(</span><span class="s1">&#39;Package Recipient&#39;</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">DataRequired</span><span class="p">()])</span>
     <span class="n">description</span> <span class="o">=</span> <span class="n">StringField</span><span class="p">(</span><span class="s1">&#39;Package Description&#39;</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">Length</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">2047</span><span class="p">),</span> <span class="n">DataRequired</span><span class="p">()])</span>
     <span class="n">update_button</span> <span class="o">=</span> <span class="n">SubmitField</span><span class="p">(</span><span class="s1">&#39;Update&#39;</span><span class="p">)</span>
-    <span class="n">check_button</span> <span class="o">=</span> <span class="n">SubmitField</span><span class="p">(</span><span class="s1">&#39;Check&#39;</span><span class="p">)</span>
+    <span class="n">deliver_button</span> <span class="o">=</span> <span class="n">SubmitField</span><span class="p">(</span><span class="s1">&#39;Deliver&#39;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="EditPackageForm.validate_recipient_id"><a class="viewcode-back" href="../../../ovs.forms.html#ovs.forms.edit_package_form.EditPackageForm.validate_recipient_id">[docs]</a>    <span class="k">def</span> <span class="nf">validate_recipient_id</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>  <span class="c1"># pylint: disable=no-self-argument, no-self-use</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Validates that the provided user_id exists.</span>
 <span class="sd">        This is to thwart malicious input.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            form: The EditPackageForm that was submitted.</span>
+<span class="sd">            field: The recipient_id field.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValidationError: If recipient_id does not correspond to an existing resident.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Resident</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Resident</span><span class="o">.</span><span class="n">user_id</span> <span class="o">==</span> <span class="n">field</span><span class="o">.</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s1">&#39;Resident does not exist&#39;</span><span class="p">)</span></div>
-
 
 <div class="viewcode-block" id="EditPackageForm.validate_package_id"><a class="viewcode-back" href="../../../ovs.forms.html#ovs.forms.edit_package_form.EditPackageForm.validate_package_id">[docs]</a>    <span class="k">def</span> <span class="nf">validate_package_id</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>  <span class="c1"># pylint: disable=no-self-argument, no-self-use</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Validates that the provided package_id exists.</span>
 <span class="sd">        This is to thwart malicious input.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            form: The EditPackageForm that was submitted.</span>
+<span class="sd">            field: The package_id field.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValidationError: If package_id not correspond to an existing package.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Package</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Package</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">field</span><span class="o">.</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s1">&#39;Package does not exist&#39;</span><span class="p">)</span></div>
-
 
 <div class="viewcode-block" id="EditPackageForm.validate_recipient_email"><a class="viewcode-back" href="../../../ovs.forms.html#ovs.forms.edit_package_form.EditPackageForm.validate_recipient_email">[docs]</a>    <span class="k">def</span> <span class="nf">validate_recipient_email</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>  <span class="c1"># pylint: disable=no-self-argument, no-self-use</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Validates that the provided resident email exists.</span>
 <span class="sd">        This is to thwart malicious input.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            form: The EditPackageForm that was submitted.</span>
+<span class="sd">            field: The recipient_email field.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValidationError: If package_id not correspond to an existing package.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">email</span> <span class="o">==</span> <span class="n">field</span><span class="o">.</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="n">field</span><span class="o">.</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">user</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">user</span><span class="o">.</span><span class="n">resident</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s1">&#39;Resident does not exist. Please verify resident email.&#39;</span><span class="p">)</span></div></div>
 </pre></div>
 

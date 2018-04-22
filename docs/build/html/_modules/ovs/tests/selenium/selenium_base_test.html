@@ -39,24 +39,35 @@
             
   <h1>Source code for ovs.tests.selenium.selenium_base_test</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">The base test case for selenium that all other selenium tests should inherit from</span>
+<span class="sd">The base test case for selenium that all other selenium tests should inherit from.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">flask_testing</span> <span class="k">import</span> <span class="n">LiveServerTestCase</span>
 <span class="kn">from</span> <span class="nn">selenium</span> <span class="k">import</span> <span class="n">webdriver</span>
 <span class="kn">from</span> <span class="nn">selenium.webdriver.chrome.options</span> <span class="k">import</span> <span class="n">Options</span>
 <span class="kn">from</span> <span class="nn">selenium.webdriver.common.keys</span> <span class="k">import</span> <span class="n">Keys</span>
 <span class="kn">from</span> <span class="nn">flask</span> <span class="k">import</span> <span class="n">current_app</span>
+<span class="kn">from</span> <span class="nn">ovs</span> <span class="k">import</span> <span class="n">create_app</span><span class="p">,</span> <span class="n">db</span>
 <span class="kn">from</span> <span class="nn">ovs.datagen</span> <span class="k">import</span> <span class="n">DataGen</span>
-<span class="kn">from</span> <span class="nn">ovs.tests.unittests.base_test</span> <span class="k">import</span> <span class="n">OVSBaseTestCase</span>
 
-<div class="viewcode-block" id="SeleniumBaseTestCase"><a class="viewcode-back" href="../../../../ovs.tests.selenium.html#ovs.tests.selenium.selenium_base_test.SeleniumBaseTestCase">[docs]</a><span class="k">class</span> <span class="nc">SeleniumBaseTestCase</span><span class="p">(</span><span class="n">OVSBaseTestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="SeleniumBaseTestCase"><a class="viewcode-back" href="../../../../ovs.tests.selenium.html#ovs.tests.selenium.selenium_base_test.SeleniumBaseTestCase">[docs]</a><span class="k">class</span> <span class="nc">SeleniumBaseTestCase</span><span class="p">(</span><span class="n">LiveServerTestCase</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    The base test case for selenium that all other selenium tests should inherit from</span>
+<span class="sd">    The base test case for selenium that all other selenium tests should inherit from.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="SeleniumBaseTestCase.create_app"><a class="viewcode-back" href="../../../../ovs.tests.selenium.html#ovs.tests.selenium.selenium_base_test.SeleniumBaseTestCase.create_app">[docs]</a>    <span class="k">def</span> <span class="nf">create_app</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a flask app instance for each test.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Flask: a flask app.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">app</span> <span class="o">=</span> <span class="n">create_app</span><span class="p">(</span><span class="s1">&#39;config/config-selenium.json&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">app</span></div>
+
 <div class="viewcode-block" id="SeleniumBaseTestCase.setUp"><a class="viewcode-back" href="../../../../ovs.tests.selenium.html#ovs.tests.selenium.selenium_base_test.SeleniumBaseTestCase.setUp">[docs]</a>    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Creates a headless chrome instance for selenium and clears the DB &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setUp</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot; Creates a headless chrome instance for Selenium and clears the DB. &quot;&quot;&quot;</span>
         <span class="n">DataGen</span><span class="o">.</span><span class="n">create_defaults</span><span class="p">()</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
 
         <span class="n">chrome_options</span> <span class="o">=</span> <span class="n">Options</span><span class="p">()</span>
         <span class="n">chrome_options</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--headless&quot;</span><span class="p">)</span>
@@ -64,6 +75,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">browser</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">Chrome</span><span class="p">(</span><span class="n">chrome_options</span><span class="o">=</span><span class="n">chrome_options</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">implicitly_wait</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_server_url</span><span class="p">()</span>
+
+        <span class="c1"># Ensure browser executable is cleaned up at the end of the test</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addCleanup</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">quit</span><span class="p">)</span>
 
         <span class="c1"># Set up default accounts for logging in</span>
         <span class="n">default_resident</span> <span class="o">=</span> <span class="n">current_app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;USERS&#39;</span><span class="p">][</span><span class="s1">&#39;RESIDENT&#39;</span><span class="p">]</span>
@@ -77,26 +91,29 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">default_admin_name</span> <span class="o">=</span> <span class="n">default_admin</span><span class="p">[</span><span class="s1">&#39;first_name&#39;</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="SeleniumBaseTestCase.tearDown"><a class="viewcode-back" href="../../../../ovs.tests.selenium.html#ovs.tests.selenium.selenium_base_test.SeleniumBaseTestCase.tearDown">[docs]</a>    <span class="k">def</span> <span class="nf">tearDown</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Closes selenium driver and OVSBaseTestCase clears the DB &quot;&quot;&quot;</span>
-        <span class="c1"># Take screenshot at end of every test because Python unittesting is deficient</span>
-        <span class="c1">#  and has no non-hack way to detect a failed test case</span>
+        <span class="sd">&quot;&quot;&quot; Closes selenium driver and OVSBaseTestCase clears the DB. &quot;&quot;&quot;</span>
+        <span class="c1"># Take screenshot at end of every test, Python unittesting has no non-hack way to detect a failed test case</span>
         <span class="n">test_screenshot_dir</span> <span class="o">=</span> <span class="s1">&#39;ovs/tests/selenium/Screenshots/&#39;</span> <span class="o">+</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">test_screenshot_dir</span><span class="p">):</span>
             <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">test_screenshot_dir</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">save_screenshot</span><span class="p">(</span><span class="n">test_screenshot_dir</span> <span class="o">+</span> <span class="s1">&#39;/</span><span class="si">%s</span><span class="s1">-last-test-run.png&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testMethodName</span><span class="p">)</span>
-
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">tearDown</span><span class="p">()</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">save_screenshot</span><span class="p">(</span><span class="n">test_screenshot_dir</span> <span class="o">+</span> <span class="s1">&#39;/</span><span class="si">%s</span><span class="s1">-last-test-run.png&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testMethodName</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SeleniumBaseTestCase.login_default_resident"><a class="viewcode-back" href="../../../../ovs.tests.selenium.html#ovs.tests.selenium.selenium_base_test.SeleniumBaseTestCase.login_default_resident">[docs]</a>    <span class="k">def</span> <span class="nf">login_default_resident</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Convenience method to login with the default resident information &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot; Convenience method to login with the default resident information. &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">login_with_credentials</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">default_resident_email</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_resident_password</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SeleniumBaseTestCase.login_default_admin"><a class="viewcode-back" href="../../../../ovs.tests.selenium.html#ovs.tests.selenium.selenium_base_test.SeleniumBaseTestCase.login_default_admin">[docs]</a>    <span class="k">def</span> <span class="nf">login_default_admin</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Convenience method to login with the default admin information &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot; Convenience method to login with the default admin information. &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">login_with_credentials</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">default_admin_email</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_admin_password</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SeleniumBaseTestCase.login_with_credentials"><a class="viewcode-back" href="../../../../ovs.tests.selenium.html#ovs.tests.selenium.selenium_base_test.SeleniumBaseTestCase.login_with_credentials">[docs]</a>    <span class="k">def</span> <span class="nf">login_with_credentials</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">email</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Logs in with the provided email and password, most selenium tests will call this &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Logs in with the provided email and password.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            email: Email to log in as.</span>
+<span class="sd">            password: Password to use.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">find_element_by_id</span><span class="p">(</span><span class="s1">&#39;login&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">send_keys</span><span class="p">(</span><span class="n">Keys</span><span class="o">.</span><span class="n">ENTER</span><span class="p">)</span>
         <span class="n">name_box</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">find_element_by_name</span><span class="p">(</span><span class="s1">&#39;email&#39;</span><span class="p">)</span>
         <span class="n">name_box</span><span class="o">.</span><span class="n">send_keys</span><span class="p">(</span><span class="n">email</span><span class="p">)</span>
         <span class="n">pass_box</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">find_element_by_name</span><span class="p">(</span><span class="s1">&#39;password&#39;</span><span class="p">)</span>
@@ -104,10 +121,28 @@
         <span class="n">pass_box</span><span class="o">.</span><span class="n">send_keys</span><span class="p">(</span><span class="n">Keys</span><span class="o">.</span><span class="n">ENTER</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SeleniumBaseTestCase.set_text_field_by_id"><a class="viewcode-back" href="../../../../ovs.tests.selenium.html#ovs.tests.selenium.selenium_base_test.SeleniumBaseTestCase.set_text_field_by_id">[docs]</a>    <span class="k">def</span> <span class="nf">set_text_field_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field_id</span><span class="p">,</span> <span class="n">new_text</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Sets the text in the given text field to the new text &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets the text in the given text form to the new text.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            field_id: The html form id.</span>
+<span class="sd">            new_text: The text to type.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">text_field</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">find_element_by_id</span><span class="p">(</span><span class="n">field_id</span><span class="p">)</span>
         <span class="n">text_field</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
-        <span class="n">text_field</span><span class="o">.</span><span class="n">send_keys</span><span class="p">(</span><span class="n">new_text</span><span class="p">)</span></div></div>
+        <span class="n">text_field</span><span class="o">.</span><span class="n">send_keys</span><span class="p">(</span><span class="n">new_text</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SeleniumBaseTestCase.go_to_page_in_dropdown"><a class="viewcode-back" href="../../../../ovs.tests.selenium.html#ovs.tests.selenium.selenium_base_test.SeleniumBaseTestCase.go_to_page_in_dropdown">[docs]</a>    <span class="k">def</span> <span class="nf">go_to_page_in_dropdown</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page_link_name</span><span class="p">,</span> <span class="n">dropdown_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Clicks a dropdown and then selects the page to go to under that dropdown.</span>
+<span class="sd">            Navigating to other pages requires doing this quite a bit.</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                dropdown_id (string): The ID of the dropdown to click.</span>
+<span class="sd">                page_link_name (string): The name of the link that appears after clicking the dropdown.</span>
+<span class="sd">         &quot;&quot;&quot;</span>
+        <span class="n">dropdown</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">find_element_by_id</span><span class="p">(</span><span class="n">dropdown_id</span><span class="p">)</span>
+        <span class="n">dropdown</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+        <span class="n">link_in_dropdown</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">find_element_by_link_text</span><span class="p">(</span><span class="n">page_link_name</span><span class="p">)</span>
+        <span class="n">link_in_dropdown</span><span class="o">.</span><span class="n">click</span><span class="p">()</span></div></div>
 </pre></div>
 
           </div>

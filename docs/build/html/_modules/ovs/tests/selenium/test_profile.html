@@ -38,7 +38,7 @@
           <div class="body" role="main">
             
   <h1>Source code for ovs.tests.selenium.test_profile</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot; Test whether profiles can be edited &quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot; Tests functionality related to editing profiles. &quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">selenium.webdriver.common.keys</span> <span class="k">import</span> <span class="n">Keys</span>
 <span class="kn">from</span> <span class="nn">selenium.webdriver.common.by</span> <span class="k">import</span> <span class="n">By</span>
@@ -47,23 +47,20 @@
 <span class="kn">from</span> <span class="nn">ovs.tests.selenium.selenium_base_test</span> <span class="k">import</span> <span class="n">SeleniumBaseTestCase</span>
 
 <div class="viewcode-block" id="TestProfile"><a class="viewcode-back" href="../../../../ovs.tests.selenium.html#ovs.tests.selenium.test_profile.TestProfile">[docs]</a><span class="k">class</span> <span class="nc">TestProfile</span><span class="p">(</span><span class="n">SeleniumBaseTestCase</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Test whether profiles can be edited &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot; Tests functionality related to editing profiles. &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="TestProfile.go_to_resident_profile_page"><a class="viewcode-back" href="../../../../ovs.tests.selenium.html#ovs.tests.selenium.test_profile.TestProfile.go_to_resident_profile_page">[docs]</a>    <span class="k">def</span> <span class="nf">go_to_resident_profile_page</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Runs the Selenium steps necessary to navigate to the edit resident profile page &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot; Runs the Selenium steps necessary to navigate to the edit resident profile page. &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">login_default_resident</span><span class="p">()</span>
 
         <span class="c1"># Click on account dropdown and go to Profile link</span>
-        <span class="n">account_dropdown</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">find_element_by_id</span><span class="p">(</span><span class="s1">&#39;accountDropdown&#39;</span><span class="p">)</span>
-        <span class="n">account_dropdown</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
-        <span class="n">profile_link</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">find_element_by_link_text</span><span class="p">(</span><span class="s1">&#39;Profile&#39;</span><span class="p">)</span>
-        <span class="n">profile_link</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">go_to_page_in_dropdown</span><span class="p">(</span><span class="s1">&#39;Profile&#39;</span><span class="p">,</span> <span class="s1">&#39;accountDropdown&#39;</span><span class="p">)</span>
 
         <span class="c1"># Verify page changed</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s1">&#39;Edit&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">title</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="TestProfile.test_edit_profile"><a class="viewcode-back" href="../../../../ovs.tests.selenium.html#ovs.tests.selenium.test_profile.TestProfile.test_edit_profile">[docs]</a>    <span class="k">def</span> <span class="nf">test_edit_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Tests whether all fields can be edited in a resident profile &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot; Tests whether all fields can be edited in a resident profile. &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_url</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s1">&#39;Overseer&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">title</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">go_to_resident_profile_page</span><span class="p">()</span>
@@ -103,7 +100,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">race_text</span><span class="p">,</span> <span class="s1">&#39;Transformer&#39;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="TestProfile.test_invalid_profile_picture"><a class="viewcode-back" href="../../../../ovs.tests.selenium.html#ovs.tests.selenium.test_profile.TestProfile.test_invalid_profile_picture">[docs]</a>    <span class="k">def</span> <span class="nf">test_invalid_profile_picture</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Tests that non-.png files cannot be uploaded as a profile picture &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot; Tests that non-.png files cannot be uploaded as a profile picture. &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_url</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s1">&#39;Overseer&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">title</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">go_to_resident_profile_page</span><span class="p">()</span>
@@ -126,7 +123,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">error_message</span><span class="p">,</span> <span class="s1">&#39;Please select a valid png.&#39;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="TestProfile.test_valid_profile_picture"><a class="viewcode-back" href="../../../../ovs.tests.selenium.html#ovs.tests.selenium.test_profile.TestProfile.test_valid_profile_picture">[docs]</a>    <span class="k">def</span> <span class="nf">test_valid_profile_picture</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Tests that .png files can be uploaded for a profile picture &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot; Tests that .png files can be uploaded for a profile picture. &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_url</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s1">&#39;Overseer&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">title</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">go_to_resident_profile_page</span><span class="p">()</span>

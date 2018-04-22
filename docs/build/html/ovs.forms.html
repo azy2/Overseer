@@ -40,34 +40,6 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-ovs.forms.add_meal_form">
-<span id="ovs-forms-add-meal-form-module"></span><h2>ovs.forms.add_meal_form module<a class="headerlink" href="#module-ovs.forms.add_meal_form" title="Permalink to this headline">¶</a></h2>
-<p>Form with data required to login for a meal</p>
-<dl class="class">
-<dt id="ovs.forms.add_meal_form.AddMealForm">
-<em class="property">class </em><code class="descclassname">ovs.forms.add_meal_form.</code><code class="descname">AddMealForm</code><span class="sig-paren">(</span><em>formdata=&lt;object object&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/forms/add_meal_form.html#AddMealForm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.forms.add_meal_form.AddMealForm" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask_wtf.form.FlaskForm</span></code></p>
-<p>Form with data required to login for a meal</p>
-<dl class="attribute">
-<dt id="ovs.forms.add_meal_form.AddMealForm.number">
-<code class="descname">number</code><em class="property"> = &lt;UnboundField(IntegerField, ('Number',), {'validators': [&lt;wtforms.validators.DataRequired object&gt;]})&gt;</em><a class="headerlink" href="#ovs.forms.add_meal_form.AddMealForm.number" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="ovs.forms.add_meal_form.AddMealForm.pin">
-<code class="descname">pin</code><em class="property"> = &lt;UnboundField(IntegerField, ('PIN',), {'validators': [&lt;wtforms.validators.DataRequired object&gt;, &lt;function validate_meal_pin&gt;]})&gt;</em><a class="headerlink" href="#ovs.forms.add_meal_form.AddMealForm.pin" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="function">
-<dt id="ovs.forms.add_meal_form.validate_meal_pin">
-<code class="descclassname">ovs.forms.add_meal_form.</code><code class="descname">validate_meal_pin</code><span class="sig-paren">(</span><em>form</em>, <em>field</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/forms/add_meal_form.html#validate_meal_pin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.forms.add_meal_form.validate_meal_pin" title="Permalink to this definition">¶</a></dt>
-<dd><p>Validates that the provided pin existsself.
-This is to thwart malicious input.</p>
-</dd></dl>
-
-</div>
 <div class="section" id="module-ovs.forms.add_package_form">
 <span id="ovs-forms-add-package-form-module"></span><h2>ovs.forms.add_package_form module<a class="headerlink" href="#module-ovs.forms.add_package_form" title="Permalink to this headline">¶</a></h2>
 <p>Form with data required to add a package</p>
@@ -83,16 +55,31 @@ This is to thwart malicious input.</p>
 
 <dl class="attribute">
 <dt id="ovs.forms.add_package_form.AddPackageForm.recipient_email">
-<code class="descname">recipient_email</code><em class="property"> = &lt;UnboundField(StringField, (&quot;Recipient's Email Address&quot;,), {'validators': [&lt;wtforms.validators.Length object&gt;, &lt;wtforms.validators.DataRequired object&gt;, &lt;function validate_resident_email&gt;]})&gt;</em><a class="headerlink" href="#ovs.forms.add_package_form.AddPackageForm.recipient_email" title="Permalink to this definition">¶</a></dt>
+<code class="descname">recipient_email</code><em class="property"> = &lt;UnboundField(StringField, (&quot;Recipient's Email Address&quot;,), {'validators': [&lt;wtforms.validators.Length object&gt;, &lt;wtforms.validators.DataRequired object&gt;]})&gt;</em><a class="headerlink" href="#ovs.forms.add_package_form.AddPackageForm.recipient_email" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-</dd></dl>
-
-<dl class="function">
-<dt id="ovs.forms.add_package_form.validate_resident_email">
-<code class="descclassname">ovs.forms.add_package_form.</code><code class="descname">validate_resident_email</code><span class="sig-paren">(</span><em>form</em>, <em>field</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/forms/add_package_form.html#validate_resident_email"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.forms.add_package_form.validate_resident_email" title="Permalink to this definition">¶</a></dt>
+<dl class="method">
+<dt id="ovs.forms.add_package_form.AddPackageForm.validate_resident_email">
+<code class="descname">validate_resident_email</code><span class="sig-paren">(</span><em>field</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/forms/add_package_form.html#AddPackageForm.validate_resident_email"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.forms.add_package_form.AddPackageForm.validate_resident_email" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates that the provided resident email exists.
 This is to thwart malicious input.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>form</strong> – The AddPackageForm that was submitted.</li>
+<li><strong>field</strong> – The resident_email field.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValidationError</span></code> – If resident_email does not correspond to an existing account.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -123,6 +110,85 @@ This is to thwart malicious input.</p>
 <dt id="ovs.forms.create_meal_plan_form.CreateMealPlanForm.validate_email">
 <code class="descname">validate_email</code><span class="sig-paren">(</span><em>field</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/forms/create_meal_plan_form.html#CreateMealPlanForm.validate_email"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.forms.create_meal_plan_form.CreateMealPlanForm.validate_email" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates that this email doesn’t already have a mealplan.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>form</strong> – The CreateMealPlanForm that was submitted.</li>
+<li><strong>field</strong> – The email field.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValidationError</span></code> – If email does not correspond to an existing account
+or if the account does not have a meal plan.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ovs.forms.edit_meal_form">
+<span id="ovs-forms-edit-meal-form-module"></span><h2>ovs.forms.edit_meal_form module<a class="headerlink" href="#module-ovs.forms.edit_meal_form" title="Permalink to this headline">¶</a></h2>
+<p>Form with data required to edit a meal</p>
+<dl class="class">
+<dt id="ovs.forms.edit_meal_form.EditMealForm">
+<em class="property">class </em><code class="descclassname">ovs.forms.edit_meal_form.</code><code class="descname">EditMealForm</code><span class="sig-paren">(</span><em>formdata=&lt;object object&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/forms/edit_meal_form.html#EditMealForm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.forms.edit_meal_form.EditMealForm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask_wtf.form.FlaskForm</span></code></p>
+<p>Form with data required to edit a meal</p>
+<dl class="attribute">
+<dt id="ovs.forms.edit_meal_form.EditMealForm.credit">
+<code class="descname">credit</code><em class="property"> = &lt;UnboundField(IntegerField, ('Credit',), {'validators': [&lt;wtforms.validators.NumberRange object&gt;]})&gt;</em><a class="headerlink" href="#ovs.forms.edit_meal_form.EditMealForm.credit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.forms.edit_meal_form.EditMealForm.delete_button">
+<code class="descname">delete_button</code><em class="property"> = &lt;UnboundField(SubmitField, ('Delete',), {})&gt;</em><a class="headerlink" href="#ovs.forms.edit_meal_form.EditMealForm.delete_button" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.forms.edit_meal_form.EditMealForm.meal_plan">
+<code class="descname">meal_plan</code><em class="property"> = &lt;UnboundField(IntegerField, ('Meal Plan',), {'validators': [&lt;wtforms.validators.NumberRange object&gt;]})&gt;</em><a class="headerlink" href="#ovs.forms.edit_meal_form.EditMealForm.meal_plan" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.forms.edit_meal_form.EditMealForm.pin">
+<code class="descname">pin</code><em class="property"> = &lt;UnboundField(HiddenField, ('PIN',), {'validators': [&lt;wtforms.validators.DataRequired object&gt;]})&gt;</em><a class="headerlink" href="#ovs.forms.edit_meal_form.EditMealForm.pin" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.forms.edit_meal_form.EditMealForm.plan_type">
+<code class="descname">plan_type</code><em class="property"> = &lt;UnboundField(SelectField, ('Plan Type',), {'choices': [('WEEKLY', 'Weekly'), ('SEMESTERLY', 'Semesterly'), ('LIFETIME', 'Lifetime')]})&gt;</em><a class="headerlink" href="#ovs.forms.edit_meal_form.EditMealForm.plan_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.forms.edit_meal_form.EditMealForm.update_button">
+<code class="descname">update_button</code><em class="property"> = &lt;UnboundField(SubmitField, ('Update',), {})&gt;</em><a class="headerlink" href="#ovs.forms.edit_meal_form.EditMealForm.update_button" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ovs.forms.edit_meal_form.EditMealForm.validate_pin">
+<code class="descname">validate_pin</code><span class="sig-paren">(</span><em>field</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/forms/edit_meal_form.html#EditMealForm.validate_pin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.forms.edit_meal_form.EditMealForm.validate_pin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that the provided pin exists
+This is to thwart malicious input.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>form</strong> – The EditMealForm that was submitted.</li>
+<li><strong>field</strong> – The pin field.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValidationError</span></code> – If Pin does not correspond to an existing mealplan.</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -137,8 +203,8 @@ This is to thwart malicious input.</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask_wtf.form.FlaskForm</span></code></p>
 <p>Form with data required to edit a package</p>
 <dl class="attribute">
-<dt id="ovs.forms.edit_package_form.EditPackageForm.check_button">
-<code class="descname">check_button</code><em class="property"> = &lt;UnboundField(SubmitField, ('Check',), {})&gt;</em><a class="headerlink" href="#ovs.forms.edit_package_form.EditPackageForm.check_button" title="Permalink to this definition">¶</a></dt>
+<dt id="ovs.forms.edit_package_form.EditPackageForm.deliver_button">
+<code class="descname">deliver_button</code><em class="property"> = &lt;UnboundField(SubmitField, ('Deliver',), {})&gt;</em><a class="headerlink" href="#ovs.forms.edit_package_form.EditPackageForm.deliver_button" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -157,11 +223,6 @@ This is to thwart malicious input.</p>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="ovs.forms.edit_package_form.EditPackageForm.recipient_id">
-<code class="descname">recipient_id</code><em class="property"> = &lt;UnboundField(HiddenField, ('Recipient ID',), {'validators': [&lt;wtforms.validators.DataRequired object&gt;]})&gt;</em><a class="headerlink" href="#ovs.forms.edit_package_form.EditPackageForm.recipient_id" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
 <dt id="ovs.forms.edit_package_form.EditPackageForm.update_button">
 <code class="descname">update_button</code><em class="property"> = &lt;UnboundField(SubmitField, ('Update',), {})&gt;</em><a class="headerlink" href="#ovs.forms.edit_package_form.EditPackageForm.update_button" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -171,6 +232,21 @@ This is to thwart malicious input.</p>
 <code class="descname">validate_package_id</code><span class="sig-paren">(</span><em>field</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/forms/edit_package_form.html#EditPackageForm.validate_package_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.forms.edit_package_form.EditPackageForm.validate_package_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates that the provided package_id exists.
 This is to thwart malicious input.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>form</strong> – The EditPackageForm that was submitted.</li>
+<li><strong>field</strong> – The package_id field.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValidationError</span></code> – If package_id not correspond to an existing package.</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -178,6 +254,21 @@ This is to thwart malicious input.</p>
 <code class="descname">validate_recipient_email</code><span class="sig-paren">(</span><em>field</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/forms/edit_package_form.html#EditPackageForm.validate_recipient_email"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.forms.edit_package_form.EditPackageForm.validate_recipient_email" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates that the provided resident email exists.
 This is to thwart malicious input.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>form</strong> – The EditPackageForm that was submitted.</li>
+<li><strong>field</strong> – The recipient_email field.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValidationError</span></code> – If package_id not correspond to an existing package.</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -185,6 +276,21 @@ This is to thwart malicious input.</p>
 <code class="descname">validate_recipient_id</code><span class="sig-paren">(</span><em>field</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/forms/edit_package_form.html#EditPackageForm.validate_recipient_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.forms.edit_package_form.EditPackageForm.validate_recipient_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates that the provided user_id exists.
 This is to thwart malicious input.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>form</strong> – The EditPackageForm that was submitted.</li>
+<li><strong>field</strong> – The recipient_id field.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValidationError</span></code> – If recipient_id does not correspond to an existing resident.</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -227,6 +333,21 @@ This is to thwart malicious input.</p>
 <dt id="ovs.forms.edit_resident_profile_form.EditResidentProfileForm.validate_phone_number">
 <code class="descname">validate_phone_number</code><span class="sig-paren">(</span><em>field</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/forms/edit_resident_profile_form.html#EditResidentProfileForm.validate_phone_number"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.forms.edit_resident_profile_form.EditResidentProfileForm.validate_phone_number" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates that the provided phone number is valid.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>form</strong> – The EditResidentProfileForm that was submitted.</li>
+<li><strong>field</strong> – The phone_number field.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValidationError</span></code> – If phone_number is not a valid phone number.</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -300,12 +421,42 @@ This is to thwart malicious input.</p>
 <dt id="ovs.forms.manage_residents_form.ManageResidentsForm.validate_email">
 <code class="descname">validate_email</code><span class="sig-paren">(</span><em>field</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/forms/manage_residents_form.html#ManageResidentsForm.validate_email"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.forms.manage_residents_form.ManageResidentsForm.validate_email" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks whether email is unregistered.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>form</strong> – The ManageResidentsForm that was submitted.</li>
+<li><strong>field</strong> – The email field.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValidationError</span></code> – If email is already in use.</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ovs.forms.manage_residents_form.ManageResidentsForm.validate_room_number">
 <code class="descname">validate_room_number</code><span class="sig-paren">(</span><em>field</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/forms/manage_residents_form.html#ManageResidentsForm.validate_room_number"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.forms.manage_residents_form.ManageResidentsForm.validate_room_number" title="Permalink to this definition">¶</a></dt>
-<dd><p>Checks whether room number exists</p>
+<dd><p>Checks whether room number exists.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>form</strong> – The ManageResidentsForm that was submitted.</li>
+<li><strong>field</strong> – The room_number field.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValidationError</span></code> – If room_number does not exist.</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -313,6 +464,194 @@ This is to thwart malicious input.</p>
 <code class="descname">validate_user_id</code><span class="sig-paren">(</span><em>field</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/forms/manage_residents_form.html#ManageResidentsForm.validate_user_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.forms.manage_residents_form.ManageResidentsForm.validate_user_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates that the provided user_id exists.
 This is to thwart malicious input.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>form</strong> – The ManageResidentsForm that was submitted.</li>
+<li><strong>field</strong> – The user_id field.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValidationError</span></code> – If user_id does not exist.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ovs.forms.manage_room_form">
+<span id="ovs-forms-manage-room-form-module"></span><h2>ovs.forms.manage_room_form module<a class="headerlink" href="#module-ovs.forms.manage_room_form" title="Permalink to this headline">¶</a></h2>
+<p>Form with data required to edit a room</p>
+<dl class="class">
+<dt id="ovs.forms.manage_room_form.ManageRoomForm">
+<em class="property">class </em><code class="descclassname">ovs.forms.manage_room_form.</code><code class="descname">ManageRoomForm</code><span class="sig-paren">(</span><em>formdata=&lt;object object&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/forms/manage_room_form.html#ManageRoomForm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.forms.manage_room_form.ManageRoomForm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask_wtf.form.FlaskForm</span></code></p>
+<p>Form with data required to edit a room</p>
+<dl class="attribute">
+<dt id="ovs.forms.manage_room_form.ManageRoomForm.delete_button">
+<code class="descname">delete_button</code><em class="property"> = &lt;UnboundField(SubmitField, ('Delete',), {})&gt;</em><a class="headerlink" href="#ovs.forms.manage_room_form.ManageRoomForm.delete_button" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.forms.manage_room_form.ManageRoomForm.room_id">
+<code class="descname">room_id</code><em class="property"> = &lt;UnboundField(HiddenField, ('Room id',), {'validators': [&lt;wtforms.validators.DataRequired object&gt;]})&gt;</em><a class="headerlink" href="#ovs.forms.manage_room_form.ManageRoomForm.room_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.forms.manage_room_form.ManageRoomForm.room_number">
+<code class="descname">room_number</code><em class="property"> = &lt;UnboundField(StringField, ('Room Number',), {'validators': [&lt;wtforms.validators.Length object&gt;, &lt;wtforms.validators.DataRequired object&gt;]})&gt;</em><a class="headerlink" href="#ovs.forms.manage_room_form.ManageRoomForm.room_number" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.forms.manage_room_form.ManageRoomForm.room_type">
+<code class="descname">room_type</code><em class="property"> = &lt;UnboundField(StringField, ('First Name',), {'validators': [&lt;wtforms.validators.Length object&gt;, &lt;wtforms.validators.DataRequired object&gt;]})&gt;</em><a class="headerlink" href="#ovs.forms.manage_room_form.ManageRoomForm.room_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.forms.manage_room_form.ManageRoomForm.status">
+<code class="descname">status</code><em class="property"> = &lt;UnboundField(StringField, ('Status',), {'validators': [&lt;wtforms.validators.Length object&gt;, &lt;wtforms.validators.DataRequired object&gt;]})&gt;</em><a class="headerlink" href="#ovs.forms.manage_room_form.ManageRoomForm.status" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.forms.manage_room_form.ManageRoomForm.update_button">
+<code class="descname">update_button</code><em class="property"> = &lt;UnboundField(SubmitField, ('Update',), {})&gt;</em><a class="headerlink" href="#ovs.forms.manage_room_form.ManageRoomForm.update_button" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ovs.forms.manage_room_form.ManageRoomForm.validate_room_id">
+<code class="descname">validate_room_id</code><span class="sig-paren">(</span><em>field</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/forms/manage_room_form.html#ManageRoomForm.validate_room_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.forms.manage_room_form.ManageRoomForm.validate_room_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that the provided room_id exists.
+This is to thwart malicious input.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>form</strong> – The ManageRoomForm that was submitted.</li>
+<li><strong>field</strong> – The room_id field.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValidationError</span></code> – If the room_id already exists.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.forms.manage_room_form.ManageRoomForm.validate_room_number">
+<code class="descname">validate_room_number</code><span class="sig-paren">(</span><em>field</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/forms/manage_room_form.html#ManageRoomForm.validate_room_number"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.forms.manage_room_form.ManageRoomForm.validate_room_number" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether room_number is unique.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>form</strong> – The ManageRoomForm that was submitted.</li>
+<li><strong>field</strong> – The room_number field.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValidationError</span></code> – If the room_number already exists.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ovs.forms.manage_users_form">
+<span id="ovs-forms-manage-users-form-module"></span><h2>ovs.forms.manage_users_form module<a class="headerlink" href="#module-ovs.forms.manage_users_form" title="Permalink to this headline">¶</a></h2>
+<p>Form with data required to edit a user</p>
+<dl class="class">
+<dt id="ovs.forms.manage_users_form.ManageUsersForm">
+<em class="property">class </em><code class="descclassname">ovs.forms.manage_users_form.</code><code class="descname">ManageUsersForm</code><span class="sig-paren">(</span><em>formdata=&lt;object object&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/forms/manage_users_form.html#ManageUsersForm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.forms.manage_users_form.ManageUsersForm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask_wtf.form.FlaskForm</span></code></p>
+<p>Form with data required to edit a user</p>
+<dl class="attribute">
+<dt id="ovs.forms.manage_users_form.ManageUsersForm.delete_button">
+<code class="descname">delete_button</code><em class="property"> = &lt;UnboundField(SubmitField, ('Delete',), {})&gt;</em><a class="headerlink" href="#ovs.forms.manage_users_form.ManageUsersForm.delete_button" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.forms.manage_users_form.ManageUsersForm.email">
+<code class="descname">email</code><em class="property"> = &lt;UnboundField(StringField, ('Email Address',), {'validators': [&lt;wtforms.validators.Email object&gt;, &lt;wtforms.validators.DataRequired object&gt;]})&gt;</em><a class="headerlink" href="#ovs.forms.manage_users_form.ManageUsersForm.email" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.forms.manage_users_form.ManageUsersForm.first_name">
+<code class="descname">first_name</code><em class="property"> = &lt;UnboundField(StringField, ('First Name',), {'validators': [&lt;wtforms.validators.Length object&gt;, &lt;wtforms.validators.DataRequired object&gt;]})&gt;</em><a class="headerlink" href="#ovs.forms.manage_users_form.ManageUsersForm.first_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.forms.manage_users_form.ManageUsersForm.last_name">
+<code class="descname">last_name</code><em class="property"> = &lt;UnboundField(StringField, ('Last Name',), {'validators': [&lt;wtforms.validators.Length object&gt;, &lt;wtforms.validators.DataRequired object&gt;]})&gt;</em><a class="headerlink" href="#ovs.forms.manage_users_form.ManageUsersForm.last_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.forms.manage_users_form.ManageUsersForm.role">
+<code class="descname">role</code><em class="property"> = &lt;UnboundField(SelectField, ('Role',), {'choices': [('ADMIN', 'Admin'), ('BUILDING_MANAGER', 'Building Manager'), ('OFFICE_MANAGER', 'Office Manager'), ('STAFF', 'Staff'), ('RESIDENT_ADVISOR', 'Resident Advisor')]})&gt;</em><a class="headerlink" href="#ovs.forms.manage_users_form.ManageUsersForm.role" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.forms.manage_users_form.ManageUsersForm.update_button">
+<code class="descname">update_button</code><em class="property"> = &lt;UnboundField(SubmitField, ('Update',), {})&gt;</em><a class="headerlink" href="#ovs.forms.manage_users_form.ManageUsersForm.update_button" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.forms.manage_users_form.ManageUsersForm.user_id">
+<code class="descname">user_id</code><em class="property"> = &lt;UnboundField(HiddenField, ('User id',), {'validators': [&lt;wtforms.validators.DataRequired object&gt;]})&gt;</em><a class="headerlink" href="#ovs.forms.manage_users_form.ManageUsersForm.user_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ovs.forms.manage_users_form.ManageUsersForm.validate_email">
+<code class="descname">validate_email</code><span class="sig-paren">(</span><em>field</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/forms/manage_users_form.html#ManageUsersForm.validate_email"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.forms.manage_users_form.ManageUsersForm.validate_email" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether email is unregistered.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>form</strong> – The ManageUsersForm that was submitted.</li>
+<li><strong>field</strong> – The email field.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValidationError</span></code> – If the email is already in use.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.forms.manage_users_form.ManageUsersForm.validate_user_id">
+<code class="descname">validate_user_id</code><span class="sig-paren">(</span><em>field</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/forms/manage_users_form.html#ManageUsersForm.validate_user_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.forms.manage_users_form.ManageUsersForm.validate_user_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that the provided user_id exists.
+This is to thwart malicious input.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>form</strong> – The ManageUsersForm that was submitted.</li>
+<li><strong>field</strong> – The user_id field.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValidationError</span></code> – If the user_id does not exist.</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -334,8 +673,23 @@ This is to thwart malicious input.</p>
 <dl class="method">
 <dt id="ovs.forms.meal_login_form.MealLoginForm.validate_pin">
 <code class="descname">validate_pin</code><span class="sig-paren">(</span><em>field</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/forms/meal_login_form.html#MealLoginForm.validate_pin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.forms.meal_login_form.MealLoginForm.validate_pin" title="Permalink to this definition">¶</a></dt>
-<dd><p>Validates that the provided pin existsself.
+<dd><p>Validates that the provided pin exists.
 This is to thwart malicious input.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>form</strong> – The MealLoginForm that was submitted.</li>
+<li><strong>field</strong> – The pin field.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValidationError</span></code> – If pin does not exist.</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -366,7 +720,7 @@ This is to thwart malicious input.</p>
 
 <dl class="attribute">
 <dt id="ovs.forms.register_manager_form.RegisterManagerForm.role">
-<code class="descname">role</code><em class="property"> = &lt;UnboundField(SelectField, ('Role',), {'choices': [('ADMIN', 'Admin'), ('BUILDING_MANAGER', 'Bulding Manager'), ('OFFICE_MANAGER', 'Office Manager'), ('STAFF', 'Staff'), ('RESIDENT_ADVISOR', 'Resident Advisor')]})&gt;</em><a class="headerlink" href="#ovs.forms.register_manager_form.RegisterManagerForm.role" title="Permalink to this definition">¶</a></dt>
+<code class="descname">role</code><em class="property"> = &lt;UnboundField(SelectField, ('Role',), {'choices': [('ADMIN', 'Admin'), ('BUILDING_MANAGER', 'Building Manager'), ('OFFICE_MANAGER', 'Office Manager'), ('STAFF', 'Staff'), ('RESIDENT_ADVISOR', 'Resident Advisor')]})&gt;</em><a class="headerlink" href="#ovs.forms.register_manager_form.RegisterManagerForm.role" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -400,12 +754,12 @@ This is to thwart malicious input.</p>
 </div>
 <div class="section" id="module-ovs.forms.register_room_form">
 <span id="ovs-forms-register-room-form-module"></span><h2>ovs.forms.register_room_form module<a class="headerlink" href="#module-ovs.forms.register_room_form" title="Permalink to this headline">¶</a></h2>
-<p>Form with data required to register a room</p>
+<p>Form with data required to register a room.</p>
 <dl class="class">
 <dt id="ovs.forms.register_room_form.RegisterRoomForm">
 <em class="property">class </em><code class="descclassname">ovs.forms.register_room_form.</code><code class="descname">RegisterRoomForm</code><span class="sig-paren">(</span><em>formdata=&lt;object object&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/forms/register_room_form.html#RegisterRoomForm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.forms.register_room_form.RegisterRoomForm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask_wtf.form.FlaskForm</span></code></p>
-<p>Form with data required to register a room</p>
+<p>Form with data required to register a room.</p>
 <dl class="attribute">
 <dt id="ovs.forms.register_room_form.RegisterRoomForm.occupants">
 <code class="descname">occupants</code><em class="property"> = &lt;UnboundField(StringField, ('Room Occupants (Comma separated list of emails):',), {'validators': [&lt;wtforms.validators.Optional object&gt;]})&gt;</em><a class="headerlink" href="#ovs.forms.register_room_form.RegisterRoomForm.occupants" title="Permalink to this definition">¶</a></dt>
@@ -429,14 +783,81 @@ This is to thwart malicious input.</p>
 <dl class="method">
 <dt id="ovs.forms.register_room_form.RegisterRoomForm.validate_occupants">
 <code class="descname">validate_occupants</code><span class="sig-paren">(</span><em>field</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/forms/register_room_form.html#RegisterRoomForm.validate_occupants"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.forms.register_room_form.RegisterRoomForm.validate_occupants" title="Permalink to this definition">¶</a></dt>
-<dd><p>Validates thet occupants exist and don’t already have a room</p>
+<dd><p>Validates that occupants exist and don’t already have a room.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>form</strong> – The RegisterRoomForm that was submitted.</li>
+<li><strong>field</strong> – The occupants field.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValidationError</span></code> – If occupants is formatted incorrectly or contains invalid residents.</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ovs.forms.register_room_form.RegisterRoomForm.validate_room_number">
 <code class="descname">validate_room_number</code><span class="sig-paren">(</span><em>field</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/forms/register_room_form.html#RegisterRoomForm.validate_room_number"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.forms.register_room_form.RegisterRoomForm.validate_room_number" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates that room number does not already exist</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>form</strong> – The RegisterRoomForm that was submitted.</li>
+<li><strong>field</strong> – The room_number field.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValidationError</span></code> – If room number already exists.</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ovs.forms.reset_password_form">
+<span id="ovs-forms-reset-password-form-module"></span><h2>ovs.forms.reset_password_form module<a class="headerlink" href="#module-ovs.forms.reset_password_form" title="Permalink to this headline">¶</a></h2>
+<p>Form to validate password resets.</p>
+<dl class="class">
+<dt id="ovs.forms.reset_password_form.ResetPasswordForm">
+<em class="property">class </em><code class="descclassname">ovs.forms.reset_password_form.</code><code class="descname">ResetPasswordForm</code><span class="sig-paren">(</span><em>formdata=&lt;object object&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/forms/reset_password_form.html#ResetPasswordForm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.forms.reset_password_form.ResetPasswordForm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask_wtf.form.FlaskForm</span></code></p>
+<p>Form to validate password resets.</p>
+<dl class="attribute">
+<dt id="ovs.forms.reset_password_form.ResetPasswordForm.confirm">
+<code class="descname">confirm</code><em class="property"> = &lt;UnboundField(PasswordField, ('Repeat Password',), {})&gt;</em><a class="headerlink" href="#ovs.forms.reset_password_form.ResetPasswordForm.confirm" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.forms.reset_password_form.ResetPasswordForm.password">
+<code class="descname">password</code><em class="property"> = &lt;UnboundField(PasswordField, ('New Password', [&lt;wtforms.validators.DataRequired object&gt;, &lt;wtforms.validators.EqualTo object&gt;]), {})&gt;</em><a class="headerlink" href="#ovs.forms.reset_password_form.ResetPasswordForm.password" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ovs.forms.reset_request_form">
+<span id="ovs-forms-reset-request-form-module"></span><h2>ovs.forms.reset_request_form module<a class="headerlink" href="#module-ovs.forms.reset_request_form" title="Permalink to this headline">¶</a></h2>
+<p>Form with data required to login.</p>
+<dl class="class">
+<dt id="ovs.forms.reset_request_form.ResetRequestForm">
+<em class="property">class </em><code class="descclassname">ovs.forms.reset_request_form.</code><code class="descname">ResetRequestForm</code><span class="sig-paren">(</span><em>formdata=&lt;object object&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/forms/reset_request_form.html#ResetRequestForm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.forms.reset_request_form.ResetRequestForm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask_wtf.form.FlaskForm</span></code></p>
+<p>Form with data required to login.</p>
+<dl class="attribute">
+<dt id="ovs.forms.reset_request_form.ResetRequestForm.email">
+<code class="descname">email</code><em class="property"> = &lt;UnboundField(StringField, ('Email',), {'validators': [&lt;wtforms.validators.DataRequired object&gt;, &lt;wtforms.validators.Email object&gt;, &lt;ovs.forms.validators.EmailRegistered object&gt;]})&gt;</em><a class="headerlink" href="#ovs.forms.reset_request_form.ResetRequestForm.email" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 
@@ -458,6 +879,21 @@ This is to thwart malicious input.</p>
 <dt id="ovs.forms.upload_profile_picture_form.UploadProfilePictureForm.validate_profile_picture">
 <code class="descname">validate_profile_picture</code><span class="sig-paren">(</span><em>field</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/forms/upload_profile_picture_form.html#UploadProfilePictureForm.validate_profile_picture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.forms.upload_profile_picture_form.UploadProfilePictureForm.validate_profile_picture" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates that the uploaded file is not empty and is a real PNG.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>form</strong> – The UploadProfilePictureForm that was submitted.</li>
+<li><strong>field</strong> – The profile_picture field.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValidationError</span></code> – If profile_picture is empty or not a valid png.</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -470,15 +906,42 @@ This is to thwart malicious input.</p>
 <dt id="ovs.forms.validators.EmailRegistered">
 <em class="property">class </em><code class="descclassname">ovs.forms.validators.</code><code class="descname">EmailRegistered</code><span class="sig-paren">(</span><em>check</em>, <em>message=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/forms/validators.html#EmailRegistered"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.forms.validators.EmailRegistered" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>If check is true validates that the given email is registered.
-If check is false validates that the given email is unregistered.
-If the validation is failed message will be displayed.
-If message is ommitted ‘Email must be an existing user’ is printed for check=True
-and ‘Email already in use’ is printed for check=False</p>
+<p>Validates that an email is or is not registered.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>check</strong> – Whether to validate that the email is registered or unregistered.</li>
+<li><strong>message</strong> – The message to be displayed to the user on the form if the check fails.
+If no message is provided the message will either be:
+“Email must be an existing user” or
+“Email already in use”</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="ovs.forms.validators.EmailRegistered.__call__">
 <code class="descname">__call__</code><span class="sig-paren">(</span><em>form</em>, <em>field</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/forms/validators.html#EmailRegistered.__call__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.forms.validators.EmailRegistered.__call__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Does the validation</p>
+<dd><p>Does the validation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>form</strong> – The form this validator is applied to.</li>
+<li><strong>field</strong> – The field this validator is applied to.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValidationError</span></code> – If the given email is unregistered if check=True
+and if the given email is registered if check=False.</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -506,17 +969,21 @@ and ‘Email already in use’ is printed for check=False</p>
   <ul>
 <li><a class="reference internal" href="#">ovs.forms package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-ovs.forms.add_meal_form">ovs.forms.add_meal_form module</a></li>
 <li><a class="reference internal" href="#module-ovs.forms.add_package_form">ovs.forms.add_package_form module</a></li>
 <li><a class="reference internal" href="#module-ovs.forms.create_meal_plan_form">ovs.forms.create_meal_plan_form module</a></li>
+<li><a class="reference internal" href="#module-ovs.forms.edit_meal_form">ovs.forms.edit_meal_form module</a></li>
 <li><a class="reference internal" href="#module-ovs.forms.edit_package_form">ovs.forms.edit_package_form module</a></li>
 <li><a class="reference internal" href="#module-ovs.forms.edit_resident_profile_form">ovs.forms.edit_resident_profile_form module</a></li>
 <li><a class="reference internal" href="#module-ovs.forms.login_form">ovs.forms.login_form module</a></li>
 <li><a class="reference internal" href="#module-ovs.forms.manage_residents_form">ovs.forms.manage_residents_form module</a></li>
+<li><a class="reference internal" href="#module-ovs.forms.manage_room_form">ovs.forms.manage_room_form module</a></li>
+<li><a class="reference internal" href="#module-ovs.forms.manage_users_form">ovs.forms.manage_users_form module</a></li>
 <li><a class="reference internal" href="#module-ovs.forms.meal_login_form">ovs.forms.meal_login_form module</a></li>
 <li><a class="reference internal" href="#module-ovs.forms.register_manager_form">ovs.forms.register_manager_form module</a></li>
 <li><a class="reference internal" href="#module-ovs.forms.register_resident_form">ovs.forms.register_resident_form module</a></li>
 <li><a class="reference internal" href="#module-ovs.forms.register_room_form">ovs.forms.register_room_form module</a></li>
+<li><a class="reference internal" href="#module-ovs.forms.reset_password_form">ovs.forms.reset_password_form module</a></li>
+<li><a class="reference internal" href="#module-ovs.forms.reset_request_form">ovs.forms.reset_request_form module</a></li>
 <li><a class="reference internal" href="#module-ovs.forms.upload_profile_picture_form">ovs.forms.upload_profile_picture_form module</a></li>
 <li><a class="reference internal" href="#module-ovs.forms.validators">ovs.forms.validators module</a></li>
 <li><a class="reference internal" href="#module-ovs.forms">Module contents</a></li>

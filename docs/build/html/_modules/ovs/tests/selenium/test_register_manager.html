@@ -38,47 +38,37 @@
           <div class="body" role="main">
             
   <h1>Source code for ovs.tests.selenium.test_register_manager</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot; Test whether users can log in &quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">selenium.webdriver.common.keys</span> <span class="k">import</span> <span class="n">Keys</span>
-<span class="kn">from</span> <span class="nn">selenium.webdriver.common.by</span> <span class="k">import</span> <span class="n">By</span>
-<span class="kn">from</span> <span class="nn">selenium.webdriver.support.ui</span> <span class="k">import</span> <span class="n">WebDriverWait</span>
-<span class="kn">from</span> <span class="nn">selenium.webdriver.support</span> <span class="k">import</span> <span class="n">expected_conditions</span> <span class="k">as</span> <span class="n">EC</span>
-<span class="kn">from</span> <span class="nn">ovs.tests.selenium.selenium_base_test</span> <span class="k">import</span> <span class="n">SeleniumBaseTestCase</span>
+<span></span><span class="sd">&quot;&quot;&quot; Test functionality related to registering managers. &quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">ovs.tests.selenium.table_test</span> <span class="k">import</span> <span class="n">TableTest</span><span class="p">,</span> <span class="n">InputTextElement</span><span class="p">,</span> <span class="n">SelectTextElement</span>
 
-<div class="viewcode-block" id="TestRegisterManager"><a class="viewcode-back" href="../../../../ovs.tests.selenium.html#ovs.tests.selenium.test_register_manager.TestRegisterManager">[docs]</a><span class="k">class</span> <span class="nc">TestRegisterManager</span><span class="p">(</span><span class="n">SeleniumBaseTestCase</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Test whether managers can be registered&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="TestRegisterManager"><a class="viewcode-back" href="../../../../ovs.tests.selenium.html#ovs.tests.selenium.test_register_manager.TestRegisterManager">[docs]</a><span class="k">class</span> <span class="nc">TestRegisterManager</span><span class="p">(</span><span class="n">TableTest</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Test functionality related to registering managers. &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="TestRegisterManager.setUp"><a class="viewcode-back" href="../../../../ovs.tests.selenium.html#ovs.tests.selenium.test_register_manager.TestRegisterManager.setUp">[docs]</a>    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setUp</span><span class="p">()</span>
+        <span class="c1"># Current form format: [Email][First Name][Last Name][Role Selector]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">form_text_field_types</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">InputTextElement</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">form_text_field_types</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">InputTextElement</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">form_text_field_types</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">InputTextElement</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">form_text_field_types</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">SelectTextElement</span><span class="p">())</span>
+
+        <span class="c1"># Current table format: [Email][First Name][Last Name][Role Selector]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table_text_field_types</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">InputTextElement</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table_text_field_types</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">InputTextElement</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table_text_field_types</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">InputTextElement</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table_text_field_types</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">SelectTextElement</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="TestRegisterManager.navigate_to_table_page"><a class="viewcode-back" href="../../../../ovs.tests.selenium.html#ovs.tests.selenium.test_register_manager.TestRegisterManager.navigate_to_table_page">[docs]</a>    <span class="k">def</span> <span class="nf">navigate_to_table_page</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">find_element_by_link_text</span><span class="p">(</span><span class="s1">&#39;Managers&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">click</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="TestRegisterManager.test_register_manager"><a class="viewcode-back" href="../../../../ovs.tests.selenium.html#ovs.tests.selenium.test_register_manager.TestRegisterManager.test_register_manager">[docs]</a>    <span class="k">def</span> <span class="nf">test_register_manager</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Tests whether all fields can be edited in a register manager page &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_url</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s1">&#39;Overseer&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">title</span><span class="p">)</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">login_default_admin</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot; Tests whether a manager can be registered. &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_table_test</span><span class="p">(</span><span class="s1">&#39;email@website.net&#39;</span><span class="p">,</span> <span class="s1">&#39;John&#39;</span><span class="p">,</span> <span class="s1">&#39;Smith&#39;</span><span class="p">,</span> <span class="s1">&#39;Office Manager&#39;</span><span class="p">)</span></div>
 
-        <span class="c1"># Click on Register Manager</span>
-        <span class="n">register_manager</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">find_element_by_link_text</span><span class="p">(</span><span class="s1">&#39;Register Manager&#39;</span><span class="p">)</span>
-        <span class="n">register_manager</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
-
-        <span class="c1"># Verify page changed</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s1">&#39;Register Manager&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">title</span><span class="p">)</span>
-
-        <span class="c1"># Change all fields</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">set_text_field_by_id</span><span class="p">(</span><span class="s1">&#39;email&#39;</span><span class="p">,</span> <span class="s1">&#39;email@website.net&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">set_text_field_by_id</span><span class="p">(</span><span class="s1">&#39;first_name&#39;</span><span class="p">,</span> <span class="s1">&#39;John&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">set_text_field_by_id</span><span class="p">(</span><span class="s1">&#39;last_name&#39;</span><span class="p">,</span> <span class="s1">&#39;Smith&#39;</span><span class="p">)</span>
-
-        <span class="c1"># Submit changes, need to &quot;press enter&quot; on button instead of clicking</span>
-        <span class="c1"># because Selenium is wonderful, stable software</span>
-        <span class="n">submit_button</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">find_element_by_id</span><span class="p">(</span><span class="s1">&#39;register_manager&#39;</span><span class="p">)</span>
-        <span class="n">submit_button</span><span class="o">.</span><span class="n">send_keys</span><span class="p">(</span><span class="n">Keys</span><span class="o">.</span><span class="n">ENTER</span><span class="p">)</span>
-
-        <span class="c1"># Wait for successful notification popup to appear</span>
-        <span class="n">wait</span> <span class="o">=</span> <span class="n">WebDriverWait</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
-        <span class="n">wait</span><span class="o">.</span><span class="n">until</span><span class="p">(</span><span class="n">EC</span><span class="o">.</span><span class="n">visibility_of_element_located</span><span class="p">((</span><span class="n">By</span><span class="o">.</span><span class="n">ID</span><span class="p">,</span> <span class="s1">&#39;notification-message&#39;</span><span class="p">)))</span>
-
-        <span class="c1"># Verify fields are empty and ready for new account registration</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">find_element_by_id</span><span class="p">(</span><span class="s1">&#39;email&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get_attribute</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">),</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">find_element_by_id</span><span class="p">(</span><span class="s1">&#39;first_name&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get_attribute</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">),</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">find_element_by_id</span><span class="p">(</span><span class="s1">&#39;last_name&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get_attribute</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">),</span> <span class="s1">&#39;&#39;</span><span class="p">)</span></div></div>
+<div class="viewcode-block" id="TestRegisterManager.test_update_delete_manager"><a class="viewcode-back" href="../../../../ovs.tests.selenium.html#ovs.tests.selenium.test_register_manager.TestRegisterManager.test_update_delete_manager">[docs]</a>    <span class="k">def</span> <span class="nf">test_update_delete_manager</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Tests that newly added managers can be updated and deleted. &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_register_manager</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_delete_table_test</span><span class="p">(</span><span class="s1">&#39;mail@websight.net&#39;</span><span class="p">,</span> <span class="s1">&#39;Jack&#39;</span><span class="p">,</span> <span class="s1">&#39;Smithers&#39;</span><span class="p">,</span> <span class="s1">&#39;Staff&#39;</span><span class="p">)</span></div></div>
 </pre></div>
 
           </div>

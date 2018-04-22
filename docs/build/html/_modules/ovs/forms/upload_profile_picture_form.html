@@ -51,7 +51,16 @@
     <span class="n">profile_picture</span> <span class="o">=</span> <span class="n">FileField</span><span class="p">(</span><span class="s1">&#39;Profile Picture&#39;</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">FileRequired</span><span class="p">()])</span>
 
 <div class="viewcode-block" id="UploadProfilePictureForm.validate_profile_picture"><a class="viewcode-back" href="../../../ovs.forms.html#ovs.forms.upload_profile_picture_form.UploadProfilePictureForm.validate_profile_picture">[docs]</a>    <span class="k">def</span> <span class="nf">validate_profile_picture</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span> <span class="c1"># pylint: disable=no-self-argument, no-self-use</span>
-        <span class="sd">&quot;&quot;&quot; Validates that the uploaded file is not empty and is a real PNG. &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Validates that the uploaded file is not empty and is a real PNG.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            form: The UploadProfilePictureForm that was submitted.</span>
+<span class="sd">            field: The profile_picture field.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValidationError: If profile_picture is empty or not a valid png.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
             <span class="n">contents</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
             <span class="n">field</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>

@@ -50,6 +50,7 @@
 <li class="toctree-l1"><a class="reference internal" href="ovs.tests.unittests.services.html">ovs.tests.unittests.services package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="ovs.tests.unittests.services.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ovs.tests.unittests.services.html#module-ovs.tests.unittests.services.test_mail_service">ovs.tests.unittests.services.test_mail_service module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ovs.tests.unittests.services.html#module-ovs.tests.unittests.services.test_manager_service">ovs.tests.unittests.services.test_manager_service module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ovs.tests.unittests.services.html#module-ovs.tests.unittests.services.test_meal_plan_service">ovs.tests.unittests.services.test_meal_plan_service module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ovs.tests.unittests.services.html#module-ovs.tests.unittests.services.test_package_service">ovs.tests.unittests.services.test_package_service module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ovs.tests.unittests.services.html#module-ovs.tests.unittests.services.test_profile_service">ovs.tests.unittests.services.test_profile_service module</a></li>
@@ -69,15 +70,71 @@
 <span id="ovs-tests-unittests-base-test-module"></span><h2>ovs.tests.unittests.base_test module<a class="headerlink" href="#module-ovs.tests.unittests.base_test" title="Permalink to this headline">¶</a></h2>
 <p>The base test case that all other test cases should inherit from</p>
 <dl class="class">
+<dt id="ovs.tests.unittests.base_test.MockBcrypt">
+<em class="property">class </em><code class="descclassname">ovs.tests.unittests.base_test.</code><code class="descname">MockBcrypt</code><span class="sig-paren">(</span><em>app=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/unittests/base_test.html#MockBcrypt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.unittests.base_test.MockBcrypt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Mock the Bcrypt object to avoid expensive security stuff during testing.</p>
+<dl class="method">
+<dt id="ovs.tests.unittests.base_test.MockBcrypt.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>app=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/unittests/base_test.html#MockBcrypt.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.unittests.base_test.MockBcrypt.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Does nothing.
+:param app: Unused.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.unittests.base_test.MockBcrypt.check_password_hash">
+<code class="descname">check_password_hash</code><span class="sig-paren">(</span><em>pw_hash</em>, <em>password</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/unittests/base_test.html#MockBcrypt.check_password_hash"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.unittests.base_test.MockBcrypt.check_password_hash" title="Permalink to this definition">¶</a></dt>
+<dd><p>Since we aren’t hashing passwords logging in is as simple as comparing plaintext.
+:param pw_hash: The password the user typed in.
+:param password: The password the account has.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if they are the same.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.unittests.base_test.MockBcrypt.generate_password_hash">
+<code class="descname">generate_password_hash</code><span class="sig-paren">(</span><em>password</em>, <em>rounds=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/unittests/base_test.html#MockBcrypt.generate_password_hash"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.unittests.base_test.MockBcrypt.generate_password_hash" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mock generate_password_hash to speed up tests.
+:param password: The password to not hash.
+:param rounds: The number of rounds Bcrypt would have applied a hash.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">password</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.unittests.base_test.MockBcrypt.init_app">
+<code class="descname">init_app</code><span class="sig-paren">(</span><em>app</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/unittests/base_test.html#MockBcrypt.init_app"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.unittests.base_test.MockBcrypt.init_app" title="Permalink to this definition">¶</a></dt>
+<dd><p>Does nothing.
+:param app: Unused.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="ovs.tests.unittests.base_test.OVSBaseTestCase">
 <em class="property">class </em><code class="descclassname">ovs.tests.unittests.base_test.</code><code class="descname">OVSBaseTestCase</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/unittests/base_test.html#OVSBaseTestCase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.unittests.base_test.OVSBaseTestCase" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask_testing.utils.LiveServerTestCase</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask_testing.utils.TestCase</span></code></p>
 <p>The base test case that all other test cases should inherit from</p>
 <dl class="method">
 <dt id="ovs.tests.unittests.base_test.OVSBaseTestCase.create_app">
 <code class="descname">create_app</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/unittests/base_test.html#OVSBaseTestCase.create_app"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.unittests.base_test.OVSBaseTestCase.create_app" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create your Flask app here, with any
-configuration you need.</p>
+<dd><p>Creates a Flask app for use during each test.
+:returns: a unique flask app for this test.
+:rtype: Flask</p>
 </dd></dl>
 
 <dl class="method">

@@ -1,5 +1,5 @@
-ovs\.tests\.unittests package
-=============================
+ovs.tests.unittests package
+===========================
 
 Subpackages
 -----------
@@ -12,8 +12,8 @@ Subpackages
 Submodules
 ----------
 
-ovs\.tests\.unittests\.base\_test module
-----------------------------------------
+ovs.tests.unittests.base\_test module
+-------------------------------------
 
 .. automodule:: ovs.tests.unittests.base_test
     :members:

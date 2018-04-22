@@ -48,6 +48,49 @@
 <em class="property">class </em><code class="descclassname">ovs.models.meal_plan_model.</code><code class="descname">MealPlan</code><span class="sig-paren">(</span><em>meal_plan</em>, <em>plan_type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/meal_plan_model.html#MealPlan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.meal_plan_model.MealPlan" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.api.Model</span></code></p>
 <p>Defines a MealPlan as represented in the database. Along with some utility functions.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>meal_plan</strong> (<em>int</em>) – The number of meals the plan is reset too after reset_date.</li>
+<li><strong>plan_type</strong> (<em>enum</em>) – Either ‘WEEKLY’, ‘SEMESTERLY’ or ‘LIFETIME’. Determines when the meals get reset.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">a new MealPlan Model object.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#ovs.models.meal_plan_model.MealPlan" title="ovs.models.meal_plan_model.MealPlan">MealPlan</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="ovs.models.meal_plan_model.MealPlan.__repr__">
+<code class="descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/meal_plan_model.html#MealPlan.__repr__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.meal_plan_model.MealPlan.__repr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes MealPlan printable.
+:returns: A string representation of this MealPlan.
+:rtype: str</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.models.meal_plan_model.MealPlan.check_reset_date">
+<code class="descname">check_reset_date</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/meal_plan_model.html#MealPlan.check_reset_date"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.meal_plan_model.MealPlan.check_reset_date" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks a meal plan’s reset date. If it has past,
+this updates the reset_date and resets the credits.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Whether the reset date was changed.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="ovs.models.meal_plan_model.MealPlan.created">
 <code class="descname">created</code><a class="headerlink" href="#ovs.models.meal_plan_model.MealPlan.created" title="Permalink to this definition">¶</a></dt>
@@ -61,8 +104,17 @@
 <dl class="method">
 <dt id="ovs.models.meal_plan_model.MealPlan.get_next_reset_date">
 <code class="descname">get_next_reset_date</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/meal_plan_model.html#MealPlan.get_next_reset_date"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.meal_plan_model.MealPlan.get_next_reset_date" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets the next reset day based off the plan type
-:return: DateTime value for reset_day</p>
+<dd><p>Gets the next reset day based off the plan type.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">value for reset_day.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">DateTime</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
@@ -73,7 +125,8 @@
 <dl class="method">
 <dt id="ovs.models.meal_plan_model.MealPlan.json">
 <code class="descname">json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/meal_plan_model.html#MealPlan.json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.meal_plan_model.MealPlan.json" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a JSON representation of this Meal Plan</p>
+<dd><p>Get a JSON representation of this Model.
+:returns: A JSON representation of this Meal Plan.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -82,12 +135,41 @@
 <dd></dd></dl>
 
 <dl class="staticmethod">
+<dt id="ovs.models.meal_plan_model.MealPlan.next_half_year">
+<em class="property">static </em><code class="descname">next_half_year</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/meal_plan_model.html#MealPlan.next_half_year"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.meal_plan_model.MealPlan.next_half_year" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the next January or July first after date.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>date</strong> (<em>DateTime</em>) – DateTime to start.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A DateTime with date as the next half year and time identical to provided date.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">DateTime</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
 <dt id="ovs.models.meal_plan_model.MealPlan.next_weekday">
 <em class="property">static </em><code class="descname">next_weekday</code><span class="sig-paren">(</span><em>weekday</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/meal_plan_model.html#MealPlan.next_weekday"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.meal_plan_model.MealPlan.next_weekday" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets the next weekday after date
-:param date: DateTime to start
-:param weekday: 0 for Monday … 6 for Sunday
-:return: DateTime with date as the next weekday and time identical to provided date.</p>
+<dd><p>Gets the next weekday after date.
+:param date: Date to get the next weekday for.
+:type date: DateTime
+:param weekday: 0 for Monday, 1 for Tuesday, … 6 for Sunday
+:type weekday: int</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A DateTime object set to the next weekday after <cite>date</cite> with identical time fields.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">DateTime</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
@@ -105,11 +187,25 @@
 <code class="descname">reset_date</code><a class="headerlink" href="#ovs.models.meal_plan_model.MealPlan.reset_date" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="attribute">
+<dt id="ovs.models.meal_plan_model.MealPlan.resident">
+<code class="descname">resident</code><a class="headerlink" href="#ovs.models.meal_plan_model.MealPlan.resident" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="ovs.models.meal_plan_model.MealPlan.update_meal_count">
 <code class="descname">update_meal_count</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/meal_plan_model.html#MealPlan.update_meal_count"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.meal_plan_model.MealPlan.update_meal_count" title="Permalink to this definition">¶</a></dt>
-<dd><p>Uses a meal credit, as outlined by the plan.
-:return: Boolean, whether a credit was available</p>
+<dd><p>Uses a meal credit, as outlined by the plan.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Whether a credit was available.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
@@ -127,7 +223,31 @@
 <dt id="ovs.models.mealplan_history_model.MealplanHistory">
 <em class="property">class </em><code class="descclassname">ovs.models.mealplan_history_model.</code><code class="descname">MealplanHistory</code><span class="sig-paren">(</span><em>resident_id</em>, <em>mealplan_pin</em>, <em>manager_id</em>, <em>log_type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/mealplan_history_model.html#MealplanHistory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.mealplan_history_model.MealplanHistory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.api.Model</span></code></p>
-<p>Defines a Mealplan History Item as represented in the database.</p>
+<p>Defines a Mealplan History Item as represented in the database.
+:param resident_id: The resident’s id who signed in.
+:type resident_id: int
+:param mealplan_pin: The pin of the mealplan used to sign in.
+:type mealplan_pin: int
+:param manager_id: The id of the manager who was logged in at the time.
+:type manager_id: int
+:param log_type: Must be either ‘MEAL_USED’ or ‘UNDO’.
+:type log_type: Enum</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A MealplanHistory Model.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="ovs.models.mealplan_history_model.MealplanHistory.__repr__">
+<code class="descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/mealplan_history_model.html#MealplanHistory.__repr__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.mealplan_history_model.MealplanHistory.__repr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allows MealplanHistory objects to be printed.
+:returns: A string representation of MealplanHistory.
+:rtype: str</p>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="ovs.models.mealplan_history_model.MealplanHistory.created">
 <code class="descname">created</code><a class="headerlink" href="#ovs.models.mealplan_history_model.MealplanHistory.created" title="Permalink to this definition">¶</a></dt>
@@ -141,7 +261,8 @@
 <dl class="method">
 <dt id="ovs.models.mealplan_history_model.MealplanHistory.json">
 <code class="descname">json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/mealplan_history_model.html#MealplanHistory.json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.mealplan_history_model.MealplanHistory.json" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a JSON representation of this Mealplan History Item</p>
+<dd><p>Get a JSON represntation of this MealplanHistory.
+:returns: A JSON representation of this MealplanHistory Item.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -179,15 +300,23 @@
 <dt id="ovs.models.package_model.Package">
 <em class="property">class </em><code class="descclassname">ovs.models.package_model.</code><code class="descname">Package</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/package_model.html#Package"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.package_model.Package" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.api.Model</span></code></p>
-<p>Defines a Package as represented in the database</p>
+<p>Defines a Package as represented in the database.</p>
+<dl class="method">
+<dt id="ovs.models.package_model.Package.__repr__">
+<code class="descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/package_model.html#Package.__repr__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.package_model.Package.__repr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allows Package to be printed.
+:returns: A string representation of this Package.
+:rtype: str</p>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="ovs.models.package_model.Package.checked_at">
 <code class="descname">checked_at</code><a class="headerlink" href="#ovs.models.package_model.Package.checked_at" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="ovs.models.package_model.Package.checked_by_id">
-<code class="descname">checked_by_id</code><a class="headerlink" href="#ovs.models.package_model.Package.checked_by_id" title="Permalink to this definition">¶</a></dt>
+<dt id="ovs.models.package_model.Package.checked_by">
+<code class="descname">checked_by</code><a class="headerlink" href="#ovs.models.package_model.Package.checked_by" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -200,25 +329,21 @@
 <code class="descname">id</code><a class="headerlink" href="#ovs.models.package_model.Package.id" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
-<dt id="ovs.models.package_model.Package.is_signed">
-<code class="descname">is_signed</code><a class="headerlink" href="#ovs.models.package_model.Package.is_signed" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 <dl class="method">
 <dt id="ovs.models.package_model.Package.json">
 <code class="descname">json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/package_model.html#Package.json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.package_model.Package.json" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a JSON representation of the Package</p>
+<dd><p>Get JSON representation of this Package.
+:returns: A JSON representation of this Package.</p>
 </dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.models.package_model.Package.recipient">
+<code class="descname">recipient</code><a class="headerlink" href="#ovs.models.package_model.Package.recipient" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ovs.models.package_model.Package.recipient_id">
 <code class="descname">recipient_id</code><a class="headerlink" href="#ovs.models.package_model.Package.recipient_id" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="ovs.models.package_model.Package.signed_at">
-<code class="descname">signed_at</code><a class="headerlink" href="#ovs.models.package_model.Package.signed_at" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -231,7 +356,25 @@
 <dt id="ovs.models.profile_model.Profile">
 <em class="property">class </em><code class="descclassname">ovs.models.profile_model.</code><code class="descname">Profile</code><span class="sig-paren">(</span><em>user_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/profile_model.html#Profile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.profile_model.Profile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.api.Model</span></code></p>
-<p>Defines a Profile as represented in the database.</p>
+<p>Defines a Profile as represented in the database.
+:param user_id: Must be the same as corresponding <cite>User.id</cite>.
+:type user_id: int</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A Profile Model object.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="ovs.models.profile_model.Profile.__repr__">
+<code class="descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/profile_model.html#Profile.__repr__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.profile_model.Profile.__repr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allows Profile to be printed.
+:returns: A string representation of this Profile.
+:rtype: str</p>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="ovs.models.profile_model.Profile.created">
 <code class="descname">created</code><a class="headerlink" href="#ovs.models.profile_model.Profile.created" title="Permalink to this definition">¶</a></dt>
@@ -245,17 +388,13 @@
 <dl class="method">
 <dt id="ovs.models.profile_model.Profile.json">
 <code class="descname">json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/profile_model.html#Profile.json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.profile_model.Profile.json" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a JSON representation of this Profile</p>
+<dd><p>Get JSON representation of this Profile.
+:returns: A JSON representation of this Profile.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ovs.models.profile_model.Profile.phone_number">
 <code class="descname">phone_number</code><a class="headerlink" href="#ovs.models.profile_model.Profile.phone_number" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="ovs.models.profile_model.Profile.picture_id">
-<code class="descname">picture_id</code><a class="headerlink" href="#ovs.models.profile_model.Profile.picture_id" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -274,13 +413,13 @@
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="ovs.models.profile_model.Profile.resident">
-<code class="descname">resident</code><a class="headerlink" href="#ovs.models.profile_model.Profile.resident" title="Permalink to this definition">¶</a></dt>
+<dt id="ovs.models.profile_model.Profile.updated">
+<code class="descname">updated</code><a class="headerlink" href="#ovs.models.profile_model.Profile.updated" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="ovs.models.profile_model.Profile.updated">
-<code class="descname">updated</code><a class="headerlink" href="#ovs.models.profile_model.Profile.updated" title="Permalink to this definition">¶</a></dt>
+<dt id="ovs.models.profile_model.Profile.user">
+<code class="descname">user</code><a class="headerlink" href="#ovs.models.profile_model.Profile.user" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -298,7 +437,25 @@
 <dt id="ovs.models.resident_model.Resident">
 <em class="property">class </em><code class="descclassname">ovs.models.resident_model.</code><code class="descname">Resident</code><span class="sig-paren">(</span><em>user_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/resident_model.html#Resident"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.resident_model.Resident" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.api.Model</span></code></p>
-<p>Defines a Resident as represented in the database. Along with some utility functions.</p>
+<p>Defines a Resident as represented in the database. Along with some utility functions.
+:param user_id: Must be the same as the corresponding <cite>User.id</cite>.
+:type user_id: int</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A Resident Model object.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="ovs.models.resident_model.Resident.__repr__">
+<code class="descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/resident_model.html#Resident.__repr__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.resident_model.Resident.__repr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allows Resident to be printed.
+:returns: A string representation of this Resident.
+:rtype: str</p>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="ovs.models.resident_model.Resident.created">
 <code class="descname">created</code><a class="headerlink" href="#ovs.models.resident_model.Resident.created" title="Permalink to this definition">¶</a></dt>
@@ -307,8 +464,14 @@
 <dl class="method">
 <dt id="ovs.models.resident_model.Resident.json">
 <code class="descname">json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/resident_model.html#Resident.json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.resident_model.Resident.json" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a JSON representation of this Resident</p>
+<dd><p>Get JSON representation of this Resident.
+:returns: A JSON representation of this Resident.</p>
 </dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.models.resident_model.Resident.meal_plan">
+<code class="descname">meal_plan</code><a class="headerlink" href="#ovs.models.resident_model.Resident.meal_plan" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ovs.models.resident_model.Resident.mealplan_pin">
@@ -316,8 +479,8 @@
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="ovs.models.resident_model.Resident.profile">
-<code class="descname">profile</code><a class="headerlink" href="#ovs.models.resident_model.Resident.profile" title="Permalink to this definition">¶</a></dt>
+<dt id="ovs.models.resident_model.Resident.packages">
+<code class="descname">packages</code><a class="headerlink" href="#ovs.models.resident_model.Resident.packages" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -336,6 +499,11 @@
 <dd></dd></dl>
 
 <dl class="attribute">
+<dt id="ovs.models.resident_model.Resident.user">
+<code class="descname">user</code><a class="headerlink" href="#ovs.models.resident_model.Resident.user" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="ovs.models.resident_model.Resident.user_id">
 <code class="descname">user_id</code><a class="headerlink" href="#ovs.models.resident_model.Resident.user_id" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -351,6 +519,14 @@
 <em class="property">class </em><code class="descclassname">ovs.models.room_model.</code><code class="descname">Room</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/room_model.html#Room"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.room_model.Room" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.api.Model</span></code></p>
 <p>Defines a Room as represented in the database. Along with some utility functions.</p>
+<dl class="method">
+<dt id="ovs.models.room_model.Room.__repr__">
+<code class="descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/room_model.html#Room.__repr__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.room_model.Room.__repr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allows Room to be printed.
+:returns: A string representation of this Room.
+:rtype: str</p>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="ovs.models.room_model.Room.created">
 <code class="descname">created</code><a class="headerlink" href="#ovs.models.room_model.Room.created" title="Permalink to this definition">¶</a></dt>
@@ -364,7 +540,8 @@
 <dl class="method">
 <dt id="ovs.models.room_model.Room.json">
 <code class="descname">json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/room_model.html#Room.json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.room_model.Room.json" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a JSON representation of this Room</p>
+<dd><p>Get a JSON object representing this Room.
+:returns: A JSON representation of this Room.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -402,7 +579,36 @@
 <dt id="ovs.models.user_model.User">
 <em class="property">class </em><code class="descclassname">ovs.models.user_model.</code><code class="descname">User</code><span class="sig-paren">(</span><em>email</em>, <em>first_name</em>, <em>last_name</em>, <em>password</em>, <em>role</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/user_model.html#User"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.user_model.User" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.api.Model</span></code></p>
-<p>Defines a User as represented in the database. Along with some utility functions.</p>
+<p>Defines a User as represented in the database.
+:param email: The user’s email.
+:type email: str
+:param first_name: The user’s first name.
+:type first_name: str
+:param last_name: The user’s last name.
+:type last_name: str
+:param password: The user’s initial password.
+:type password: str
+:param role: The user’s role. Must be one of ‘RESIDENT’, ‘RESIDENT_ADVISOR’,</p>
+<blockquote>
+<div>‘STAFF’, ‘OFFICE_MANAGER’, ‘BUILDING_MANAGER’, or ‘ADMIN’</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A User Model object.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#ovs.models.user_model.User" title="ovs.models.user_model.User">User</a></td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="ovs.models.user_model.User.__repr__">
+<code class="descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/user_model.html#User.__repr__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.user_model.User.__repr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allows User to be printed.
+:returns: A string representation of this User.
+:rtype: str</p>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="ovs.models.user_model.User.created">
 <code class="descname">created</code><a class="headerlink" href="#ovs.models.user_model.User.created" title="Permalink to this definition">¶</a></dt>
@@ -421,13 +627,26 @@
 <dl class="method">
 <dt id="ovs.models.user_model.User.get_id">
 <code class="descname">get_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/user_model.html#User.get_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.user_model.User.get_id" title="Permalink to this definition">¶</a></dt>
-<dd><p>:returns the user’s unique id in the database</p>
+<dd><p>Retrieve this users id in the database as a string.
+:returns: The user’s id.
+:rtype: str</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="ovs.models.user_model.User.has_password">
 <code class="descname">has_password</code><span class="sig-paren">(</span><em>password</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/user_model.html#User.has_password"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.user_model.User.has_password" title="Permalink to this definition">¶</a></dt>
-<dd><p>Checks if inputted password matches the one stored in DB</p>
+<dd><p>Checks if inputted password matches the one stored in DB
+:param password: The typed in password</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if <cite>password</cite> matches the one in the database, False otherwise.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
@@ -438,25 +657,29 @@
 <dl class="method">
 <dt id="ovs.models.user_model.User.is_active">
 <code class="descname">is_active</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/user_model.html#User.is_active"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.user_model.User.is_active" title="Permalink to this definition">¶</a></dt>
-<dd><p>Checks if this user account is active</p>
+<dd><p>Checks if this user account is active. Always returns True as required by Flask.
+:returns: True</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="ovs.models.user_model.User.is_anonymous">
 <code class="descname">is_anonymous</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/user_model.html#User.is_anonymous"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.user_model.User.is_anonymous" title="Permalink to this definition">¶</a></dt>
-<dd><p>Checks if this user is anonymous</p>
+<dd><p>Checks if this user is anonymous. Always returns False as required by Flask.
+:returns: False</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="ovs.models.user_model.User.is_authenticated">
 <code class="descname">is_authenticated</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/user_model.html#User.is_authenticated"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.user_model.User.is_authenticated" title="Permalink to this definition">¶</a></dt>
-<dd><p>Checks if a user is authenticated</p>
+<dd><p>Checks if a user is authenticated. Always returns True as required by Flask.
+:returns: True</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="ovs.models.user_model.User.json">
 <code class="descname">json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/user_model.html#User.json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.user_model.User.json" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a JSON representation of this User</p>
+<dd><p>Returns a JSON representation of this User
+:returns: A JSON representation of this User.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -470,6 +693,16 @@
 <dd></dd></dl>
 
 <dl class="attribute">
+<dt id="ovs.models.user_model.User.profile">
+<code class="descname">profile</code><a class="headerlink" href="#ovs.models.user_model.User.profile" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.models.user_model.User.resident">
+<code class="descname">resident</code><a class="headerlink" href="#ovs.models.user_model.User.resident" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="ovs.models.user_model.User.role">
 <code class="descname">role</code><a class="headerlink" href="#ovs.models.user_model.User.role" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -477,7 +710,26 @@
 <dl class="method">
 <dt id="ovs.models.user_model.User.update">
 <code class="descname">update</code><span class="sig-paren">(</span><em>email</em>, <em>first_name</em>, <em>last_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/user_model.html#User.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.user_model.User.update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Updates user with new information</p>
+<dd><p>Updates user with new information
+:param email: The new email address.
+:param first_name: The new first_name.
+:param last_name: The new last_name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.models.user_model.User.update_password">
+<code class="descname">update_password</code><span class="sig-paren">(</span><em>new_password</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/models/user_model.html#User.update_password"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.models.user_model.User.update_password" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the password of the user.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>new_password</strong> – The newpassword to hash and set as the user pass.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The updated model.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">

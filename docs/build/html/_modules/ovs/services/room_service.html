@@ -41,10 +41,6 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">DB access and other services for Rooms</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-
-<span class="kn">from</span> <span class="nn">sqlalchemy.exc</span> <span class="k">import</span> <span class="n">SQLAlchemyError</span>
-
 <span class="kn">from</span> <span class="nn">ovs</span> <span class="k">import</span> <span class="n">db</span>
 <span class="kn">from</span> <span class="nn">ovs.models.room_model</span> <span class="k">import</span> <span class="n">Room</span>
 <span class="kn">from</span> <span class="nn">ovs.services.resident_service</span> <span class="k">import</span> <span class="n">ResidentService</span>
@@ -54,9 +50,6 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    DB Access and utility methods for Rooms</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">pass</span>
 
 <div class="viewcode-block" id="RoomService.create_room"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.room_service.RoomService.create_room">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">create_room</span><span class="p">(</span><span class="n">number</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">room_type</span><span class="p">,</span> <span class="n">occupant_emails</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
@@ -73,19 +66,57 @@
 <span class="sd">            A Room db model.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">new_room</span> <span class="o">=</span> <span class="n">Room</span><span class="p">(</span><span class="n">number</span><span class="o">=</span><span class="n">number</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">room_type</span><span class="p">)</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">new_room</span><span class="p">)</span>
-            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
-        <span class="k">except</span> <span class="n">SQLAlchemyError</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;Failed to create new room.&#39;</span><span class="p">)</span>
-            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">rollback</span><span class="p">()</span>
-            <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">new_room</span><span class="p">)</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
 
-        <span class="n">emails</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">occupant_emails</span><span class="o">.</span><span class="n">split</span><span class="p">())</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">email</span> <span class="ow">in</span> <span class="n">emails</span><span class="p">:</span>
-            <span class="n">RoomService</span><span class="o">.</span><span class="n">add_resident_to_room</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">number</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">occupant_emails</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="n">emails</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">occupant_emails</span><span class="o">.</span><span class="n">split</span><span class="p">())</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">email</span> <span class="ow">in</span> <span class="n">emails</span><span class="p">:</span>
+                <span class="n">RoomService</span><span class="o">.</span><span class="n">add_resident_to_room</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">number</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">new_room</span></div>
+
+<div class="viewcode-block" id="RoomService.delete_room"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.room_service.RoomService.delete_room">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">delete_room</span><span class="p">(</span><span class="n">room_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Deletes a room from the database.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            room_id: Unique room id.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">room</span> <span class="o">=</span> <span class="n">RoomService</span><span class="o">.</span><span class="n">get_room_by_id</span><span class="p">(</span><span class="n">room_id</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">occupant</span> <span class="ow">in</span> <span class="n">room</span><span class="o">.</span><span class="n">occupants</span><span class="p">:</span>
+            <span class="n">RoomService</span><span class="o">.</span><span class="n">add_resident_to_room</span><span class="p">(</span><span class="n">occupant</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">email</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">room</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RoomService.edit_room"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.room_service.RoomService.edit_room">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">edit_room</span><span class="p">(</span><span class="n">room_id</span><span class="p">,</span> <span class="n">room_number</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">room_type</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Edits a room in the database.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            room_id: Unique room id.</span>
+<span class="sd">            room_number: New room number</span>
+<span class="sd">            status: New room status string</span>
+<span class="sd">            room_type: New room type string</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Whether the room was updated succesfully</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">room</span> <span class="o">=</span> <span class="n">RoomService</span><span class="o">.</span><span class="n">get_room_by_id</span><span class="p">(</span><span class="n">room_id</span><span class="p">)</span>
+
+        <span class="n">other_room</span> <span class="o">=</span> <span class="n">RoomService</span><span class="o">.</span><span class="n">get_room_by_number</span><span class="p">(</span><span class="n">room_number</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">other_room</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">other_room</span> <span class="o">!=</span> <span class="n">room</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="n">room</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="n">room_number</span>
+        <span class="n">room</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">status</span>
+        <span class="n">room</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">room_type</span>
+
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">refresh</span><span class="p">(</span><span class="n">room</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="RoomService.get_room_by_id"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.room_service.RoomService.get_room_by_id">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_room_by_id</span><span class="p">(</span><span class="n">room_id</span><span class="p">):</span>
@@ -98,11 +129,7 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            A Room db model.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Room</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">room_id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
-        <span class="k">except</span> <span class="n">SQLAlchemyError</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;Failed to get room by id.&#39;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="kc">None</span></div>
+        <span class="k">return</span> <span class="n">Room</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">room_id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="RoomService.get_room_by_number"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.room_service.RoomService.get_room_by_number">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_room_by_number</span><span class="p">(</span><span class="n">number</span><span class="p">):</span>
@@ -115,11 +142,7 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            A Room db model.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Room</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">number</span><span class="o">=</span><span class="n">number</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
-        <span class="k">except</span> <span class="n">SQLAlchemyError</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;Failed to get room by room number.&#39;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="kc">None</span></div>
+        <span class="k">return</span> <span class="n">Room</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">number</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">number</span><span class="p">))</span><span class="o">.</span><span class="n">first</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="RoomService.room_exists"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.room_service.RoomService.room_exists">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">room_exists</span><span class="p">(</span><span class="n">number</span><span class="p">):</span>
@@ -137,16 +160,29 @@
 <div class="viewcode-block" id="RoomService.get_all_rooms"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.room_service.RoomService.get_all_rooms">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_all_rooms</span><span class="p">():</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Fetch all rooms in the db.</span>
+<span class="sd">        Fetch all rooms except the default in the db.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">           A list of Room db models.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Room</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-        <span class="k">except</span> <span class="n">SQLAlchemyError</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;Failed to get all rooms.&#39;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="p">[]</span></div>
+        <span class="k">return</span> <span class="n">Room</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Room</span><span class="o">.</span><span class="n">number</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="RoomService.get_empty_room_stats"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.room_service.RoomService.get_empty_room_stats">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_empty_room_stats</span><span class="p">():</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets empty room statistics.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">           dictionary between room type and number of empty rooms of that type.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">empty_rooms</span> <span class="o">=</span> <span class="n">Room</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Room</span><span class="o">.</span><span class="n">number</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="o">~</span><span class="n">Room</span><span class="o">.</span><span class="n">occupants</span><span class="o">.</span><span class="n">any</span><span class="p">())</span>
+        <span class="n">stats</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">room</span> <span class="ow">in</span> <span class="n">empty_rooms</span><span class="p">:</span>
+            <span class="n">stats</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">room</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">stats</span><span class="p">[</span><span class="n">room</span><span class="o">.</span><span class="n">type</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">return</span> <span class="n">stats</span></div>
 
 <div class="viewcode-block" id="RoomService.add_resident_to_room"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.room_service.RoomService.add_resident_to_room">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">add_resident_to_room</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">room_number</span><span class="p">):</span>
@@ -157,24 +193,22 @@
 <span class="sd">            email: Resident&#39;s email address.</span>
 <span class="sd">            room_number: The room number.</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">            If both resident and rooms were successfully updated.</span>
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: if email or room_number is invalid</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">resident</span> <span class="o">=</span> <span class="n">ResidentService</span><span class="o">.</span><span class="n">get_resident_by_email</span><span class="p">(</span><span class="n">email</span><span class="p">)</span>
         <span class="n">room</span> <span class="o">=</span> <span class="n">RoomService</span><span class="o">.</span><span class="n">get_room_by_number</span><span class="p">(</span><span class="n">room_number</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">resident</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">room</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Failed to associate resident and room.&#39;</span><span class="p">)</span>
 
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">resident</span><span class="o">.</span><span class="n">room_number</span> <span class="o">=</span> <span class="n">room_number</span>
-            <span class="c1"># occupants are updated automatically by mysql</span>
-            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
-            <span class="k">return</span> <span class="kc">True</span>
-        <span class="k">except</span> <span class="n">SQLAlchemyError</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;Failed to associated resident and room.&#39;</span><span class="p">)</span>
-            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">rollback</span><span class="p">()</span>
-            <span class="k">return</span> <span class="kc">False</span></div></div>
+        <span class="n">old_room</span> <span class="o">=</span> <span class="n">RoomService</span><span class="o">.</span><span class="n">get_room_by_number</span><span class="p">(</span><span class="n">resident</span><span class="o">.</span><span class="n">room_number</span><span class="p">)</span>
+        <span class="n">resident</span><span class="o">.</span><span class="n">room_number</span> <span class="o">=</span> <span class="n">room_number</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+        <span class="c1"># room.occupants should be automatically updated by SQL but we have to refresh the object in the session</span>
+        <span class="c1"># in order to see it before a commit.</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">refresh</span><span class="p">(</span><span class="n">room</span><span class="p">)</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">refresh</span><span class="p">(</span><span class="n">old_room</span><span class="p">)</span></div></div>
 </pre></div>
 
           </div>

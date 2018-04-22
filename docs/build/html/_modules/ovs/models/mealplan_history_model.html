@@ -42,7 +42,8 @@
 <span class="sd">Keeps track of mealplan history as represented in the database</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">flask</span> <span class="k">import</span> <span class="n">jsonify</span>
-<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="k">import</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">Column</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">DateTime</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="k">import</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">Column</span><span class="p">,</span> <span class="n">DateTime</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.sql</span> <span class="k">import</span> <span class="n">func</span>
 
 <span class="kn">from</span> <span class="nn">ovs</span> <span class="k">import</span> <span class="n">db</span>
 
@@ -50,6 +51,14 @@
 <div class="viewcode-block" id="MealplanHistory"><a class="viewcode-back" href="../../../ovs.models.html#ovs.models.mealplan_history_model.MealplanHistory">[docs]</a><span class="k">class</span> <span class="nc">MealplanHistory</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Defines a Mealplan History Item as represented in the database.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        resident_id (int): The resident&#39;s id who signed in.</span>
+<span class="sd">        mealplan_pin (int): The pin of the mealplan used to sign in.</span>
+<span class="sd">        manager_id (int): The id of the manager who was logged in at the time.</span>
+<span class="sd">        log_type (Enum): Must be either &#39;MEAL_USED&#39; or &#39;UNDO&#39;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A MealplanHistory Model.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;mealplan_history&#39;</span>
     <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -57,8 +66,8 @@
     <span class="n">mealplan_pin</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">)</span>
     <span class="n">manager_id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">)</span>
     <span class="n">log_type</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Enum</span><span class="p">(</span><span class="s1">&#39;MEAL_USED&#39;</span><span class="p">,</span> <span class="s1">&#39;UNDO&#39;</span><span class="p">),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">created</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">DateTime</span><span class="p">,</span> <span class="n">server_default</span><span class="o">=</span><span class="n">text</span><span class="p">(</span><span class="s1">&#39;CURRENT_TIMESTAMP&#39;</span><span class="p">))</span>
-    <span class="n">updated</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">DateTime</span><span class="p">,</span> <span class="n">server_default</span><span class="o">=</span><span class="n">text</span><span class="p">(</span><span class="s1">&#39;CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP&#39;</span><span class="p">))</span>
+    <span class="n">created</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">DateTime</span><span class="p">,</span> <span class="n">server_default</span><span class="o">=</span><span class="n">func</span><span class="o">.</span><span class="n">now</span><span class="p">())</span>
+    <span class="n">updated</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">DateTime</span><span class="p">,</span> <span class="n">server_default</span><span class="o">=</span><span class="n">func</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span> <span class="n">server_onupdate</span><span class="o">=</span><span class="n">func</span><span class="o">.</span><span class="n">now</span><span class="p">())</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resident_id</span><span class="p">,</span> <span class="n">mealplan_pin</span><span class="p">,</span> <span class="n">manager_id</span><span class="p">,</span> <span class="n">log_type</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">MealplanHistory</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
@@ -67,13 +76,22 @@
             <span class="n">manager_id</span><span class="o">=</span><span class="n">manager_id</span><span class="p">,</span>
             <span class="n">log_type</span><span class="o">=</span><span class="n">log_type</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="MealplanHistory.__repr__"><a class="viewcode-back" href="../../../ovs.models.html#ovs.models.mealplan_history_model.MealplanHistory.__repr__">[docs]</a>    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Allows MealplanHistory objects to be printed.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            str: A string representation of MealplanHistory.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="s1">&#39;MealplanHistory([id=</span><span class="si">{id}</span><span class="s1">, resident_id=</span><span class="si">{resident_id}</span><span class="s1">, mealplan_pin=</span><span class="si">{mealplan_pin}</span><span class="s1">, &#39;</span> \
                <span class="s1">&#39;manager_id=</span><span class="si">{manager_id}</span><span class="s1">, log_type=</span><span class="si">{log_type}</span><span class="s1">, created=</span><span class="si">{created}</span><span class="s1">, updated=</span><span class="si">{updated}</span><span class="s1">])&#39;</span>\
-            <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="MealplanHistory.json"><a class="viewcode-back" href="../../../ovs.models.html#ovs.models.mealplan_history_model.MealplanHistory.json">[docs]</a>    <span class="k">def</span> <span class="nf">json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Returns a JSON representation of this Mealplan History Item&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get a JSON represntation of this MealplanHistory.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">             A JSON representation of this MealplanHistory Item.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span>
             <span class="nb">id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
             <span class="n">resident_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">resident_id</span><span class="p">,</span>

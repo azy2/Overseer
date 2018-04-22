@@ -44,6 +44,7 @@
 <span class="kn">from</span> <span class="nn">wtforms.validators</span> <span class="k">import</span> <span class="n">Length</span><span class="p">,</span> <span class="n">Email</span><span class="p">,</span> <span class="n">DataRequired</span><span class="p">,</span> <span class="n">optional</span>
 <span class="kn">from</span> <span class="nn">wtforms.fields.html5</span> <span class="k">import</span> <span class="n">TelField</span>
 <span class="kn">import</span> <span class="nn">phonenumbers</span>
+<span class="kn">from</span> <span class="nn">phonenumbers.phonenumberutil</span> <span class="k">import</span> <span class="n">NumberParseException</span>
 
 <span class="kn">from</span> <span class="nn">ovs.utils</span> <span class="k">import</span> <span class="n">genders</span>
 
@@ -61,6 +62,13 @@
 <div class="viewcode-block" id="EditResidentProfileForm.validate_phone_number"><a class="viewcode-back" href="../../../ovs.forms.html#ovs.forms.edit_resident_profile_form.EditResidentProfileForm.validate_phone_number">[docs]</a>    <span class="k">def</span> <span class="nf">validate_phone_number</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span> <span class="c1"># pylint: disable=no-self-argument, no-self-use</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Validates that the provided phone number is valid.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            form: The EditResidentProfileForm that was submitted.</span>
+<span class="sd">            field: The phone_number field.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValidationError: If phone_number is not a valid phone number.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">16</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s1">&#39;Invalid phone number.&#39;</span><span class="p">)</span>
@@ -68,13 +76,12 @@
             <span class="n">input_number</span> <span class="o">=</span> <span class="n">phonenumbers</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">phonenumbers</span><span class="o">.</span><span class="n">is_valid_number</span><span class="p">(</span><span class="n">input_number</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s1">&#39;Invalid phone number.&#39;</span><span class="p">)</span>
-            <span class="c1">#phonenumbers.phonenumberutil.NumberParseException could happen</span>
-        <span class="k">except</span><span class="p">:</span> <span class="c1">#pylint: disable=bare-except</span>
-            <span class="k">try</span><span class="p">:</span> <span class="c1">#Try to add the US area code to it</span>
+        <span class="k">except</span> <span class="n">NumberParseException</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>  <span class="c1"># Try to add the US area code to it</span>
                 <span class="n">input_number</span> <span class="o">=</span> <span class="n">phonenumbers</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s2">&quot;+1&quot;</span><span class="o">+</span><span class="n">field</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">phonenumbers</span><span class="o">.</span><span class="n">is_valid_number</span><span class="p">(</span><span class="n">input_number</span><span class="p">):</span>
                     <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s1">&#39;Invalid phone number.&#39;</span><span class="p">)</span>
-            <span class="k">except</span><span class="p">:</span> <span class="c1">#pylint: disable=bare-except</span>
+            <span class="k">except</span> <span class="n">NumberParseException</span><span class="p">:</span>  <span class="c1"># pylint: disable=bare-except</span>
                 <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s1">&#39;Invalid phone number.&#39;</span><span class="p">)</span></div></div>
 </pre></div>
 

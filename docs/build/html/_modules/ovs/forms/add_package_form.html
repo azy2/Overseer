@@ -48,21 +48,27 @@
 <span class="kn">from</span> <span class="nn">ovs.models.user_model</span> <span class="k">import</span> <span class="n">User</span>
 
 
-<div class="viewcode-block" id="validate_resident_email"><a class="viewcode-back" href="../../../ovs.forms.html#ovs.forms.add_package_form.validate_resident_email">[docs]</a><span class="k">def</span> <span class="nf">validate_resident_email</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>  <span class="c1"># pylint: disable=unused-argument</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Validates that the provided resident email exists.</span>
-<span class="sd">    This is to thwart malicious input.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Resident</span><span class="p">,</span> <span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="n">Resident</span><span class="o">.</span><span class="n">user_id</span> <span class="o">==</span> <span class="n">User</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>\
-                                       <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">email</span> <span class="o">==</span> <span class="n">field</span><span class="o">.</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s1">&#39;Resident does not exist. Please verify resident email.&#39;</span><span class="p">)</span></div>
-
-
 <div class="viewcode-block" id="AddPackageForm"><a class="viewcode-back" href="../../../ovs.forms.html#ovs.forms.add_package_form.AddPackageForm">[docs]</a><span class="k">class</span> <span class="nc">AddPackageForm</span><span class="p">(</span><span class="n">FlaskForm</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Form with data required to add a package &quot;&quot;&quot;</span>
     <span class="n">recipient_email</span> <span class="o">=</span> <span class="n">StringField</span><span class="p">(</span><span class="s1">&#39;Recipient</span><span class="se">\&#39;</span><span class="s1">s Email Address&#39;</span><span class="p">,</span>
-                                  <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">Length</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">35</span><span class="p">),</span> <span class="n">DataRequired</span><span class="p">(),</span> <span class="n">validate_resident_email</span><span class="p">])</span>
-    <span class="n">description</span> <span class="o">=</span> <span class="n">StringField</span><span class="p">(</span><span class="s1">&#39;Package Description&#39;</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">Length</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">2047</span><span class="p">)])</span></div>
+                                  <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">Length</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">35</span><span class="p">),</span> <span class="n">DataRequired</span><span class="p">()])</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="n">StringField</span><span class="p">(</span><span class="s1">&#39;Package Description&#39;</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">Length</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">2047</span><span class="p">)])</span>
+
+<div class="viewcode-block" id="AddPackageForm.validate_resident_email"><a class="viewcode-back" href="../../../ovs.forms.html#ovs.forms.add_package_form.AddPackageForm.validate_resident_email">[docs]</a>    <span class="k">def</span> <span class="nf">validate_resident_email</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>  <span class="c1"># pylint: disable=unused-argument, no-self-use, no-self-argument</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Validates that the provided resident email exists.</span>
+<span class="sd">        This is to thwart malicious input.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            form: The AddPackageForm that was submitted.</span>
+<span class="sd">            field: The resident_email field.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValidationError: If resident_email does not correspond to an existing account.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Resident</span><span class="p">,</span> <span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="n">Resident</span><span class="o">.</span><span class="n">user_id</span> <span class="o">==</span> <span class="n">User</span><span class="o">.</span><span class="n">id</span><span class="p">)</span> \
+                <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">email</span> <span class="o">==</span> <span class="n">field</span><span class="o">.</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s1">&#39;Resident does not exist. Please verify resident email.&#39;</span><span class="p">)</span></div></div>
 </pre></div>
 
           </div>

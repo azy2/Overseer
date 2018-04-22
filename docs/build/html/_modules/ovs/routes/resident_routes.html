@@ -38,15 +38,15 @@
           <div class="body" role="main">
             
   <h1>Source code for ovs.routes.resident_routes</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot; under /resident &quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;Routes defined under &#39;/resident&#39;.&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
 <span class="kn">import</span> <span class="nn">base64</span>
 
-<span class="kn">from</span> <span class="nn">flask</span> <span class="k">import</span> <span class="n">Blueprint</span><span class="p">,</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">render_template</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">url_for</span><span class="p">,</span> <span class="n">flash</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="k">import</span> <span class="n">Blueprint</span><span class="p">,</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">render_template</span><span class="p">,</span> <span class="n">url_for</span><span class="p">,</span> <span class="n">flash</span>
 <span class="kn">from</span> <span class="nn">flask_login</span> <span class="k">import</span> <span class="n">current_user</span><span class="p">,</span> <span class="n">login_required</span>
 
-<span class="kn">from</span> <span class="nn">ovs.forms.edit_resident_profile_form</span> <span class="k">import</span> <span class="n">EditResidentProfileForm</span>
-<span class="kn">from</span> <span class="nn">ovs.forms.upload_profile_picture_form</span> <span class="k">import</span> <span class="n">UploadProfilePictureForm</span>
-<span class="kn">from</span> <span class="nn">ovs.services.profile_service</span> <span class="k">import</span> <span class="n">ProfileService</span>
+<span class="kn">from</span> <span class="nn">ovs</span> <span class="k">import</span> <span class="n">db</span>
 <span class="kn">from</span> <span class="nn">ovs.services.resident_service</span> <span class="k">import</span> <span class="n">ResidentService</span>
 <span class="kn">from</span> <span class="nn">ovs.services.profile_picture_service</span> <span class="k">import</span> <span class="n">ProfilePictureService</span>
 <span class="kn">from</span> <span class="nn">ovs.middleware</span> <span class="k">import</span> <span class="n">permissions</span>
@@ -59,44 +59,36 @@
 <span class="nd">@login_required</span>
 <span class="nd">@permissions</span><span class="p">(</span><span class="n">roles</span><span class="o">.</span><span class="n">RESIDENT</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">landing_page</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot; The landing page for residents &quot;&quot;&quot;</span>
-    <span class="n">resident_id</span> <span class="o">=</span> <span class="n">current_user</span><span class="o">.</span><span class="n">get_id</span><span class="p">()</span>
-    <span class="n">resident</span> <span class="o">=</span> <span class="n">ResidentService</span><span class="o">.</span><span class="n">get_resident_by_id</span><span class="p">(</span><span class="n">resident_id</span><span class="p">)</span>
-    <span class="n">profile</span> <span class="o">=</span> <span class="n">resident</span><span class="o">.</span><span class="n">profile</span>
-    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;resident/index.html&#39;</span><span class="p">,</span> <span class="n">role</span><span class="o">=</span><span class="n">roles</span><span class="o">.</span><span class="n">RESIDENT</span><span class="p">,</span> <span class="n">profile</span><span class="o">=</span><span class="n">profile</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="edit_profile"><a class="viewcode-back" href="../../../ovs.routes.html#ovs.routes.resident_routes.edit_profile">[docs]</a><span class="nd">@residents_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/profile/&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">])</span>
-<span class="nd">@login_required</span>
-<span class="nd">@permissions</span><span class="p">(</span><span class="n">roles</span><span class="o">.</span><span class="n">RESIDENT</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">edit_profile</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Allows the user to edit their profile in a wtform</span>
+<span class="sd">    Home page for residents accessed by &#39;/resident&#39;.</span>
+
+<span class="sd">    Methods:</span>
+<span class="sd">        GET.</span>
+
+<span class="sd">    Permissions:</span>
+<span class="sd">        Accessible to RESIDENT or higher level users.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A Flask template.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">resident_id</span> <span class="o">=</span> <span class="n">current_user</span><span class="o">.</span><span class="n">get_id</span><span class="p">()</span>
-    <span class="n">profile</span> <span class="o">=</span> <span class="n">ResidentService</span><span class="o">.</span><span class="n">get_resident_by_id</span><span class="p">(</span><span class="n">resident_id</span><span class="p">)</span><span class="o">.</span><span class="n">profile</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">resident_id</span> <span class="o">=</span> <span class="n">current_user</span><span class="o">.</span><span class="n">get_id</span><span class="p">()</span>
+        <span class="n">resident</span> <span class="o">=</span> <span class="n">ResidentService</span><span class="o">.</span><span class="n">get_resident_by_id</span><span class="p">(</span><span class="n">resident_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">resident</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Invalid resident_id </span><span class="si">%s</span><span class="s1"> for route /resident&#39;</span><span class="p">,</span> <span class="n">resident_id</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;/.landing_page&#39;</span><span class="p">))</span>
 
-    <span class="n">profile_form</span> <span class="o">=</span> <span class="n">EditResidentProfileForm</span><span class="p">(</span><span class="n">obj</span><span class="o">=</span><span class="n">profile</span><span class="p">)</span>
-    <span class="n">picture_form</span> <span class="o">=</span> <span class="n">UploadProfilePictureForm</span><span class="p">()</span>
-
-    <span class="k">if</span> <span class="s1">&#39;profile_btn&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">form</span> <span class="ow">and</span> <span class="n">profile_form</span><span class="o">.</span><span class="n">validate_on_submit</span><span class="p">():</span>
-        <span class="c1"># Set profile data in database with non-null values from the form</span>
-        <span class="n">ProfileService</span><span class="o">.</span><span class="n">update_profile</span><span class="p">(</span><span class="n">resident_id</span><span class="p">,</span>
-                                      <span class="n">profile_form</span><span class="o">.</span><span class="n">preferred_email</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
-                                      <span class="n">profile_form</span><span class="o">.</span><span class="n">preferred_name</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
-                                      <span class="n">profile_form</span><span class="o">.</span><span class="n">phone_number</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
-                                      <span class="n">profile_form</span><span class="o">.</span><span class="n">race</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
-                                      <span class="n">profile_form</span><span class="o">.</span><span class="n">gender</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
-        <span class="n">flash</span><span class="p">(</span><span class="s1">&#39;Updated profile successfully&#39;</span><span class="p">,</span> <span class="s1">&#39;success&#39;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;resident.edit_profile&#39;</span><span class="p">))</span>
-    <span class="k">elif</span> <span class="s1">&#39;picture_btn&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">form</span> <span class="ow">and</span> <span class="n">picture_form</span><span class="o">.</span><span class="n">validate_on_submit</span><span class="p">():</span>
-        <span class="n">picture_data</span> <span class="o">=</span> <span class="n">picture_form</span><span class="o">.</span><span class="n">profile_picture</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-        <span class="n">ProfilePictureService</span><span class="o">.</span><span class="n">update_profile_picture</span><span class="p">(</span><span class="n">profile</span><span class="o">.</span><span class="n">picture_id</span><span class="p">,</span> <span class="n">picture_data</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;resident.edit_profile&#39;</span><span class="p">))</span>
-
-    <span class="n">pict</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">ProfilePictureService</span><span class="o">.</span><span class="n">get_profile_picture</span><span class="p">(</span><span class="n">profile</span><span class="o">.</span><span class="n">picture_id</span><span class="p">))</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;resident/profile.html&#39;</span><span class="p">,</span> <span class="n">role</span><span class="o">=</span><span class="n">roles</span><span class="o">.</span><span class="n">RESIDENT</span><span class="p">,</span> <span class="n">profile</span><span class="o">=</span><span class="n">profile</span><span class="p">,</span> <span class="n">pict</span><span class="o">=</span><span class="n">pict</span><span class="p">,</span>
-                           <span class="n">profile_form</span><span class="o">=</span><span class="n">profile_form</span><span class="p">,</span> <span class="n">picture_form</span><span class="o">=</span><span class="n">picture_form</span><span class="p">)</span></div>
+        <span class="n">profile</span> <span class="o">=</span> <span class="n">current_user</span><span class="o">.</span><span class="n">profile</span>
+        <span class="n">packages</span> <span class="o">=</span> <span class="n">resident</span><span class="o">.</span><span class="n">packages</span>
+        <span class="n">meal_plan</span> <span class="o">=</span> <span class="n">resident</span><span class="o">.</span><span class="n">meal_plan</span>
+        <span class="n">pict</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">ProfilePictureService</span><span class="o">.</span><span class="n">get_profile_picture</span><span class="p">(</span><span class="n">profile</span><span class="o">.</span><span class="n">user_id</span><span class="p">))</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;resident/index.html&#39;</span><span class="p">,</span> <span class="n">role</span><span class="o">=</span><span class="n">roles</span><span class="o">.</span><span class="n">RESIDENT</span><span class="p">,</span> <span class="n">profile</span><span class="o">=</span><span class="n">profile</span><span class="p">,</span> <span class="n">pict</span><span class="o">=</span><span class="n">pict</span><span class="p">,</span>
+                               <span class="n">packages</span><span class="o">=</span><span class="n">packages</span><span class="p">,</span> <span class="n">mealplan</span><span class="o">=</span><span class="n">meal_plan</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span> <span class="c1"># pylint: disable=bare-except</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">rollback</span><span class="p">()</span>
+        <span class="n">flash</span><span class="p">(</span><span class="s1">&#39;An error was encountered&#39;</span><span class="p">,</span> <span class="s1">&#39;danger&#39;</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;resident.landing_page&#39;</span><span class="p">))</span></div>
 </pre></div>
 
           </div>

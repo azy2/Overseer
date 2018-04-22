@@ -42,16 +42,43 @@
 </div>
 <div class="section" id="module-ovs.middleware.permissions">
 <span id="ovs-middleware-permissions-module"></span><h2>ovs.middleware.permissions module<a class="headerlink" href="#module-ovs.middleware.permissions" title="Permalink to this headline">¶</a></h2>
-<p>Middleware to allow for user role based endpoint control</p>
+<p>Middleware to allow for user role based endpoint control.</p>
 <dl class="class">
 <dt id="ovs.middleware.permissions.Permissions">
 <em class="property">class </em><code class="descclassname">ovs.middleware.permissions.</code><code class="descname">Permissions</code><span class="sig-paren">(</span><em>role</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/middleware/permissions.html#Permissions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.middleware.permissions.Permissions" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Permissions decorator to allow for role based endpoint control</p>
+<p>Requires that the user who accesses the decorated route has the correct permissions.
+:param role: The minimum role required to access this route.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A func that does the permission checking.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<p>routes that need authorization should apply the decorator like so:</p>
+<p>from ovs.middleware import permissions
+&#64;bp.route(‘/my_admin_only_route/’, methods=[‘GET’])
+&#64;permissions(roles.ADMIN)
+def my_admin_only_route():</p>
+<blockquote>
+<div>…</div></blockquote>
 <dl class="method">
 <dt id="ovs.middleware.permissions.Permissions.__call__">
 <code class="descname">__call__</code><span class="sig-paren">(</span><em>func</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/middleware/permissions.html#Permissions.__call__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.middleware.permissions.Permissions.__call__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calls the decorator function</p>
+<dd><p>This function is an implementation detail of decorators.
+See <code class="xref py py-class docutils literal notranslate"><span class="pre">ovs.middleware.Permissions</span></code>
+:param func: The decorated function.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A function handled by python.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>

@@ -51,8 +51,15 @@
 
 <div class="viewcode-block" id="MealLoginForm.validate_pin"><a class="viewcode-back" href="../../../ovs.forms.html#ovs.forms.meal_login_form.MealLoginForm.validate_pin">[docs]</a>    <span class="k">def</span> <span class="nf">validate_pin</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>  <span class="c1"># pylint: disable=no-self-argument, no-self-use</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Validates that the provided pin existsself.</span>
+<span class="sd">        Validates that the provided pin exists.</span>
 <span class="sd">        This is to thwart malicious input.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            form: The MealLoginForm that was submitted.</span>
+<span class="sd">            field: The pin field.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValidationError: If pin does not exist.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">MealPlan</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">MealPlan</span><span class="o">.</span><span class="n">pin</span> <span class="o">==</span> <span class="n">field</span><span class="o">.</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s1">&#39;Invalid Pin&#39;</span><span class="p">)</span></div></div>

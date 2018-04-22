@@ -51,12 +51,18 @@
 
 <div class="viewcode-block" id="OVSConfig"><a class="viewcode-back" href="../../ovs.html#ovs.config.OVSConfig">[docs]</a><span class="k">class</span> <span class="nc">OVSConfig</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Used to load config from a file. Ex:</span>
+<span class="sd">    Used to load config from a file.</span>
 
-<span class="sd">    config = OVSConfig(&#39;config/config-local-dev.json&#39;)</span>
-<span class="sd">    print(config[&#39;database&#39;])</span>
+<span class="sd">    Args:</span>
+<span class="sd">        config_path: A path to a json file with the app&#39;s configuration.</span>
+<span class="sd">                                     If none is provided &#39;config/config-local-dev.json&#39; will be used.</span>
 
-<span class="sd">    The configuration should be edited by editing the JSON directly, and cannot be changed in code.</span>
+<span class="sd">    Examples:</span>
+<span class="sd">        config = OVSConfig(&#39;config/config-local-dev.json&#39;)</span>
+<span class="sd">        print(config[&#39;database&#39;])</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A OVSConfig representing the fields in the JSON file given by config_path.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -72,21 +78,46 @@
                 <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;Error reading config file </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">config_file</span><span class="p">)</span>
                 <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">[</span><span class="n">item</span><span class="p">]</span>
+<div class="viewcode-block" id="OVSConfig.__getitem__"><a class="viewcode-back" href="../../ovs.html#ovs.config.OVSConfig.__getitem__">[docs]</a>    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Allows [] on OVSConfig.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            item: The item to get</span>
 
-    <span class="k">def</span> <span class="nf">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            The value of item from the JSON file passed in.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">[</span><span class="n">item</span><span class="p">]</span></div>
 
-    <span class="k">def</span> <span class="nf">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;OVSConfig is static, and cannot be edited.&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="OVSConfig.__contains__"><a class="viewcode-back" href="../../ovs.html#ovs.config.OVSConfig.__contains__">[docs]</a>    <span class="k">def</span> <span class="nf">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Allows `in` on OVSConfig.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            item: The item to test.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: If the item was in the JSON file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span></div>
+
+<div class="viewcode-block" id="OVSConfig.__setitem__"><a class="viewcode-back" href="../../ovs.html#ovs.config.OVSConfig.__setitem__">[docs]</a>    <span class="k">def</span> <span class="nf">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Disallows `OVSConfig[] = _`.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            key: key</span>
+<span class="sd">            value: value</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            Exception: Always. OVSConfig is not mutable.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;OVSConfig is not mutable, and cannot be edited.&#39;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="OVSConfig.get"><a class="viewcode-back" href="../../ovs.html#ovs.config.OVSConfig.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default_value</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Fetch the value associate with the key in the dictionary.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            key: The key to acess the dictionary.</span>
+<span class="sd">            key: The key to access the dictionary.</span>
 <span class="sd">            default_value: The default value if the key is not mapped.</span>
 
 <span class="sd">        Returns:</span>
@@ -102,7 +133,7 @@
 <span class="sd">        Fetch all dictionary items.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            A list of key, value tulpes.</span>
+<span class="sd">            A list of key, value tuples.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">items</span><span class="p">()</span></div></div>
 </pre></div>
