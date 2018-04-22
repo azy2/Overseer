@@ -1,5 +1,5 @@
-ovs\.tests package
-==================
+ovs.tests package
+=================
 
 Subpackages
 -----------

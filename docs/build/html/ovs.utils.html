@@ -51,7 +51,15 @@
 <dl class="staticmethod">
 <dt id="ovs.utils.crypto.Crypto.generate_password">
 <em class="property">static </em><code class="descname">generate_password</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/utils/crypto.html#Crypto.generate_password"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.utils.crypto.Crypto.generate_password" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generate a random password</p>
+<dd><p>Get a default password</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Generate a random password</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -145,8 +153,96 @@
 <dl class="staticmethod">
 <dt id="ovs.utils.roles.UserRole.has_permission">
 <em class="property">static </em><code class="descname">has_permission</code><span class="sig-paren">(</span><em>min_access_role</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/utils/roles.html#UserRole.has_permission"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.utils.roles.UserRole.has_permission" title="Permalink to this definition">¶</a></dt>
-<dd><p>Checks user perms a given user_role and minimum access role</p>
+<dd><p>Checks that user_role has permission to access recourse with permission level min_access_role.
+:param user_role: The current users role.
+:type user_role: UserRole
+:param min_access_role: The minimum role that can access this recourse.
+:type min_access_role: UserRole</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if the user is above min_access_role, False otherwise.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ovs.utils.timed_serializer">
+<span id="ovs-utils-timed-serializer-module"></span><h2>ovs.utils.timed_serializer module<a class="headerlink" href="#module-ovs.utils.timed_serializer" title="Permalink to this headline">¶</a></h2>
+<p>Houses the timed serializer for secure token generation.</p>
+<dl class="class">
+<dt id="ovs.utils.timed_serializer.Serializer">
+<em class="property">class </em><code class="descclassname">ovs.utils.timed_serializer.</code><code class="descname">Serializer</code><a class="reference internal" href="_modules/ovs/utils/timed_serializer.html#Serializer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.utils.timed_serializer.Serializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class to allow secure de/serialization of attributes using a salt.</p>
+<dl class="staticmethod">
+<dt id="ovs.utils.timed_serializer.Serializer.decode_attr">
+<em class="property">static </em><code class="descname">decode_attr</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/utils/timed_serializer.html#Serializer.decode_attr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.utils.timed_serializer.Serializer.decode_attr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deserializes an attribute, using a key as a salt.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>attr</strong> – The attribute to deserialize.</li>
+<li><strong>key</strong> – The salt to use with the TimedSerializer.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">The deserialized string.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="ovs.utils.timed_serializer.Serializer.init_app">
+<em class="property">static </em><code class="descname">init_app</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/utils/timed_serializer.html#Serializer.init_app"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.utils.timed_serializer.Serializer.init_app" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initializes the static serializer with the app’s secret
+Note that it must be done in this manner because the app_context
+is not available until the application is created.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>app</strong> – the Flask app containing a SECRET_KEY</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="ovs.utils.timed_serializer.Serializer.serialize_attr">
+<em class="property">static </em><code class="descname">serialize_attr</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/utils/timed_serializer.html#Serializer.serialize_attr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.utils.timed_serializer.Serializer.serialize_attr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Serializes an attribute, using a key as a salt.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>attr</strong> – The attribute to serialize.</li>
+<li><strong>key</strong> – The salt to use with the TimedSerializer.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">The serialized string.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ovs.utils.timed_serializer.Serializer.ts">
+<code class="descname">ts</code><em class="property"> = None</em><a class="headerlink" href="#ovs.utils.timed_serializer.Serializer.ts" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 
@@ -171,6 +267,7 @@
 <li><a class="reference internal" href="#module-ovs.utils.genders">ovs.utils.genders module</a></li>
 <li><a class="reference internal" href="#module-ovs.utils.log_types">ovs.utils.log_types module</a></li>
 <li><a class="reference internal" href="#module-ovs.utils.roles">ovs.utils.roles module</a></li>
+<li><a class="reference internal" href="#module-ovs.utils.timed_serializer">ovs.utils.timed_serializer module</a></li>
 <li><a class="reference internal" href="#module-ovs.utils">Module contents</a></li>
 </ul>
 </li>

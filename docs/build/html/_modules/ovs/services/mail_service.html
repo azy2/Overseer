@@ -41,6 +41,7 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Send Mail functions.</span>
 <span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">string</span> <span class="k">import</span> <span class="n">Template</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 
 <span class="kn">from</span> <span class="nn">flask</span> <span class="k">import</span> <span class="n">current_app</span>
@@ -66,13 +67,18 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            A (mail, response) tuple.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">ovs.services</span> <span class="k">import</span> <span class="n">UserService</span> <span class="c1"># to deal with circular dependencies</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">UserService</span><span class="o">.</span><span class="n">get_user_by_email</span><span class="p">(</span><span class="n">to_email</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">user</span> <span class="ow">and</span> <span class="n">user</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">preferred_email</span><span class="p">:</span>
+            <span class="n">to_email</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">preferred_email</span>
+
         <span class="n">sg</span> <span class="o">=</span> <span class="n">SendGridAPIClient</span><span class="p">(</span><span class="n">apikey</span><span class="o">=</span><span class="n">current_app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;SENDGRID&#39;</span><span class="p">][</span><span class="s1">&#39;API_KEY&#39;</span><span class="p">])</span>
 
         <span class="n">from_email</span> <span class="o">=</span> <span class="n">Email</span><span class="p">(</span>
             <span class="s1">&#39;no-reply@</span><span class="si">{domain_name}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">domain_name</span><span class="o">=</span><span class="n">current_app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;SENDGRID&#39;</span><span class="p">][</span><span class="s1">&#39;DOMAIN_NAME&#39;</span><span class="p">]))</span>
         <span class="n">to_email</span> <span class="o">=</span> <span class="n">Email</span><span class="p">(</span><span class="n">to_email</span><span class="p">)</span>
         <span class="n">content</span> <span class="o">=</span> <span class="n">Content</span><span class="p">(</span>
-            <span class="s1">&#39;text/plain&#39;</span><span class="p">,</span> <span class="n">text</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">substitutions</span> <span class="k">else</span> <span class="n">text</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">substitutions</span><span class="p">))</span>
+            <span class="s1">&#39;text/html&#39;</span><span class="p">,</span> <span class="n">text</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">substitutions</span> <span class="k">else</span> <span class="n">Template</span><span class="p">(</span><span class="n">text</span><span class="p">)</span><span class="o">.</span><span class="n">safe_substitute</span><span class="p">(</span><span class="o">**</span><span class="n">substitutions</span><span class="p">))</span>
         <span class="n">mail</span> <span class="o">=</span> <span class="n">Mail</span><span class="p">(</span><span class="n">from_email</span><span class="o">=</span><span class="n">from_email</span><span class="p">,</span>
                     <span class="n">subject</span><span class="o">=</span><span class="n">subject</span><span class="p">,</span>
                     <span class="n">to_email</span><span class="o">=</span><span class="n">to_email</span><span class="p">,</span>

@@ -58,7 +58,15 @@
 
 <div class="viewcode-block" id="UserRole.has_permission"><a class="viewcode-back" href="../../../ovs.utils.html#ovs.utils.roles.UserRole.has_permission">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">has_permission</span><span class="p">(</span><span class="n">user_role</span><span class="p">,</span> <span class="n">min_access_role</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Checks user perms a given user_role and minimum access role&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks that user_role has permission to access recourse with permission level min_access_role.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            user_role (UserRole): The current users role.</span>
+<span class="sd">            min_access_role (UserRole): The minimum role that can access this recourse.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if the user is above min_access_role, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">permission_levels</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s1">&#39;ADMIN&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
             <span class="s1">&#39;OFFICE_MANAGER&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>

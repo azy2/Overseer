@@ -43,17 +43,21 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="ovs.forms.html">ovs.forms package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="ovs.forms.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ovs.forms.html#module-ovs.forms.add_meal_form">ovs.forms.add_meal_form module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ovs.forms.html#module-ovs.forms.add_package_form">ovs.forms.add_package_form module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ovs.forms.html#module-ovs.forms.create_meal_plan_form">ovs.forms.create_meal_plan_form module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ovs.forms.html#module-ovs.forms.edit_meal_form">ovs.forms.edit_meal_form module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ovs.forms.html#module-ovs.forms.edit_package_form">ovs.forms.edit_package_form module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ovs.forms.html#module-ovs.forms.edit_resident_profile_form">ovs.forms.edit_resident_profile_form module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ovs.forms.html#module-ovs.forms.login_form">ovs.forms.login_form module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ovs.forms.html#module-ovs.forms.manage_residents_form">ovs.forms.manage_residents_form module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ovs.forms.html#module-ovs.forms.manage_room_form">ovs.forms.manage_room_form module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ovs.forms.html#module-ovs.forms.manage_users_form">ovs.forms.manage_users_form module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ovs.forms.html#module-ovs.forms.meal_login_form">ovs.forms.meal_login_form module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ovs.forms.html#module-ovs.forms.register_manager_form">ovs.forms.register_manager_form module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ovs.forms.html#module-ovs.forms.register_resident_form">ovs.forms.register_resident_form module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ovs.forms.html#module-ovs.forms.register_room_form">ovs.forms.register_room_form module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ovs.forms.html#module-ovs.forms.reset_password_form">ovs.forms.reset_password_form module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ovs.forms.html#module-ovs.forms.reset_request_form">ovs.forms.reset_request_form module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ovs.forms.html#module-ovs.forms.upload_profile_picture_form">ovs.forms.upload_profile_picture_form module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ovs.forms.html#module-ovs.forms.validators">ovs.forms.validators module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ovs.forms.html#module-ovs.forms">Module contents</a></li>
@@ -87,7 +91,6 @@
 <li class="toctree-l2"><a class="reference internal" href="ovs.routes.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ovs.routes.html#module-ovs.routes.admin_routes">ovs.routes.admin_routes module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ovs.routes.html#module-ovs.routes.auth_routes">ovs.routes.auth_routes module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ovs.routes.html#module-ovs.routes.dev_routes">ovs.routes.dev_routes module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ovs.routes.html#module-ovs.routes.manager_routes">ovs.routes.manager_routes module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ovs.routes.html#module-ovs.routes.ovs_routes">ovs.routes.ovs_routes module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ovs.routes.html#module-ovs.routes.resident_routes">ovs.routes.resident_routes module</a></li>
@@ -98,6 +101,7 @@
 <li class="toctree-l2"><a class="reference internal" href="ovs.services.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ovs.services.html#module-ovs.services.auth_service">ovs.services.auth_service module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ovs.services.html#module-ovs.services.mail_service">ovs.services.mail_service module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ovs.services.html#module-ovs.services.manager_service">ovs.services.manager_service module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ovs.services.html#module-ovs.services.meal_service">ovs.services.meal_service module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ovs.services.html#module-ovs.services.package_service">ovs.services.package_service module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ovs.services.html#module-ovs.services.profile_picture_service">ovs.services.profile_picture_service module</a></li>
@@ -113,9 +117,15 @@
 <li class="toctree-l3"><a class="reference internal" href="ovs.tests.selenium.html">ovs.tests.selenium package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ovs.tests.selenium.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ovs.tests.selenium.html#module-ovs.tests.selenium.selenium_base_test">ovs.tests.selenium.selenium_base_test module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ovs.tests.selenium.html#module-ovs.tests.selenium.table_test">ovs.tests.selenium.table_test module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ovs.tests.selenium.html#module-ovs.tests.selenium.test_cross_system">ovs.tests.selenium.test_cross_system module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ovs.tests.selenium.html#module-ovs.tests.selenium.test_login">ovs.tests.selenium.test_login module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ovs.tests.selenium.html#module-ovs.tests.selenium.test_meal_plan">ovs.tests.selenium.test_meal_plan module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ovs.tests.selenium.html#module-ovs.tests.selenium.test_misc">ovs.tests.selenium.test_misc module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ovs.tests.selenium.html#module-ovs.tests.selenium.test_package">ovs.tests.selenium.test_package module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ovs.tests.selenium.html#module-ovs.tests.selenium.test_profile">ovs.tests.selenium.test_profile module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ovs.tests.selenium.html#module-ovs.tests.selenium.test_register_manager">ovs.tests.selenium.test_register_manager module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ovs.tests.selenium.html#module-ovs.tests.selenium.test_register_resident">ovs.tests.selenium.test_register_resident module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ovs.tests.selenium.html#module-ovs.tests.selenium.test_register_room">ovs.tests.selenium.test_register_room module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ovs.tests.selenium.html#module-ovs.tests.selenium">Module contents</a></li>
 </ul>
@@ -131,6 +141,7 @@
 <li class="toctree-l5"><a class="reference internal" href="ovs.tests.unittests.services.html">ovs.tests.unittests.services package</a><ul>
 <li class="toctree-l6"><a class="reference internal" href="ovs.tests.unittests.services.html#submodules">Submodules</a></li>
 <li class="toctree-l6"><a class="reference internal" href="ovs.tests.unittests.services.html#module-ovs.tests.unittests.services.test_mail_service">ovs.tests.unittests.services.test_mail_service module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="ovs.tests.unittests.services.html#module-ovs.tests.unittests.services.test_manager_service">ovs.tests.unittests.services.test_manager_service module</a></li>
 <li class="toctree-l6"><a class="reference internal" href="ovs.tests.unittests.services.html#module-ovs.tests.unittests.services.test_meal_plan_service">ovs.tests.unittests.services.test_meal_plan_service module</a></li>
 <li class="toctree-l6"><a class="reference internal" href="ovs.tests.unittests.services.html#module-ovs.tests.unittests.services.test_package_service">ovs.tests.unittests.services.test_package_service module</a></li>
 <li class="toctree-l6"><a class="reference internal" href="ovs.tests.unittests.services.html#module-ovs.tests.unittests.services.test_profile_service">ovs.tests.unittests.services.test_profile_service module</a></li>
@@ -158,6 +169,7 @@
 <li class="toctree-l2"><a class="reference internal" href="ovs.utils.html#module-ovs.utils.genders">ovs.utils.genders module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ovs.utils.html#module-ovs.utils.log_types">ovs.utils.log_types module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ovs.utils.html#module-ovs.utils.roles">ovs.utils.roles module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ovs.utils.html#module-ovs.utils.timed_serializer">ovs.utils.timed_serializer module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ovs.utils.html#module-ovs.utils">Module contents</a></li>
 </ul>
 </li>
@@ -169,51 +181,124 @@
 </div>
 <div class="section" id="module-ovs.blob">
 <span id="ovs-blob-module"></span><h2>ovs.blob module<a class="headerlink" href="#module-ovs.blob" title="Permalink to this headline">¶</a></h2>
-<p>Blob interface code</p>
+<p>Blob interface code.</p>
 <dl class="class">
 <dt id="ovs.blob.Blob">
 <em class="property">class </em><code class="descclassname">ovs.blob.</code><code class="descname">Blob</code><span class="sig-paren">(</span><em>app=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/blob.html#Blob"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.blob.Blob" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Blob is the implementation for azure blob storage</p>
+<p>Blob is the implementation for azure blob storage.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>app</strong> – The current Flask app. If not provided init_app must be called before using this object.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A <cite>Blob</cite> object.</td>
+</tr>
+</tbody>
+</table>
 <dl class="attribute">
 <dt id="ovs.blob.Blob.PROFILE_PICTURE_CONTAINER">
 <code class="descname">PROFILE_PICTURE_CONTAINER</code><em class="property"> = 'profile-picture'</em><a class="headerlink" href="#ovs.blob.Blob.PROFILE_PICTURE_CONTAINER" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="ovs.blob.Blob.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>app=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/blob.html#Blob.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.blob.Blob.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initializes the Blob object. If app is not provided init_app must be called before use.</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="ovs.blob.Blob.create_blob_from_bytes">
 <code class="descname">create_blob_from_bytes</code><span class="sig-paren">(</span><em>container</em>, <em>name</em>, <em>byte_array</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/blob.html#Blob.create_blob_from_bytes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.blob.Blob.create_blob_from_bytes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Wraps create blob from bytes service</p>
+<dd><p>Wraps create blob from bytes service if in production. Otherwise saves the data to disk.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>container</strong> – The azure blob service container.</li>
+<li><strong>name</strong> – The name of the blob.</li>
+<li><strong>byte_array</strong> – The data to be put in the blob.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ovs.blob.Blob.delete_blob">
 <code class="descname">delete_blob</code><span class="sig-paren">(</span><em>container</em>, <em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/blob.html#Blob.delete_blob"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.blob.Blob.delete_blob" title="Permalink to this definition">¶</a></dt>
-<dd><p>Wraps delete blob service</p>
+<dd><p>Wraps delete blob service if in production. Otherwise deletes the data from disk.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>container</strong> – The container which contains the blob.</li>
+<li><strong>name</strong> – The name of the blob in the container.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ovs.blob.Blob.exists">
 <code class="descname">exists</code><span class="sig-paren">(</span><em>container</em>, <em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/blob.html#Blob.exists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.blob.Blob.exists" title="Permalink to this definition">¶</a></dt>
-<dd><p>Wraps exists blob service</p>
+<dd><p>Wraps exists blob service if in production. Otherwise check if the file is on disk.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>container</strong> – The container where the blob resides.</li>
+<li><strong>name</strong> – The name of the blob.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Whether the blob exits.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">bool</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ovs.blob.Blob.get_blob_to_bytes">
 <code class="descname">get_blob_to_bytes</code><span class="sig-paren">(</span><em>container</em>, <em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/blob.html#Blob.get_blob_to_bytes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.blob.Blob.get_blob_to_bytes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Wraps get blob to bytes service</p>
+<dd><p>Wraps get blob to bytes service.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>container</strong> – The container where the blob resides.</li>
+<li><strong>name</strong> – The name of the blob.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The data contained in the blob.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">bytearray</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ovs.blob.Blob.init_app">
 <code class="descname">init_app</code><span class="sig-paren">(</span><em>app</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/blob.html#Blob.init_app"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.blob.Blob.init_app" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initializes the Blob object</p>
+<dd><p>Initializes the Blob object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>app</strong> – The currently running Flask app.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -221,7 +306,22 @@
 <dl class="function">
 <dt id="ovs.blob.make_file_name">
 <code class="descclassname">ovs.blob.</code><code class="descname">make_file_name</code><span class="sig-paren">(</span><em>container</em>, <em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/blob.html#make_file_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.blob.make_file_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Builds filename for testing from container and id</p>
+<dd><p>Builds filename for testing and dev from container and id.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>container</strong> – The container.</li>
+<li><strong>name</strong> – The blob name.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A file path representing the blob.</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
@@ -234,10 +334,75 @@ details, etc…</p>
 <dt id="ovs.config.OVSConfig">
 <em class="property">class </em><code class="descclassname">ovs.config.</code><code class="descname">OVSConfig</code><span class="sig-paren">(</span><em>config_path=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/config.html#OVSConfig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.config.OVSConfig" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Used to load config from a file. Ex:</p>
+<p>Used to load config from a file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>config_path</strong> – A path to a json file with the app’s configuration.
+If none is provided ‘config/config-local-dev.json’ will be used.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
 <p>config = OVSConfig(‘config/config-local-dev.json’)
 print(config[‘database’])</p>
-<p>The configuration should be edited by editing the JSON directly, and cannot be changed in code.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A OVSConfig representing the fields in the JSON file given by config_path.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="ovs.config.OVSConfig.__contains__">
+<code class="descname">__contains__</code><span class="sig-paren">(</span><em>item</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/config.html#OVSConfig.__contains__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.config.OVSConfig.__contains__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allows <cite>in</cite> on OVSConfig.
+:param item: The item to test.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">If the item was in the JSON file.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.config.OVSConfig.__getitem__">
+<code class="descname">__getitem__</code><span class="sig-paren">(</span><em>item</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/config.html#OVSConfig.__getitem__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.config.OVSConfig.__getitem__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allows [] on OVSConfig.
+:param item: The item to get</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The value of item from the JSON file passed in.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.config.OVSConfig.__setitem__">
+<code class="descname">__setitem__</code><span class="sig-paren">(</span><em>key</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/config.html#OVSConfig.__setitem__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.config.OVSConfig.__setitem__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disallows <cite>OVSConfig[] = _</cite>.
+:param key: key
+:param value: value</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal notranslate"><span class="pre">Exception</span></code> – Always. OVSConfig is not mutable.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="method">
 <dt id="ovs.config.OVSConfig.get">
 <code class="descname">get</code><span class="sig-paren">(</span><em>key</em>, <em>default_value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/config.html#OVSConfig.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.config.OVSConfig.get" title="Permalink to this definition">¶</a></dt>
@@ -247,7 +412,7 @@ print(config[‘database’])</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>key</strong> – The key to acess the dictionary.</li>
+<li><strong>key</strong> – The key to access the dictionary.</li>
 <li><strong>default_value</strong> – The default value if the key is not mapped.</li>
 </ul>
 </td>
@@ -267,34 +432,10 @@ print(config[‘database’])</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of key, value tulpes.</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of key, value tuples.</td>
 </tr>
 </tbody>
 </table>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="module-ovs.database">
-<span id="ovs-database-module"></span><h2>ovs.database module<a class="headerlink" href="#module-ovs.database" title="Permalink to this headline">¶</a></h2>
-<p>Database interface code</p>
-<dl class="class">
-<dt id="ovs.database.Database">
-<em class="property">class </em><code class="descclassname">ovs.database.</code><code class="descname">Database</code><span class="sig-paren">(</span><em>app</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/database.html#Database"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.database.Database" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Database is the implementation for app.database and provides sqlalchemy
-with a target.</p>
-<dl class="method">
-<dt id="ovs.database.Database.engine">
-<code class="descname">engine</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/database.html#Database.engine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.database.Database.engine" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get a handle to the database engine</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ovs.database.Database.instance">
-<code class="descname">instance</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/database.html#Database.instance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.database.Database.instance" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get a handle to the database</p>
 </dd></dl>
 
 </dd></dl>
@@ -329,7 +470,16 @@ with a target.</p>
 <dl class="staticmethod">
 <dt id="ovs.datagen.DataGen.create_user">
 <em class="property">static </em><code class="descname">create_user</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/datagen.html#DataGen.create_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.datagen.DataGen.create_user" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a default user if it doesn’t exist</p>
+<dd><p>Creates a default user if it doesn’t exist.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>user_role</strong> – The role of the default user to create.
+current_app.config[‘USERS’][user_role] must exist.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -343,6 +493,28 @@ a database connection. The networking code can be found in <cite>../main.py</cit
 <dt id="ovs.create_app">
 <code class="descclassname">ovs.</code><code class="descname">create_app</code><span class="sig-paren">(</span><em>config_path=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs.html#create_app"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.create_app" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a Flask app instance and returns it</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>config_path</strong> (<em>str</em>) – A path to a JSON object with an app configuration.</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Some default configurations can be found in <cite>config</cite>.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a Flask app.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Flask</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
@@ -361,7 +533,6 @@ a database connection. The networking code can be found in <cite>../main.py</cit
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
 <li><a class="reference internal" href="#module-ovs.blob">ovs.blob module</a></li>
 <li><a class="reference internal" href="#module-ovs.config">ovs.config module</a></li>
-<li><a class="reference internal" href="#module-ovs.database">ovs.database module</a></li>
 <li><a class="reference internal" href="#module-ovs.datagen">ovs.datagen module</a></li>
 <li><a class="reference internal" href="#module-ovs">Module contents</a></li>
 </ul>

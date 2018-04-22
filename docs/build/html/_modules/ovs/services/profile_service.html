@@ -41,15 +41,10 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">DB access and other services for profiles</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-
-<span class="kn">from</span> <span class="nn">flask</span> <span class="k">import</span> <span class="n">current_app</span>
-<span class="kn">from</span> <span class="nn">sqlalchemy.exc</span> <span class="k">import</span> <span class="n">SQLAlchemyError</span>
 
 <span class="kn">from</span> <span class="nn">ovs</span> <span class="k">import</span> <span class="n">db</span>
-<span class="kn">from</span> <span class="nn">ovs.models.profile_model</span> <span class="k">import</span> <span class="n">Profile</span>
-<span class="kn">from</span> <span class="nn">ovs.services.profile_picture_service</span> <span class="k">import</span> <span class="n">ProfilePictureService</span>
-<span class="kn">from</span> <span class="nn">ovs.services.resident_service</span> <span class="k">import</span> <span class="n">ResidentService</span>
+<span class="kn">from</span> <span class="nn">ovs.services</span> <span class="k">import</span> <span class="n">UserService</span>
+<span class="kn">from</span> <span class="nn">ovs.models</span> <span class="k">import</span> <span class="n">Profile</span>
 
 
 <div class="viewcode-block" id="ProfileService"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.profile_service.ProfileService">[docs]</a><span class="k">class</span> <span class="nc">ProfileService</span><span class="p">:</span>
@@ -61,26 +56,21 @@
         <span class="k">pass</span>
 
 <div class="viewcode-block" id="ProfileService.update_profile"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.profile_service.ProfileService.update_profile">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">update_profile</span><span class="p">(</span><span class="n">resident_id</span><span class="p">,</span> <span class="n">preferred_email</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">preferred_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="k">def</span> <span class="nf">update_profile</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">preferred_email</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">preferred_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                        <span class="n">phone_number</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">race</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">gender</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates a profile associated with resident identified by resident id.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            resident_id: Unique resident id.</span>
+<span class="sd">            user_id: Unique user_id</span>
 <span class="sd">            preferred_email: Resident&#39;s preferred email.</span>
 <span class="sd">            preferred_name: Resident&#39;s preferred name.</span>
 <span class="sd">            phone_number: Resident&#39;s phone number.</span>
 <span class="sd">            race: Resident&#39;s race.</span>
 <span class="sd">            gender: Resident&#39;s gender.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            If the resident&#39;s profile was updated successfully.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">resident</span> <span class="o">=</span> <span class="n">ResidentService</span><span class="o">.</span><span class="n">get_resident_by_id</span><span class="p">(</span><span class="n">resident_id</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">resident</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">False</span>
-        <span class="n">profile</span> <span class="o">=</span> <span class="n">resident</span><span class="o">.</span><span class="n">profile</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">UserService</span><span class="o">.</span><span class="n">get_user_by_id</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
+        <span class="n">profile</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">profile</span>
         <span class="k">if</span> <span class="n">preferred_email</span><span class="p">:</span>
             <span class="n">profile</span><span class="o">.</span><span class="n">preferred_email</span> <span class="o">=</span> <span class="n">preferred_email</span>
         <span class="k">if</span> <span class="n">preferred_name</span><span class="p">:</span>
@@ -90,37 +80,8 @@
         <span class="k">if</span> <span class="n">gender</span><span class="p">:</span>
             <span class="n">profile</span><span class="o">.</span><span class="n">gender</span> <span class="o">=</span> <span class="n">gender</span>
 
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
-            <span class="k">return</span> <span class="kc">True</span>
-        <span class="k">except</span> <span class="n">SQLAlchemyError</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;Failed to update resident profile.&#39;</span><span class="p">)</span>
-            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">rollback</span><span class="p">()</span>
-            <span class="k">return</span> <span class="kc">False</span></div>
-
-<div class="viewcode-block" id="ProfileService.delete_profile"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.profile_service.ProfileService.delete_profile">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">delete_profile</span><span class="p">(</span><span class="n">resident_id</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Deletes a profile associated with resident identified by resident id.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            resident_id: Unique resident id.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            If the Profile db model was sucessfully deleted.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">resident</span> <span class="o">=</span> <span class="n">ResidentService</span><span class="o">.</span><span class="n">get_resident_by_id</span><span class="p">(</span><span class="n">resident_id</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">resident</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">False</span>
-        <span class="n">profile</span> <span class="o">=</span> <span class="n">resident</span><span class="o">.</span><span class="n">profile</span>
-        <span class="n">picture_id</span> <span class="o">=</span> <span class="n">profile</span><span class="o">.</span><span class="n">picture_id</span>
-        <span class="n">ProfilePictureService</span><span class="o">.</span><span class="n">delete_profile_picture</span><span class="p">(</span><span class="n">picture_id</span><span class="p">)</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">profile</span><span class="p">)</span>
-            <span class="k">return</span> <span class="kc">True</span>
-        <span class="k">except</span> <span class="n">SQLAlchemyError</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;Failed to delete resident profile.&#39;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="kc">False</span></div>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">refresh</span><span class="p">(</span><span class="n">profile</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ProfileService.get_all_profiles"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.profile_service.ProfileService.get_all_profiles">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_all_profiles</span><span class="p">():</span>
@@ -128,26 +89,9 @@
 <span class="sd">        Fetches all profiles.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            A list of Profile db models..</span>
+<span class="sd">            A list of Profile db models.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Profile</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-        <span class="k">except</span> <span class="n">SQLAlchemyError</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;Failed to get all profiles.&#39;</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="ProfileService.set_default_picture"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.profile_service.ProfileService.set_default_picture">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">set_default_picture</span><span class="p">(</span><span class="n">picture_id</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Sets default picture for new residents.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            picture_id: Profile db model picture id.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">default_picture_path</span> <span class="o">=</span> <span class="n">current_app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;BLOBSTORE&#39;</span><span class="p">][</span><span class="s1">&#39;DEFAULT_PATH&#39;</span><span class="p">]</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">default_picture_path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">default_image</span><span class="p">:</span>
-            <span class="n">file_contents</span> <span class="o">=</span> <span class="n">default_image</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-            <span class="n">file_bytes</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="n">file_contents</span><span class="p">)</span>
-        <span class="n">ProfilePictureService</span><span class="o">.</span><span class="n">create_profile_picture</span><span class="p">(</span><span class="n">picture_id</span><span class="p">,</span> <span class="n">file_bytes</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Profile</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span></div></div>
 </pre></div>
 
           </div>

@@ -38,14 +38,14 @@
           <div class="body" role="main">
             
   <h1>Source code for ovs.tests.selenium.test_login</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot; Test whether users can log in &quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot; Test functionality related to logging in and out. &quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">ovs.tests.selenium.selenium_base_test</span> <span class="k">import</span> <span class="n">SeleniumBaseTestCase</span>
 
 <div class="viewcode-block" id="TestLogin"><a class="viewcode-back" href="../../../../ovs.tests.selenium.html#ovs.tests.selenium.test_login.TestLogin">[docs]</a><span class="k">class</span> <span class="nc">TestLogin</span><span class="p">(</span><span class="n">SeleniumBaseTestCase</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Test whether users can log in &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot; Tests functionality related to logging in and out. &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="TestLogin.test_resident_login"><a class="viewcode-back" href="../../../../ovs.tests.selenium.html#ovs.tests.selenium.test_login.TestLogin.test_resident_login">[docs]</a>    <span class="k">def</span> <span class="nf">test_resident_login</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Tests whether residents can log in or not &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot; Tests whether residents can log in. &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_url</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s1">&#39;Overseer&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">title</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">login_default_resident</span><span class="p">()</span>
@@ -54,20 +54,17 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">default_resident_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">title</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="TestLogin.test_resident_logout"><a class="viewcode-back" href="../../../../ovs.tests.selenium.html#ovs.tests.selenium.test_login.TestLogin.test_resident_logout">[docs]</a>    <span class="k">def</span> <span class="nf">test_resident_logout</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Tests whether residents can log out or not &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot; Tests whether residents can log out. &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">test_resident_login</span><span class="p">()</span>
 
-        <span class="c1"># Open dropdown with logout link option</span>
-        <span class="n">account_dropdown</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">find_element_by_id</span><span class="p">(</span><span class="s1">&#39;accountDropdown&#39;</span><span class="p">)</span>
-        <span class="n">account_dropdown</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
-        <span class="n">logout_link</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">find_element_by_link_text</span><span class="p">(</span><span class="s1">&#39;Logout&#39;</span><span class="p">)</span>
-        <span class="n">logout_link</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+        <span class="c1"># Use dropdown with logout link option</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">go_to_page_in_dropdown</span><span class="p">(</span><span class="s1">&#39;Logout&#39;</span><span class="p">,</span> <span class="s1">&#39;accountDropdown&#39;</span><span class="p">)</span>
 
         <span class="c1"># Should be back at Overseer home page</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s1">&#39;Overseer&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">title</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="TestLogin.test_manager_login"><a class="viewcode-back" href="../../../../ovs.tests.selenium.html#ovs.tests.selenium.test_login.TestLogin.test_manager_login">[docs]</a>    <span class="k">def</span> <span class="nf">test_manager_login</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Tests whether managers can log in or not &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot; Tests whether managers can log in. &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_url</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s1">&#39;Overseer&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">title</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">login_default_admin</span><span class="p">()</span>
@@ -76,13 +73,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">default_admin_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">title</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="TestLogin.test_bad_login"><a class="viewcode-back" href="../../../../ovs.tests.selenium.html#ovs.tests.selenium.test_login.TestLogin.test_bad_login">[docs]</a>    <span class="k">def</span> <span class="nf">test_bad_login</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Tests whether a random email can log in or not &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot; Tests whether a random email can log in. &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_url</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s1">&#39;Overseer&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">title</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">login_with_credentials</span><span class="p">(</span><span class="s1">&#39;testtesttest@gmail.com&#39;</span><span class="p">,</span> <span class="s1">&#39;password_goes_here&#39;</span><span class="p">)</span>
 
-        <span class="c1"># Page should not have changed</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s1">&#39;Overseer&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">title</span><span class="p">)</span></div></div>
+        <span class="c1"># Should still be at login page</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s1">&#39;Overseer - Login&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">title</span><span class="p">)</span></div></div>
 </pre></div>
 
           </div>

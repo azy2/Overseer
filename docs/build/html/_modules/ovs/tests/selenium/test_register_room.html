@@ -38,49 +38,59 @@
           <div class="body" role="main">
             
   <h1>Source code for ovs.tests.selenium.test_register_room</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot; Test whether users can log in &quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">selenium.webdriver.common.keys</span> <span class="k">import</span> <span class="n">Keys</span>
+<span></span><span class="sd">&quot;&quot;&quot; Tests functionality related to registering rooms. &quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">selenium.webdriver.common.by</span> <span class="k">import</span> <span class="n">By</span>
 <span class="kn">from</span> <span class="nn">selenium.webdriver.support.ui</span> <span class="k">import</span> <span class="n">WebDriverWait</span>
 <span class="kn">from</span> <span class="nn">selenium.webdriver.support</span> <span class="k">import</span> <span class="n">expected_conditions</span> <span class="k">as</span> <span class="n">EC</span>
-<span class="kn">from</span> <span class="nn">ovs.tests.selenium.selenium_base_test</span> <span class="k">import</span> <span class="n">SeleniumBaseTestCase</span>
+<span class="kn">from</span> <span class="nn">ovs.tests.selenium.table_test</span> <span class="k">import</span> <span class="n">TableTest</span><span class="p">,</span> <span class="n">InputTextElement</span>
 
-<div class="viewcode-block" id="TestRegisterRoom"><a class="viewcode-back" href="../../../../ovs.tests.selenium.html#ovs.tests.selenium.test_register_room.TestRegisterRoom">[docs]</a><span class="k">class</span> <span class="nc">TestRegisterRoom</span><span class="p">(</span><span class="n">SeleniumBaseTestCase</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Test whether managers can be registered&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="TestRegisterRoom"><a class="viewcode-back" href="../../../../ovs.tests.selenium.html#ovs.tests.selenium.test_register_room.TestRegisterRoom">[docs]</a><span class="k">class</span> <span class="nc">TestRegisterRoom</span><span class="p">(</span><span class="n">TableTest</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Tests functionality related to registering rooms. &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="TestRegisterRoom.setUp"><a class="viewcode-back" href="../../../../ovs.tests.selenium.html#ovs.tests.selenium.test_register_room.TestRegisterRoom.setUp">[docs]</a>    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setUp</span><span class="p">()</span>
+        <span class="c1"># Current form format is [Room Number][Status][Type][Occupant Emails]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">form_text_field_types</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">InputTextElement</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">form_text_field_types</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">InputTextElement</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">form_text_field_types</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">InputTextElement</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">form_text_field_types</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">InputTextElement</span><span class="p">())</span>
+
+        <span class="c1"># Current table format is [Room Number][Status][Type][Num Occupants]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table_text_field_types</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">InputTextElement</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table_text_field_types</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">InputTextElement</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table_text_field_types</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">InputTextElement</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table_text_field_types</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestRegisterRoom.navigate_to_table_page"><a class="viewcode-back" href="../../../../ovs.tests.selenium.html#ovs.tests.selenium.test_register_room.TestRegisterRoom.navigate_to_table_page">[docs]</a>    <span class="k">def</span> <span class="nf">navigate_to_table_page</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">find_element_by_link_text</span><span class="p">(</span><span class="s1">&#39;Rooms&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">click</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="TestRegisterRoom.test_register_room"><a class="viewcode-back" href="../../../../ovs.tests.selenium.html#ovs.tests.selenium.test_register_room.TestRegisterRoom.test_register_room">[docs]</a>    <span class="k">def</span> <span class="nf">test_register_room</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Tests whether all fields can be edited in a register room page &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot; Tests whether a room can be registered with the default resident. &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_table_test</span><span class="p">(</span><span class="s1">&#39;429D&#39;</span><span class="p">,</span> <span class="s1">&#39;rented&#39;</span><span class="p">,</span> <span class="s1">&#39;single&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_resident_email</span><span class="p">)</span>
+
+        <span class="c1"># Need to also verify that the number of occupants is 1</span>
+        <span class="n">last_table_row</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_last_table_row</span><span class="p">()</span>
+        <span class="n">num_occupants</span> <span class="o">=</span> <span class="n">last_table_row</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">num_occupants</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestRegisterRoom.test_update_delete_room"><a class="viewcode-back" href="../../../../ovs.tests.selenium.html#ovs.tests.selenium.test_register_room.TestRegisterRoom.test_update_delete_room">[docs]</a>    <span class="k">def</span> <span class="nf">test_update_delete_room</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Tests that registered rooms can be updated and deleted. &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_register_room</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_delete_table_test</span><span class="p">(</span><span class="s1">&#39;420D&#39;</span><span class="p">,</span> <span class="s1">&#39;Status goes here&#39;</span><span class="p">,</span> <span class="s1">&#39;Type goes here&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestRegisterRoom.test_register_room_invalid"><a class="viewcode-back" href="../../../../ovs.tests.selenium.html#ovs.tests.selenium.test_register_room.TestRegisterRoom.test_register_room_invalid">[docs]</a>    <span class="k">def</span> <span class="nf">test_register_room_invalid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Tests that rooms cannot be registered for residents that do not exist. &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_url</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s1">&#39;Overseer&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">title</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">login_default_admin</span><span class="p">()</span>
 
-        <span class="c1"># Click on Register Manager</span>
-        <span class="n">register_manager</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">find_element_by_link_text</span><span class="p">(</span><span class="s1">&#39;Register a Room&#39;</span><span class="p">)</span>
-        <span class="n">register_manager</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+        <span class="c1"># Attempt to add a resident that doesn&#39;t exist to a room</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">navigate_to_table_page</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_to_table</span><span class="p">(</span><span class="s1">&#39;123&#39;</span><span class="p">,</span> <span class="s1">&#39;Legitimate Status&#39;</span><span class="p">,</span> <span class="s1">&#39;Yes&#39;</span><span class="p">,</span> <span class="s1">&#39;real_email@gmail.com&#39;</span><span class="p">)</span>
 
-        <span class="c1"># Verify page changed</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s1">&#39;Register Room&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">title</span><span class="p">)</span>
-
-        <span class="c1"># # Change all fields</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">set_text_field_by_id</span><span class="p">(</span><span class="s1">&#39;room_number&#39;</span><span class="p">,</span> <span class="s1">&#39;429D&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">set_text_field_by_id</span><span class="p">(</span><span class="s1">&#39;room_status&#39;</span><span class="p">,</span> <span class="s1">&#39;rented&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">set_text_field_by_id</span><span class="p">(</span><span class="s1">&#39;room_type&#39;</span><span class="p">,</span> <span class="s1">&#39;single&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">set_text_field_by_id</span><span class="p">(</span><span class="s1">&#39;occupants&#39;</span><span class="p">,</span> <span class="s1">&#39;resident@gmail.com&#39;</span><span class="p">)</span>
-
-        <span class="c1"># Submit changes, need to &quot;press enter&quot; on button instead of clicking</span>
-        <span class="c1"># because Selenium is wonderful, stable software</span>
-        <span class="n">submit_button</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">find_element_by_id</span><span class="p">(</span><span class="s1">&#39;register_room&#39;</span><span class="p">)</span>
-        <span class="n">submit_button</span><span class="o">.</span><span class="n">send_keys</span><span class="p">(</span><span class="n">Keys</span><span class="o">.</span><span class="n">ENTER</span><span class="p">)</span>
-
-        <span class="c1"># Wait for successful notification popup to appear</span>
+        <span class="c1"># Wait for failure notification</span>
         <span class="n">wait</span> <span class="o">=</span> <span class="n">WebDriverWait</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
-        <span class="n">wait</span><span class="o">.</span><span class="n">until</span><span class="p">(</span><span class="n">EC</span><span class="o">.</span><span class="n">visibility_of_element_located</span><span class="p">((</span><span class="n">By</span><span class="o">.</span><span class="n">ID</span><span class="p">,</span> <span class="s1">&#39;notification-message&#39;</span><span class="p">)))</span>
-
-        <span class="c1"># Verify fields are empty and ready for new account registration</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">find_element_by_id</span><span class="p">(</span><span class="s1">&#39;room_number&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get_attribute</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">),</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">find_element_by_id</span><span class="p">(</span><span class="s1">&#39;room_status&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get_attribute</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">),</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">find_element_by_id</span><span class="p">(</span><span class="s1">&#39;room_type&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get_attribute</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">),</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">find_element_by_id</span><span class="p">(</span><span class="s1">&#39;occupants&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get_attribute</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">),</span> <span class="s1">&#39;&#39;</span><span class="p">)</span></div></div>
+        <span class="n">wait</span><span class="o">.</span><span class="n">until</span><span class="p">(</span><span class="n">EC</span><span class="o">.</span><span class="n">visibility_of_element_located</span><span class="p">((</span><span class="n">By</span><span class="o">.</span><span class="n">CLASS_NAME</span><span class="p">,</span> <span class="s1">&#39;invalid-feedback&#39;</span><span class="p">)))</span></div></div>
 </pre></div>
 
           </div>

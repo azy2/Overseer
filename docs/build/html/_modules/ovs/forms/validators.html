@@ -44,12 +44,16 @@
 <span class="kn">from</span> <span class="nn">ovs.services.user_service</span> <span class="k">import</span> <span class="n">UserService</span>
 
 <div class="viewcode-block" id="EmailRegistered"><a class="viewcode-back" href="../../../ovs.forms.html#ovs.forms.validators.EmailRegistered">[docs]</a><span class="k">class</span> <span class="nc">EmailRegistered</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; If check is true validates that the given email is registered.</span>
-<span class="sd">        If check is false validates that the given email is unregistered.</span>
-<span class="sd">        If the validation is failed message will be displayed.</span>
-<span class="sd">        If message is ommitted &#39;Email must be an existing user&#39; is printed for check=True</span>
-<span class="sd">        and &#39;Email already in use&#39; is printed for check=False &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Validates that an email is or is not registered.</span>
 
+<span class="sd">    Args:</span>
+<span class="sd">        check: Whether to validate that the email is registered or unregistered.</span>
+<span class="sd">        message: The message to be displayed to the user on the form if the check fails.</span>
+<span class="sd">                                 If no message is provided the message will either be:</span>
+<span class="sd">                                 &quot;Email must be an existing user&quot; or</span>
+<span class="sd">                                 &quot;Email already in use&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="EmailRegistered.__init__"><a class="viewcode-back" href="../../../ovs.forms.html#ovs.forms.validators.EmailRegistered.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">check</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Recieves paramaters for the validator &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">check</span> <span class="o">=</span> <span class="n">check</span>
@@ -60,8 +64,19 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="n">message</span></div>
 
 <div class="viewcode-block" id="EmailRegistered.__call__"><a class="viewcode-back" href="../../../ovs.forms.html#ovs.forms.validators.EmailRegistered.__call__">[docs]</a>    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Does the validation &quot;&quot;&quot;</span>
-        <span class="n">user</span> <span class="o">=</span> <span class="n">UserService</span><span class="o">.</span><span class="n">get_user_by_email</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Does the validation.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            form: The form this validator is applied to.</span>
+<span class="sd">            field: The field this validator is applied to.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValidationError: If the given email is unregistered if check=True</span>
+<span class="sd">                             and if the given email is registered if check=False.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">email</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">UserService</span><span class="o">.</span><span class="n">get_user_by_email</span><span class="p">(</span><span class="n">email</span><span class="p">)</span>
         <span class="n">not_registered</span> <span class="o">=</span> <span class="n">user</span> <span class="ow">is</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">not_registered</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">check</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">message</span><span class="p">)</span></div></div>

@@ -55,15 +55,65 @@
 </dd></dl>
 
 <dl class="method">
+<dt id="ovs.tests.unittests.services.test_mail_service.TestSendMail.test_create_user_doesnt_send_email">
+<code class="descname">test_create_user_doesnt_send_email</code><span class="sig-paren">(</span><em>mock_mail</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/unittests/services/test_mail_service.html#TestSendMail.test_create_user_doesnt_send_email"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.unittests.services.test_mail_service.TestSendMail.test_create_user_doesnt_send_email" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests that creating a user without a default password doesn’t send an email.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mock_mail</strong> – The mock_client for the patched function. This allows us to check
+if an email would get sent without actually sending one.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="ovs.tests.unittests.services.test_mail_service.TestSendMail.test_create_user_sends_email">
 <code class="descname">test_create_user_sends_email</code><span class="sig-paren">(</span><em>mock_mail</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/unittests/services/test_mail_service.html#TestSendMail.test_create_user_sends_email"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.unittests.services.test_mail_service.TestSendMail.test_create_user_sends_email" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests that creating a user sends an email</p>
+<dd><p>Tests that creating a user sends an email.
+:param mock_mail: The mock_client for the patched function. This allows us to check</p>
+<blockquote>
+<div>if an email would get sent without actually sending one.</div></blockquote>
 </dd></dl>
 
 <dl class="method">
 <dt id="ovs.tests.unittests.services.test_mail_service.TestSendMail.test_send_mail">
 <code class="descname">test_send_mail</code><span class="sig-paren">(</span><em>mock_client</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/unittests/services/test_mail_service.html#TestSendMail.test_send_mail"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.unittests.services.test_mail_service.TestSendMail.test_send_mail" title="Permalink to this definition">¶</a></dt>
-<dd><p>Test that mail contains correct information.</p>
+<dd><p>Test that mail contains correct information.
+:param mock_client: The mock_client for the patched function. This allows us to check</p>
+<blockquote>
+<div>if an email would get sent without actually sending one.</div></blockquote>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ovs.tests.unittests.services.test_manager_service">
+<span id="ovs-tests-unittests-services-test-manager-service-module"></span><h2>ovs.tests.unittests.services.test_manager_service module<a class="headerlink" href="#module-ovs.tests.unittests.services.test_manager_service" title="Permalink to this headline">¶</a></h2>
+<p>Tests for manager services</p>
+<dl class="class">
+<dt id="ovs.tests.unittests.services.test_manager_service.TestManagerService">
+<em class="property">class </em><code class="descclassname">ovs.tests.unittests.services.test_manager_service.</code><code class="descname">TestManagerService</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/unittests/services/test_manager_service.html#TestManagerService"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.unittests.services.test_manager_service.TestManagerService" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="ovs.tests.unittests.html#ovs.tests.unittests.base_test.OVSBaseTestCase" title="ovs.tests.unittests.base_test.OVSBaseTestCase"><code class="xref py py-class docutils literal notranslate"><span class="pre">ovs.tests.unittests.base_test.OVSBaseTestCase</span></code></a></p>
+<p>Tests for manager services</p>
+<dl class="method">
+<dt id="ovs.tests.unittests.services.test_manager_service.TestManagerService.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/unittests/services/test_manager_service.html#TestManagerService.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.unittests.services.test_manager_service.TestManagerService.setUp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs before every test and clears relevant tables</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.unittests.services.test_manager_service.TestManagerService.test_get_admin_count">
+<code class="descname">test_get_admin_count</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/unittests/services/test_manager_service.html#TestManagerService.test_get_admin_count"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.unittests.services.test_manager_service.TestManagerService.test_get_admin_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests that get_admin_count returns the correct number of users</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.unittests.services.test_manager_service.TestManagerService.test_get_all_managers">
+<code class="descname">test_get_all_managers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/unittests/services/test_manager_service.html#TestManagerService.test_get_all_managers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.unittests.services.test_manager_service.TestManagerService.test_get_all_managers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests that get_all_mangers returns the correct number of users</p>
 </dd></dl>
 
 </dd></dl>
@@ -84,27 +134,39 @@
 </dd></dl>
 
 <dl class="method">
-<dt id="ovs.tests.unittests.services.test_meal_plan_service.TestMealPlanService.database_contains_test_meal_plan">
-<code class="descname">database_contains_test_meal_plan</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/unittests/services/test_meal_plan_service.html#TestMealPlanService.database_contains_test_meal_plan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.unittests.services.test_meal_plan_service.TestMealPlanService.database_contains_test_meal_plan" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns true if the database contains exactly the test meal plan, false otherwise</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="ovs.tests.unittests.services.test_meal_plan_service.TestMealPlanService.setUp">
 <code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/unittests/services/test_meal_plan_service.html#TestMealPlanService.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.unittests.services.test_meal_plan_service.TestMealPlanService.setUp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runs before every test and clears relevant tables</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="ovs.tests.unittests.services.test_meal_plan_service.TestMealPlanService.test_create_meal_plan">
-<code class="descname">test_create_meal_plan</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/unittests/services/test_meal_plan_service.html#TestMealPlanService.test_create_meal_plan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.unittests.services.test_meal_plan_service.TestMealPlanService.test_create_meal_plan" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests that meal plans can be created</p>
+<dt id="ovs.tests.unittests.services.test_meal_plan_service.TestMealPlanService.test_database_contains_meal_plan">
+<code class="descname">test_database_contains_meal_plan</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/unittests/services/test_meal_plan_service.html#TestMealPlanService.test_database_contains_meal_plan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.unittests.services.test_meal_plan_service.TestMealPlanService.test_database_contains_meal_plan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests database constains a specific meal plan.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.unittests.services.test_meal_plan_service.TestMealPlanService.test_delete_meal_plan">
+<code class="descname">test_delete_meal_plan</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/unittests/services/test_meal_plan_service.html#TestMealPlanService.test_delete_meal_plan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.unittests.services.test_meal_plan_service.TestMealPlanService.test_delete_meal_plan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests that meal plans can be deleted</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.unittests.services.test_meal_plan_service.TestMealPlanService.test_delete_meal_plan_null">
+<code class="descname">test_delete_meal_plan_null</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/unittests/services/test_meal_plan_service.html#TestMealPlanService.test_delete_meal_plan_null"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.unittests.services.test_meal_plan_service.TestMealPlanService.test_delete_meal_plan_null" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests that nothing breaks when deleting a nonexistant meal plan</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="ovs.tests.unittests.services.test_meal_plan_service.TestMealPlanService.test_invalid_get_meal_plan_by_pin">
 <code class="descname">test_invalid_get_meal_plan_by_pin</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/unittests/services/test_meal_plan_service.html#TestMealPlanService.test_invalid_get_meal_plan_by_pin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.unittests.services.test_meal_plan_service.TestMealPlanService.test_invalid_get_meal_plan_by_pin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests get_meal_plan_by_pin with a non-existent pin</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.unittests.services.test_meal_plan_service.TestMealPlanService.test_update_meal_plan">
+<code class="descname">test_update_meal_plan</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/unittests/services/test_meal_plan_service.html#TestMealPlanService.test_update_meal_plan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.unittests.services.test_meal_plan_service.TestMealPlanService.test_update_meal_plan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests that meal plans can be updated</p>
 </dd></dl>
 
 </dd></dl>
@@ -114,31 +176,31 @@
 <span id="ovs-tests-unittests-services-test-package-service-module"></span><h2>ovs.tests.unittests.services.test_package_service module<a class="headerlink" href="#module-ovs.tests.unittests.services.test_package_service" title="Permalink to this headline">¶</a></h2>
 <p>Tests for package services</p>
 <dl class="class">
-<dt id="ovs.tests.unittests.services.test_package_service.TestPackageServce">
-<em class="property">class </em><code class="descclassname">ovs.tests.unittests.services.test_package_service.</code><code class="descname">TestPackageServce</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/unittests/services/test_package_service.html#TestPackageServce"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.unittests.services.test_package_service.TestPackageServce" title="Permalink to this definition">¶</a></dt>
+<dt id="ovs.tests.unittests.services.test_package_service.TestPackageService">
+<em class="property">class </em><code class="descclassname">ovs.tests.unittests.services.test_package_service.</code><code class="descname">TestPackageService</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/unittests/services/test_package_service.html#TestPackageService"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.unittests.services.test_package_service.TestPackageService" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="ovs.tests.unittests.html#ovs.tests.unittests.base_test.OVSBaseTestCase" title="ovs.tests.unittests.base_test.OVSBaseTestCase"><code class="xref py py-class docutils literal notranslate"><span class="pre">ovs.tests.unittests.base_test.OVSBaseTestCase</span></code></a></p>
 <p>Tests for package services</p>
 <dl class="method">
-<dt id="ovs.tests.unittests.services.test_package_service.TestPackageServce.create_test_users">
-<code class="descname">create_test_users</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/unittests/services/test_package_service.html#TestPackageServce.create_test_users"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.unittests.services.test_package_service.TestPackageServce.create_test_users" title="Permalink to this definition">¶</a></dt>
+<dt id="ovs.tests.unittests.services.test_package_service.TestPackageService.create_test_users">
+<code class="descname">create_test_users</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/unittests/services/test_package_service.html#TestPackageService.create_test_users"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.unittests.services.test_package_service.TestPackageService.create_test_users" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates two RESIDENT accounts and one ADMIN account for use in testing</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="ovs.tests.unittests.services.test_package_service.TestPackageServce.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/unittests/services/test_package_service.html#TestPackageServce.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.unittests.services.test_package_service.TestPackageServce.setUp" title="Permalink to this definition">¶</a></dt>
+<dt id="ovs.tests.unittests.services.test_package_service.TestPackageService.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/unittests/services/test_package_service.html#TestPackageService.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.unittests.services.test_package_service.TestPackageService.setUp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runs before every test and clears relevant tables</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="ovs.tests.unittests.services.test_package_service.TestPackageServce.test_get_all_packages_recipients_checkers">
-<code class="descname">test_get_all_packages_recipients_checkers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/unittests/services/test_package_service.html#TestPackageServce.test_get_all_packages_recipients_checkers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.unittests.services.test_package_service.TestPackageServce.test_get_all_packages_recipients_checkers" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests get_all_packages_recipients_checkers are expected checkers</p>
+<dt id="ovs.tests.unittests.services.test_package_service.TestPackageService.test_get_all_packages_recipients">
+<code class="descname">test_get_all_packages_recipients</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/unittests/services/test_package_service.html#TestPackageService.test_get_all_packages_recipients"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.unittests.services.test_package_service.TestPackageService.test_get_all_packages_recipients" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests get_all_packages_recipients contains a package</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="ovs.tests.unittests.services.test_package_service.TestPackageServce.test_update_package">
-<code class="descname">test_update_package</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/unittests/services/test_package_service.html#TestPackageServce.test_update_package"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.unittests.services.test_package_service.TestPackageServce.test_update_package" title="Permalink to this definition">¶</a></dt>
+<dt id="ovs.tests.unittests.services.test_package_service.TestPackageService.test_update_package">
+<code class="descname">test_update_package</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/unittests/services/test_package_service.html#TestPackageService.test_update_package"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.unittests.services.test_package_service.TestPackageService.test_update_package" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests that packages can be updated</p>
 </dd></dl>
 
@@ -157,18 +219,6 @@
 <dt id="ovs.tests.unittests.services.test_profile_service.TestProfileService.setUp">
 <code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/unittests/services/test_profile_service.html#TestProfileService.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.unittests.services.test_profile_service.TestProfileService.setUp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runs before every test and clears relevant tables</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ovs.tests.unittests.services.test_profile_service.TestProfileService.test_delete_profile">
-<code class="descname">test_delete_profile</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/unittests/services/test_profile_service.html#TestProfileService.test_delete_profile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.unittests.services.test_profile_service.TestProfileService.test_delete_profile" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests that profiles can be deleted</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ovs.tests.unittests.services.test_profile_service.TestProfileService.test_delete_profile_null">
-<code class="descname">test_delete_profile_null</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/unittests/services/test_profile_service.html#TestProfileService.test_delete_profile_null"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.unittests.services.test_profile_service.TestProfileService.test_delete_profile_null" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests that nothing breaks when deleting a nonexistant profile</p>
 </dd></dl>
 
 <dl class="method">
@@ -216,18 +266,6 @@
 <dt id="ovs.tests.unittests.services.test_resident_service.TestResidentService.test_create_resident_null">
 <code class="descname">test_create_resident_null</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/unittests/services/test_resident_service.html#TestResidentService.test_create_resident_null"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.unittests.services.test_resident_service.TestResidentService.test_create_resident_null" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests that non-resident user accounts cannot be found in Resident database</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ovs.tests.unittests.services.test_resident_service.TestResidentService.test_delete_resident">
-<code class="descname">test_delete_resident</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/unittests/services/test_resident_service.html#TestResidentService.test_delete_resident"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.unittests.services.test_resident_service.TestResidentService.test_delete_resident" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests that profiles can be deleted</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ovs.tests.unittests.services.test_resident_service.TestResidentService.test_delete_resident_null">
-<code class="descname">test_delete_resident_null</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/unittests/services/test_resident_service.html#TestResidentService.test_delete_resident_null"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.unittests.services.test_resident_service.TestResidentService.test_delete_resident_null" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests that nothing breaks when deleting a nonexistant resident</p>
 </dd></dl>
 
 <dl class="method">
@@ -314,9 +352,39 @@
 </dd></dl>
 
 <dl class="method">
+<dt id="ovs.tests.unittests.services.test_room_service.TestRoomService.test_delete_room">
+<code class="descname">test_delete_room</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/unittests/services/test_room_service.html#TestRoomService.test_delete_room"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.unittests.services.test_room_service.TestRoomService.test_delete_room" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests that rooms can be deleted</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.unittests.services.test_room_service.TestRoomService.test_delete_room_invalid">
+<code class="descname">test_delete_room_invalid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/unittests/services/test_room_service.html#TestRoomService.test_delete_room_invalid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.unittests.services.test_room_service.TestRoomService.test_delete_room_invalid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests that a nonexistant room cannot be deleted</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.unittests.services.test_room_service.TestRoomService.test_edit_room">
+<code class="descname">test_edit_room</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/unittests/services/test_room_service.html#TestRoomService.test_edit_room"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.unittests.services.test_room_service.TestRoomService.test_edit_room" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests that rooms can be edited</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.unittests.services.test_room_service.TestRoomService.test_edit_room_invalid">
+<code class="descname">test_edit_room_invalid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/unittests/services/test_room_service.html#TestRoomService.test_edit_room_invalid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.unittests.services.test_room_service.TestRoomService.test_edit_room_invalid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests that rooms can be edited</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="ovs.tests.unittests.services.test_room_service.TestRoomService.test_get_all_rooms">
 <code class="descname">test_get_all_rooms</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/unittests/services/test_room_service.html#TestRoomService.test_get_all_rooms"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.unittests.services.test_room_service.TestRoomService.test_get_all_rooms" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests getting all rooms with 1 entry</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.unittests.services.test_room_service.TestRoomService.test_get_all_rooms_multiple">
+<code class="descname">test_get_all_rooms_multiple</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/unittests/services/test_room_service.html#TestRoomService.test_get_all_rooms_multiple"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.unittests.services.test_room_service.TestRoomService.test_get_all_rooms_multiple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests getting all rooms with 2 entries</p>
 </dd></dl>
 
 <dl class="method">
@@ -347,12 +415,6 @@
 <dt id="ovs.tests.unittests.services.test_room_service.TestRoomService.test_invalid_get_room_by_number">
 <code class="descname">test_invalid_get_room_by_number</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/unittests/services/test_room_service.html#TestRoomService.test_invalid_get_room_by_number"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.unittests.services.test_room_service.TestRoomService.test_invalid_get_room_by_number" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests that get_room_by_number returns None for an invalid room number</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ovs.tests.unittests.services.test_room_service.TestRoomService.tests_get_all_rooms_multiple">
-<code class="descname">tests_get_all_rooms_multiple</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/unittests/services/test_room_service.html#TestRoomService.tests_get_all_rooms_multiple"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.unittests.services.test_room_service.TestRoomService.tests_get_all_rooms_multiple" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests getting all rooms with 2 entries</p>
 </dd></dl>
 
 </dd></dl>
@@ -387,6 +449,12 @@
 <dl class="method">
 <dt id="ovs.tests.unittests.services.test_user_service.TestUserService.test_delete_user">
 <code class="descname">test_delete_user</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/unittests/services/test_user_service.html#TestUserService.test_delete_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.unittests.services.test_user_service.TestUserService.test_delete_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests that a user can be deleted</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ovs.tests.unittests.services.test_user_service.TestUserService.test_delete_user_last_admin">
+<code class="descname">test_delete_user_last_admin</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/tests/unittests/services/test_user_service.html#TestUserService.test_delete_user_last_admin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.tests.unittests.services.test_user_service.TestUserService.test_delete_user_last_admin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests that a user can be deleted</p>
 </dd></dl>
 
@@ -457,6 +525,7 @@
 <li><a class="reference internal" href="#">ovs.tests.unittests.services package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
 <li><a class="reference internal" href="#module-ovs.tests.unittests.services.test_mail_service">ovs.tests.unittests.services.test_mail_service module</a></li>
+<li><a class="reference internal" href="#module-ovs.tests.unittests.services.test_manager_service">ovs.tests.unittests.services.test_manager_service module</a></li>
 <li><a class="reference internal" href="#module-ovs.tests.unittests.services.test_meal_plan_service">ovs.tests.unittests.services.test_meal_plan_service module</a></li>
 <li><a class="reference internal" href="#module-ovs.tests.unittests.services.test_package_service">ovs.tests.unittests.services.test_package_service module</a></li>
 <li><a class="reference internal" href="#module-ovs.tests.unittests.services.test_profile_service">ovs.tests.unittests.services.test_profile_service module</a></li>

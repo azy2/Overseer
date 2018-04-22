@@ -41,13 +41,12 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Defines a MealPlan as represented in the database</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
 
 <span class="kn">from</span> <span class="nn">flask</span> <span class="k">import</span> <span class="n">jsonify</span>
-<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="k">import</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">Column</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">DateTime</span><span class="p">,</span> <span class="n">Sequence</span>
-<span class="kn">from</span> <span class="nn">sqlalchemy.exc</span> <span class="k">import</span> <span class="n">SQLAlchemyError</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="k">import</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">Column</span><span class="p">,</span> <span class="n">DateTime</span><span class="p">,</span> <span class="n">Sequence</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.sql</span> <span class="k">import</span> <span class="n">func</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.orm</span> <span class="k">import</span> <span class="n">relationship</span>
 
 <span class="kn">from</span> <span class="nn">ovs</span> <span class="k">import</span> <span class="n">db</span>
 
@@ -55,6 +54,13 @@
 <div class="viewcode-block" id="MealPlan"><a class="viewcode-back" href="../../../ovs.models.html#ovs.models.meal_plan_model.MealPlan">[docs]</a><span class="k">class</span> <span class="nc">MealPlan</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Defines a MealPlan as represented in the database. Along with some utility functions.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        meal_plan (int): The number of meals the plan is reset too after reset_date.</span>
+<span class="sd">        plan_type (enum): Either &#39;WEEKLY&#39;, &#39;SEMESTERLY&#39; or &#39;LIFETIME&#39;. Determines when the meals get reset.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        MealPlan: a new MealPlan Model object.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;mealplan&#39;</span>
 
@@ -64,8 +70,9 @@
     <span class="n">meal_plan</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">reset_date</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">DateTime</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">())</span>
     <span class="n">plan_type</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Enum</span><span class="p">(</span><span class="s1">&#39;WEEKLY&#39;</span><span class="p">,</span> <span class="s1">&#39;SEMESTERLY&#39;</span><span class="p">,</span> <span class="s1">&#39;LIFETIME&#39;</span><span class="p">),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">created</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">DateTime</span><span class="p">,</span> <span class="n">server_default</span><span class="o">=</span><span class="n">text</span><span class="p">(</span><span class="s1">&#39;CURRENT_TIMESTAMP&#39;</span><span class="p">))</span>
-    <span class="n">updated</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">DateTime</span><span class="p">,</span> <span class="n">server_default</span><span class="o">=</span><span class="n">text</span><span class="p">(</span><span class="s1">&#39;CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP&#39;</span><span class="p">))</span>
+    <span class="n">created</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">DateTime</span><span class="p">,</span> <span class="n">server_default</span><span class="o">=</span><span class="n">func</span><span class="o">.</span><span class="n">now</span><span class="p">())</span>
+    <span class="n">updated</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">DateTime</span><span class="p">,</span> <span class="n">server_default</span><span class="o">=</span><span class="n">func</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span> <span class="n">server_onupdate</span><span class="o">=</span><span class="n">func</span><span class="o">.</span><span class="n">now</span><span class="p">())</span>
+    <span class="n">resident</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s1">&#39;Resident&#39;</span><span class="p">,</span> <span class="n">uselist</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">single_parent</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">meal_plan</span><span class="p">,</span> <span class="n">plan_type</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">MealPlan</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
@@ -76,52 +83,102 @@
 <div class="viewcode-block" id="MealPlan.update_meal_count"><a class="viewcode-back" href="../../../ovs.models.html#ovs.models.meal_plan_model.MealPlan.update_meal_count">[docs]</a>    <span class="k">def</span> <span class="nf">update_meal_count</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Uses a meal credit, as outlined by the plan.</span>
-<span class="sd">        :return: Boolean, whether a credit was available</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: Whether a credit was available.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_reset_date</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">credits</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">credits</span> <span class="o">-=</span> <span class="mi">1</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="MealPlan.check_reset_date"><a class="viewcode-back" href="../../../ovs.models.html#ovs.models.meal_plan_model.MealPlan.check_reset_date">[docs]</a>    <span class="k">def</span> <span class="nf">check_reset_date</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks a meal plan&#39;s reset date. If it has past,</span>
+<span class="sd">        this updates the reset_date and resets the credits.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: Whether the reset date was changed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">plan_type</span> <span class="o">==</span> <span class="s1">&#39;LIFETIME&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">reset_date</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">reset_date</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">reset_date</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_next_reset_date</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">credits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">meal_plan</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">credits</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">credits</span> <span class="o">-=</span> <span class="mi">1</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
-                <span class="k">return</span> <span class="kc">True</span>
-            <span class="k">except</span> <span class="n">SQLAlchemyError</span><span class="p">:</span>
-                <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;Failed to update meal plan credits.&#39;</span><span class="p">)</span>
-                <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">rollback</span><span class="p">()</span>
-                <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">return</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="kc">False</span></div>
 
 <div class="viewcode-block" id="MealPlan.get_next_reset_date"><a class="viewcode-back" href="../../../ovs.models.html#ovs.models.meal_plan_model.MealPlan.get_next_reset_date">[docs]</a>    <span class="k">def</span> <span class="nf">get_next_reset_date</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Gets the next reset day based off the plan type</span>
-<span class="sd">        :return: DateTime value for reset_day</span>
+<span class="sd">        Gets the next reset day based off the plan type.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            DateTime: value for reset_day.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">plan_type</span> <span class="o">==</span> <span class="s1">&#39;WEEKLY&#39;</span><span class="p">:</span>
             <span class="n">date</span> <span class="o">=</span> <span class="n">MealPlan</span><span class="o">.</span><span class="n">next_weekday</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">(),</span> <span class="mi">0</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">date</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">hour</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">minute</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">second</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">microsecond</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>  <span class="c1"># error case. This does give them unlimited meals</span>
-            <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span></div>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">plan_type</span> <span class="o">==</span> <span class="s1">&#39;SEMESTERLY&#39;</span><span class="p">:</span>
+            <span class="n">date</span> <span class="o">=</span> <span class="n">MealPlan</span><span class="o">.</span><span class="n">next_half_year</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">())</span>
+            <span class="k">return</span> <span class="n">date</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">hour</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">minute</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">second</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">microsecond</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1"># error case. This does give them unlimited meals</span>
+        <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="MealPlan.next_half_year"><a class="viewcode-back" href="../../../ovs.models.html#ovs.models.meal_plan_model.MealPlan.next_half_year">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">next_half_year</span><span class="p">(</span><span class="n">date</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the next January or July first after date.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            date (DateTime): DateTime to start.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            DateTime: A DateTime with date as the next half year and time identical to provided date.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">month</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="n">month</span>
+        <span class="n">next_month</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">month</span> <span class="o">&lt;</span> <span class="mi">7</span><span class="p">:</span>
+            <span class="n">next_month</span> <span class="o">=</span> <span class="mi">7</span>
+        <span class="n">next_year</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="n">year</span>
+        <span class="k">if</span> <span class="n">next_month</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">next_year</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">date</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">month</span><span class="o">=</span><span class="n">next_month</span><span class="p">,</span> <span class="n">day</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">year</span><span class="o">=</span><span class="n">next_year</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="MealPlan.next_weekday"><a class="viewcode-back" href="../../../ovs.models.html#ovs.models.meal_plan_model.MealPlan.next_weekday">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">next_weekday</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="n">weekday</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Gets the next weekday after date</span>
-<span class="sd">        :param date: DateTime to start</span>
-<span class="sd">        :param weekday: 0 for Monday ... 6 for Sunday</span>
-<span class="sd">        :return: DateTime with date as the next weekday and time identical to provided date.</span>
+<span class="sd">        Gets the next weekday after date.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            date (DateTime): Date to get the next weekday for.</span>
+<span class="sd">            weekday (int): 0 for Monday, 1 for Tuesday, ... 6 for Sunday</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            DateTime: A DateTime object set to the next weekday after `date` with identical time fields.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">days_ahead</span> <span class="o">=</span> <span class="n">weekday</span> <span class="o">-</span> <span class="n">date</span><span class="o">.</span><span class="n">weekday</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">days_ahead</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># Target day already happened this week</span>
             <span class="n">days_ahead</span> <span class="o">+=</span> <span class="mi">7</span>
         <span class="k">return</span> <span class="n">date</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">days_ahead</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="MealPlan.__repr__"><a class="viewcode-back" href="../../../ovs.models.html#ovs.models.meal_plan_model.MealPlan.__repr__">[docs]</a>    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Makes MealPlan printable.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            str: A string representation of this MealPlan.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="s1">&#39;MealPlan([id=</span><span class="si">{id}</span><span class="s1">, pin=</span><span class="si">{pin}</span><span class="s1">, credits=</span><span class="si">{credits}</span><span class="s1">, meal_plan=</span><span class="si">{meal_plan}</span><span class="s1">, plan_type=</span><span class="si">{plan_type}</span><span class="s1">, &#39;</span> \
-               <span class="s1">&#39;created=</span><span class="si">{created}</span><span class="s1">, updated=</span><span class="si">{updated}</span><span class="s1">])&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span>
+               <span class="s1">&#39;created=</span><span class="si">{created}</span><span class="s1">, updated=</span><span class="si">{updated}</span><span class="s1">])&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="MealPlan.json"><a class="viewcode-back" href="../../../ovs.models.html#ovs.models.meal_plan_model.MealPlan.json">[docs]</a>    <span class="k">def</span> <span class="nf">json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Returns a JSON representation of this Meal Plan &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get a JSON representation of this Model.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            A JSON representation of this Meal Plan.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span>
             <span class="nb">id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
             <span class="n">number</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pin</span><span class="p">,</span>

@@ -40,37 +40,43 @@
   <h1>Source code for ovs.models.package_model</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot; Defines a Package as represented in the database &quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">flask</span> <span class="k">import</span> <span class="n">jsonify</span>
-<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="k">import</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">Column</span><span class="p">,</span> <span class="n">VARCHAR</span><span class="p">,</span> <span class="n">Boolean</span><span class="p">,</span> <span class="n">DateTime</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="k">import</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">Column</span><span class="p">,</span> <span class="n">VARCHAR</span><span class="p">,</span> <span class="n">DateTime</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">,</span> <span class="n">String</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.orm</span> <span class="k">import</span> <span class="n">relationship</span>
 
 <span class="kn">from</span> <span class="nn">ovs</span> <span class="k">import</span> <span class="n">db</span>
 
 
 <div class="viewcode-block" id="Package"><a class="viewcode-back" href="../../../ovs.models.html#ovs.models.package_model.Package">[docs]</a><span class="k">class</span> <span class="nc">Package</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Defines a Package as represented in the database &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot; Defines a Package as represented in the database. &quot;&quot;&quot;</span>
     <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;packages&#39;</span>
 
     <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">recipient_id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="s1">&#39;recipient_id&#39;</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">checked_by_id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="s1">&#39;checked_by_id&#39;</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">recipient_id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="s1">&#39;recipient_id&#39;</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;residents.user_id&#39;</span><span class="p">),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">checked_by</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="s1">&#39;checked_by&#39;</span><span class="p">,</span> <span class="n">String</span><span class="p">(</span><span class="mi">511</span><span class="p">),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">checked_at</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="s1">&#39;checked_at&#39;</span><span class="p">,</span> <span class="n">DateTime</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">is_signed</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="s1">&#39;is_signed&#39;</span><span class="p">,</span> <span class="n">Boolean</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">signed_at</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="s1">&#39;signed_at&#39;</span><span class="p">,</span> <span class="n">DateTime</span><span class="p">,</span> <span class="n">server_default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
     <span class="n">description</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="s1">&#39;description&#39;</span><span class="p">,</span> <span class="n">VARCHAR</span><span class="p">(</span><span class="mi">2047</span><span class="p">),</span> <span class="n">server_default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">recipient</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s1">&#39;Resident&#39;</span><span class="p">,</span> <span class="n">uselist</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">single_parent</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s1">&#39;Package([id=</span><span class="si">{id}</span><span class="s1">, recipient_id=</span><span class="si">{recipient_id}</span><span class="s1">, checked_by_id=</span><span class="si">{checked_by_id}</span><span class="s1">, &#39;</span> \
-               <span class="s1">&#39;checked_at=</span><span class="si">{checked_at}</span><span class="s1">, is_signed=</span><span class="si">{is_signed}</span><span class="s1">, signed_at=</span><span class="si">{signed_at}</span><span class="s1">, &#39;</span> \
-               <span class="s1">&#39;description=</span><span class="si">{description}</span><span class="s1">])&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span>
+<div class="viewcode-block" id="Package.__repr__"><a class="viewcode-back" href="../../../ovs.models.html#ovs.models.package_model.Package.__repr__">[docs]</a>    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Allows Package to be printed.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            str: A string representation of this Package.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s1">&#39;Package([id=</span><span class="si">{id}</span><span class="s1">, recipient_id=</span><span class="si">{recipient_id}</span><span class="s1">, checked_by=</span><span class="si">{checked_by}</span><span class="s1">, &#39;</span> \
+               <span class="s1">&#39;checked_at=</span><span class="si">{checked_at}</span><span class="s1">, description=</span><span class="si">{description}</span><span class="s1">])&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Package.json"><a class="viewcode-back" href="../../../ovs.models.html#ovs.models.package_model.Package.json">[docs]</a>    <span class="k">def</span> <span class="nf">json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Returns a JSON representation of the Package &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get JSON representation of this Package.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">             A JSON representation of this Package.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span>
             <span class="nb">id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
             <span class="n">recipient_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">recipient_id</span><span class="p">,</span>
-            <span class="n">checked_by_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">checked_by_id</span><span class="p">,</span>
+            <span class="n">checked_by</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">checked_by</span><span class="p">,</span>
             <span class="n">checked_at</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">checked_at</span><span class="p">,</span>
-            <span class="n">is_signed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">is_signed</span><span class="p">,</span>
-            <span class="n">signed_at</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">signed_at</span><span class="p">,</span>
             <span class="n">description</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">description</span>
         <span class="p">)</span></div></div>
 </pre></div>

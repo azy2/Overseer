@@ -18,32 +18,24 @@ Subpackages
 Submodules
 ----------
 
-ovs\.blob module
-----------------
+ovs.blob module
+---------------
 
 .. automodule:: ovs.blob
     :members:
     :undoc-members:
     :show-inheritance:
 
-ovs\.config module
-------------------
+ovs.config module
+-----------------
 
 .. automodule:: ovs.config
     :members:
     :undoc-members:
     :show-inheritance:
 
-ovs\.database module
---------------------
-
-.. automodule:: ovs.database
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-ovs\.datagen module
--------------------
+ovs.datagen module
+------------------
 
 .. automodule:: ovs.datagen
     :members:

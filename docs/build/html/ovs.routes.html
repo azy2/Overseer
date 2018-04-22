@@ -42,133 +42,391 @@
 </div>
 <div class="section" id="module-ovs.routes.admin_routes">
 <span id="ovs-routes-admin-routes-module"></span><h2>ovs.routes.admin_routes module<a class="headerlink" href="#module-ovs.routes.admin_routes" title="Permalink to this headline">¶</a></h2>
-<p>routes under /admin/</p>
+<p>Routes defined under ‘/admin’.</p>
 <dl class="function">
-<dt id="ovs.routes.admin_routes.register_manager">
-<code class="descclassname">ovs.routes.admin_routes.</code><code class="descname">register_manager</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/routes/admin_routes.html#register_manager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.routes.admin_routes.register_manager" title="Permalink to this definition">¶</a></dt>
-<dd><p>/admin/register_manager serves an html form with input fields for email,
-first name, last name, and role and accepts that form (POST) and adds a user
-to the user table with a default password.</p>
+<dt id="ovs.routes.admin_routes.manage_managers">
+<code class="descclassname">ovs.routes.admin_routes.</code><code class="descname">manage_managers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/routes/admin_routes.html#manage_managers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.routes.admin_routes.manage_managers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Manager management page accessed by ‘/admin/manage_managers’.</p>
+<dl class="method">
+<dt>
+<code class="descname">GET, POST.</code></dt>
+<dd></dd></dl>
+
+<dl class="docutils">
+<dt>Permissions:</dt>
+<dd>Accessible to ADMIN or higher level users.</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A Flask template.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
 <div class="section" id="module-ovs.routes.auth_routes">
 <span id="ovs-routes-auth-routes-module"></span><h2>ovs.routes.auth_routes module<a class="headerlink" href="#module-ovs.routes.auth_routes" title="Permalink to this headline">¶</a></h2>
-<p>routes under /auth/</p>
+<p>Routes defined under ‘/auth’.</p>
 <dl class="function">
 <dt id="ovs.routes.auth_routes.login">
 <code class="descclassname">ovs.routes.auth_routes.</code><code class="descname">login</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/routes/auth_routes.html#login"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.routes.auth_routes.login" title="Permalink to this definition">¶</a></dt>
-<dd><p>Interface for users to login</p>
+<dd><p>Login in page accessed by ‘/auth/login’.</p>
+<dl class="method">
+<dt>
+<code class="descname">GET, POST.</code></dt>
+<dd></dd></dl>
+
+<dl class="docutils">
+<dt>Permissions:</dt>
+<dd>Accessible to ALL.</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A Flask template.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="ovs.routes.auth_routes.logout">
 <code class="descclassname">ovs.routes.auth_routes.</code><code class="descname">logout</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/routes/auth_routes.html#logout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.routes.auth_routes.logout" title="Permalink to this definition">¶</a></dt>
-<dd><p>Logs a user out</p>
+<dd><p>Logout page accessed by ‘/auth/logout/’.</p>
+<dl class="method">
+<dt>
+<code class="descname">GET.</code></dt>
+<dd></dd></dl>
+
+<dl class="docutils">
+<dt>Permissions:</dt>
+<dd>Accessible to ALL.</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A Flask template.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
-</div>
-<div class="section" id="module-ovs.routes.dev_routes">
-<span id="ovs-routes-dev-routes-module"></span><h2>ovs.routes.dev_routes module<a class="headerlink" href="#module-ovs.routes.dev_routes" title="Permalink to this headline">¶</a></h2>
-<p>Routes for developers</p>
 <dl class="function">
-<dt id="ovs.routes.dev_routes.dev_home_page">
-<code class="descclassname">ovs.routes.dev_routes.</code><code class="descname">dev_home_page</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/routes/dev_routes.html#dev_home_page"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.routes.dev_routes.dev_home_page" title="Permalink to this definition">¶</a></dt>
-<dd><p>A home page that displays links to all accessible routes</p>
+<dt id="ovs.routes.auth_routes.request_user_reset">
+<code class="descclassname">ovs.routes.auth_routes.</code><code class="descname">request_user_reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/routes/auth_routes.html#request_user_reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.routes.auth_routes.request_user_reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Password reset request page accessed by ‘/auth/reset’.</p>
+<dl class="method">
+<dt>
+<code class="descname">GET, POST.</code></dt>
+<dd></dd></dl>
+
+<dl class="docutils">
+<dt>Permissions:</dt>
+<dd>Accessible to ALL.</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A Flask template.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
-<dt id="ovs.routes.dev_routes.has_no_empty_params">
-<code class="descclassname">ovs.routes.dev_routes.</code><code class="descname">has_no_empty_params</code><span class="sig-paren">(</span><em>rule</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/routes/dev_routes.html#has_no_empty_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.routes.dev_routes.has_no_empty_params" title="Permalink to this definition">¶</a></dt>
-<dd><p>Checks if the rule is valid for navigation</p>
+<dt id="ovs.routes.auth_routes.reset_user">
+<code class="descclassname">ovs.routes.auth_routes.</code><code class="descname">reset_user</code><span class="sig-paren">(</span><em>token</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/routes/auth_routes.html#reset_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.routes.auth_routes.reset_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Password reset page accessed by ‘/auth/reset/&lt;token&gt;’.</p>
+<dl class="method">
+<dt>
+<code class="descname">GET, POST.</code></dt>
+<dd></dd></dl>
+
+<dl class="docutils">
+<dt>Permissions:</dt>
+<dd>Accessible to ALL.</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>token</strong> – A password reset token.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A Flask template.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
 <div class="section" id="module-ovs.routes.manager_routes">
 <span id="ovs-routes-manager-routes-module"></span><h2>ovs.routes.manager_routes module<a class="headerlink" href="#module-ovs.routes.manager_routes" title="Permalink to this headline">¶</a></h2>
-<p>Routes under /manager/</p>
+<p>Routes defined under ‘/manager’.</p>
 <dl class="function">
-<dt id="ovs.routes.manager_routes.add_meals">
-<code class="descclassname">ovs.routes.manager_routes.</code><code class="descname">add_meals</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/routes/manager_routes.html#add_meals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.routes.manager_routes.add_meals" title="Permalink to this definition">¶</a></dt>
-<dd><p>/manager/meal_login serves an html form with input field pin
-and accepts that form (POST) and logs the use to a meal plan</p>
-</dd></dl>
+<dt id="ovs.routes.manager_routes.get_residents">
+<code class="descclassname">ovs.routes.manager_routes.</code><code class="descname">get_residents</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/routes/manager_routes.html#get_residents"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.routes.manager_routes.get_residents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all resident email request accessed by ‘/manager/get_residents’.</p>
+<dl class="method">
+<dt>
+<code class="descname">POST.</code></dt>
+<dd></dd></dl>
 
-<dl class="function">
-<dt id="ovs.routes.manager_routes.create_meal_plan">
-<code class="descclassname">ovs.routes.manager_routes.</code><code class="descname">create_meal_plan</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/routes/manager_routes.html#create_meal_plan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.routes.manager_routes.create_meal_plan" title="Permalink to this definition">¶</a></dt>
-<dd><p>/manager/meal_login serves an html form with input field pin
-and accepts that form (POST) and logs the use to a meal plan</p>
+<dl class="docutils">
+<dt>Permissions:</dt>
+<dd>Accessible to STAFF or higher level users.</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A json object.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="ovs.routes.manager_routes.landing_page">
 <code class="descclassname">ovs.routes.manager_routes.</code><code class="descname">landing_page</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/routes/manager_routes.html#landing_page"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.routes.manager_routes.landing_page" title="Permalink to this definition">¶</a></dt>
-<dd><p>The landing page for managers</p>
+<dd><p>Home page for managers accessed by ‘/manager’.</p>
+<dl class="method">
+<dt>
+<code class="descname">GET.</code></dt>
+<dd></dd></dl>
+
+<dl class="docutils">
+<dt>Permissions:</dt>
+<dd>Accessible to STAFF or higher level users.</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A Flask template.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="ovs.routes.manager_routes.manage_meal_plans">
+<code class="descclassname">ovs.routes.manager_routes.</code><code class="descname">manage_meal_plans</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/routes/manager_routes.html#manage_meal_plans"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.routes.manager_routes.manage_meal_plans" title="Permalink to this definition">¶</a></dt>
+<dd><p>Meal plan mangement page accessed by ‘/manager/manage_meal_plans’.</p>
+<dl class="method">
+<dt>
+<code class="descname">GET, POST.</code></dt>
+<dd></dd></dl>
+
+<dl class="docutils">
+<dt>Permissions:</dt>
+<dd>Accessible to STAFF or higher level users.</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A Flask template.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="ovs.routes.manager_routes.manage_packages">
 <code class="descclassname">ovs.routes.manager_routes.</code><code class="descname">manage_packages</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/routes/manager_routes.html#manage_packages"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.routes.manager_routes.manage_packages" title="Permalink to this definition">¶</a></dt>
-<dd><p>/manager/register_resident serves an html form with input fields for email,
-first name, and last name and accepts that form (POST) and adds a user
-to the user table with a default password.</p>
+<dd><p>Package management page accessed by ‘/manager/manage_packages’.</p>
+<dl class="method">
+<dt>
+<code class="descname">GET, POST.</code></dt>
+<dd></dd></dl>
+
+<dl class="docutils">
+<dt>Permissions:</dt>
+<dd>Accessible to STAFF or higher level users.</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A Flask template.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="ovs.routes.manager_routes.manage_residents">
 <code class="descclassname">ovs.routes.manager_routes.</code><code class="descname">manage_residents</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/routes/manager_routes.html#manage_residents"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.routes.manager_routes.manage_residents" title="Permalink to this definition">¶</a></dt>
-<dd><p>/manager/manage_residents serves a HTML with list of residents with their info.
-It allows a manager to add/edit/delete residents with form inputs.</p>
+<dd><p>Residents management page accessed by ‘/manager/manage_residents’.</p>
+<dl class="method">
+<dt>
+<code class="descname">GET, POST.</code></dt>
+<dd></dd></dl>
+
+<dl class="docutils">
+<dt>Permissions:</dt>
+<dd>Accessible to STAFF or higher level users.</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A Flask template.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="ovs.routes.manager_routes.manage_rooms">
+<code class="descclassname">ovs.routes.manager_routes.</code><code class="descname">manage_rooms</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/routes/manager_routes.html#manage_rooms"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.routes.manager_routes.manage_rooms" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rooms management page accessed by ‘/manager/manage_rooms’.</p>
+<dl class="method">
+<dt>
+<code class="descname">GET, POST.</code></dt>
+<dd></dd></dl>
+
+<dl class="docutils">
+<dt>Permissions:</dt>
+<dd>Accessible to STAFF or higher level users.</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A Flask template.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="ovs.routes.manager_routes.meal_login">
 <code class="descclassname">ovs.routes.manager_routes.</code><code class="descname">meal_login</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/routes/manager_routes.html#meal_login"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.routes.manager_routes.meal_login" title="Permalink to this definition">¶</a></dt>
-<dd><p>/manager/meal_login serves an html form with input field pin
-and accepts that form (POST) and logs the use to a meal plan</p>
+<dd><p>Meal login page accessed by ‘manager/meal_login’.</p>
+<dl class="method">
+<dt>
+<code class="descname">GET, POST.</code></dt>
+<dd></dd></dl>
+
+<dl class="docutils">
+<dt>Permissions:</dt>
+<dd>Accessible to STAFF or higher level users.</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A Flask template.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="ovs.routes.manager_routes.meal_undo">
 <code class="descclassname">ovs.routes.manager_routes.</code><code class="descname">meal_undo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/routes/manager_routes.html#meal_undo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.routes.manager_routes.meal_undo" title="Permalink to this definition">¶</a></dt>
-<dd><p>/manager/meal_undo accepts that form (POST) and undo the use of a meal plan
-Currently uses manager id to distinguish frontends. Should use session token.</p>
-</dd></dl>
+<dd><p>Undo meal request accessed by ‘/manager/meal_undo’.</p>
+<dl class="method">
+<dt>
+<code class="descname">POST.</code></dt>
+<dd></dd></dl>
 
-<dl class="function">
-<dt id="ovs.routes.manager_routes.register_room">
-<code class="descclassname">ovs.routes.manager_routes.</code><code class="descname">register_room</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/routes/manager_routes.html#register_room"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.routes.manager_routes.register_room" title="Permalink to this definition">¶</a></dt>
-<dd><p>/manager/register_room serves an HTML form with input fields for room #,
-status, and type and accepts that form (POST) and adds a room to the
-rooms table. The option for admins to add current residents to said
-room is an available option.</p>
+<dl class="docutils">
+<dt>Permissions:</dt>
+<dd>Accessible to STAFF or higher level users.</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A Flask template.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
 <div class="section" id="module-ovs.routes.ovs_routes">
 <span id="ovs-routes-ovs-routes-module"></span><h2>ovs.routes.ovs_routes module<a class="headerlink" href="#module-ovs.routes.ovs_routes" title="Permalink to this headline">¶</a></h2>
-<p>Routes under /</p>
+<p>Routes defined under ‘/’.</p>
+<dl class="function">
+<dt id="ovs.routes.ovs_routes.edit_profile">
+<code class="descclassname">ovs.routes.ovs_routes.</code><code class="descname">edit_profile</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/routes/ovs_routes.html#edit_profile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.routes.ovs_routes.edit_profile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Profile edit page accessed by ‘/profile’.</p>
+<dl class="method">
+<dt>
+<code class="descname">GET, POST.</code></dt>
+<dd></dd></dl>
+
+<dl class="docutils">
+<dt>Permissions:</dt>
+<dd>Accessible to all users.</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A Flask template.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="function">
 <dt id="ovs.routes.ovs_routes.landing_page">
 <code class="descclassname">ovs.routes.ovs_routes.</code><code class="descname">landing_page</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/routes/ovs_routes.html#landing_page"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.routes.ovs_routes.landing_page" title="Permalink to this definition">¶</a></dt>
-<dd><p>The homepage for OVS</p>
+<dd><p>The home page accessed by ‘/’.</p>
+<dl class="method">
+<dt>
+<code class="descname">GET.</code></dt>
+<dd></dd></dl>
+
+<dl class="docutils">
+<dt>Permissions:</dt>
+<dd>Accessible to ALL.</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A Flask template.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
 <div class="section" id="module-ovs.routes.resident_routes">
 <span id="ovs-routes-resident-routes-module"></span><h2>ovs.routes.resident_routes module<a class="headerlink" href="#module-ovs.routes.resident_routes" title="Permalink to this headline">¶</a></h2>
-<p>under /resident</p>
-<dl class="function">
-<dt id="ovs.routes.resident_routes.edit_profile">
-<code class="descclassname">ovs.routes.resident_routes.</code><code class="descname">edit_profile</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/routes/resident_routes.html#edit_profile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.routes.resident_routes.edit_profile" title="Permalink to this definition">¶</a></dt>
-<dd><p>Allows the user to edit their profile in a wtform</p>
-</dd></dl>
-
+<p>Routes defined under ‘/resident’.</p>
 <dl class="function">
 <dt id="ovs.routes.resident_routes.landing_page">
 <code class="descclassname">ovs.routes.resident_routes.</code><code class="descname">landing_page</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/routes/resident_routes.html#landing_page"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.routes.resident_routes.landing_page" title="Permalink to this definition">¶</a></dt>
-<dd><p>The landing page for residents</p>
+<dd><p>Home page for residents accessed by ‘/resident’.</p>
+<dl class="method">
+<dt>
+<code class="descname">GET.</code></dt>
+<dd></dd></dl>
+
+<dl class="docutils">
+<dt>Permissions:</dt>
+<dd>Accessible to RESIDENT or higher level users.</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A Flask template.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
@@ -190,7 +448,6 @@ room is an available option.</p>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
 <li><a class="reference internal" href="#module-ovs.routes.admin_routes">ovs.routes.admin_routes module</a></li>
 <li><a class="reference internal" href="#module-ovs.routes.auth_routes">ovs.routes.auth_routes module</a></li>
-<li><a class="reference internal" href="#module-ovs.routes.dev_routes">ovs.routes.dev_routes module</a></li>
 <li><a class="reference internal" href="#module-ovs.routes.manager_routes">ovs.routes.manager_routes module</a></li>
 <li><a class="reference internal" href="#module-ovs.routes.ovs_routes">ovs.routes.ovs_routes module</a></li>
 <li><a class="reference internal" href="#module-ovs.routes.resident_routes">ovs.routes.resident_routes module</a></li>

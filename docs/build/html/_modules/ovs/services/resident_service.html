@@ -41,25 +41,16 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">DB and utility functions for Residents</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-
-<span class="kn">from</span> <span class="nn">sqlalchemy.exc</span> <span class="k">import</span> <span class="n">SQLAlchemyError</span>
-
 <span class="kn">from</span> <span class="nn">ovs</span> <span class="k">import</span> <span class="n">db</span>
-<span class="kn">from</span> <span class="nn">ovs.models.profile_model</span> <span class="k">import</span> <span class="n">Profile</span>
 <span class="kn">from</span> <span class="nn">ovs.models.resident_model</span> <span class="k">import</span> <span class="n">Resident</span>
 <span class="kn">from</span> <span class="nn">ovs.models.user_model</span> <span class="k">import</span> <span class="n">User</span>
-<span class="kn">from</span> <span class="nn">ovs.utils</span> <span class="k">import</span> <span class="n">genders</span>
 
 
 <div class="viewcode-block" id="ResidentService"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.resident_service.ResidentService">[docs]</a><span class="k">class</span> <span class="nc">ResidentService</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot; DB and utility functions for Residents &quot;&quot;&quot;</span>
-
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">pass</span>
+    <span class="sd">&quot;&quot;&quot; DB and utility functions for Residents. &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="ResidentService.create_resident"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.resident_service.ResidentService.create_resident">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">create_resident</span><span class="p">(</span><span class="n">new_user</span><span class="p">,</span> <span class="n">room_number</span><span class="o">=</span><span class="s1">&#39;None&#39;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">create_resident</span><span class="p">(</span><span class="n">new_user</span><span class="p">,</span> <span class="n">room_number</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Adds a resident to the Resident table.</span>
 
@@ -70,31 +61,10 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            The Resident db model that was just created.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">ovs.services.profile_service</span> <span class="k">import</span> <span class="n">ProfileService</span>
-        <span class="kn">from</span> <span class="nn">ovs.services.room_service</span> <span class="k">import</span> <span class="n">RoomService</span>
-
         <span class="n">new_resident</span> <span class="o">=</span> <span class="n">Resident</span><span class="p">(</span><span class="n">new_user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-        <span class="n">new_resident_profile</span> <span class="o">=</span> <span class="n">Profile</span><span class="p">(</span><span class="n">new_user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-        <span class="n">new_resident_profile</span><span class="o">.</span><span class="n">preferred_name</span> <span class="o">=</span> <span class="n">new_user</span><span class="o">.</span><span class="n">first_name</span>
-        <span class="n">new_resident_profile</span><span class="o">.</span><span class="n">preferred_email</span> <span class="o">=</span> <span class="n">new_user</span><span class="o">.</span><span class="n">email</span>
-        <span class="n">new_resident_profile</span><span class="o">.</span><span class="n">gender</span> <span class="o">=</span> <span class="n">genders</span><span class="o">.</span><span class="n">UNSPECIFIED</span>
-        <span class="n">ProfileService</span><span class="o">.</span><span class="n">set_default_picture</span><span class="p">(</span><span class="n">new_resident_profile</span><span class="o">.</span><span class="n">picture_id</span><span class="p">)</span>
-
-        <span class="n">room</span> <span class="o">=</span> <span class="n">RoomService</span><span class="o">.</span><span class="n">get_room_by_number</span><span class="p">(</span><span class="n">room_number</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">room</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;Failed to create resident because of invalid room number&#39;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="kc">None</span>
         <span class="n">new_resident</span><span class="o">.</span><span class="n">room_number</span> <span class="o">=</span> <span class="n">room_number</span>
-
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">new_resident</span><span class="p">)</span>
-            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">new_resident_profile</span><span class="p">)</span>
-            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
-        <span class="k">except</span> <span class="n">SQLAlchemyError</span><span class="p">:</span>
-            <span class="c1"># Resident must be unique by their email.</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;Failed to create resident.&#39;</span><span class="p">)</span>
-            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">rollback</span><span class="p">()</span>
-            <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">new_resident</span><span class="p">)</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
 
         <span class="k">return</span> <span class="n">new_resident</span></div>
 
@@ -109,37 +79,11 @@
 <span class="sd">            first_name: New first name.</span>
 <span class="sd">            last_name: New last name.</span>
 <span class="sd">            room_number: New room number.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            If the edit/update was successful.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="kn">from</span> <span class="nn">ovs.services.user_service</span> <span class="k">import</span> <span class="n">UserService</span>
         <span class="kn">from</span> <span class="nn">ovs.services.room_service</span> <span class="k">import</span> <span class="n">RoomService</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">UserService</span><span class="o">.</span><span class="n">edit_user</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">email</span><span class="p">,</span> <span class="n">first_name</span><span class="p">,</span> <span class="n">last_name</span><span class="p">)</span>
-                <span class="ow">and</span> <span class="n">RoomService</span><span class="o">.</span><span class="n">add_resident_to_room</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">room_number</span><span class="p">))</span></div>
-
-<div class="viewcode-block" id="ResidentService.delete_resident"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.resident_service.ResidentService.delete_resident">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">delete_resident</span><span class="p">(</span><span class="n">user_id</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Deletes an existing resident identified by user_id.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            user_id: Unique user id.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            If the user was successfuly deleted.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">ovs.services.profile_service</span> <span class="k">import</span> <span class="n">ProfileService</span>
-        <span class="n">resident</span> <span class="o">=</span> <span class="n">ResidentService</span><span class="o">.</span><span class="n">get_resident_by_id</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">resident</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">ProfileService</span><span class="o">.</span><span class="n">delete_profile</span><span class="p">(</span><span class="n">user_id</span><span class="p">):</span>
-                <span class="k">try</span><span class="p">:</span>
-                    <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">resident</span><span class="p">)</span>
-                    <span class="k">return</span> <span class="kc">True</span>
-                <span class="k">except</span> <span class="n">SQLAlchemyError</span><span class="p">:</span>
-                    <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;Failed to delete resident.&#39;</span><span class="p">)</span>
-                    <span class="k">return</span> <span class="kc">False</span>
-        <span class="k">return</span> <span class="kc">False</span></div>
+        <span class="n">UserService</span><span class="o">.</span><span class="n">edit_user</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">email</span><span class="p">,</span> <span class="n">first_name</span><span class="p">,</span> <span class="n">last_name</span><span class="p">)</span>
+        <span class="n">RoomService</span><span class="o">.</span><span class="n">add_resident_to_room</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">room_number</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ResidentService.get_resident_by_email"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.resident_service.ResidentService.get_resident_by_email">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_resident_by_email</span><span class="p">(</span><span class="n">email</span><span class="p">):</span>
@@ -152,14 +96,7 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            A Resident db model.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">query</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Resident</span><span class="p">)</span>\
-                <span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="n">User</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">Resident</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">email</span> <span class="o">==</span> <span class="n">email</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
-        <span class="k">except</span> <span class="n">SQLAlchemyError</span><span class="p">:</span>
-            <span class="c1"># There should never be multiple user with the same email.</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;Failed to get resident by email.&#39;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="kc">None</span></div>
+        <span class="k">return</span> <span class="n">Resident</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="n">User</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">Resident</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">email</span> <span class="o">==</span> <span class="n">email</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="ResidentService.get_resident_by_id"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.resident_service.ResidentService.get_resident_by_id">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_resident_by_id</span><span class="p">(</span><span class="n">user_id</span><span class="p">):</span>
@@ -169,14 +106,10 @@
 <span class="sd">        Args:</span>
 <span class="sd">            user_id: Unique user id.</span>
 
-<span class="sd">        Returns Resident db model.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            A Resident db model.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">query</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Resident</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
-        <span class="k">except</span> <span class="n">SQLAlchemyError</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;Failed to get resident by id.&#39;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="kc">None</span></div>
+        <span class="k">return</span> <span class="n">Resident</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="ResidentService.resident_exists"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.resident_service.ResidentService.resident_exists">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">resident_exists</span><span class="p">(</span><span class="n">user_id</span><span class="p">):</span>
@@ -202,12 +135,7 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            A Resident db model.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">query</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Resident</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">mealplan_pin</span><span class="o">=</span><span class="n">pin</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
-        <span class="k">except</span> <span class="n">SQLAlchemyError</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;Failed to get resient by meal pin.&#39;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="kc">None</span></div>
+        <span class="k">return</span> <span class="n">Resident</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">mealplan_pin</span><span class="o">=</span><span class="n">pin</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="ResidentService.set_resident_pin"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.resident_service.ResidentService.set_resident_pin">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">set_resident_pin</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">new_pin</span><span class="p">):</span>
@@ -217,20 +145,11 @@
 <span class="sd">        Args:</span>
 <span class="sd">            user_id: The resident&#39;s unique user id.</span>
 <span class="sd">            new_pin: The new meal pin to be assigned to the resident.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            If the pin was set sucessfully.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Resident</span><span class="p">)</span>\
+        <span class="n">Resident</span><span class="o">.</span><span class="n">query</span>\
                 <span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span>\
                 <span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">Resident</span><span class="o">.</span><span class="n">mealplan_pin</span><span class="p">:</span> <span class="n">new_pin</span><span class="p">})</span>
-            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
-            <span class="k">return</span> <span class="kc">True</span>
-        <span class="k">except</span> <span class="n">SQLAlchemyError</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;Failed to set new meal pin for resident.&#39;</span><span class="p">)</span>
-            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">rollback</span><span class="p">()</span>
-            <span class="k">return</span> <span class="kc">False</span></div>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="ResidentService.get_all_residents_users"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.resident_service.ResidentService.get_all_residents_users">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_all_residents_users</span><span class="p">():</span>
@@ -240,11 +159,8 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            A list of (Resident, User) db model tuples.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Resident</span><span class="p">,</span> <span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="n">Resident</span><span class="o">.</span><span class="n">user_id</span> <span class="o">==</span> <span class="n">User</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-        <span class="k">except</span> <span class="n">SQLAlchemyError</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;Failed to fetch all residents.&#39;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="p">[]</span></div></div>
+        <span class="k">return</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Resident</span><span class="p">,</span> <span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="n">Resident</span><span class="o">.</span><span class="n">user_id</span> <span class="o">==</span> <span class="n">User</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span></div></div>
+        
 </pre></div>
 
           </div>

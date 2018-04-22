@@ -38,25 +38,57 @@
           <div class="body" role="main">
             
   <h1>Source code for ovs.middleware.permissions</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Middleware to allow for user role based endpoint control&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;Middleware to allow for user role based endpoint control.&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">wraps</span>
 <span class="kn">from</span> <span class="nn">flask_login</span> <span class="k">import</span> <span class="n">current_user</span>
 <span class="kn">from</span> <span class="nn">flask</span> <span class="k">import</span> <span class="n">flash</span><span class="p">,</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">request</span>
 <span class="kn">from</span> <span class="nn">ovs.utils</span> <span class="k">import</span> <span class="n">roles</span>
 
+
 <div class="viewcode-block" id="Permissions"><a class="viewcode-back" href="../../../ovs.middleware.html#ovs.middleware.permissions.Permissions">[docs]</a><span class="k">class</span> <span class="nc">Permissions</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Permissions decorator to allow for role based endpoint control&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Requires that the user who accesses the decorated route has the correct permissions.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        role: The minimum role required to access this route.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A func that does the permission checking.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        routes that need authorization should apply the decorator like so:</span>
+
+<span class="sd">        from ovs.middleware import permissions</span>
+<span class="sd">        @bp.route(&#39;/my_admin_only_route/&#39;, methods=[&#39;GET&#39;])</span>
+<span class="sd">        @permissions(roles.ADMIN)</span>
+<span class="sd">        def my_admin_only_route():</span>
+<span class="sd">            ...</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">role</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">role</span> <span class="o">=</span> <span class="n">role</span>
 
 <div class="viewcode-block" id="Permissions.__call__"><a class="viewcode-back" href="../../../ovs.middleware.html#ovs.middleware.permissions.Permissions.__call__">[docs]</a>    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Calls the decorator function&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function is an implementation detail of decorators.</span>
+<span class="sd">        See :class:`ovs.middleware.Permissions`</span>
+<span class="sd">        Args:</span>
+<span class="sd">            func: The decorated function.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A function handled by python.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nd">@wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
         <span class="k">def</span> <span class="nf">authorize_and_call</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;Calls the decorated function on successful perm check&quot;&quot;&quot;</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            This is an inner function of `Permissions.__call__` which is required for python decorators.</span>
+<span class="sd">            Args:</span>
+<span class="sd">                *args: Handled by python</span>
+<span class="sd">                **kwargs: Handled by python</span>
+
+<span class="sd">            Returns:</span>
+<span class="sd">                A parameterized decorator.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">roles</span><span class="o">.</span><span class="n">has_permission</span><span class="p">(</span><span class="n">current_user</span><span class="o">.</span><span class="n">role</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">role</span><span class="p">):</span>
                 <span class="n">flash</span><span class="p">(</span><span class="s1">&#39;Unauthorized Access!&#39;</span><span class="p">,</span> <span class="s1">&#39;danger&#39;</span><span class="p">)</span>
-                <span class="nb">print</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">referrer</span><span class="p">)</span>
                 <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">referrer</span> <span class="ow">or</span> <span class="s1">&#39;/&#39;</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">authorize_and_call</span></div></div>

@@ -42,7 +42,8 @@
 <span class="sd">Defines a Resident as represented in the database</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">flask</span> <span class="k">import</span> <span class="n">jsonify</span>
-<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="k">import</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">Column</span><span class="p">,</span> <span class="n">CHAR</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">DateTime</span><span class="p">,</span> <span class="n">ForeignKey</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="k">import</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">Column</span><span class="p">,</span> <span class="n">CHAR</span><span class="p">,</span> <span class="n">DateTime</span><span class="p">,</span> <span class="n">ForeignKey</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.sql</span> <span class="k">import</span> <span class="n">func</span>
 <span class="kn">from</span> <span class="nn">sqlalchemy.orm</span> <span class="k">import</span> <span class="n">relationship</span>
 
 <span class="kn">from</span> <span class="nn">ovs</span> <span class="k">import</span> <span class="n">db</span>
@@ -51,25 +52,43 @@
 <div class="viewcode-block" id="Resident"><a class="viewcode-back" href="../../../ovs.models.html#ovs.models.resident_model.Resident">[docs]</a><span class="k">class</span> <span class="nc">Resident</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Defines a Resident as represented in the database. Along with some utility functions.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        user_id (int): Must be the same as the corresponding `User.id`.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A Resident Model object.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;residents&#39;</span>
 
-    <span class="n">user_id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">user_id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;users.id&#39;</span><span class="p">),</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">room_number</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">CHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">),</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;rooms.number&#39;</span><span class="p">))</span>
-    <span class="n">mealplan_pin</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">)</span>
-    <span class="n">created</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">DateTime</span><span class="p">,</span> <span class="n">server_default</span><span class="o">=</span><span class="n">text</span><span class="p">(</span><span class="s1">&#39;CURRENT_TIMESTAMP&#39;</span><span class="p">))</span>
-    <span class="n">updated</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">DateTime</span><span class="p">,</span> <span class="n">server_default</span><span class="o">=</span><span class="n">text</span><span class="p">(</span><span class="s1">&#39;CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP&#39;</span><span class="p">))</span>
-    <span class="n">profile</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s1">&#39;Profile&#39;</span><span class="p">,</span> <span class="n">uselist</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">back_populates</span><span class="o">=</span><span class="s1">&#39;resident&#39;</span><span class="p">,</span> <span class="n">cascade</span><span class="o">=</span><span class="s1">&#39;all, delete, delete-orphan&#39;</span><span class="p">)</span>
+    <span class="n">mealplan_pin</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;mealplan.pin&#39;</span><span class="p">))</span>
+    <span class="n">created</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">DateTime</span><span class="p">,</span> <span class="n">server_default</span><span class="o">=</span><span class="n">func</span><span class="o">.</span><span class="n">now</span><span class="p">())</span>
+    <span class="n">updated</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">DateTime</span><span class="p">,</span> <span class="n">server_default</span><span class="o">=</span><span class="n">func</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span> <span class="n">server_onupdate</span><span class="o">=</span><span class="n">func</span><span class="o">.</span><span class="n">now</span><span class="p">())</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s1">&#39;User&#39;</span><span class="p">,</span> <span class="n">uselist</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">single_parent</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">cascade</span><span class="o">=</span><span class="s1">&#39;delete, delete-orphan&#39;</span><span class="p">)</span>
+    <span class="n">packages</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s1">&#39;Package&#39;</span><span class="p">,</span> <span class="n">cascade</span><span class="o">=</span><span class="s1">&#39;delete, delete-orphan&#39;</span><span class="p">)</span>
+    <span class="n">meal_plan</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s1">&#39;MealPlan&#39;</span><span class="p">,</span> <span class="n">uselist</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">single_parent</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                             <span class="n">cascade</span><span class="o">=</span><span class="s1">&#39;delete, delete-orphan&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">Resident</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">,</span> <span class="n">mealplan_pin</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Resident</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Resident.__repr__"><a class="viewcode-back" href="../../../ovs.models.html#ovs.models.resident_model.Resident.__repr__">[docs]</a>    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Allows Resident to be printed.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            str: A string representation of this Resident.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="s1">&#39;Resident([user_id=</span><span class="si">{user_id}</span><span class="s1">, room_number=</span><span class="si">{room_number}</span><span class="s1">,&#39;</span> \
-               <span class="s1">&#39;created=</span><span class="si">{created}</span><span class="s1">, updated=</span><span class="si">{updated}</span><span class="s1">])&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span>
+               <span class="s1">&#39;created=</span><span class="si">{created}</span><span class="s1">, updated=</span><span class="si">{updated}</span><span class="s1">])&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Resident.json"><a class="viewcode-back" href="../../../ovs.models.html#ovs.models.resident_model.Resident.json">[docs]</a>    <span class="k">def</span> <span class="nf">json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Returns a JSON representation of this Resident &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get JSON representation of this Resident.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">             A JSON representation of this Resident.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span>
             <span class="n">user_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">user_id</span><span class="p">,</span>
             <span class="n">room_number</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">room_number</span><span class="p">,</span>

@@ -41,10 +41,8 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Service routines and db access for the Auth layer</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">import</span> <span class="nn">logging</span>
 
 <span class="kn">from</span> <span class="nn">flask_login</span> <span class="k">import</span> <span class="n">LoginManager</span>
-<span class="kn">from</span> <span class="nn">sqlalchemy.exc</span> <span class="k">import</span> <span class="n">SQLAlchemyError</span>
 
 <span class="kn">from</span> <span class="nn">ovs</span> <span class="k">import</span> <span class="n">db</span>
 <span class="kn">from</span> <span class="nn">ovs.models.user_model</span> <span class="k">import</span> <span class="n">User</span>
@@ -66,10 +64,7 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            A User db model.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">user_id</span><span class="p">))</span>
-        <span class="k">except</span> <span class="n">SQLAlchemyError</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;Faied to fetch user by user id.&#39;</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">user_id</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="AuthService.verify_auth"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.auth_service.AuthService.verify_auth">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">verify_auth</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>

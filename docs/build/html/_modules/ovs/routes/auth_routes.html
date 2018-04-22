@@ -38,48 +38,148 @@
           <div class="body" role="main">
             
   <h1>Source code for ovs.routes.auth_routes</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot; routes under /auth/ &quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">flask</span> <span class="k">import</span> <span class="n">Blueprint</span><span class="p">,</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">url_for</span><span class="p">,</span> <span class="n">flash</span>
+<span></span><span class="sd">&quot;&quot;&quot;Routes defined under &#39;/auth&#39;.&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
+
+<span class="kn">from</span> <span class="nn">flask</span> <span class="k">import</span> <span class="n">Blueprint</span><span class="p">,</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">url_for</span><span class="p">,</span> <span class="n">flash</span><span class="p">,</span> <span class="n">render_template</span>
 <span class="kn">from</span> <span class="nn">flask_login</span> <span class="k">import</span> <span class="n">login_user</span><span class="p">,</span> <span class="n">logout_user</span><span class="p">,</span> <span class="n">login_required</span>
 
+<span class="kn">from</span> <span class="nn">ovs</span> <span class="k">import</span> <span class="n">db</span>
 <span class="kn">from</span> <span class="nn">ovs.forms.login_form</span> <span class="k">import</span> <span class="n">LoginForm</span>
+<span class="kn">from</span> <span class="nn">ovs.forms</span> <span class="k">import</span> <span class="n">ResetRequestForm</span><span class="p">,</span> <span class="n">ResetPasswordForm</span>
 <span class="kn">from</span> <span class="nn">ovs.services</span> <span class="k">import</span> <span class="n">AuthService</span>
 <span class="kn">from</span> <span class="nn">ovs.utils.roles</span> <span class="k">import</span> <span class="n">UserRole</span>
+<span class="kn">from</span> <span class="nn">ovs.utils</span> <span class="k">import</span> <span class="n">serializer</span>
 <span class="kn">from</span> <span class="nn">ovs.services.user_service</span> <span class="k">import</span> <span class="n">UserService</span>
 
 <span class="n">auth_bp</span> <span class="o">=</span> <span class="n">Blueprint</span><span class="p">(</span><span class="s1">&#39;auth&#39;</span><span class="p">,</span> <span class="vm">__name__</span><span class="p">,</span> <span class="p">)</span>
 
 
-<div class="viewcode-block" id="login"><a class="viewcode-back" href="../../../ovs.routes.html#ovs.routes.auth_routes.login">[docs]</a><span class="nd">@auth_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/login&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<div class="viewcode-block" id="login"><a class="viewcode-back" href="../../../ovs.routes.html#ovs.routes.auth_routes.login">[docs]</a><span class="nd">@auth_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/login/&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">login</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot; Interface for users to login &quot;&quot;&quot;</span>
-    <span class="n">form</span> <span class="o">=</span> <span class="n">LoginForm</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">validate</span><span class="p">():</span>
-        <span class="n">email</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">email</span><span class="o">.</span><span class="n">data</span>
-        <span class="n">password</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">password</span><span class="o">.</span><span class="n">data</span>
-        <span class="n">user</span> <span class="o">=</span> <span class="n">UserService</span><span class="o">.</span><span class="n">get_user_by_email</span><span class="p">(</span><span class="n">email</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">user</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">flash</span><span class="p">(</span><span class="s1">&#39;Invalid email or password.&#39;</span><span class="p">,</span> <span class="s1">&#39;danger&#39;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;/.landing_page&#39;</span><span class="p">))</span>
-        <span class="k">elif</span> <span class="ow">not</span> <span class="n">AuthService</span><span class="o">.</span><span class="n">verify_auth</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
-            <span class="n">flash</span><span class="p">(</span><span class="s1">&#39;Invalid email or password.&#39;</span><span class="p">,</span> <span class="s1">&#39;danger&#39;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;/.landing_page&#39;</span><span class="p">))</span>
-        <span class="n">login_user</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">role</span> <span class="o">==</span> <span class="n">UserRole</span><span class="o">.</span><span class="n">RESIDENT</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;resident.landing_page&#39;</span><span class="p">))</span>
-        <span class="k">else</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Login in page accessed by &#39;/auth/login&#39;.</span>
+
+<span class="sd">    Methods:</span>
+<span class="sd">        GET, POST.</span>
+
+<span class="sd">    Permissions:</span>
+<span class="sd">        Accessible to ALL.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A Flask template.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">login_form</span> <span class="o">=</span> <span class="n">LoginForm</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">login_form</span><span class="o">.</span><span class="n">validate_on_submit</span><span class="p">():</span>
+            <span class="n">email</span> <span class="o">=</span> <span class="n">login_form</span><span class="o">.</span><span class="n">email</span><span class="o">.</span><span class="n">data</span>
+            <span class="n">password</span> <span class="o">=</span> <span class="n">login_form</span><span class="o">.</span><span class="n">password</span><span class="o">.</span><span class="n">data</span>
+            <span class="n">user</span> <span class="o">=</span> <span class="n">UserService</span><span class="o">.</span><span class="n">get_user_by_email</span><span class="p">(</span><span class="n">email</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">user</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">flash</span><span class="p">(</span><span class="s1">&#39;Invalid email or password.&#39;</span><span class="p">,</span> <span class="s1">&#39;danger&#39;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;auth.login&#39;</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="ow">not</span> <span class="n">AuthService</span><span class="o">.</span><span class="n">verify_auth</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
+                <span class="n">flash</span><span class="p">(</span><span class="s1">&#39;Invalid email or password.&#39;</span><span class="p">,</span> <span class="s1">&#39;danger&#39;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;auth.login&#39;</span><span class="p">))</span>
+            <span class="n">login_user</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">role</span> <span class="o">==</span> <span class="n">UserRole</span><span class="o">.</span><span class="n">RESIDENT</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;resident.landing_page&#39;</span><span class="p">))</span>
             <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;manager.landing_page&#39;</span><span class="p">))</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">flash</span><span class="p">(</span><span class="s1">&#39;Invalid email or password.&#39;</span><span class="p">,</span> <span class="s1">&#39;danger&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;login.html&#39;</span><span class="p">,</span> <span class="n">login_form</span><span class="o">=</span><span class="n">login_form</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>  <span class="c1"># pylint: disable=bare-except</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">rollback</span><span class="p">()</span>
+        <span class="n">flash</span><span class="p">(</span><span class="s1">&#39;Could not log in&#39;</span><span class="p">,</span> <span class="s1">&#39;danger&#39;</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span>
         <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;/.landing_page&#39;</span><span class="p">))</span></div>
 
+<div class="viewcode-block" id="request_user_reset"><a class="viewcode-back" href="../../../ovs.routes.html#ovs.routes.auth_routes.request_user_reset">[docs]</a><span class="nd">@auth_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/reset/&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">request_user_reset</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Password reset request page accessed by &#39;/auth/reset&#39;.</span>
 
-<div class="viewcode-block" id="logout"><a class="viewcode-back" href="../../../ovs.routes.html#ovs.routes.auth_routes.logout">[docs]</a><span class="nd">@auth_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/logout&#39;</span><span class="p">)</span>
+<span class="sd">    Methods:</span>
+<span class="sd">        GET, POST.</span>
+
+<span class="sd">    Permissions:</span>
+<span class="sd">        Accessible to ALL.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A Flask template.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">ResetRequestForm</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">validate_on_submit</span><span class="p">():</span>
+            <span class="n">UserService</span><span class="o">.</span><span class="n">send_reset_email</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">email</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+            <span class="n">flash</span><span class="p">(</span><span class="s1">&#39;Sent reset email!&#39;</span><span class="p">,</span> <span class="s1">&#39;success&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;auth.login&#39;</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;reset_request.html&#39;</span><span class="p">,</span> <span class="n">form</span><span class="o">=</span><span class="n">form</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>  <span class="c1"># pylint: disable=bare-except</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">rollback</span><span class="p">()</span>
+        <span class="n">flash</span><span class="p">(</span><span class="s1">&#39;An error was encountered.&#39;</span><span class="p">,</span> <span class="s1">&#39;danger&#39;</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;auth.login&#39;</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="reset_user"><a class="viewcode-back" href="../../../ovs.routes.html#ovs.routes.auth_routes.reset_user">[docs]</a><span class="nd">@auth_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/reset/&lt;token&gt;/&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">reset_user</span><span class="p">(</span><span class="n">token</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Password reset page accessed by &#39;/auth/reset/&lt;token&gt;&#39;.</span>
+
+<span class="sd">    Methods:</span>
+<span class="sd">        GET, POST.</span>
+
+<span class="sd">    Permissions:</span>
+<span class="sd">        Accessible to ALL.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        token: A password reset token.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A Flask template.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">ResetPasswordForm</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">validate_on_submit</span><span class="p">():</span>
+            <span class="n">email</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">decode_attr</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="s1">&#39;ovs-reset-email&#39;</span><span class="p">)</span>
+
+            <span class="n">user</span> <span class="o">=</span> <span class="n">UserService</span><span class="o">.</span><span class="n">get_user_by_email</span><span class="p">(</span><span class="n">email</span><span class="p">)</span>
+            <span class="n">UserService</span><span class="o">.</span><span class="n">reset_user</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">form</span><span class="o">.</span><span class="n">password</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+            <span class="n">flash</span><span class="p">(</span><span class="s1">&#39;Successfully updated password!&#39;</span><span class="p">,</span> <span class="s1">&#39;success&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;/.landing_page&#39;</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;reset_password.html&#39;</span><span class="p">,</span> <span class="n">form</span><span class="o">=</span><span class="n">form</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>  <span class="c1"># pylint: disable=bare-except</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">rollback</span><span class="p">()</span>
+        <span class="n">flash</span><span class="p">(</span><span class="s1">&#39;An error was encountered&#39;</span><span class="p">,</span> <span class="s1">&#39;danger&#39;</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;auth.login&#39;</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="logout"><a class="viewcode-back" href="../../../ovs.routes.html#ovs.routes.auth_routes.logout">[docs]</a><span class="nd">@auth_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/logout/&#39;</span><span class="p">)</span>
 <span class="nd">@login_required</span>
 <span class="k">def</span> <span class="nf">logout</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot; Logs a user out &quot;&quot;&quot;</span>
-    <span class="n">logout_user</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;/.landing_page&#39;</span><span class="p">))</span></div>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Logout page accessed by &#39;/auth/logout/&#39;.</span>
+
+<span class="sd">    Methods:</span>
+<span class="sd">        GET.</span>
+
+<span class="sd">    Permissions:</span>
+<span class="sd">        Accessible to ALL.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A Flask template.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">logout_user</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;/.landing_page&#39;</span><span class="p">))</span>
+    <span class="k">except</span><span class="p">:</span>  <span class="c1"># pylint: disable=bare-except</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">rollback</span><span class="p">()</span>
+        <span class="n">flash</span><span class="p">(</span><span class="s1">&#39;An error was encountered&#39;</span><span class="p">,</span> <span class="s1">&#39;danger&#39;</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;/.landing_page&#39;</span><span class="p">))</span></div>
 </pre></div>
 
           </div>
