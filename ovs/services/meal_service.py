@@ -217,7 +217,7 @@ class MealService:
         Get the meal log corresponding to the given undo for a specific manager.
 
         Args:
-            undo_data: Datetime of undo
+            undo_date: Datetime of undo.
             manager_id: User id of manager who logged the meal that is being undone.
 
         Returns:
@@ -244,7 +244,6 @@ class MealService:
         curr_meal_usage = [0 for i in range(24)]
         day_count = 1
         curr_day = None
-        prev_hour = None
 
         # Loop through every log in meal history
         for log in history:
@@ -252,11 +251,10 @@ class MealService:
             if log.log_type == "MEAL_USED":
                 # Initialize log variables
                 hour = log.created.hour
-                prev_hour = hour
                 log_day = [log.created.month, log.created.day, log.created.year]
 
                 # Current day not yet set (first log)
-                if curr_day == None:
+                if curr_day is None:
                     curr_day = log_day
 
                 # Current day has changed, update aggregate values

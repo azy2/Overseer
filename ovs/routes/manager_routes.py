@@ -11,13 +11,8 @@ from ovs import db
 from ovs.forms import RegisterRoomForm, RegisterResidentForm, ManageResidentsForm, \
     AddPackageForm, EditPackageForm, MealLoginForm, CreateMealPlanForm, EditMealForm, \
     ManageRoomForm
-from ovs.services.meal_service import MealService
-from ovs.services.package_service import PackageService
-from ovs.services.room_service import RoomService
-from ovs.services.user_service import UserService
-from ovs.services.resident_service import ResidentService
-from ovs.services.profile_picture_service import ProfilePictureService
-from ovs.services.manager_service import ManagerService
+from ovs.services import MealService, PackageService, RoomService, UserService, \
+    ResidentService, ProfilePictureService
 from ovs.middleware import permissions
 from ovs.utils import roles
 from ovs.utils import log_types
@@ -264,7 +259,7 @@ def manage_packages():
 
             elif edit_form.update_button.data and edit_form.validate_on_submit():
                 PackageService.update_package(edit_form.package_id.data,
-                                              edit_form.recipient_id.data,
+                                              edit_form.recipient_email.data,
                                               edit_form.description.data)
                 db.session.commit()
                 flash('Package edited successfully!', 'success')

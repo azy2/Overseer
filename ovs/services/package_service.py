@@ -1,8 +1,11 @@
 """ DB and utility functions for Packages """
+from datetime import datetime as dt
+
 from ovs import db
 from ovs.models.package_model import Package
 from ovs.models.user_model import User
-from datetime import datetime as dt
+from ovs.services.resident_service import ResidentService
+
 
 
 class PackageService:
@@ -46,15 +49,16 @@ class PackageService:
         return Package.query.filter_by(id=package_id).first()
 
     @staticmethod
-    def update_package(package_id, recipient_id, description):
+    def update_package(package_id, recipient_email, description):
         """
         Updates the receiver and description of Package identified by package_id.
 
         Args:
             package_id: Unique package id.
-            recipient_email: Recipient's email address.
+            recipient_email: Recipient's unique email.
             description: A short description of the package.
         """
+        recipient_id = ResidentService.get_resident_by_email(recipient_email).user_id
         db.session.query(Package)\
                   .filter_by(id=package_id)\
                   .update({Package.recipient_id: recipient_id, Package.description: description})
