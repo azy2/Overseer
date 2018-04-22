@@ -69,7 +69,8 @@ def manage_managers():
         user = UserService.get_user_by_id(current_user.get_id())
         role = user.role
         return render_template('admin/manage_managers.html', role=role, user=user,
-                               register_form=register_form, form_data=zip(edit_forms, managers))
+                               register_form=register_form, form_data=zip(edit_forms, managers),
+                               profile=user.profile)
     except: # pylint: disable=bare-except
         db.session.rollback()
         flash('An error was encountered', 'danger')
