@@ -1,39 +1,29 @@
 """ Tests functionality related to registering residents. """
-from ovs.tests.selenium.selenium_base_test import SeleniumBaseTestCase
+from ovs.tests.selenium.table_test import TableTest, InputTextElement
 
-class TestRegisterResident(SeleniumBaseTestCase):
+class TestRegisterResident(TableTest):
     """ Tests functionality related to registering residents. """
+
+    def setUp(self):
+        super().setUp()
+        self.form_text_field_ids.append('register_form-email')
+        self.form_text_field_ids.append('register_form-first_name')
+        self.form_text_field_ids.append('register_form-last_name')
+
+        # Current format is [Email][First Name][Last Name][Room Number]
+        self.table_text_field_types.append(InputTextElement())
+        self.table_text_field_types.append(InputTextElement())
+        self.table_text_field_types.append(InputTextElement())
+        self.table_text_field_types.append(None)
+
+    def navigate_to_table_page(self):
+        self.browser.find_element_by_link_text('Residents').click()
 
     def test_register_resident(self):
         """ Tests whether residents can be registered. """
-        self.browser.get(self.base_url)
-        self.assertIn('Overseer', self.browser.title)
-        super().login_default_admin()
+        self.add_table_test('testing123@gmail.com', 'Test', 'Testerson')
 
-        # Click on Residents link
-        register_resident_link = self.browser.find_element_by_link_text('Residents')
-        register_resident_link.click()
-
-        # Verify page changed
-        self.assertIn('Residents', self.browser.title)
-
-        # Set all fields and register resident
-        self.set_text_field_by_id('register_form-email', 'testing123@gmail.com')
-        self.set_text_field_by_id('register_form-first_name', 'Test')
-        self.set_text_field_by_id('register_form-last_name', 'Testerson')
-        register_button = self.browser.find_element_by_name('register_btn')
-        register_button.click()
-
-        # New residents get added to the bottom of the table, find last entry
-        meal_plan_table = self.browser.find_element_by_class_name('table-responsive')
-        last_table_row = meal_plan_table.find_elements_by_tag_name('tr')[-1]
-        row_entries = last_table_row.find_elements_by_tag_name('td')
-
-        # Verify resident information matches the last added resident
-        # Current format is [Email][First Name][Last Name]
-        last_added_email = row_entries[0].find_element_by_class_name('form-control').get_attribute('value')
-        last_added_first_name = row_entries[1].find_element_by_class_name('form-control').get_attribute('value')
-        last_added_last_name = row_entries[2].find_element_by_class_name('form-control').get_attribute('value')
-        self.assertEqual(last_added_email, 'testing123@gmail.com')
-        self.assertEqual(last_added_first_name, 'Test')
-        self.assertEqual(last_added_last_name, 'Testerson')
+    def test_update_delete_resident(self):
+        """ Tests that registered residents can be updated and deleted. """
+        self.test_register_resident()
+        self.update_delete_table_test(None, 'Jack', 'Sparrow', None)

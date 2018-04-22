@@ -1,7 +1,4 @@
 """ Tests functionality related to packages. """
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from ovs.tests.selenium.table_test import TableTest, InputTextElement
 
 class TestPackage(TableTest):
@@ -12,12 +9,12 @@ class TestPackage(TableTest):
         self.form_text_field_ids.append('add_form-recipient_email')
         self.form_text_field_ids.append('add_form-description')
 
-        self.table_text_field_types.append(None) 
-        self.table_text_field_types.append(InputTextElement()) 
-        self.table_text_field_types.append(None) 
-        self.table_text_field_types.append(None) 
-        self.table_text_field_types.append(InputTextElement()) 
- 
+        self.table_text_field_types.append(None)
+        self.table_text_field_types.append(InputTextElement())
+        self.table_text_field_types.append(None)
+        self.table_text_field_types.append(None)
+        self.table_text_field_types.append(InputTextElement())
+
     def navigate_to_table_page(self):
         self.browser.find_element_by_link_text('Packages').click()
 

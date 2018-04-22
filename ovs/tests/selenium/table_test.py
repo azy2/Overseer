@@ -1,4 +1,5 @@
 """ Base test class for tests related to responsive tables. """
+from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -14,11 +15,11 @@ class TableTest(SeleniumBaseTestCase):
         super().setUp()
         self.form_text_field_ids = []
         self.table_text_field_types = []
-        
+
     def get_last_table_row(self):
         """ Gets a list of WebElements corresponding to the data for the last row in the table.
 
-            Return:
+            Returns:
                 List of WebElement: The last row in the table.
         """
         table = self.browser.find_element_by_class_name('table-responsive')
@@ -26,11 +27,11 @@ class TableTest(SeleniumBaseTestCase):
         return last_table_row.find_elements_by_tag_name('td')
 
     def add_to_table(self, *args):
-        """ Sets the text in the form based on *args and the order of self.form_text_field_ids 
+        """ Sets the text in the form based on *args and the order of self.form_text_field_ids
              then adds the entry to the table.
 
             Args:
-                *arg (list of string): The text to enter in the form fields.
+                args: The text to enter in the form fields.
         """
         for i in range(len(args)):
             self.set_text_field_by_id(self.form_text_field_ids[i], args[i])
@@ -42,40 +43,39 @@ class TableTest(SeleniumBaseTestCase):
         """ Verifies that the fields in the last row of the table match *args left to right.
 
             Args:
-                *args (list of string): The text to verify left to right.
-                                        None will skip over that field. 
+                args: The text to verify left to right. None will skip over that field.
 
-            Return:
+            Returns:
                 boolean: True if all fields match expected values, False otherwise
         """
         last_row_elements = self.get_last_table_row()
 
         args_index = 0
         for i in range(len(self.table_text_field_types)):
-            if self.table_text_field_types[i] == None:
+            if self.table_text_field_types[i] is None:
                 continue
 
             if args[args_index] != None:
-                    actual_text = self.table_text_field_types[i].get_text(last_row_elements[i])
-                    if actual_text != args[args_index]:
-                        return False
+                actual_text = self.table_text_field_types[i].get_text(last_row_elements[i])
+                if actual_text != args[args_index]:
+                    return False
 
             args_index += 1
 
         return True
 
     def set_last_row_fields(self, *args):
-        """ Sets the fields in the last row of the table to *args from left to right. 
+        """ Sets the fields in the last row of the table to *args from left to right.
 
             Args:
-                *args (list of string): The text to set the fields to from left to right.
-                                        None will skip setting that field to anything new
+                args: The text to set the fields to from left to right.
+                        None will skip setting that field to anything new.
         """
         last_row_elements = self.get_last_table_row()
 
         args_index = 0
         for i in range(len(self.table_text_field_types)):
-            if self.table_text_field_types[i] == None:
+            if self.table_text_field_types[i] is None:
                 continue
 
             if args[args_index] != None:
@@ -84,7 +84,7 @@ class TableTest(SeleniumBaseTestCase):
             args_index += 1
 
     def click_last_row_button_at_index(self, index):
-        """ Clicks the button in the last row of the table at the passed in index. 
+        """ Clicks the button in the last row of the table at the passed in index.
 
             Args:
                 index (int): The row index for the button to click.
@@ -105,7 +105,7 @@ class TableTest(SeleniumBaseTestCase):
         self.click_last_row_button_at_index(len(self.table_text_field_types) + 1)
 
     def navigate_to_table_page(self):
-        """ Subclasses need to override this to get to the page with the corresponding table. 
+        """ Subclasses need to override this to get to the page with the corresponding table.
             Assumes that the page is currently reachable using the menu bar at the top. """
         pass
 
@@ -113,7 +113,7 @@ class TableTest(SeleniumBaseTestCase):
         """ Tests that *args can be added to the table through the form correctly.
 
             Args:
-                *args (list of strings): The text to put in the form from top to bottom.
+                args: The text to put in the form from top to bottom.
         """
         self.browser.get(self.base_url)
         self.assertIn('Overseer', self.browser.title)
@@ -122,7 +122,7 @@ class TableTest(SeleniumBaseTestCase):
         # Go to the page with the table and add an entry to it
         self.navigate_to_table_page()
         self.add_to_table(*args)
-        
+
         # Wait for successful add notification
         wait = WebDriverWait(self.browser, 5)
         wait.until(EC.visibility_of_element_located((By.ID, 'notification-message')))
@@ -130,11 +130,11 @@ class TableTest(SeleniumBaseTestCase):
         self.assertTrue(self.verify_last_row_fields_match(*args))
 
     def update_delete_table_test(self, *args):
-        """ Tests that the table can be updated with *args from left to right. 
+        """ Tests that the table can be updated with *args from left to right.
             Also tests that rows can be deleted from the table.
 
             Args:
-                *args (list of strings): The text to update in the table from left to right.
+                args: The text to update in the table from left to right.
         """
         # Assumes that the last row in the table already exists and that we are on the table page
         # Verify that changing fields without pressing 'Update' does not change anything
@@ -144,8 +144,6 @@ class TableTest(SeleniumBaseTestCase):
 
         # Update the text and verify that it changes
         self.set_last_row_fields(*args)
-        self.browser.save_screenshot("Screenshots/shit.png")
-
         self.click_update_last_row()
         self.navigate_to_table_page()
         self.assertTrue(self.verify_last_row_fields_match(*args))
@@ -162,18 +160,18 @@ class RowTextElement:
     """ Represents a WebElement that contains a text element in a row of the table. """
 
     def get_text(self, table_element):
-        """ Gets the text from the passed in WebElement of the corresponding type. 
+        """ Gets the text from the passed in WebElement of the corresponding type.
 
             Args:
                 table_element (WebElement): The element of this type to get the text from.
 
-            Return:
+            Returns:
                 string: The text on the element.
         """
         pass
 
     def set_text(self, table_element, new_text):
-        """ Sets the text on the passed in WebElement. 
+        """ Sets the text on the passed in WebElement.
 
             Args:
                 table_element (WebElement): The element of this type to set the text for.
@@ -183,7 +181,7 @@ class RowTextElement:
 
 class PlainTextElement(RowTextElement):
     """ Plain text elements that cannot be modified. """
-    
+
     def get_text(self, table_element):
         return table_element.text
 
