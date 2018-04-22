@@ -38,7 +38,6 @@
                                 <form method="post" name="Edit Form" id="edit-package-submit" class="needs-validation"  novalidate>
                                     {{ edit_form.csrf_token }}
                                     {{ field_plain(edit_form.package_id, value=package.id) }}
-                                    {{ field_plain(edit_form.recipient_id, value=recipient.id) }}
                                     <td>{{ recipient.first_name + " " + recipient.last_name }}</td>
                                     <td>{{ field_plain(edit_form.recipient_email, value=recipient.email) }}</td>
                                     <td>{{ package.checked_by }}</td>

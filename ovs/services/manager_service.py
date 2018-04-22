@@ -18,9 +18,9 @@ class ManagerService:
     @staticmethod
     def get_admin_count():
         """
-        Gets the number of system admins
+        Gets the number of system admins.
 
         Returns:
-            Number of admin users
+            Number of admin users.
         """
         return User.query.filter_by(role=roles.ADMIN).count()

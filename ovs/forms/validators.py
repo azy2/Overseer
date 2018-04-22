@@ -35,7 +35,8 @@ class EmailRegistered(object):
             ValidationError: If the given email is unregistered if check=True
                              and if the given email is registered if check=False.
         """
-        user = UserService.get_user_by_email(field.data)
+        email = field.data.strip()
+        user = UserService.get_user_by_email(email)
         not_registered = user is None
         if not_registered == self.check:
             raise ValidationError(self.message)

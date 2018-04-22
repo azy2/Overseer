@@ -120,3 +120,4 @@ class ResidentService:
             A list of (Resident, User) db model tuples.
         """
         return db.session.query(Resident, User).join(User, Resident.user_id == User.id).all()
+        

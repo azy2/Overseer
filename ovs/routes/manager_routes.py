@@ -11,12 +11,8 @@ from ovs import db
 from ovs.forms import RegisterRoomForm, RegisterResidentForm, ManageResidentsForm, \
     AddPackageForm, EditPackageForm, MealLoginForm, CreateMealPlanForm, EditMealForm, \
     ManageRoomForm
-from ovs.services.meal_service import MealService
-from ovs.services.package_service import PackageService
-from ovs.services.room_service import RoomService
-from ovs.services.user_service import UserService
-from ovs.services.resident_service import ResidentService
-from ovs.services.profile_picture_service import ProfilePictureService
+from ovs.services import MealService, PackageService, RoomService, UserService, \
+    ResidentService, ProfilePictureService
 from ovs.middleware import permissions
 from ovs.utils import roles
 from ovs.utils import log_types
@@ -41,8 +37,16 @@ def landing_page():
         A Flask template.
     """
     try:
-        return render_template('manager/index.html', role=current_user.role,
-                               user=current_user, profile=current_user.profile)
+        user = UserService.get_user_by_id(current_user.get_id())
+        role = user.role
+        empty_room_stats = RoomService.get_empty_room_stats()
+        num_residents = len(ResidentService.get_all_residents_users())
+        today_num_packages, total_num_packages = PackageService.get_package_info()
+        aggregate_meal_usage = MealService.get_aggregate_meal_usage()
+        return render_template('manager/index.html', role=role, user=user, profile=user.profile,
+                               empty_room_stats=empty_room_stats,
+                               num_residents=num_residents, total_num_packages=total_num_packages,
+                               today_num_packages=today_num_packages, aggregate_meal_usage=aggregate_meal_usage)
     except: # pylint: disable=bare-except
         db.session.rollback()
         flash('An error was encountered', 'danger')
@@ -228,9 +232,9 @@ def manage_packages():
     """
     try:
         add_form = AddPackageForm(prefix='add_form')
-        packages = PackageService.get_all_packages_recipients()
+        packages_recipients = PackageService.get_all_packages_recipients()
         edit_forms = []
-        for (package, _) in packages:
+        for (package, _) in packages_recipients:
             edit_forms.append(EditPackageForm(prefix=str(package.id)))
 
         user = UserService.get_user_by_id(current_user.get_id())
@@ -240,7 +244,7 @@ def manage_packages():
             recipient_email = add_form.recipient_email.data
             recipient_id = UserService.get_user_by_email(recipient_email).id
             checked_by = '{} {}'.format(user.first_name, user.last_name)
-            checked_at = datetime.datetime.now().replace(second=0, microsecond=0)  # Current date/time
+            checked_at = datetime.datetime.now() # Current date/time
             description = add_form.description.data
 
             PackageService.create_package(recipient_id, checked_by, checked_at, description)
@@ -265,7 +269,7 @@ def manage_packages():
                 return redirect(url_for('manager.manage_packages'))
 
         return render_template('manager/manage_packages.html', role=role, user=user,
-                               add_form=add_form, form_data=zip(edit_forms, packages),
+                               add_form=add_form, form_data=zip(edit_forms, packages_recipients),
                                profile=user.profile)
     except: # pylint: disable=bare-except
         db.session.rollback()
