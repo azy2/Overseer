@@ -25,7 +25,7 @@ $(document).ready(function() {
 
   getResidentEmails();
 
-  $( "#add_form-recipient_email,#email" ).autocomplete({
+  $( "#add_form-recipient_email,#email,[id$='recipient_email']" ).autocomplete({
     source: emails
   });
 });
