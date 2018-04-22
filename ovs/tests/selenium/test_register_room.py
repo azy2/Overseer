@@ -9,12 +9,13 @@ class TestRegisterRoom(TableTest):
 
     def setUp(self):
         super().setUp()
-        self.form_text_field_ids.append('room_number')
-        self.form_text_field_ids.append('room_status')
-        self.form_text_field_ids.append('room_type')
-        self.form_text_field_ids.append('occupants')
+        # Current form format is [Room Number][Status][Type][Occupant Emails]
+        self.form_text_field_types.append(InputTextElement())
+        self.form_text_field_types.append(InputTextElement())
+        self.form_text_field_types.append(InputTextElement())
+        self.form_text_field_types.append(InputTextElement())
 
-        # Current format is [Room Number][Status][Type][Num Occupants]
+        # Current table format is [Room Number][Status][Type][Num Occupants]
         self.table_text_field_types.append(InputTextElement())
         self.table_text_field_types.append(InputTextElement())
         self.table_text_field_types.append(InputTextElement())

@@ -8,12 +8,12 @@ from ovs.tests.selenium.selenium_base_test import SeleniumBaseTestCase
 class TableTest(SeleniumBaseTestCase):
     """ Base test class for tests related to responsive tables. """
 
-    # Subclasses should append to form_text_field_ids the ids for the form text fields in order
-    # Subclasses should append to table_text_field_types with instances of TableTextElement
+    # Subclasses should append to form_text_field_types in order from top to bottom with TableTextElements
+    # Subclasses should also append to table_text_field_types with instances of TableTextElement
     #  corresponding to the type of the field at that index in the row, None disregards the field
     def setUp(self):
         super().setUp()
-        self.form_text_field_ids = []
+        self.form_text_field_types = []
         self.table_text_field_types = []
 
     def get_last_table_row(self):
@@ -27,14 +27,19 @@ class TableTest(SeleniumBaseTestCase):
         return last_table_row.find_elements_by_tag_name('td')
 
     def add_to_table(self, *args):
-        """ Sets the text in the form based on *args and the order of self.form_text_field_ids
+        """ Sets the text in the form based on *args and the order of self.form_text_field_types
              then adds the entry to the table.
 
             Args:
                 args: The text to enter in the form fields.
         """
-        for i, new_text in enumerate(args):
-            self.set_text_field_by_id(self.form_text_field_ids[i], new_text)
+        form_fields = self.browser.find_elements_by_class_name('form-group')
+
+        for i in range(len(self.form_text_field_types)):
+            new_text = args[i]
+            if new_text != None:
+                field_type = self.form_text_field_types[i]
+                field_type.set_text(form_fields[i], new_text)
 
         add_button = self.browser.find_element_by_class_name('btn-primary')
         add_button.click()

@@ -6,11 +6,12 @@ class TestRegisterResident(TableTest):
 
     def setUp(self):
         super().setUp()
-        self.form_text_field_ids.append('register_form-email')
-        self.form_text_field_ids.append('register_form-first_name')
-        self.form_text_field_ids.append('register_form-last_name')
+        # Current form format is [Email][First Name][Last Name]
+        self.form_text_field_types.append(InputTextElement())
+        self.form_text_field_types.append(InputTextElement())
+        self.form_text_field_types.append(InputTextElement())
 
-        # Current format is [Email][First Name][Last Name][Room Number]
+        # Current table format is [Email][First Name][Last Name][Room Number]
         self.table_text_field_types.append(InputTextElement())
         self.table_text_field_types.append(InputTextElement())
         self.table_text_field_types.append(InputTextElement())

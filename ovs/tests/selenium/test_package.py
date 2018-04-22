@@ -6,9 +6,11 @@ class TestPackage(TableTest):
 
     def setUp(self):
         super().setUp()
-        self.form_text_field_ids.append('add_form-recipient_email')
-        self.form_text_field_ids.append('add_form-description')
+        # Current form has [Recipient Email][Package Description]
+        self.form_text_field_types.append(InputTextElement())
+        self.form_text_field_types.append(InputTextElement())
 
+        # Current table has [Recipient Name][Email][Checked By][Checked Time][Description]
         self.table_text_field_types.append(None)
         self.table_text_field_types.append(InputTextElement())
         self.table_text_field_types.append(None)
