@@ -9,7 +9,7 @@ from ovs.tests.selenium.selenium_base_test import SeleniumBaseTestCase
 class TestCrossSystem(SeleniumBaseTestCase):
     """ Tests functionality across routes. """
 
-   def test_new_resident_add_room(self):
+    def test_new_resident_add_room(self):
         """ Tests that newly created residents can be added to rooms. """
         self.browser.get(self.base_url)
         self.assertIn('Overseer', self.browser.title)
