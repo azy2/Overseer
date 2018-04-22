@@ -196,7 +196,7 @@ class InputTextElement(RowTextElement):
     """ Text fields that can be modified. """
 
     def get_text(self, table_element):
-        # All text fields in table currently have 'form-control' class name
+        # All non-plain-text text fields in table currently have 'form-control' class name
         return table_element.find_element_by_class_name('form-control').get_attribute('value')
 
     def set_text(self, table_element, new_text):
@@ -208,9 +208,9 @@ class SelectTextElement(RowTextElement):
     """ Text fields that are a dropdown selector for a few text options. """
 
     def get_text(self, table_element):
-        text_selector = Select(table_element)
+        text_selector = Select(table_element.find_element_by_class_name('form-control'))
         return text_selector.first_selected_option.text
 
     def set_text(self, table_element, new_text):
-        text_selector = Select(table_element)
+        text_selector = Select(table_element.find_element_by_class_name('form-control'))
         text_selector.select_by_visible_text(new_text)
