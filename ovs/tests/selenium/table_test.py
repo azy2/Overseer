@@ -5,6 +5,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from ovs.tests.selenium.selenium_base_test import SeleniumBaseTestCase
 
+
 class TableTest(SeleniumBaseTestCase):
     """ Base test class for tests related to responsive tables. """
 
