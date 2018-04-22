@@ -45,6 +45,13 @@ class TestCrossSystem(SeleniumBaseTestCase):
         confirmation_holder = self.browser.find_elements_by_class_name('col-6')[1]
         self.assertIn(self.default_resident_name, confirmation_holder.find_element_by_tag_name('p').text)
 
+        # Wait for notification to appear
+        wait = WebDriverWait(self.browser, 10)
+        wait.until(EC.visibility_of_element_located((By.ID, 'notification-message')))
+
+        # Wait for notification to disappear
+        wait.until(EC.invisibility_of_element_located((By.ID, 'notification-message')))
+
         # Log in to new resident account and edit preferred name in profile
         self.go_to_page_in_dropdown('Logout', 'accountDropdown')
         super().login_default_resident()
