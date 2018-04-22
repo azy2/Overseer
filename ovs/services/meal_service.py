@@ -250,7 +250,7 @@ class MealService:
             # Update meal usage for the given day and hour
             if log.log_type == "MEAL_USED":
                 # Initialize log variables
-                hour = log.created.hour
+                hour = log.created.astimezone(tz=None).hour
                 log_day = [log.created.month, log.created.day, log.created.year]
 
                 # Current day not yet set (first log)
