@@ -53,7 +53,7 @@ def manage_managers():
                     flash('User deleted.', 'success')
                 else:
                     flash('Cannot delete the last admin', 'danger')
-                return redirect(url_for('manager.manage_managers'))
+                return redirect(url_for('admin.manage_managers'))
 
             elif edit_form.update_button.data and edit_form.validate_on_submit():
                 UserService.edit_user(
