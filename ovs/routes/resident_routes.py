@@ -41,6 +41,7 @@ def landing_page():
         profile = current_user.profile
         packages = resident.packages
         meal_plan = resident.meal_plan
+        meal_plan.check_reset_date()
         pict = base64.b64encode(ProfilePictureService.get_profile_picture(profile.user_id)).decode()
         return render_template('resident/index.html', role=roles.RESIDENT, profile=profile, pict=pict,
                                packages=packages, mealplan=meal_plan)
