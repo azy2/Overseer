@@ -244,7 +244,7 @@ def manage_packages():
             recipient_email = add_form.recipient_email.data
             recipient_id = UserService.get_user_by_email(recipient_email).id
             checked_by = '{} {}'.format(user.first_name, user.last_name)
-            checked_at = datetime.datetime.now() # Current date/time
+            checked_at = datetime.datetime.utcnow() # Current date/time
             description = add_form.description.data
 
             PackageService.create_package(recipient_id, checked_by, checked_at, description)

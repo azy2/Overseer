@@ -10,6 +10,26 @@ from ovs.config import OVSConfig
 
 db = SQLAlchemy(session_options={"autoflush": True})
 
+def utc_to_timezone(dt):
+    """
+    Converts a datetime object from UTC to the datetime configured in
+    the currently running app.
+
+    Args:
+        dt: The datetime object in UTC to convert.
+
+    Returns:
+        A datetime object in the current_app's timezone.
+
+    Note:
+        This function can be used in jinja2 templates.
+    """
+    from flask import current_app
+    from pytz import timezone
+    import datetime
+    return dt.replace(tzinfo=datetime.timezone.utc)\
+             .astimezone(tz=timezone(current_app.config['TIMEZONE']))
+
 def create_app(config_path=None):
     """
     Creates a Flask app instance and returns it
@@ -80,6 +100,8 @@ def create_app(config_path=None):
         app.register_blueprint(routes.ManagerRoutes, url_prefix='/manager')
         app.register_blueprint(routes.ResidentRoutes, url_prefix='/resident')
         app.register_blueprint(routes.AuthRoutes, url_prefix='/auth')
+
+        app.jinja_env.globals.update(utc_to_timezone=utc_to_timezone)
 
         if (os.environ.get("WERKZEUG_RUN_MAIN") == "true" or os.environ.get("FLASK_DEBUG") != "True")\
            and not app.config['TESTING']:

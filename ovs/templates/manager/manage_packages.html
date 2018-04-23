@@ -41,7 +41,7 @@
                                     <td>{{ recipient.first_name + " " + recipient.last_name }}</td>
                                     <td>{{ field_plain(edit_form.recipient_email, value=recipient.email) }}</td>
                                     <td>{{ package.checked_by }}</td>
-                                    <td>{{ package.checked_at }}</td>
+                                    <td>{{ utc_to_timezone(package.checked_at).strftime("%c") }}</td>
                                     <td>{{ field_plain(edit_form.description, value=package.description) }}</td>
                                     <td>{{ field_plain(edit_form.update_button, class="btn btn-secondary") }}</td>
                                     <td>{{ field_plain(edit_form.deliver_button, class="btn btn-secondary") }}</td>

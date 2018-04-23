@@ -1,8 +1,7 @@
 """
 DB and utility functions for Meals
 """
-
-from ovs import db
+from ovs import db, utc_to_timezone
 from ovs.models.meal_plan_model import MealPlan
 from ovs.models.mealplan_history_model import MealplanHistory
 from ovs.utils import log_types
@@ -250,7 +249,7 @@ class MealService:
             # Update meal usage for the given day and hour
             if log.log_type == "MEAL_USED":
                 # Initialize log variables
-                hour = log.created.astimezone(tz=None).hour
+                hour = utc_to_timezone(log.created).hour
                 log_day = [log.created.month, log.created.day, log.created.year]
 
                 # Current day not yet set (first log)

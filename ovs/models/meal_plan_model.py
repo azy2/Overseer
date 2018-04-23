@@ -5,7 +5,6 @@ from datetime import datetime, timedelta
 
 from flask import jsonify
 from sqlalchemy import Integer, Enum, Column, DateTime, Sequence
-from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 
 from ovs import db
@@ -30,8 +29,8 @@ class MealPlan(db.Model):
     meal_plan = Column(Integer, nullable=False)
     reset_date = Column(DateTime, default=datetime.utcnow())
     plan_type = Column(Enum('WEEKLY', 'SEMESTERLY', 'LIFETIME'), nullable=False)
-    created = Column(DateTime, server_default=func.now())
-    updated = Column(DateTime, server_default=func.now(), server_onupdate=func.now())
+    created = Column(DateTime, default=datetime.utcnow)
+    updated = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     resident = relationship('Resident', uselist=False, single_parent=True)
 
     def __init__(self, meal_plan, plan_type):

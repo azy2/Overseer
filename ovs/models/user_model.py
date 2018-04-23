@@ -1,11 +1,11 @@
 """
 Defines a User as represented in the database
 """
+from datetime import datetime
 
 from flask import jsonify
 from flask_bcrypt import Bcrypt, bcrypt
 from sqlalchemy import Integer, Enum, Column, CHAR, String, DateTime
-from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 
 from ovs import db
@@ -41,8 +41,8 @@ class User(db.Model):
                   nullable=False)
     profile = relationship('Profile', uselist=False, back_populates='user',
                            cascade='all, delete, delete-orphan')
-    created = Column(DateTime, server_default=func.now())
-    updated = Column(DateTime, server_default=func.now(), server_onupdate=func.now())
+    created = Column(DateTime, default=datetime.utcnow)
+    updated = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     resident = relationship('Resident', uselist=False, cascade='delete, delete-orphan')
 
     def __init__(self, email, first_name, last_name, password, role):
