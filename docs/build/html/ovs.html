@@ -517,6 +517,27 @@ a database connection. The networking code can be found in <cite>../main.py</cit
 </table>
 </dd></dl>
 
+<dl class="function">
+<dt id="ovs.utc_to_timezone">
+<code class="descclassname">ovs.</code><code class="descname">utc_to_timezone</code><span class="sig-paren">(</span><em>dt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs.html#utc_to_timezone"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.utc_to_timezone" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a datetime object from UTC to the datetime configured in
+the currently running app.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>dt</strong> – The datetime object in UTC to convert.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A datetime object in the current_app’s timezone.</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This function can be used in jinja2 templates.</p>
+</div>
+</dd></dl>
+
 </div>
 </div>
 

@@ -41,8 +41,7 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">DB and utility functions for Meals</span>
 <span class="sd">&quot;&quot;&quot;</span>
-
-<span class="kn">from</span> <span class="nn">ovs</span> <span class="k">import</span> <span class="n">db</span>
+<span class="kn">from</span> <span class="nn">ovs</span> <span class="k">import</span> <span class="n">db</span><span class="p">,</span> <span class="n">utc_to_timezone</span>
 <span class="kn">from</span> <span class="nn">ovs.models.meal_plan_model</span> <span class="k">import</span> <span class="n">MealPlan</span>
 <span class="kn">from</span> <span class="nn">ovs.models.mealplan_history_model</span> <span class="k">import</span> <span class="n">MealplanHistory</span>
 <span class="kn">from</span> <span class="nn">ovs.utils</span> <span class="k">import</span> <span class="n">log_types</span>
@@ -290,7 +289,7 @@
             <span class="c1"># Update meal usage for the given day and hour</span>
             <span class="k">if</span> <span class="n">log</span><span class="o">.</span><span class="n">log_type</span> <span class="o">==</span> <span class="s2">&quot;MEAL_USED&quot;</span><span class="p">:</span>
                 <span class="c1"># Initialize log variables</span>
-                <span class="n">hour</span> <span class="o">=</span> <span class="n">log</span><span class="o">.</span><span class="n">created</span><span class="o">.</span><span class="n">hour</span>
+                <span class="n">hour</span> <span class="o">=</span> <span class="n">utc_to_timezone</span><span class="p">(</span><span class="n">log</span><span class="o">.</span><span class="n">created</span><span class="p">)</span><span class="o">.</span><span class="n">hour</span>
                 <span class="n">log_day</span> <span class="o">=</span> <span class="p">[</span><span class="n">log</span><span class="o">.</span><span class="n">created</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">log</span><span class="o">.</span><span class="n">created</span><span class="o">.</span><span class="n">day</span><span class="p">,</span> <span class="n">log</span><span class="o">.</span><span class="n">created</span><span class="o">.</span><span class="n">year</span><span class="p">]</span>
 
                 <span class="c1"># Current day not yet set (first log)</span>
