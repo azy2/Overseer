@@ -2,8 +2,8 @@
 Keeps track of mealplan history as represented in the database
 """
 from flask import jsonify
-from sqlalchemy import Integer, Enum, Column
-from sqlalchemy_utc import UtcDateTime, utcnow
+from sqlalchemy import Integer, Enum, Column, DateTime
+from sqlalchemy.sql import func
 
 from ovs import db
 
@@ -26,8 +26,8 @@ class MealplanHistory(db.Model):
     mealplan_pin = Column(Integer)
     manager_id = Column(Integer)
     log_type = Column(Enum('MEAL_USED', 'UNDO'), nullable=False)
-    created = Column(UtcDateTime, server_default=utcnow())
-    updated = Column(UtcDateTime, server_default=utcnow(), server_onupdate=utcnow())
+    created = Column(DateTime, server_default=func.now())
+    updated = Column(DateTime, server_default=func.now(), server_onupdate=func.now())
 
     def __init__(self, resident_id, mealplan_pin, manager_id, log_type):
         super(MealplanHistory, self).__init__(

@@ -2,9 +2,9 @@
 Defines a Room as represented in the database
 """
 from flask import jsonify
-from sqlalchemy import Integer, Column, CHAR
+from sqlalchemy import Integer, Column, CHAR, DateTime
 from sqlalchemy.orm import relationship
-from sqlalchemy_utc import UtcDateTime, utcnow
+from sqlalchemy.sql import func
 
 from ovs import db
 
@@ -20,8 +20,8 @@ class Room(db.Model):
     status = Column(CHAR(255), nullable=False)
     type = Column(CHAR(255), nullable=False)
     occupants = relationship('Resident', backref='rooms', lazy=False, cascade='all, delete, delete-orphan')
-    created = Column(UtcDateTime, server_default=utcnow())
-    updated = Column(UtcDateTime, server_default=utcnow(), server_onupdate=utcnow())
+    created = Column(DateTime, server_default=func.now())
+    updated = Column(DateTime, server_default=func.now(), server_onupdate=func.now())
 
     def __repr__(self):
         """

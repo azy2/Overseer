@@ -29,7 +29,7 @@ class TestMealPlanModel(OVSBaseTestCase):
         self.test_meal_plan.update_meal_count()
         self.assertEqual(starting_credits - 1, self.test_meal_plan.credits)
         # Add 1 minute to the reset time to avoid any flaky tests right around the reset period
-        self.assertTrue(datetime.now(timezone.utc) < self.test_meal_plan.reset_date.replace(minute=1))
+        self.assertTrue(datetime.utcnow() < self.test_meal_plan.reset_date.replace(minute=1))
 
     def test_use_meal_no_credits(self):
         """ Tests use_meal fails when no credits are available """

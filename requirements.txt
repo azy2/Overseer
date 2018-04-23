@@ -9,7 +9,6 @@ PyMySQL==0.8.0
 mock==2.0.0
 nose2==0.7.4
 SQLAlchemy==1.2.2
-sqlalchemy-utc==0.10.0
 WTForms==2.1
 azure-storage-blob==1.1.0
 selenium==3.8.0
