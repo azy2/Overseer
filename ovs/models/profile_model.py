@@ -2,9 +2,9 @@
 Defines a Profile as represented in the database
 """
 from flask import jsonify
-from sqlalchemy import Integer, Enum, Column, CHAR, ForeignKey, DateTime
-from sqlalchemy.sql import func
+from sqlalchemy import Integer, Enum, Column, CHAR, ForeignKey
 from sqlalchemy.orm import relationship
+from sqlalchemy_utc import UtcDateTime, utcnow
 
 from ovs import db
 from ovs.utils import genders
@@ -28,8 +28,8 @@ class Profile(db.Model):
     preferred_email = Column(CHAR(255))
     race = Column(CHAR(31))
     gender = Column(Enum(genders.MALE, genders.FEMALE, genders.UNSPECIFIED))
-    created = Column(DateTime, server_default=func.now())
-    updated = Column(DateTime, server_default=func.now(), server_onupdate=func.now())
+    created = Column(UtcDateTime, server_default=utcnow())
+    updated = Column(UtcDateTime, server_default=utcnow(), server_onupdate=utcnow())
     user = relationship('User', uselist=False, back_populates='profile',
                         single_parent=True, cascade='delete, delete-orphan')
 

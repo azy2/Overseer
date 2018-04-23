@@ -1,12 +1,12 @@
 """
 Defines a MealPlan as represented in the database
 """
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from flask import jsonify
-from sqlalchemy import Integer, Enum, Column, DateTime, Sequence
-from sqlalchemy.sql import func
+from sqlalchemy import Integer, Enum, Column, Sequence
 from sqlalchemy.orm import relationship
+from sqlalchemy_utc import UtcDateTime, utcnow
 
 from ovs import db
 
@@ -28,10 +28,10 @@ class MealPlan(db.Model):
     pin = Column(Integer, Sequence('meal_pin_seq'), primary_key=True, autoincrement=True)
     credits = Column(Integer, nullable=False)
     meal_plan = Column(Integer, nullable=False)
-    reset_date = Column(DateTime, default=datetime.utcnow())
+    reset_date = Column(UtcDateTime, default=utcnow())
     plan_type = Column(Enum('WEEKLY', 'SEMESTERLY', 'LIFETIME'), nullable=False)
-    created = Column(DateTime, server_default=func.now())
-    updated = Column(DateTime, server_default=func.now(), server_onupdate=func.now())
+    created = Column(UtcDateTime, server_default=utcnow())
+    updated = Column(UtcDateTime, server_default=utcnow(), server_onupdate=utcnow())
     resident = relationship('Resident', uselist=False, single_parent=True)
 
     def __init__(self, meal_plan, plan_type):
@@ -65,7 +65,7 @@ class MealPlan(db.Model):
         """
         if self.plan_type == 'LIFETIME':
             return False
-        if self.reset_date is None or datetime.utcnow() > self.reset_date:
+        if self.reset_date is None or datetime.now(timezone.utc) > self.reset_date:
             self.reset_date = self.get_next_reset_date()
             self.credits = self.meal_plan
             return True
@@ -79,14 +79,14 @@ class MealPlan(db.Model):
             DateTime: value for reset_day.
         """
         if self.plan_type == 'WEEKLY':
-            date = MealPlan.next_weekday(datetime.utcnow(), 0)
+            date = MealPlan.next_weekday(datetime.now(timezone.utc), 0)
             return date.replace(hour=0, minute=0, second=0, microsecond=0)
         elif self.plan_type == 'SEMESTERLY':
-            date = MealPlan.next_half_year(datetime.utcnow())
+            date = MealPlan.next_half_year(datetime.now(timezone.utc))
             return date.replace(hour=0, minute=0, second=0, microsecond=0)
 
         # error case. This does give them unlimited meals
-        return datetime.utcnow()
+        return datetime.now(timezone.utc)
 
     @staticmethod
     def next_half_year(date):

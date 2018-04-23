@@ -37,7 +37,7 @@ def create_app(config_path=None):
         db_config = app.config['DATABASE']
         if app.config['SELENIUM']:
             app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/ovs.db'
-        elif app.config['TESTING']:
+        elif app.config['TESTING'] or True:
             app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://'
         else:
             app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://' + \
