@@ -51,7 +51,7 @@ def landing_page():
         db.session.rollback()
         flash('An error was encountered', 'danger')
         logging.exception(traceback.format_exc())
-        return redirect(url_for('manager'))
+        return redirect(url_for('manager.landing_page'))
 
 
 @manager_bp.route('/manage_rooms/', methods=['GET', 'POST'])

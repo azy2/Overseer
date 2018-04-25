@@ -270,7 +270,7 @@ class MealService:
             # Remove the previous meal from the usage stats
             elif log.log_type == "UNDO":
                 bad_log = MealService.get_log_to_undo(log.created, log.manager_id)
-                curr_meal_usage[bad_log.created.hour-1] -= 1
+                curr_meal_usage[utc_to_timezone(bad_log.created).hour-1] -= 1
 
         # Final update for last day
         for i in range(24):
