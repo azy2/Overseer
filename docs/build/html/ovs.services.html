@@ -50,7 +50,7 @@
 <p>Contains application methods relevant to the Authentication layer</p>
 <dl class="staticmethod">
 <dt id="ovs.services.auth_service.AuthService.load_user">
-<em class="property">static </em><code class="descname">load_user</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/auth_service.html#AuthService.load_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.auth_service.AuthService.load_user" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">load_user</code><span class="sig-paren">(</span><em>user_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/auth_service.html#AuthService.load_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.auth_service.AuthService.load_user" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fetch a user by user id.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -66,7 +66,7 @@
 
 <dl class="staticmethod">
 <dt id="ovs.services.auth_service.AuthService.verify_auth">
-<em class="property">static </em><code class="descname">verify_auth</code><span class="sig-paren">(</span><em>password</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/auth_service.html#AuthService.verify_auth"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.auth_service.AuthService.verify_auth" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">verify_auth</code><span class="sig-paren">(</span><em>user</em>, <em>password</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/auth_service.html#AuthService.verify_auth"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.auth_service.AuthService.verify_auth" title="Permalink to this definition">¶</a></dt>
 <dd><p>Verify the password authenticates a given user.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -98,7 +98,7 @@
 <p>Contains methods related to the sendgrid mail provider</p>
 <dl class="staticmethod">
 <dt id="ovs.services.mail_service.MailService.send_email">
-<em class="property">static </em><code class="descname">send_email</code><span class="sig-paren">(</span><em>subject</em>, <em>text</em>, <em>substitutions=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/mail_service.html#MailService.send_email"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.mail_service.MailService.send_email" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">send_email</code><span class="sig-paren">(</span><em>to_email</em>, <em>subject</em>, <em>text</em>, <em>substitutions=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/mail_service.html#MailService.send_email"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.mail_service.MailService.send_email" title="Permalink to this definition">¶</a></dt>
 <dd><p>Send an email to the recipient.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -171,7 +171,7 @@
 <p>DB and utility functions for Meals</p>
 <dl class="staticmethod">
 <dt id="ovs.services.meal_service.MealService.add_meals">
-<em class="property">static </em><code class="descname">add_meals</code><span class="sig-paren">(</span><em>number</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/meal_service.html#MealService.add_meals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.meal_service.MealService.add_meals" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">add_meals</code><span class="sig-paren">(</span><em>pin</em>, <em>number</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/meal_service.html#MealService.add_meals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.meal_service.MealService.add_meals" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add credits to meal plan identified by meal pin.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -189,7 +189,7 @@
 
 <dl class="staticmethod">
 <dt id="ovs.services.meal_service.MealService.create_meal_plan">
-<em class="property">static </em><code class="descname">create_meal_plan</code><span class="sig-paren">(</span><em>plan_type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/meal_service.html#MealService.create_meal_plan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.meal_service.MealService.create_meal_plan" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">create_meal_plan</code><span class="sig-paren">(</span><em>meal_plan</em>, <em>plan_type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/meal_service.html#MealService.create_meal_plan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.meal_service.MealService.create_meal_plan" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a MealPlan db entry.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -210,7 +210,7 @@
 
 <dl class="staticmethod">
 <dt id="ovs.services.meal_service.MealService.create_meal_plan_for_resident_by_email">
-<em class="property">static </em><code class="descname">create_meal_plan_for_resident_by_email</code><span class="sig-paren">(</span><em>plan_type</em>, <em>email</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/meal_service.html#MealService.create_meal_plan_for_resident_by_email"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.meal_service.MealService.create_meal_plan_for_resident_by_email" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">create_meal_plan_for_resident_by_email</code><span class="sig-paren">(</span><em>meal_plan</em>, <em>plan_type</em>, <em>email</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/meal_service.html#MealService.create_meal_plan_for_resident_by_email"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.meal_service.MealService.create_meal_plan_for_resident_by_email" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="docutils">
 <dt>Create a new meal plan db entry</dt>
 <dd>and assign a meal plan pin to an existing resident identified by email.</dd>
@@ -235,7 +235,7 @@
 
 <dl class="staticmethod">
 <dt id="ovs.services.meal_service.MealService.delete_meal_plan">
-<em class="property">static </em><code class="descname">delete_meal_plan</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/meal_service.html#MealService.delete_meal_plan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.meal_service.MealService.delete_meal_plan" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">delete_meal_plan</code><span class="sig-paren">(</span><em>pin</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/meal_service.html#MealService.delete_meal_plan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.meal_service.MealService.delete_meal_plan" title="Permalink to this definition">¶</a></dt>
 <dd><p>Deletes a meal plan from the database.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -249,7 +249,7 @@
 
 <dl class="staticmethod">
 <dt id="ovs.services.meal_service.MealService.edit_meal_plan">
-<em class="property">static </em><code class="descname">edit_meal_plan</code><span class="sig-paren">(</span><em>credit=None</em>, <em>plan_meal_count=None</em>, <em>plan_type=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/meal_service.html#MealService.edit_meal_plan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.meal_service.MealService.edit_meal_plan" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">edit_meal_plan</code><span class="sig-paren">(</span><em>pin</em>, <em>credit=None</em>, <em>plan_meal_count=None</em>, <em>plan_type=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/meal_service.html#MealService.edit_meal_plan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.meal_service.MealService.edit_meal_plan" title="Permalink to this definition">¶</a></dt>
 <dd><p>Updates a meal plan with any provided info.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -298,7 +298,7 @@ average number of meals used for that hour over all days in the meal history.</t
 
 <dl class="staticmethod">
 <dt id="ovs.services.meal_service.MealService.get_last_log">
-<em class="property">static </em><code class="descname">get_last_log</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/meal_service.html#MealService.get_last_log"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.meal_service.MealService.get_last_log" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">get_last_log</code><span class="sig-paren">(</span><em>manager_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/meal_service.html#MealService.get_last_log"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.meal_service.MealService.get_last_log" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fetch the most recent meal log associated manager identified by manager id.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -314,7 +314,7 @@ average number of meals used for that hour over all days in the meal history.</t
 
 <dl class="staticmethod">
 <dt id="ovs.services.meal_service.MealService.get_log_to_undo">
-<em class="property">static </em><code class="descname">get_log_to_undo</code><span class="sig-paren">(</span><em>manager_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/meal_service.html#MealService.get_log_to_undo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.meal_service.MealService.get_log_to_undo" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">get_log_to_undo</code><span class="sig-paren">(</span><em>undo_date</em>, <em>manager_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/meal_service.html#MealService.get_log_to_undo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.meal_service.MealService.get_log_to_undo" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the meal log corresponding to the given undo for a specific manager.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -349,7 +349,7 @@ average number of meals used for that hour over all days in the meal history.</t
 
 <dl class="staticmethod">
 <dt id="ovs.services.meal_service.MealService.get_meal_plan_by_pin">
-<em class="property">static </em><code class="descname">get_meal_plan_by_pin</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/meal_service.html#MealService.get_meal_plan_by_pin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.meal_service.MealService.get_meal_plan_by_pin" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">get_meal_plan_by_pin</code><span class="sig-paren">(</span><em>pin</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/meal_service.html#MealService.get_meal_plan_by_pin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.meal_service.MealService.get_meal_plan_by_pin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fetch the mean plan that is associated with the meal pin.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -365,7 +365,7 @@ average number of meals used for that hour over all days in the meal history.</t
 
 <dl class="staticmethod">
 <dt id="ovs.services.meal_service.MealService.log_meal_history">
-<em class="property">static </em><code class="descname">log_meal_history</code><span class="sig-paren">(</span><em>pin</em>, <em>manager_id</em>, <em>log_type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/meal_service.html#MealService.log_meal_history"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.meal_service.MealService.log_meal_history" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">log_meal_history</code><span class="sig-paren">(</span><em>resident_id</em>, <em>pin</em>, <em>manager_id</em>, <em>log_type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/meal_service.html#MealService.log_meal_history"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.meal_service.MealService.log_meal_history" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a MealPlanHistory to db that logs the login/undo action.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -385,7 +385,7 @@ average number of meals used for that hour over all days in the meal history.</t
 
 <dl class="staticmethod">
 <dt id="ovs.services.meal_service.MealService.undo_meal_use">
-<em class="property">static </em><code class="descname">undo_meal_use</code><span class="sig-paren">(</span><em>resident_id</em>, <em>pin</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/meal_service.html#MealService.undo_meal_use"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.meal_service.MealService.undo_meal_use" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">undo_meal_use</code><span class="sig-paren">(</span><em>manager_id</em>, <em>resident_id</em>, <em>pin</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/meal_service.html#MealService.undo_meal_use"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.meal_service.MealService.undo_meal_use" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="docutils">
 <dt>Adds a single credit back to meal plan identified by meal pin</dt>
 <dd>and adds a MealService db entry.</dd>
@@ -407,7 +407,7 @@ average number of meals used for that hour over all days in the meal history.</t
 
 <dl class="staticmethod">
 <dt id="ovs.services.meal_service.MealService.use_meal">
-<em class="property">static </em><code class="descname">use_meal</code><span class="sig-paren">(</span><em>manager_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/meal_service.html#MealService.use_meal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.meal_service.MealService.use_meal" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">use_meal</code><span class="sig-paren">(</span><em>pin</em>, <em>manager_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/meal_service.html#MealService.use_meal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.meal_service.MealService.use_meal" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="docutils">
 <dt>Decrement credit for meal plan identified by meal pin</dt>
 <dd>and log a MealService db entry.</dd>
@@ -442,7 +442,7 @@ average number of meals used for that hour over all days in the meal history.</t
 <p>DB and utility functions for Packages</p>
 <dl class="staticmethod">
 <dt id="ovs.services.package_service.PackageService.create_package">
-<em class="property">static </em><code class="descname">create_package</code><span class="sig-paren">(</span><em>checked_by</em>, <em>checked_at</em>, <em>description</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/package_service.html#PackageService.create_package"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.package_service.PackageService.create_package" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">create_package</code><span class="sig-paren">(</span><em>recipient_id</em>, <em>checked_by</em>, <em>checked_at</em>, <em>description</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/package_service.html#PackageService.create_package"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.package_service.PackageService.create_package" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a package db entry.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -465,7 +465,7 @@ average number of meals used for that hour over all days in the meal history.</t
 
 <dl class="staticmethod">
 <dt id="ovs.services.package_service.PackageService.delete_package">
-<em class="property">static </em><code class="descname">delete_package</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/package_service.html#PackageService.delete_package"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.package_service.PackageService.delete_package" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">delete_package</code><span class="sig-paren">(</span><em>package_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/package_service.html#PackageService.delete_package"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.package_service.PackageService.delete_package" title="Permalink to this definition">¶</a></dt>
 <dd><p>Deletes Package identified by package_id.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -493,7 +493,7 @@ average number of meals used for that hour over all days in the meal history.</t
 
 <dl class="staticmethod">
 <dt id="ovs.services.package_service.PackageService.get_all_packages_by_recipient">
-<em class="property">static </em><code class="descname">get_all_packages_by_recipient</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/package_service.html#PackageService.get_all_packages_by_recipient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.package_service.PackageService.get_all_packages_by_recipient" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">get_all_packages_by_recipient</code><span class="sig-paren">(</span><em>user_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/package_service.html#PackageService.get_all_packages_by_recipient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.package_service.PackageService.get_all_packages_by_recipient" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fetch all packages for a resident in db.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -523,7 +523,7 @@ average number of meals used for that hour over all days in the meal history.</t
 
 <dl class="staticmethod">
 <dt id="ovs.services.package_service.PackageService.get_package_by_id">
-<em class="property">static </em><code class="descname">get_package_by_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/package_service.html#PackageService.get_package_by_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.package_service.PackageService.get_package_by_id" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">get_package_by_id</code><span class="sig-paren">(</span><em>package_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/package_service.html#PackageService.get_package_by_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.package_service.PackageService.get_package_by_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fetch a package identified by the package id.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -553,7 +553,7 @@ average number of meals used for that hour over all days in the meal history.</t
 
 <dl class="staticmethod">
 <dt id="ovs.services.package_service.PackageService.update_package">
-<em class="property">static </em><code class="descname">update_package</code><span class="sig-paren">(</span><em>recipient_email</em>, <em>description</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/package_service.html#PackageService.update_package"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.package_service.PackageService.update_package" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">update_package</code><span class="sig-paren">(</span><em>package_id</em>, <em>recipient_email</em>, <em>description</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/package_service.html#PackageService.update_package"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.package_service.PackageService.update_package" title="Permalink to this definition">¶</a></dt>
 <dd><p>Updates the receiver and description of Package identified by package_id.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -583,7 +583,7 @@ average number of meals used for that hour over all days in the meal history.</t
 <p>Services related to profile pictures</p>
 <dl class="staticmethod">
 <dt id="ovs.services.profile_picture_service.ProfilePictureService.create_profile_picture">
-<em class="property">static </em><code class="descname">create_profile_picture</code><span class="sig-paren">(</span><em>picture</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/profile_picture_service.html#ProfilePictureService.create_profile_picture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.profile_picture_service.ProfilePictureService.create_profile_picture" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">create_profile_picture</code><span class="sig-paren">(</span><em>user_id</em>, <em>picture</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/profile_picture_service.html#ProfilePictureService.create_profile_picture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.profile_picture_service.ProfilePictureService.create_profile_picture" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a blob object in the profile picture container with the associated id.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -601,7 +601,7 @@ average number of meals used for that hour over all days in the meal history.</t
 
 <dl class="staticmethod">
 <dt id="ovs.services.profile_picture_service.ProfilePictureService.delete_profile_picture">
-<em class="property">static </em><code class="descname">delete_profile_picture</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/profile_picture_service.html#ProfilePictureService.delete_profile_picture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.profile_picture_service.ProfilePictureService.delete_profile_picture" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">delete_profile_picture</code><span class="sig-paren">(</span><em>user_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/profile_picture_service.html#ProfilePictureService.delete_profile_picture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.profile_picture_service.ProfilePictureService.delete_profile_picture" title="Permalink to this definition">¶</a></dt>
 <dd><p>Deletes a blob object in the profile picture container with the associated id.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -615,7 +615,7 @@ average number of meals used for that hour over all days in the meal history.</t
 
 <dl class="staticmethod">
 <dt id="ovs.services.profile_picture_service.ProfilePictureService.get_profile_picture">
-<em class="property">static </em><code class="descname">get_profile_picture</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/profile_picture_service.html#ProfilePictureService.get_profile_picture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.profile_picture_service.ProfilePictureService.get_profile_picture" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">get_profile_picture</code><span class="sig-paren">(</span><em>user_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/profile_picture_service.html#ProfilePictureService.get_profile_picture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.profile_picture_service.ProfilePictureService.get_profile_picture" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets a blob object in the profile picture container with the associated id.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -631,7 +631,7 @@ average number of meals used for that hour over all days in the meal history.</t
 
 <dl class="staticmethod">
 <dt id="ovs.services.profile_picture_service.ProfilePictureService.set_default_picture">
-<em class="property">static </em><code class="descname">set_default_picture</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/profile_picture_service.html#ProfilePictureService.set_default_picture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.profile_picture_service.ProfilePictureService.set_default_picture" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">set_default_picture</code><span class="sig-paren">(</span><em>user_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/profile_picture_service.html#ProfilePictureService.set_default_picture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.profile_picture_service.ProfilePictureService.set_default_picture" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets default picture for new residents.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -645,7 +645,7 @@ average number of meals used for that hour over all days in the meal history.</t
 
 <dl class="staticmethod">
 <dt id="ovs.services.profile_picture_service.ProfilePictureService.update_profile_picture">
-<em class="property">static </em><code class="descname">update_profile_picture</code><span class="sig-paren">(</span><em>picture</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/profile_picture_service.html#ProfilePictureService.update_profile_picture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.profile_picture_service.ProfilePictureService.update_profile_picture" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">update_profile_picture</code><span class="sig-paren">(</span><em>user_id</em>, <em>picture</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/profile_picture_service.html#ProfilePictureService.update_profile_picture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.profile_picture_service.ProfilePictureService.update_profile_picture" title="Permalink to this definition">¶</a></dt>
 <dd><p>Updates a blob object in the profile picture container with the associated id.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -688,7 +688,7 @@ average number of meals used for that hour over all days in the meal history.</t
 
 <dl class="staticmethod">
 <dt id="ovs.services.profile_service.ProfileService.update_profile">
-<em class="property">static </em><code class="descname">update_profile</code><span class="sig-paren">(</span><em>preferred_email=None</em>, <em>preferred_name=None</em>, <em>phone_number=None</em>, <em>race=None</em>, <em>gender=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/profile_service.html#ProfileService.update_profile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.profile_service.ProfileService.update_profile" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">update_profile</code><span class="sig-paren">(</span><em>user_id</em>, <em>preferred_email=None</em>, <em>preferred_name=None</em>, <em>phone_number=None</em>, <em>race=None</em>, <em>gender=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/profile_service.html#ProfileService.update_profile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.profile_service.ProfileService.update_profile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Updates a profile associated with resident identified by resident id.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -721,7 +721,7 @@ average number of meals used for that hour over all days in the meal history.</t
 <p>DB and utility functions for Residents.</p>
 <dl class="staticmethod">
 <dt id="ovs.services.resident_service.ResidentService.create_resident">
-<em class="property">static </em><code class="descname">create_resident</code><span class="sig-paren">(</span><em>room_number=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/resident_service.html#ResidentService.create_resident"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.resident_service.ResidentService.create_resident" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">create_resident</code><span class="sig-paren">(</span><em>new_user</em>, <em>room_number=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/resident_service.html#ResidentService.create_resident"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.resident_service.ResidentService.create_resident" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a resident to the Resident table.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -742,7 +742,7 @@ average number of meals used for that hour over all days in the meal history.</t
 
 <dl class="staticmethod">
 <dt id="ovs.services.resident_service.ResidentService.edit_resident">
-<em class="property">static </em><code class="descname">edit_resident</code><span class="sig-paren">(</span><em>email</em>, <em>first_name</em>, <em>last_name</em>, <em>room_number</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/resident_service.html#ResidentService.edit_resident"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.resident_service.ResidentService.edit_resident" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">edit_resident</code><span class="sig-paren">(</span><em>user_id</em>, <em>email</em>, <em>first_name</em>, <em>last_name</em>, <em>room_number</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/resident_service.html#ResidentService.edit_resident"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.resident_service.ResidentService.edit_resident" title="Permalink to this definition">¶</a></dt>
 <dd><p>Edits an existing resident identified by user_id.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -777,7 +777,7 @@ average number of meals used for that hour over all days in the meal history.</t
 
 <dl class="staticmethod">
 <dt id="ovs.services.resident_service.ResidentService.get_resident_by_email">
-<em class="property">static </em><code class="descname">get_resident_by_email</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/resident_service.html#ResidentService.get_resident_by_email"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.resident_service.ResidentService.get_resident_by_email" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">get_resident_by_email</code><span class="sig-paren">(</span><em>email</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/resident_service.html#ResidentService.get_resident_by_email"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.resident_service.ResidentService.get_resident_by_email" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fetch resident identified by email.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -793,7 +793,7 @@ average number of meals used for that hour over all days in the meal history.</t
 
 <dl class="staticmethod">
 <dt id="ovs.services.resident_service.ResidentService.get_resident_by_id">
-<em class="property">static </em><code class="descname">get_resident_by_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/resident_service.html#ResidentService.get_resident_by_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.resident_service.ResidentService.get_resident_by_id" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">get_resident_by_id</code><span class="sig-paren">(</span><em>user_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/resident_service.html#ResidentService.get_resident_by_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.resident_service.ResidentService.get_resident_by_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fetch resident identified by user id.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -809,7 +809,7 @@ average number of meals used for that hour over all days in the meal history.</t
 
 <dl class="staticmethod">
 <dt id="ovs.services.resident_service.ResidentService.get_resident_by_pin">
-<em class="property">static </em><code class="descname">get_resident_by_pin</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/resident_service.html#ResidentService.get_resident_by_pin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.resident_service.ResidentService.get_resident_by_pin" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">get_resident_by_pin</code><span class="sig-paren">(</span><em>pin</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/resident_service.html#ResidentService.get_resident_by_pin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.resident_service.ResidentService.get_resident_by_pin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fetch resident identified by pin.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -825,7 +825,7 @@ average number of meals used for that hour over all days in the meal history.</t
 
 <dl class="staticmethod">
 <dt id="ovs.services.resident_service.ResidentService.resident_exists">
-<em class="property">static </em><code class="descname">resident_exists</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/resident_service.html#ResidentService.resident_exists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.resident_service.ResidentService.resident_exists" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">resident_exists</code><span class="sig-paren">(</span><em>user_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/resident_service.html#ResidentService.resident_exists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.resident_service.ResidentService.resident_exists" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if resident identified user id exists.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -841,7 +841,7 @@ average number of meals used for that hour over all days in the meal history.</t
 
 <dl class="staticmethod">
 <dt id="ovs.services.resident_service.ResidentService.set_resident_pin">
-<em class="property">static </em><code class="descname">set_resident_pin</code><span class="sig-paren">(</span><em>new_pin</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/resident_service.html#ResidentService.set_resident_pin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.resident_service.ResidentService.set_resident_pin" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">set_resident_pin</code><span class="sig-paren">(</span><em>user_id</em>, <em>new_pin</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/resident_service.html#ResidentService.set_resident_pin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.resident_service.ResidentService.set_resident_pin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set a meal pin for a resident identified by user id.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -870,7 +870,7 @@ average number of meals used for that hour over all days in the meal history.</t
 <p>DB Access and utility methods for Rooms</p>
 <dl class="staticmethod">
 <dt id="ovs.services.room_service.RoomService.add_resident_to_room">
-<em class="property">static </em><code class="descname">add_resident_to_room</code><span class="sig-paren">(</span><em>room_number</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/room_service.html#RoomService.add_resident_to_room"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.room_service.RoomService.add_resident_to_room" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">add_resident_to_room</code><span class="sig-paren">(</span><em>email</em>, <em>room_number</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/room_service.html#RoomService.add_resident_to_room"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.room_service.RoomService.add_resident_to_room" title="Permalink to this definition">¶</a></dt>
 <dd><p>Associates a resident with a room. Updates resident’s room number and occupants of room.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -891,7 +891,7 @@ average number of meals used for that hour over all days in the meal history.</t
 
 <dl class="staticmethod">
 <dt id="ovs.services.room_service.RoomService.create_room">
-<em class="property">static </em><code class="descname">create_room</code><span class="sig-paren">(</span><em>status</em>, <em>room_type</em>, <em>occupant_emails=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/room_service.html#RoomService.create_room"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.room_service.RoomService.create_room" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">create_room</code><span class="sig-paren">(</span><em>number</em>, <em>status</em>, <em>room_type</em>, <em>occupant_emails=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/room_service.html#RoomService.create_room"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.room_service.RoomService.create_room" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a room db entry.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -914,7 +914,7 @@ average number of meals used for that hour over all days in the meal history.</t
 
 <dl class="staticmethod">
 <dt id="ovs.services.room_service.RoomService.delete_room">
-<em class="property">static </em><code class="descname">delete_room</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/room_service.html#RoomService.delete_room"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.room_service.RoomService.delete_room" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">delete_room</code><span class="sig-paren">(</span><em>room_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/room_service.html#RoomService.delete_room"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.room_service.RoomService.delete_room" title="Permalink to this definition">¶</a></dt>
 <dd><p>Deletes a room from the database.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -928,7 +928,7 @@ average number of meals used for that hour over all days in the meal history.</t
 
 <dl class="staticmethod">
 <dt id="ovs.services.room_service.RoomService.edit_room">
-<em class="property">static </em><code class="descname">edit_room</code><span class="sig-paren">(</span><em>room_number</em>, <em>status</em>, <em>room_type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/room_service.html#RoomService.edit_room"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.room_service.RoomService.edit_room" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">edit_room</code><span class="sig-paren">(</span><em>room_id</em>, <em>room_number</em>, <em>status</em>, <em>room_type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/room_service.html#RoomService.edit_room"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.room_service.RoomService.edit_room" title="Permalink to this definition">¶</a></dt>
 <dd><p>Edits a room in the database.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -979,7 +979,7 @@ average number of meals used for that hour over all days in the meal history.</t
 
 <dl class="staticmethod">
 <dt id="ovs.services.room_service.RoomService.get_room_by_id">
-<em class="property">static </em><code class="descname">get_room_by_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/room_service.html#RoomService.get_room_by_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.room_service.RoomService.get_room_by_id" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">get_room_by_id</code><span class="sig-paren">(</span><em>room_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/room_service.html#RoomService.get_room_by_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.room_service.RoomService.get_room_by_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fetch a room identified by room id.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -995,7 +995,7 @@ average number of meals used for that hour over all days in the meal history.</t
 
 <dl class="staticmethod">
 <dt id="ovs.services.room_service.RoomService.get_room_by_number">
-<em class="property">static </em><code class="descname">get_room_by_number</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/room_service.html#RoomService.get_room_by_number"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.room_service.RoomService.get_room_by_number" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">get_room_by_number</code><span class="sig-paren">(</span><em>number</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/room_service.html#RoomService.get_room_by_number"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.room_service.RoomService.get_room_by_number" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fetch a Room model by room number.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1011,7 +1011,7 @@ average number of meals used for that hour over all days in the meal history.</t
 
 <dl class="staticmethod">
 <dt id="ovs.services.room_service.RoomService.room_exists">
-<em class="property">static </em><code class="descname">room_exists</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/room_service.html#RoomService.room_exists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.room_service.RoomService.room_exists" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">room_exists</code><span class="sig-paren">(</span><em>number</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/room_service.html#RoomService.room_exists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.room_service.RoomService.room_exists" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks if a room identified by room number exits.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1038,7 +1038,7 @@ average number of meals used for that hour over all days in the meal history.</t
 <p>DB and utility functions for Users</p>
 <dl class="staticmethod">
 <dt id="ovs.services.user_service.UserService.create_user">
-<em class="property">static </em><code class="descname">create_user</code><span class="sig-paren">(</span><em>first_name</em>, <em>last_name</em>, <em>role</em>, <em>password=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/user_service.html#UserService.create_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.user_service.UserService.create_user" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">create_user</code><span class="sig-paren">(</span><em>email</em>, <em>first_name</em>, <em>last_name</em>, <em>role</em>, <em>password=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/user_service.html#UserService.create_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.user_service.UserService.create_user" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a user entry to db.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1062,7 +1062,7 @@ average number of meals used for that hour over all days in the meal history.</t
 
 <dl class="staticmethod">
 <dt id="ovs.services.user_service.UserService.delete_user">
-<em class="property">static </em><code class="descname">delete_user</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/user_service.html#UserService.delete_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.user_service.UserService.delete_user" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">delete_user</code><span class="sig-paren">(</span><em>user_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/user_service.html#UserService.delete_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.user_service.UserService.delete_user" title="Permalink to this definition">¶</a></dt>
 <dd><p>Deletes an existing user identified by user id.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1071,7 +1071,7 @@ average number of meals used for that hour over all days in the meal history.</t
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>user_id</strong> – Unique user id.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
-<dt>True if the user was sucessfuly deleted.</dt>
+<dt>True if the user was successfuly deleted.</dt>
 <dd>False if user_id refers to the last admin.</dd>
 </dl>
 </td>
@@ -1084,7 +1084,7 @@ average number of meals used for that hour over all days in the meal history.</t
 
 <dl class="staticmethod">
 <dt id="ovs.services.user_service.UserService.edit_user">
-<em class="property">static </em><code class="descname">edit_user</code><span class="sig-paren">(</span><em>email</em>, <em>first_name</em>, <em>last_name</em>, <em>role=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/user_service.html#UserService.edit_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.user_service.UserService.edit_user" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">edit_user</code><span class="sig-paren">(</span><em>user_id</em>, <em>email</em>, <em>first_name</em>, <em>last_name</em>, <em>role=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/user_service.html#UserService.edit_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.user_service.UserService.edit_user" title="Permalink to this definition">¶</a></dt>
 <dd><p>Edits user identified by user id.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1099,7 +1099,18 @@ average number of meals used for that hour over all days in the meal history.</t
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code> – If email is already registered.</p>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code> – If email is already registered.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><dl class="docutils">
+<dt>True if the user was successfully updated.</dt>
+<dd><p class="first last">False if trying to change the role of the last admin</p>
+</dd>
+</dl>
+</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">bool</p>
 </td>
 </tr>
 </tbody>
@@ -1108,7 +1119,7 @@ average number of meals used for that hour over all days in the meal history.</t
 
 <dl class="staticmethod">
 <dt id="ovs.services.user_service.UserService.get_user_by_email">
-<em class="property">static </em><code class="descname">get_user_by_email</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/user_service.html#UserService.get_user_by_email"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.user_service.UserService.get_user_by_email" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">get_user_by_email</code><span class="sig-paren">(</span><em>email</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/user_service.html#UserService.get_user_by_email"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.user_service.UserService.get_user_by_email" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fetch a user identified by email.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1124,7 +1135,7 @@ average number of meals used for that hour over all days in the meal history.</t
 
 <dl class="staticmethod">
 <dt id="ovs.services.user_service.UserService.get_user_by_id">
-<em class="property">static </em><code class="descname">get_user_by_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/user_service.html#UserService.get_user_by_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.user_service.UserService.get_user_by_id" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">get_user_by_id</code><span class="sig-paren">(</span><em>user_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/user_service.html#UserService.get_user_by_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.user_service.UserService.get_user_by_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fetch a user identified by user id.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1140,7 +1151,7 @@ average number of meals used for that hour over all days in the meal history.</t
 
 <dl class="staticmethod">
 <dt id="ovs.services.user_service.UserService.reset_user">
-<em class="property">static </em><code class="descname">reset_user</code><span class="sig-paren">(</span><em>new_password</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/user_service.html#UserService.reset_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.user_service.UserService.reset_user" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">reset_user</code><span class="sig-paren">(</span><em>reset_user</em>, <em>new_password</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/user_service.html#UserService.reset_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.user_service.UserService.reset_user" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reset a given user’s password.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1161,7 +1172,7 @@ average number of meals used for that hour over all days in the meal history.</t
 
 <dl class="staticmethod">
 <dt id="ovs.services.user_service.UserService.send_reset_email">
-<em class="property">static </em><code class="descname">send_reset_email</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/user_service.html#UserService.send_reset_email"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.user_service.UserService.send_reset_email" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">send_reset_email</code><span class="sig-paren">(</span><em>email</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/user_service.html#UserService.send_reset_email"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.user_service.UserService.send_reset_email" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sends a password reset email to the email address associated with a user.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1175,7 +1186,7 @@ average number of meals used for that hour over all days in the meal history.</t
 
 <dl class="staticmethod">
 <dt id="ovs.services.user_service.UserService.send_setup_email">
-<em class="property">static </em><code class="descname">send_setup_email</code><span class="sig-paren">(</span><em>first_name</em>, <em>last_name</em>, <em>role</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/user_service.html#UserService.send_setup_email"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.user_service.UserService.send_setup_email" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">send_setup_email</code><span class="sig-paren">(</span><em>email</em>, <em>first_name</em>, <em>last_name</em>, <em>role</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/services/user_service.html#UserService.send_setup_email"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.services.user_service.UserService.send_setup_email" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sends a setup email to the email address associated with a user.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1264,7 +1275,7 @@ average number of meals used for that hour over all days in the meal history.</t
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2018, Ben Lambeth.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.2.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.4.
     </div>
   </body>
 </html>

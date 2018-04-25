@@ -152,7 +152,7 @@
 
 <dl class="staticmethod">
 <dt id="ovs.utils.roles.UserRole.has_permission">
-<em class="property">static </em><code class="descname">has_permission</code><span class="sig-paren">(</span><em>min_access_role</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/utils/roles.html#UserRole.has_permission"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.utils.roles.UserRole.has_permission" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">has_permission</code><span class="sig-paren">(</span><em>user_role</em>, <em>min_access_role</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/utils/roles.html#UserRole.has_permission"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.utils.roles.UserRole.has_permission" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks that user_role has permission to access recourse with permission level min_access_role.
 :param user_role: The current users role.
 :type user_role: UserRole
@@ -183,7 +183,7 @@
 <p>Class to allow secure de/serialization of attributes using a salt.</p>
 <dl class="staticmethod">
 <dt id="ovs.utils.timed_serializer.Serializer.decode_attr">
-<em class="property">static </em><code class="descname">decode_attr</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/utils/timed_serializer.html#Serializer.decode_attr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.utils.timed_serializer.Serializer.decode_attr" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">decode_attr</code><span class="sig-paren">(</span><em>attr</em>, <em>key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/utils/timed_serializer.html#Serializer.decode_attr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.utils.timed_serializer.Serializer.decode_attr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Deserializes an attribute, using a key as a salt.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -204,7 +204,7 @@
 
 <dl class="staticmethod">
 <dt id="ovs.utils.timed_serializer.Serializer.init_app">
-<em class="property">static </em><code class="descname">init_app</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/utils/timed_serializer.html#Serializer.init_app"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.utils.timed_serializer.Serializer.init_app" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">init_app</code><span class="sig-paren">(</span><em>app</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/utils/timed_serializer.html#Serializer.init_app"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.utils.timed_serializer.Serializer.init_app" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initializes the static serializer with the app’s secret
 Note that it must be done in this manner because the app_context
 is not available until the application is created.</p>
@@ -220,7 +220,7 @@ is not available until the application is created.</p>
 
 <dl class="staticmethod">
 <dt id="ovs.utils.timed_serializer.Serializer.serialize_attr">
-<em class="property">static </em><code class="descname">serialize_attr</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/utils/timed_serializer.html#Serializer.serialize_attr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.utils.timed_serializer.Serializer.serialize_attr" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">serialize_attr</code><span class="sig-paren">(</span><em>attr</em>, <em>key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/utils/timed_serializer.html#Serializer.serialize_attr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.utils.timed_serializer.Serializer.serialize_attr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Serializes an attribute, using a key as a salt.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -310,7 +310,7 @@ is not available until the application is created.</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2018, Ben Lambeth.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.2.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.4.
     </div>
   </body>
 </html>

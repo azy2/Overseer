@@ -110,6 +110,10 @@
 
 <span class="sd">        Raises:</span>
 <span class="sd">            ValueError: If email is already registered.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if the user was successfully updated.</span>
+<span class="sd">                  False if trying to change the role of the last admin</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">user</span> <span class="o">=</span> <span class="n">UserService</span><span class="o">.</span><span class="n">get_user_by_id</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
         <span class="n">email_user</span> <span class="o">=</span> <span class="n">UserService</span><span class="o">.</span><span class="n">get_user_by_email</span><span class="p">(</span><span class="n">email</span><span class="p">)</span>
@@ -121,7 +125,10 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Email already exists&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">role</span><span class="p">:</span>
-            <span class="n">user</span><span class="o">.</span><span class="n">role</span> <span class="o">=</span> <span class="n">role</span></div>
+            <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">role</span> <span class="o">==</span> <span class="s1">&#39;ADMIN&#39;</span> <span class="ow">and</span> <span class="n">ManagerService</span><span class="o">.</span><span class="n">get_admin_count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+            <span class="n">user</span><span class="o">.</span><span class="n">role</span> <span class="o">=</span> <span class="n">role</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="UserService.delete_user"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.user_service.UserService.delete_user">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">delete_user</span><span class="p">(</span><span class="n">user_id</span><span class="p">):</span>
@@ -132,7 +139,7 @@
 <span class="sd">            user_id: Unique user id.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            bool: True if the user was sucessfuly deleted.</span>
+<span class="sd">            bool: True if the user was successfuly deleted.</span>
 <span class="sd">                  False if user_id refers to the last admin.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">user</span> <span class="o">=</span> <span class="n">UserService</span><span class="o">.</span><span class="n">get_user_by_id</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
@@ -267,7 +274,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2018, Ben Lambeth.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.2.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.4.
     </div>
   </body>
 </html>

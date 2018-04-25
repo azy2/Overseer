@@ -310,7 +310,7 @@
             <span class="c1"># Remove the previous meal from the usage stats</span>
             <span class="k">elif</span> <span class="n">log</span><span class="o">.</span><span class="n">log_type</span> <span class="o">==</span> <span class="s2">&quot;UNDO&quot;</span><span class="p">:</span>
                 <span class="n">bad_log</span> <span class="o">=</span> <span class="n">MealService</span><span class="o">.</span><span class="n">get_log_to_undo</span><span class="p">(</span><span class="n">log</span><span class="o">.</span><span class="n">created</span><span class="p">,</span> <span class="n">log</span><span class="o">.</span><span class="n">manager_id</span><span class="p">)</span>
-                <span class="n">curr_meal_usage</span><span class="p">[</span><span class="n">bad_log</span><span class="o">.</span><span class="n">created</span><span class="o">.</span><span class="n">hour</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">1</span>
+                <span class="n">curr_meal_usage</span><span class="p">[</span><span class="n">utc_to_timezone</span><span class="p">(</span><span class="n">bad_log</span><span class="o">.</span><span class="n">created</span><span class="p">)</span><span class="o">.</span><span class="n">hour</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">1</span>
 
         <span class="c1"># Final update for last day</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">24</span><span class="p">):</span>
@@ -356,7 +356,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2018, Ben Lambeth.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.2.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.4.
     </div>
   </body>
 </html>
