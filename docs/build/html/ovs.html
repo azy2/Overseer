@@ -469,7 +469,7 @@ print(config[‘database’])</p>
 
 <dl class="staticmethod">
 <dt id="ovs.datagen.DataGen.create_user">
-<em class="property">static </em><code class="descname">create_user</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/datagen.html#DataGen.create_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.datagen.DataGen.create_user" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">create_user</code><span class="sig-paren">(</span><em>user_role</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs/datagen.html#DataGen.create_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.datagen.DataGen.create_user" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a default user if it doesn’t exist.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -515,6 +515,27 @@ a database connection. The networking code can be found in <cite>../main.py</cit
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="function">
+<dt id="ovs.utc_to_timezone">
+<code class="descclassname">ovs.</code><code class="descname">utc_to_timezone</code><span class="sig-paren">(</span><em>dt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ovs.html#utc_to_timezone"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ovs.utc_to_timezone" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a datetime object from UTC to the datetime configured in
+the currently running app.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>dt</strong> – The datetime object in UTC to convert.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A datetime object in the current_app’s timezone.</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This function can be used in jinja2 templates.</p>
+</div>
 </dd></dl>
 
 </div>
@@ -576,7 +597,7 @@ a database connection. The networking code can be found in <cite>../main.py</cit
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2018, Ben Lambeth.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.2.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.4.
     </div>
   </body>
 </html>

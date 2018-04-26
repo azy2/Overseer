@@ -41,9 +41,8 @@
 <span></span><span class="sd">&quot;&quot;&quot; Tests functionality across routes. &quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">selenium.webdriver.common.keys</span> <span class="k">import</span> <span class="n">Keys</span>
 <span class="kn">from</span> <span class="nn">selenium.webdriver.common.by</span> <span class="k">import</span> <span class="n">By</span>
-<span class="kn">from</span> <span class="nn">selenium.webdriver.support.ui</span> <span class="k">import</span> <span class="n">WebDriverWait</span>
+<span class="kn">from</span> <span class="nn">selenium.webdriver.support.ui</span> <span class="k">import</span> <span class="n">WebDriverWait</span><span class="p">,</span> <span class="n">Select</span>
 <span class="kn">from</span> <span class="nn">selenium.webdriver.support</span> <span class="k">import</span> <span class="n">expected_conditions</span> <span class="k">as</span> <span class="n">EC</span>
-<span class="kn">from</span> <span class="nn">selenium.webdriver.support.ui</span> <span class="k">import</span> <span class="n">Select</span>
 <span class="kn">from</span> <span class="nn">ovs.tests.selenium.selenium_base_test</span> <span class="k">import</span> <span class="n">SeleniumBaseTestCase</span>
 
 <div class="viewcode-block" id="TestCrossSystem"><a class="viewcode-back" href="../../../../ovs.tests.selenium.html#ovs.tests.selenium.test_cross_system.TestCrossSystem">[docs]</a><span class="k">class</span> <span class="nc">TestCrossSystem</span><span class="p">(</span><span class="n">SeleniumBaseTestCase</span><span class="p">):</span>
@@ -54,10 +53,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_url</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s1">&#39;Overseer&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">title</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">login_default_admin</span><span class="p">()</span>
-
         <span class="c1"># Create a meal plan for the new resident</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">go_to_page_in_dropdown</span><span class="p">(</span><span class="s1">&#39;Meal Plans&#39;</span><span class="p">,</span> <span class="s1">&#39;mealDropdown&#39;</span><span class="p">)</span>
-
         <span class="c1"># Make a 20 credit Semesterly meal plan for the created resident</span>
         <span class="n">email_text_field</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">find_element_by_id</span><span class="p">(</span><span class="s1">&#39;email&#39;</span><span class="p">)</span>
         <span class="n">email_text_field</span><span class="o">.</span><span class="n">send_keys</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">default_resident_email</span><span class="p">)</span>
@@ -67,37 +64,32 @@
         <span class="n">plan_type_selector</span><span class="o">.</span><span class="n">select_by_visible_text</span><span class="p">(</span><span class="s1">&#39;Semesterly&#39;</span><span class="p">)</span>
         <span class="n">register_button</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">find_element_by_name</span><span class="p">(</span><span class="s1">&#39;create_btn&#39;</span><span class="p">)</span>
         <span class="n">register_button</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
-
         <span class="c1"># New meal plans get added to the bottom of the table, find last entry to get the pin</span>
         <span class="n">meal_plan_table</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">find_element_by_class_name</span><span class="p">(</span><span class="s1">&#39;table-responsive&#39;</span><span class="p">)</span>
         <span class="n">last_table_row</span> <span class="o">=</span> <span class="n">meal_plan_table</span><span class="o">.</span><span class="n">find_elements_by_tag_name</span><span class="p">(</span><span class="s1">&#39;tr&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         <span class="n">resident_pin</span> <span class="o">=</span> <span class="n">last_table_row</span><span class="o">.</span><span class="n">find_elements_by_tag_name</span><span class="p">(</span><span class="s1">&#39;td&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-
         <span class="c1"># Use the meal plan</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">go_to_page_in_dropdown</span><span class="p">(</span><span class="s1">&#39;Meal login&#39;</span><span class="p">,</span> <span class="s1">&#39;mealDropdown&#39;</span><span class="p">)</span>
         <span class="n">pin_text_field</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">find_element_by_id</span><span class="p">(</span><span class="s1">&#39;pin&#39;</span><span class="p">)</span>
         <span class="n">pin_text_field</span><span class="o">.</span><span class="n">send_keys</span><span class="p">(</span><span class="n">resident_pin</span><span class="p">)</span>
         <span class="n">sign_in_button</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">find_element_by_class_name</span><span class="p">(</span><span class="s1">&#39;btn-primary&#39;</span><span class="p">)</span>
         <span class="n">sign_in_button</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
-
         <span class="c1"># Verify that the new resident&#39;s name is used in the confirmation</span>
         <span class="c1"># This element is likely to change on the page, really should have an ID attached</span>
         <span class="n">confirmation_holder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">find_elements_by_class_name</span><span class="p">(</span><span class="s1">&#39;col-6&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">default_resident_name</span><span class="p">,</span> <span class="n">confirmation_holder</span><span class="o">.</span><span class="n">find_element_by_tag_name</span><span class="p">(</span><span class="s1">&#39;p&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
-
         <span class="c1"># Log in to new resident account and edit preferred name in profile</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">go_to_page_in_dropdown</span><span class="p">(</span><span class="s1">&#39;Logout&#39;</span><span class="p">,</span> <span class="s1">&#39;accountDropdown&#39;</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">login_default_resident</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">go_to_page_in_dropdown</span><span class="p">(</span><span class="s1">&#39;Profile&#39;</span><span class="p">,</span> <span class="s1">&#39;accountDropdown&#39;</span><span class="p">)</span>
-
         <span class="c1"># Change preferred name and submit changes</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_text_field_by_id</span><span class="p">(</span><span class="s1">&#39;preferred_name&#39;</span><span class="p">,</span> <span class="s1">&#39;Megatron&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">find_element_by_id</span><span class="p">(</span><span class="s1">&#39;submit_changes&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">send_keys</span><span class="p">(</span><span class="n">Keys</span><span class="o">.</span><span class="n">ENTER</span><span class="p">)</span>
-
         <span class="c1"># Wait for successful notification popup to appear</span>
-        <span class="n">wait</span> <span class="o">=</span> <span class="n">WebDriverWait</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+        <span class="n">wait</span> <span class="o">=</span> <span class="n">WebDriverWait</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
         <span class="n">wait</span><span class="o">.</span><span class="n">until</span><span class="p">(</span><span class="n">EC</span><span class="o">.</span><span class="n">visibility_of_element_located</span><span class="p">((</span><span class="n">By</span><span class="o">.</span><span class="n">ID</span><span class="p">,</span> <span class="s1">&#39;notification-message&#39;</span><span class="p">)))</span>
-
+        <span class="c1"># Wait for notification to disappear</span>
+        <span class="n">wait</span><span class="o">.</span><span class="n">until</span><span class="p">(</span><span class="n">EC</span><span class="o">.</span><span class="n">invisibility_of_element_located</span><span class="p">((</span><span class="n">By</span><span class="o">.</span><span class="n">ID</span><span class="p">,</span> <span class="s1">&#39;notification-message&#39;</span><span class="p">)))</span>
         <span class="c1"># Go back to meal plan and verify name updated</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">go_to_page_in_dropdown</span><span class="p">(</span><span class="s1">&#39;Logout&#39;</span><span class="p">,</span> <span class="s1">&#39;accountDropdown&#39;</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">login_default_admin</span><span class="p">()</span>
@@ -200,7 +192,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2018, Ben Lambeth.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.2.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.4.
     </div>
   </body>
 </html>

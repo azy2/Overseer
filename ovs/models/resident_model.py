@@ -1,9 +1,10 @@
 """
 Defines a Resident as represented in the database
 """
+from datetime import datetime
+
 from flask import jsonify
 from sqlalchemy import Integer, Column, CHAR, DateTime, ForeignKey
-from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 
 from ovs import db
@@ -23,8 +24,8 @@ class Resident(db.Model):
     user_id = Column(Integer, ForeignKey('users.id'), primary_key=True)
     room_number = Column(CHAR(255), ForeignKey('rooms.number'))
     mealplan_pin = Column(Integer, ForeignKey('mealplan.pin'))
-    created = Column(DateTime, server_default=func.now())
-    updated = Column(DateTime, server_default=func.now(), server_onupdate=func.now())
+    created = Column(DateTime, default=datetime.utcnow)
+    updated = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     user = relationship('User', uselist=False, single_parent=True,
                         cascade='delete, delete-orphan')
     packages = relationship('Package', cascade='delete, delete-orphan')

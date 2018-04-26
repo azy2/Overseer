@@ -81,6 +81,8 @@
         <span class="n">profile</span> <span class="o">=</span> <span class="n">current_user</span><span class="o">.</span><span class="n">profile</span>
         <span class="n">packages</span> <span class="o">=</span> <span class="n">resident</span><span class="o">.</span><span class="n">packages</span>
         <span class="n">meal_plan</span> <span class="o">=</span> <span class="n">resident</span><span class="o">.</span><span class="n">meal_plan</span>
+        <span class="k">if</span> <span class="n">meal_plan</span><span class="p">:</span>
+            <span class="n">meal_plan</span><span class="o">.</span><span class="n">check_reset_date</span><span class="p">()</span>
         <span class="n">pict</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">ProfilePictureService</span><span class="o">.</span><span class="n">get_profile_picture</span><span class="p">(</span><span class="n">profile</span><span class="o">.</span><span class="n">user_id</span><span class="p">))</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;resident/index.html&#39;</span><span class="p">,</span> <span class="n">role</span><span class="o">=</span><span class="n">roles</span><span class="o">.</span><span class="n">RESIDENT</span><span class="p">,</span> <span class="n">profile</span><span class="o">=</span><span class="n">profile</span><span class="p">,</span> <span class="n">pict</span><span class="o">=</span><span class="n">pict</span><span class="p">,</span>
                                <span class="n">packages</span><span class="o">=</span><span class="n">packages</span><span class="p">,</span> <span class="n">mealplan</span><span class="o">=</span><span class="n">meal_plan</span><span class="p">)</span>
@@ -128,7 +130,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2018, Ben Lambeth.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.2.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.4.
     </div>
   </body>
 </html>

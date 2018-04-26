@@ -52,19 +52,23 @@ def manage_managers():
                     db.session.commit()
                     flash('User deleted.', 'success')
                 else:
-                    flash('Cannot delete the last admin', 'danger')
+                    flash('Cannot delete the last admin.', 'danger')
                 return redirect(url_for('admin.manage_managers'))
 
             elif edit_form.update_button.data and edit_form.validate_on_submit():
-                UserService.edit_user(
-                    edit_form.user_id.data,
-                    edit_form.email.data,
-                    edit_form.first_name.data,
-                    edit_form.last_name.data,
-                    edit_form.role.data)
-                db.session.commit()
-                flash('User updated!', 'success')
+                if UserService.edit_user(
+                        edit_form.user_id.data,
+                        edit_form.email.data,
+                        edit_form.first_name.data,
+                        edit_form.last_name.data,
+                        edit_form.role.data):
+                    db.session.commit()
+                    flash('User updated!', 'success')
+                else:
+                    flash('Cannot remove the last admin.', 'danger')
 
+                if edit_form.role.data != 'ADMIN' and edit_form.user_id.data == current_user.get_id():
+                    return redirect(url_for('manager.landing_page')) #User lost access to this page.
                 return redirect(url_for('admin.manage_managers'))
 
         user = UserService.get_user_by_id(current_user.get_id())

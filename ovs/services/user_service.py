@@ -70,6 +70,10 @@ class UserService:
 
         Raises:
             ValueError: If email is already registered.
+
+        Returns:
+            bool: True if the user was successfully updated.
+                  False if trying to change the role of the last admin
         """
         user = UserService.get_user_by_id(user_id)
         email_user = UserService.get_user_by_email(email)
@@ -81,7 +85,10 @@ class UserService:
         else:
             raise ValueError("Email already exists")
         if role:
+            if user.role == 'ADMIN' and ManagerService.get_admin_count() == 1:
+                return False
             user.role = role
+        return True
 
     @staticmethod
     def delete_user(user_id):
@@ -92,7 +99,7 @@ class UserService:
             user_id: Unique user id.
 
         Returns:
-            bool: True if the user was sucessfuly deleted.
+            bool: True if the user was successfuly deleted.
                   False if user_id refers to the last admin.
         """
         user = UserService.get_user_by_id(user_id)
