@@ -22,7 +22,7 @@ class Resident(db.Model):
     __tablename__ = 'residents'
 
     user_id = Column(Integer, ForeignKey('users.id'), primary_key=True)
-    room_number = Column(CHAR(255), ForeignKey('rooms.number'))
+    room_number = Column(CHAR(255), ForeignKey('rooms.number', onupdate='cascade'))
     mealplan_pin = Column(Integer, ForeignKey('mealplan.pin'))
     created = Column(DateTime, default=datetime.utcnow)
     updated = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
