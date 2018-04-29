@@ -246,11 +246,12 @@ class MealService:
 
         # Loop through every log in meal history
         for log in history:
+            time = utc_to_timezone(log.created)
             # Update meal usage for the given day and hour
             if log.log_type == "MEAL_USED":
                 # Initialize log variables
-                hour = utc_to_timezone(log.created).hour
-                log_day = [log.created.month, log.created.day, log.created.year]
+                hour = time.hour
+                log_day = [time.month, time.day, time.year]
 
                 # Current day not yet set (first log)
                 if curr_day is None:
