@@ -105,19 +105,6 @@ class RoomService:
         return Room.query.filter_by(number=str(number)).first()
 
     @staticmethod
-    def room_exists(number):
-        """
-        Checks if a room identified by room number exits.
-
-        Args:
-            number: The room number.
-
-        Returns:
-            If a matching room exists.
-        """
-        return RoomService.get_room_by_number(number) is not None
-
-    @staticmethod
     def get_all_rooms():
         """
         Fetch all rooms except the default in the db.

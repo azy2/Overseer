@@ -160,7 +160,7 @@
         <span class="n">meal_plan</span> <span class="o">=</span> <span class="n">MealService</span><span class="o">.</span><span class="n">get_meal_plan_by_pin</span><span class="p">(</span><span class="n">pin</span><span class="p">)</span>
 
         <span class="n">resident</span> <span class="o">=</span> <span class="n">ResidentService</span><span class="o">.</span><span class="n">get_resident_by_pin</span><span class="p">(</span><span class="n">meal_plan</span><span class="o">.</span><span class="n">pin</span><span class="p">)</span>
-        <span class="n">ResidentService</span><span class="o">.</span><span class="n">set_resident_pin</span><span class="p">(</span><span class="n">resident</span><span class="o">.</span><span class="n">user_id</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">ResidentService</span><span class="o">.</span><span class="n">set_resident_pin</span><span class="p">(</span><span class="n">resident</span><span class="o">.</span><span class="n">user_id</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
         <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">meal_plan</span><span class="p">)</span>
         <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span></div>
@@ -286,11 +286,12 @@
 
         <span class="c1"># Loop through every log in meal history</span>
         <span class="k">for</span> <span class="n">log</span> <span class="ow">in</span> <span class="n">history</span><span class="p">:</span>
+            <span class="n">time</span> <span class="o">=</span> <span class="n">utc_to_timezone</span><span class="p">(</span><span class="n">log</span><span class="o">.</span><span class="n">created</span><span class="p">)</span>
             <span class="c1"># Update meal usage for the given day and hour</span>
             <span class="k">if</span> <span class="n">log</span><span class="o">.</span><span class="n">log_type</span> <span class="o">==</span> <span class="s2">&quot;MEAL_USED&quot;</span><span class="p">:</span>
                 <span class="c1"># Initialize log variables</span>
-                <span class="n">hour</span> <span class="o">=</span> <span class="n">utc_to_timezone</span><span class="p">(</span><span class="n">log</span><span class="o">.</span><span class="n">created</span><span class="p">)</span><span class="o">.</span><span class="n">hour</span>
-                <span class="n">log_day</span> <span class="o">=</span> <span class="p">[</span><span class="n">log</span><span class="o">.</span><span class="n">created</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">log</span><span class="o">.</span><span class="n">created</span><span class="o">.</span><span class="n">day</span><span class="p">,</span> <span class="n">log</span><span class="o">.</span><span class="n">created</span><span class="o">.</span><span class="n">year</span><span class="p">]</span>
+                <span class="n">hour</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">hour</span>
+                <span class="n">log_day</span> <span class="o">=</span> <span class="p">[</span><span class="n">time</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">day</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">year</span><span class="p">]</span>
 
                 <span class="c1"># Current day not yet set (first log)</span>
                 <span class="k">if</span> <span class="n">curr_day</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
