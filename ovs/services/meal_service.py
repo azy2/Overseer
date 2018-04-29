@@ -120,7 +120,7 @@ class MealService:
         meal_plan = MealService.get_meal_plan_by_pin(pin)
 
         resident = ResidentService.get_resident_by_pin(meal_plan.pin)
-        ResidentService.set_resident_pin(resident.user_id, 0)
+        ResidentService.set_resident_pin(resident.user_id, None)
 
         db.session.delete(meal_plan)
         db.session.flush()
