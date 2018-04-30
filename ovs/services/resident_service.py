@@ -72,19 +72,6 @@ class ResidentService:
         return Resident.query.filter_by(user_id=user_id).first()
 
     @staticmethod
-    def resident_exists(user_id):
-        """
-        Check if resident identified user id exists.
-
-        Args:
-            user_id: Unique user id.
-
-        Returns:
-            If the residents exists.
-        """
-        return ResidentService.get_resident_by_id(user_id) is not None
-
-    @staticmethod
     def get_resident_by_pin(pin):
         """
         Fetch resident identified by pin.
@@ -120,4 +107,3 @@ class ResidentService:
             A list of (Resident, User) db model tuples.
         """
         return db.session.query(Resident, User).join(User, Resident.user_id == User.id).all()
-        

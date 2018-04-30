@@ -111,19 +111,6 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">Resident</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="ResidentService.resident_exists"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.resident_service.ResidentService.resident_exists">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">resident_exists</span><span class="p">(</span><span class="n">user_id</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Check if resident identified user id exists.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            user_id: Unique user id.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            If the residents exists.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">ResidentService</span><span class="o">.</span><span class="n">get_resident_by_id</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></div>
-
 <div class="viewcode-block" id="ResidentService.get_resident_by_pin"><a class="viewcode-back" href="../../../ovs.services.html#ovs.services.resident_service.ResidentService.get_resident_by_pin">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_resident_by_pin</span><span class="p">(</span><span class="n">pin</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
